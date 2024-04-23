@@ -3,7 +3,6 @@ package com.geulgrim.common.portfolio.repository;
 import com.geulgrim.common.portfolio.entity.Portfolio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

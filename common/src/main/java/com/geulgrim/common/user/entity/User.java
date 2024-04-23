@@ -1,8 +1,7 @@
 package com.geulgrim.common.user.entity;
 
-import com.geulgrim.common.global.entity.BaseEntity;
+
 import com.geulgrim.common.user.entity.enums.UserType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
