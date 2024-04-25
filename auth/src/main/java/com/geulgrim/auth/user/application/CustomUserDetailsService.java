@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String phoneNum) throws UsernameNotFoundException {
         User user = userRepository.findByPhoneNum(phoneNum).orElseThrow();
 
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority());
+//        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority());
 
 
         return null;
