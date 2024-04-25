@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PushMailCreateDto {
 
-    private String receiverAddress;
+    private Long receiverId;
     
     private Long senderId;
 
@@ -24,7 +24,7 @@ public class PushMailCreateDto {
     public PushMail toEntity(PushMailCreateDto dto) {
 
         return PushMail.builder()
-                .receiverAddress(dto.getReceiverAddress())
+                .receiverId(dto.getReceiverId())
                 .senderId(dto.getSenderId())
                 .favoriteJobs(dto.getFavoriteJobs())
                 .domain(PushMailDomain.valueOf(dto.getDomain()))

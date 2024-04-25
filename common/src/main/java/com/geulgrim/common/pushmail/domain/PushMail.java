@@ -16,7 +16,7 @@ public class PushMail extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String receiverAddress;
+    private Long receiverId;
 
     private Long senderId;
 

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PushMailResponseDto {
 
-    private String receiverAddress;
+    private Long receiverId;
 
     private Long senderId;
 
