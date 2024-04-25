@@ -27,7 +27,7 @@ public class PushMailCreateDto {
                 .receiverId(dto.getReceiverId())
                 .senderId(dto.getSenderId())
                 .favoriteJobs(dto.getFavoriteJobs())
-                .domain(PushMailDomain.valueOf(dto.getDomain()))
+                .domain(PushMailDomain.valueOf(domain))
                 .title(PushMailDomain.valueOf(domain).generateTitle())
                 .content(PushMailDomain.valueOf(domain).generateContent())
                 .isChecked(false)
