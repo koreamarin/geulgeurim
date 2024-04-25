@@ -1,11 +1,13 @@
 package com.geulgrim.common.pushmail.domain;
 
 import com.geulgrim.common.global.entity.BaseEntity;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
+@Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

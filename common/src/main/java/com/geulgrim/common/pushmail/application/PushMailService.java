@@ -21,7 +21,7 @@ public class PushMailService {
     //userRepository 필요
     //jobrepository 필요
 
-    public PushMailResponseDto sendEmail(PushMailCreateDto dto) {
+    public PushMailResponseDto create(PushMailCreateDto dto) {
 
         PushMail pushMail = dto.toEntity(dto);
         PushMailDomain domain = PushMailDomain.valueOf(dto.getDomain());
