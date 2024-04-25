@@ -1,18 +1,15 @@
 package com.geulgrim.common.pushmail.domain;
 
-import com.geulgrim.common.global.entity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PushMail extends BaseEntity {
+public class PushMail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +19,8 @@ public class PushMail extends BaseEntity {
 
     private Long senderId;
 
-    private Long[] favoriteJobs;
+    @ElementCollection
+    private List<Long> favoriteJobList; //즐겨찾기 공고 리스트
 
     private PushMailDomain domain;
 
@@ -34,7 +32,7 @@ public class PushMail extends BaseEntity {
 
 
     public void updateTitle(String nickname) {
-        this.title = nickname = this.title;
+        this.title = nickname + this.title;
     }
 
     public void updateContent(String jobTitle) {
