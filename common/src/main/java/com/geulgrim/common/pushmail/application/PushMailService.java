@@ -4,7 +4,7 @@ import com.geulgrim.common.pushmail.application.request.PushMailCreateDto;
 import com.geulgrim.common.pushmail.application.response.PushMailResponseDto;
 import com.geulgrim.common.pushmail.domain.PushMail;
 import com.geulgrim.common.pushmail.domain.PushMailDomain;
-import com.geulgrim.common.pushmail.respository.PushMailRepository;
+import com.geulgrim.common.pushmail.domain.respository.PushMailRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
