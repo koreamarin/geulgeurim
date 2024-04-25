@@ -46,15 +46,15 @@ public enum PushMailDomain {
 
     },
 
-    FAVORITE_JOB_UPLOAD("FAVORITE_JOB_UPLOAD") {
+    FAVORITE_JOB_CLOSINGSOON("FAVORITE_JOB_CLOSINGSOON") {
         @Override
         public String generateTitle() {
-            return FAVORITE_JOB_UPLOAD_TITLE;
+            return FAVORITE_JOB_CLOSINGSOON_TITLE;
         }
 
         @Override
         public String generateContent() {
-            return FAVORITE_JOB_UPLOAD_CONTENT;
+            return FAVORITE_JOB_CLOSINGSOON_CONTENT;
         }
     },
 
@@ -93,7 +93,7 @@ public enum PushMailDomain {
     }
 
     public boolean isNeedJobTitle() {
-        return domain.equals(FAVORITE_JOB_UPLOAD.toString());
+        return domain.equals(FAVORITE_JOB_CLOSINGSOON.toString());
     }
 
 }

@@ -1,7 +1,9 @@
 package com.geulgrim.common.pushmail.domain;
 
-import com.geulgrim.common.pushmail.application.PushMailCreateDto;
 import com.geulgrim.common.global.entity.BaseEntity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
 @Getter
@@ -10,9 +12,17 @@ import lombok.*;
 @Builder
 public class PushMail extends BaseEntity {
 
-    private String senderId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private String receiverId;
+    private String receiverAddress;
+
+    private Long senderId;
+
+    private Long[] favoriteJobs;
+
+    private PushMailDomain domain;
 
     private String title;
 
@@ -20,13 +30,12 @@ public class PushMail extends BaseEntity {
 
     private boolean isChecked;
 
-    public PushMail toEntity(PushMailCreateDto dto) {
-        return PushMail.builder()
-                .senderId(dto.getSenderId())
-                .receiverId(dto.getReceiverId())
-                .title(dto.getTitle())
-                .content(dto.getContent())
-                .isChecked(false)
-                .build();
+
+    public void updateTitle(String nickname) {
+        this.title = nickname = this.title;
+    }
+
+    public void updateContent(String jobTitle) {
+        this.content = jobTitle + this.content;
     }
 }
