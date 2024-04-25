@@ -7,11 +7,13 @@ import com.geulgrim.common.pushmail.domain.PushMailDomain;
 import com.geulgrim.common.pushmail.domain.respository.PushMailRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class PushMailService {
 
     private final PushMailRepository pushMailRepository;
@@ -23,8 +25,11 @@ public class PushMailService {
 
     public PushMailResponseDto create(PushMailCreateDto dto) {
 
+        log.info("createDto의 domain 값 = {} ", dto.getDomain());
         PushMail pushMail = dto.toEntity(dto);
+        log.info("createdto의 domain string 값 ={} ", dto.getDomain());
         PushMailDomain domain = PushMailDomain.valueOf(dto.getDomain());
+        log.info("domain Enum 값 ={} ", domain);
 
         if (domain.isNeedNickName()) {
             //유저에서 sender 닉네임 얻어서 title 수정

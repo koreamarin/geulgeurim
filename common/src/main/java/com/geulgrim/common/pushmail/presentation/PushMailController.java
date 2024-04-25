@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,7 +18,7 @@ public class PushMailController {
 
     @PostMapping("/create")
     @Operation(summary = "푸시메일 생성", description = "푸시 메일을 생성합니다.")
-    public ResponseEntity<PushMailResponseDto> create(PushMailCreateDto dto) {
+    public ResponseEntity<PushMailResponseDto> create(@RequestBody PushMailCreateDto dto) {
         return new ResponseEntity(pushMailService.create(dto), HttpStatus.CREATED);
     }
 
