@@ -1,13 +1,14 @@
-package com.geulgrim.common.email.domain;
+package com.geulgrim.common.pushmail.domain;
 
-import com.geulgrim.common.email.application.pushMailCreateDto;
+import com.geulgrim.common.pushmail.application.PushMailCreateDto;
+import com.geulgrim.common.global.entity.BaseEntity;
 import lombok.*;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PushMail {
+public class PushMail extends BaseEntity {
 
     private String senderId;
 
@@ -19,7 +20,7 @@ public class PushMail {
 
     private boolean isChecked;
 
-    public PushMail toEntity(pushMailCreateDto dto) {
+    public PushMail toEntity(PushMailCreateDto dto) {
         return PushMail.builder()
                 .senderId(dto.getSenderId())
                 .receiverId(dto.getReceiverId())

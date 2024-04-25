@@ -1,9 +1,9 @@
-package com.geulgrim.common.email.domain;
+package com.geulgrim.common.pushmail.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import static com.geulgrim.common.email.domain.PushMailText.*;
+import static com.geulgrim.common.pushmail.domain.PushMailText.*;
 
 @Getter
 @RequiredArgsConstructor

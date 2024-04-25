@@ -1,4 +1,4 @@
-package com.geulgrim.common.email.domain;
+package com.geulgrim.common.pushmail.domain;
 
 public class PushMailText {
 
