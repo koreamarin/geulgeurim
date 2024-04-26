@@ -22,7 +22,7 @@ public class PushMailController {
     @Operation(summary = "푸시메일 생성", description = "푸시 메일을 생성합니다.")
     public ResponseEntity<PushMailResponseDto> create(@RequestBody PushMailCreateDto dto) {
         log.info("PushMail - 푸시 메일 생성 요청 : {}", dto);
-        return new ResponseEntity(pushMailService.create(dto), HttpStatus.CREATED);
+        return new ResponseEntity<>(pushMailService.create(dto), HttpStatus.CREATED);
     }
 
 }
