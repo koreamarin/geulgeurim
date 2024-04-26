@@ -28,6 +28,9 @@ dependencies {
     //mail push
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+    //firebase
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
+
     //swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.5.0'
 

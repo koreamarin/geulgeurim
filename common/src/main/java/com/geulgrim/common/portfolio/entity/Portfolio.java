@@ -2,7 +2,7 @@ package com.geulgrim.common.portfolio.entity;
 
 import com.geulgrim.common.global.entity.BaseEntity;
 import com.geulgrim.common.portfolio.entity.enums.OpenState;
-import com.geulgrim.common.user.entity.User;
+import com.geulgrim.common.user.doamin.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
