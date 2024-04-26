@@ -22,6 +22,7 @@ public class PushMail {
     @ElementCollection
     private List<Long> favoriteJobList; //즐겨찾기 공고 리스트
 
+    @Enumerated(value = EnumType.STRING)
     private PushMailDomain domain;
 
     private String title;
