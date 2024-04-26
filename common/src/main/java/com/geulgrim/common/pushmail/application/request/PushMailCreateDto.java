@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +19,7 @@ public class PushMailCreateDto {
     
     private Long senderId;
 
-    private Long[] favoriteJobs; //관심 공고 리스트
+    private List<Long> favoriteJobs; //관심 공고 리스트
 
     private String domain;
 
@@ -26,7 +28,7 @@ public class PushMailCreateDto {
         return PushMail.builder()
                 .receiverId(dto.getReceiverId())
                 .senderId(dto.getSenderId())
-                .favoriteJobs(dto.getFavoriteJobs())
+                .favoriteJobList(dto.getFavoriteJobs())
                 .domain(PushMailDomain.valueOf(domain))
                 .title(PushMailDomain.valueOf(domain).generateTitle())
                 .content(PushMailDomain.valueOf(domain).generateContent())

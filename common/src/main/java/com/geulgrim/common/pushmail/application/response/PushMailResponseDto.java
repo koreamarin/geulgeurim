@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +18,7 @@ public class PushMailResponseDto {
 
     private Long senderId;
 
-    private Long[] favoriteJobs;
+    private List<Long> favoriteJobList;
 
     private PushMailDomain domain;
 
