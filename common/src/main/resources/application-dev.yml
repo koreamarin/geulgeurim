@@ -8,8 +8,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/geulgrim?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
     hikari:
-      username: ssafy
-      password: ssafy
+      username: geulgrim
+      password: ggc108
   jpa:
     hibernate:
       ddl-auto: create
@@ -22,3 +22,16 @@ spring:
       web:
         pageable:
           one-indexed-parameters: true
+  # mail push
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: teamgeulgrim@gmail.com
+    password: fpua kxqz hjnp kyhn
+    properties:
+      mail:
+        debug: true
+        smtp:
+          auth: false
+          starttls:
+            enable: true
