@@ -7,14 +7,15 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
 
+@Service
 @RequiredArgsConstructor
-public class MailSender {
+public class PushMailSender {
 
-    private static final String TEAM_GEULGRIM_MAIL = "teamgeulgrim@gmail.com";
+    private static String TEAM_GEULGRIM_MAIL = "teamgeulgrim@gmail.com";
     private final JavaMailSender javaMailSender;
 
     public boolean sendPushMail(PushMail pushMail, String rcvAddress, String rcvNickname) {
@@ -32,8 +33,6 @@ public class MailSender {
             mimeMessageHelper.setTo(new InternetAddress(rcvAddress, rcvNickname, "UTF-8"));
             //sender(teamgeulgrim)
             mimeMessageHelper.setFrom(TEAM_GEULGRIM_MAIL);
-            //전송 시각
-            mimeMessageHelper.setSentDate(new Date(String.valueOf(pushMail.getCreatedAt())));
 
             javaMailSender.send(mimeMessage);
 
