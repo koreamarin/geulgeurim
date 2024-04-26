@@ -1,6 +1,6 @@
-package com.geulgrim.common.portfolio.dto;
+package com.geulgrim.common.portfolio.application.dto.response;
 
-import com.geulgrim.common.portfolio.entity.enums.OpenState;
+import com.geulgrim.common.portfolio.domain.entity.enums.OpenState;
 import lombok.Getter;
 import lombok.Setter;
 

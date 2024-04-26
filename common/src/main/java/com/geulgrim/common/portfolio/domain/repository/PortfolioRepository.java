@@ -1,6 +1,6 @@
-package com.geulgrim.common.portfolio.repository;
+package com.geulgrim.common.portfolio.domain.repository;
 
-import com.geulgrim.common.portfolio.entity.Portfolio;
+import com.geulgrim.common.portfolio.domain.entity.Portfolio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
