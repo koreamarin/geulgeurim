@@ -1,7 +1,6 @@
 package com.geulgrim.common.push.infrastructure.mail.util;
 
 import com.geulgrim.common.push.domain.Push;
-import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -20,7 +19,7 @@ public class MailSender {
 
     private final JavaMailSender javaMailSender;
 
-    public boolean sendMailPush(Push push, String rcvEmail, String rcvNickname) {
+    public void sendMailPush(Push push, String rcvEmail, String rcvNickname) {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
@@ -38,12 +37,9 @@ public class MailSender {
 
             javaMailSender.send(mimeMessage);
 
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        return true;
     }
 }
