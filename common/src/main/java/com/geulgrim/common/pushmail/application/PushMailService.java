@@ -18,7 +18,7 @@ public class PushMailService {
 
     private final PushMailRepository pushMailRepository;
 
-    private static MailSender mailSender;
+    private final PushMailSender mailSender;
 
     //userRepository 필요
     //jobrepository 필요
@@ -33,8 +33,12 @@ public class PushMailService {
 
         if (domain.isNeedNickName()) {
             //유저에서 sender 닉네임 얻어서 title 수정
+            log.info("닉네임이 필요한 푸시메일 ={}", domain);
+            pushMail.updateTitle("seny");
         } else if (domain.isNeedJobTitle()) {
-            //구인에서 공고제목 얻어서 content 수정
+            //구인에서 공고제목 얻어서 content 수정, 이후 페이지 링크로 수정
+            log.info("공고제목이 필요한 푸시메일 ={}", domain);
+            pushMail.updateContent("싸피 공고");
         }
 
         //exception 처리
@@ -52,7 +56,7 @@ public class PushMailService {
         return PushMailResponseDto.builder()
                 .receiverId(dto.getReceiverId())
                 .senderId(dto.getSenderId())
-                .favoriteJobs(dto.getFavoriteJobs())
+                .favoriteJobList(dto.getFavoriteJobs())
                 .domain(domain)
                 .title(pushMail.getTitle())
                 .content(pushMail.getContent())
