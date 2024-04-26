@@ -1,4 +1,4 @@
-package com.geulgrim.common.global.entity;
+package com.geulgrim.common.global.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

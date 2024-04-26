@@ -1,8 +1,7 @@
-package com.geulgrim.common.portfolio.entity;
+package com.geulgrim.common.portfolio.domain.entity;
 
-import com.geulgrim.common.global.entity.BaseEntity;
-import com.geulgrim.common.portfolio.entity.enums.OpenState;
-import com.geulgrim.common.user.entity.User;
+import com.geulgrim.common.global.domain.entity.FileUrl;
+import com.geulgrim.common.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -20,22 +18,21 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Builder
 @Entity
 @Getter
-public class Portfolio extends BaseEntity {
+public class PortfolioFile {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column
-    private Long pofolId;
+    private Long pofolFileId;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "file_url_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+    private FileUrl fileUrl;
 
-    private String pofolName;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "pofol_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Portfolio portfolio;
 
-    @Enumerated(STRING)
-    private OpenState status;
-
-    private String fileUrl;
 }
