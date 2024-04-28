@@ -1,7 +1,7 @@
 package com.geulgrim.common.push.application.dto.request;
 
 import com.geulgrim.common.push.domain.Push;
-import com.geulgrim.common.user.doamin.User;
+import com.geulgrim.common.user.domain.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

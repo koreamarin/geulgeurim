@@ -6,11 +6,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.Getter;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
+@Getter
 public class User {
 
     @Id
@@ -19,10 +21,12 @@ public class User {
     private String email;
     private String birthday;
     private String name;
+    private String nickname;
     private String wallet;
     @Enumerated(STRING)
     private UserType userType;
     private String phoneNum;
+    private String fcmToken;
 
 
 }
