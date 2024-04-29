@@ -1,10 +1,10 @@
+import { initializeApp } from 'firebase/app';
 import { useMemo, useEffect, useReducer, useCallback } from 'react';
+import { Messaging, getMessaging, getToken } from 'firebase/messaging';
 
-import * as process from 'node:process';
+import axiosOrigin from 'axios';
 import axios, { endpoints } from 'src/utils/axios';
 
-import { getApp, getApps, initializeApp } from 'firebase/app';
-import { Messaging, getMessaging, getToken } from 'firebase/messaging';
 import { AuthContext } from './auth-context';
 import { setSession, isValidToken } from './utils';
 import { AuthUserType, ActionMapType, AuthStateType } from '../../types';
@@ -158,7 +158,7 @@ export function AuthProvider({ children }: Props) {
       if (permission === 'granted') {
         console.log('Notification permission granted.');
         // 허용되면 FCM 토큰을 가져옴
-        const token = await getToken(messaging, { vapidKey });
+        const token = await getToken(messagingVal, { vapidKey });
         return token;
       }
         console.log('Unable to get permission to notify.');
@@ -170,9 +170,29 @@ export function AuthProvider({ children }: Props) {
     }
   }
 
+  // 서비스워커 등록
+  const registerServiceWorker = () => {
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("/public/firebase-messaging-sw.js")
+          .then((registration) => {
+            // 테스트콘솔
+            console.log(registration);
+          })
+          .catch((err) => {
+            console.log("Service Worker 등록 실패:", err);
+          });
+      });
+    }
+  };
+
 
   // LOGIN
   const login = useCallback(async (email: string, password: string) => {
+
+
+
     const data = {
       email,
       password,
@@ -180,6 +200,8 @@ export function AuthProvider({ children }: Props) {
 
     try {
       console.log('로그인 요청');
+      // console.log(email)
+      // console.log(password)
       // 로그인 요청
       const res = await axios.post(endpoints.auth.login, data);
       const { accessToken, user } = res.data;
@@ -187,36 +209,27 @@ export function AuthProvider({ children }: Props) {
       // 세션 설정
       setSession(accessToken);
 
-      // 서비스워커 등록
-      const registerServiceWorker = () => {
-        if ("serviceWorker" in navigator) {
-          window.addEventListener("load", () => {
-            navigator.serviceWorker
-              .register("/public/firebase/firebase-messaging-sw.js")
-              .then((registration) => {
-                // 테스트콘솔
-                console.log(registration);
-              })
-              .catch((err) => {
-                console.log("Service Worker 등록 실패:", err);
-              });
-          });
-        }
-      };
-
-
-
 
       // 알림 권한 요청 및 FCM 토큰 획득
       const fcmToken = await requestNotificationPermissionAndGetToken(messaging, import.meta.env.VITE_FIREBASE_VAPID_ID);
       console.log(fcmToken);
 
-      if (fcmToken) {
-        // 서버 FCM 토큰 전송
-        await axios.post(`user/fcm`, {
+      if(fcmToken){
+        const url = 'http://localhost:8080/api/v1/user/fcm';
+        const data = {
           userId: user.id,
-          fcmToken
-        });
+          fcmToken: fcmToken
+        };
+
+        // Axios를 사용한 POST 요청
+        axiosOrigin.post(url, data)
+          .then(response => {
+            console.log('Server response:', response.data);
+          })
+          .catch(error => {
+            console.error('Error sending token to server:', error);
+          });
+      }
 
         // 로컬 상태 업데이트
         dispatch({
@@ -236,6 +249,12 @@ export function AuthProvider({ children }: Props) {
       console.error('Login failed:', error);
     }
   }, []);
+
+  // fcm서비스 워커 등록
+  useEffect(() => {
+    registerServiceWorker();
+  }, []);
+
 
   // REGISTER
   const register = useCallback(
