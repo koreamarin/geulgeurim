@@ -12,17 +12,12 @@ import com.geulgrim.common.crew.domain.repository.CrewRequestRepository;
 import com.geulgrim.common.crew.exception.CrewException;
 import com.geulgrim.common.user.domain.entity.User;
 import com.geulgrim.common.user.domain.repository.UserRepository;
-import jakarta.mail.Multipart;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static com.geulgrim.common.crew.exception.CrewErrorCode.NOT_EXISTS_CREW_BOARD;
-import static com.geulgrim.common.portfolio.exception.PortfolioErrorCode.NOT_EXISTS_PORTFOLIO;
 
 @Slf4j
 @RequiredArgsConstructor
