@@ -2,6 +2,7 @@ package com.geulgrim.common.crew.application.service;
 
 import com.geulgrim.common.crew.application.dto.request.CrewBoardRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewJoinRequest;
+import com.geulgrim.common.crew.application.dto.request.CrewReply;
 import com.geulgrim.common.crew.application.dto.response.CrewApplicant;
 import com.geulgrim.common.crew.application.dto.response.CrewBoardDetail;
 import com.geulgrim.common.crew.domain.entity.Crew;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import static com.geulgrim.common.crew.exception.CrewErrorCode.NOT_EXISTS_CREW_BOARD;
+import static com.geulgrim.common.crew.exception.CrewErrorCode.NOT_EXISTS_CREW_REQUEST;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -147,5 +149,17 @@ public class CrewService {
         }
 
         return crewApplicants;
+    }
+
+    public Long reply(Long requestId, CrewReply crewReply) {
+
+        CrewRequest crewRequest = crewRequestRepository.findById(requestId)
+                .orElseThrow(() -> new CrewException(NOT_EXISTS_CREW_REQUEST));
+
+        crewRequest.setStatus(crewReply.status()); // SUCCESS, FAIL, PENDING으로 수정
+        crewRequestRepository.save(crewRequest); // 저장
+
+        return crewRequest.getCrewRequestId();
+
     }
 }

@@ -2,6 +2,7 @@ package com.geulgrim.common.crew.presentation;
 
 import com.geulgrim.common.crew.application.dto.request.CrewBoardRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewJoinRequest;
+import com.geulgrim.common.crew.application.dto.request.CrewReply;
 import com.geulgrim.common.crew.application.dto.response.CrewApplicant;
 import com.geulgrim.common.crew.application.dto.response.CrewBoardDetail;
 import com.geulgrim.common.crew.application.service.CrewService;
@@ -92,12 +93,13 @@ public class CrewController {
     }
 
     // 크루 모집 신청에 대한 답변
-//    @PutMapping("/request/reply/{crew_id}")
-//    public ResponseEntity<List<CrewApplicant>> reply(
-//            @PathVariable("crew_id") Long crewId
-//    ) {
-//        List<CrewApplicant> crewApplicants = crewService.reply(crewId);
-//        return ResponseEntity.ok(crewApplicants);
-//    }
+    @PutMapping("/request/reply/{crew_request_id}")
+    public ResponseEntity<Long> reply(
+            @PathVariable("crew_request_id") Long requestId,
+            @RequestBody CrewReply crewReply
+    ) {
+        Long crewId = crewService.reply(requestId, crewReply);
+        return ResponseEntity.ok(crewId);
+    }
 
 }

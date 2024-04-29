@@ -5,10 +5,7 @@ import com.geulgrim.common.crew.domain.entity.enums.Position;
 import com.geulgrim.common.global.domain.entity.BaseEntity;
 import com.geulgrim.common.user.domain.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -20,7 +17,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @Builder
 @Entity
-@Getter
+@Getter @Setter
 public class CrewRequest extends BaseEntity {
 
     @Id
