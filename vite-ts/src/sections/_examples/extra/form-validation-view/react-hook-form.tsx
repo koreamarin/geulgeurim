@@ -261,7 +261,7 @@ export default function ReactHookForm({ debug }: Props) {
               </Block>
             </Stack>
 
-            <Block label="RHFAutocomplete">
+            {/* <Block label="RHFAutocomplete">
               <RHFAutocomplete
                 name="autocomplete"
                 label="Autocomplete"
@@ -274,7 +274,7 @@ export default function ReactHookForm({ debug }: Props) {
                   </li>
                 )}
               />
-            </Block>
+            </Block> */}
 
             <Block label="RHFAutocomplete">
               <RHFAutocomplete
