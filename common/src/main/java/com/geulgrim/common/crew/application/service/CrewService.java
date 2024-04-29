@@ -14,7 +14,6 @@ import com.geulgrim.common.crew.domain.entity.enums.CrewStatus;
 import com.geulgrim.common.crew.domain.repository.CrewImageRepository;
 import com.geulgrim.common.crew.domain.repository.CrewRepository;
 import com.geulgrim.common.crew.domain.repository.CrewRequestRepository;
-import com.geulgrim.common.crew.exception.CrewErrorCode;
 import com.geulgrim.common.crew.exception.CrewException;
 import com.geulgrim.common.user.domain.entity.User;
 import com.geulgrim.common.user.domain.repository.UserRepository;
@@ -25,8 +24,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import static com.geulgrim.common.crew.exception.CrewErrorCode.NOT_EXISTS_CREW_BOARD;
-import static com.geulgrim.common.crew.exception.CrewErrorCode.NOT_EXISTS_CREW_REQUEST;
+import java.util.Objects;
+
+import static com.geulgrim.common.crew.exception.CrewErrorCode.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -188,7 +188,12 @@ public class CrewService {
         CrewRequest existingRequest = crewRequestRepository.findByUserIdAndCrewId(
                 crewJoinRequest.getUserId(), crewId);
         if (existingRequest != null) {
-            throw new CrewException(CrewErrorCode.ALREADY_SUBMITTED);
+            throw new CrewException(ALREADY_SUBMITTED);
+        }
+
+        // 게시글을 만든 사람은 지원할 수 없음
+        if (Objects.equals(crew.getUser().getUserId(), crewJoinRequest.getUserId())) {
+            throw new CrewException(CREATOR_CANNOT_APPLY);
         }
 
         CrewRequest crewRequest = CrewRequest.builder()
@@ -210,7 +215,7 @@ public class CrewService {
         List<CrewApplicant> crewApplicants = new ArrayList<>();
 
         for (CrewRequest crewRequest: crewRequests) {
-            log.info(crewRequest.getMessage());
+//            log.info(crewRequest.getMessage());
             CrewApplicant crewApplicant = CrewApplicant.builder()
                     .userId(crewRequest.getUser().getUserId())
                     .crewRequestId(crewRequest.getCrewRequestId())
@@ -228,7 +233,7 @@ public class CrewService {
         CrewRequest crewRequest = crewRequestRepository.findById(requestId)
                 .orElseThrow(() -> new CrewException(NOT_EXISTS_CREW_REQUEST));
 
-        crewRequest.setStatus(crewReply.status()); // SUCCESS, FAIL, PENDING으로 수정
+        crewRequest.setStatus(crewReply.status()); // SUCCESS, FAIL, PENDING 중 한 가지로 응답
         crewRequestRepository.save(crewRequest); // 저장
 
         return crewRequest.getCrewRequestId();
