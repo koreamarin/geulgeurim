@@ -49,11 +49,6 @@ const OPTIONS = [
   { value: 'option 8', label: 'Option 8' },
 ];
 
-type OptionType = {
-  value: string;
-  label: string;
-};
-
 export const defaultValues = {
   age: 0,
   email: '',
