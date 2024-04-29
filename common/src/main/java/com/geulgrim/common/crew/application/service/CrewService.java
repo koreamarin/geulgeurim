@@ -139,6 +139,7 @@ public class CrewService {
             log.info(crewRequest.getMessage());
             CrewApplicant crewApplicant = CrewApplicant.builder()
                     .userId(crewRequest.getUser().getUserId())
+                    .crewRequestId(crewRequest.getCrewRequestId())
                     .position(crewRequest.getPosition())
                     .message(crewRequest.getMessage())
                     .build();

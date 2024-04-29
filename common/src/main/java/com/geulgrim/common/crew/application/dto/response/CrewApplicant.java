@@ -9,6 +9,7 @@ import lombok.Getter;
 public class CrewApplicant {
 
     private Long userId;
+    private Long crewRequestId;
     private Position position;
     private String message;
 }

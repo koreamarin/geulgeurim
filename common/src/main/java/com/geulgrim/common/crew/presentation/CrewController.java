@@ -91,5 +91,13 @@ public class CrewController {
         return ResponseEntity.ok(crewApplicants);
     }
 
+    // 크루 모집 신청에 대한 답변
+//    @PutMapping("/request/reply/{crew_id}")
+//    public ResponseEntity<List<CrewApplicant>> reply(
+//            @PathVariable("crew_id") Long crewId
+//    ) {
+//        List<CrewApplicant> crewApplicants = crewService.reply(crewId);
+//        return ResponseEntity.ok(crewApplicants);
+//    }
 
 }
