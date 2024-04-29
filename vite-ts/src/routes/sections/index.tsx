@@ -3,6 +3,7 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import MainLayout from 'src/layouts/main';
 
 // import { PATH_AFTER_LOGIN } from 'src/config-global';
+import { nftRoutes } from './nft';
 import { authRoutes } from './auth';
 import { customRoutes } from './custom';
 import { recruitRoutes } from './recruit';
@@ -29,11 +30,10 @@ export default function Router() {
     {
       path: '/',
       element: (
-        <MainLayout>
-          <HomePage />
-        </MainLayout>
+        <Navigate replace to="/recruit" />
       ),
     },
+
 
     // Auth routes
     ...authRoutes,
@@ -52,6 +52,7 @@ export default function Router() {
     ...customRoutes,
     ...recruitRoutes,
     ...communityRoutes,
+    ...nftRoutes,
 
     // No match 404
     { path: '*', element: <Navigate to="/404" replace /> },

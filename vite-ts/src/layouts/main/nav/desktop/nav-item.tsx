@@ -29,14 +29,13 @@ export const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
         {...other}
       >
         {title}
-
         {hasChild && <Iconify width={16} icon="eva:arrow-ios-downward-fill" sx={{ ml: 1 }} />}
       </StyledNavItem>
     );
 
-    if (hasChild) {
-      return renderContent;
-    }
+    // if (hasChild) {
+    //   return renderContent;
+    // }
 
     if (externalLink) {
       return (

@@ -5,7 +5,7 @@ type Props = {
   id: string;
 };
 
-export default function RecruitSubmittedFormView({ id }: Props) {
+export default function RecruitApplyFormView({ id }: Props) {
   return (
     <Container>
       <Box>제출 양식</Box>

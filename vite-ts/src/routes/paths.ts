@@ -12,23 +12,45 @@ const ROOTS = {
   AUTH: '/auth',
   AUTH_DEMO: '/auth-demo',
   DASHBOARD: '/dashboard',
+  RECRUIT: '/recruit',
+  COMMUNITY: '/community',
+  NFT: '/nft',
 };
 
 // ----------------------------------------------------------------------
 
 export const paths = {
-  // recruit: '/recurit',
-  // recruit: '/recurit',
-  // recruit: '/recurit',
-  // recruit: '/recurit',
-  // recruit: '/recurit',
-  custom: '/custom',
   recruit: {
-    // list: `/recurit`,
-    details: (id: string) => `/recurit/${id}`,
-    // details: (id: string) => `/recurit/${id}`,
-    // details: (id: string) => `/recurit/${id}`,
-    // details: (id: string) => `/recurit/${id}`,
+    main: `${ROOTS.RECRUIT}`,
+    details: (id: number) => `${ROOTS.RECRUIT}/${id}`,
+    apply: (id: number) => `${ROOTS.RECRUIT}/apply/${id}`,
+    apply_fail: (id: number) => `${ROOTS.RECRUIT}/apply/${id}/fail`,
+    apply_success: (id: number) => `${ROOTS.RECRUIT}/apply/${id}/success`,
+  },
+
+  community: {
+    root: `${ROOTS.COMMUNITY}`,
+    board: {
+      main: `${ROOTS.COMMUNITY}/board`,
+      detail: (id: number) => `${ROOTS.COMMUNITY}/board/${id}`,
+      write: `${ROOTS.COMMUNITY}/board/write`,
+    },
+    share: {
+      main: `${ROOTS.COMMUNITY}/share`,
+      detail: (id: number) => `${ROOTS.COMMUNITY}/share/${id}`,
+      write: `${ROOTS.COMMUNITY}/share/write`,
+    },
+    crew: {
+      main: `${ROOTS.COMMUNITY}/crew`,
+      detail: (id: number) => `${ROOTS.COMMUNITY}/crew/${id}`,
+      write: `${ROOTS.COMMUNITY}/crew/write`,
+      apply: (id: number) => `${ROOTS.COMMUNITY}/crew/apply/${id}`,
+    },
+  },
+
+  nft: {
+    root: `${ROOTS.NFT}`,
+    detail: (id: number) => `${ROOTS.NFT}/${id}`,
   },
 
   comingSoon: '/coming-soon',
