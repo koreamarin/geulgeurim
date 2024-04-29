@@ -28,10 +28,14 @@ public class CrewController {
 
     // 크루 모집 전체 조회
     @GetMapping
-    public ResponseEntity<List<CrewBoard>> getCrewBoard() {
-        List<CrewBoard> crewBoards = crewService.getCrewBoard();
+    public ResponseEntity<List<CrewBoard>> getCrewBoard(
+            @RequestParam(required = false) String projectName,
+            @RequestParam(required = false) String sort
+    ) {
+        List<CrewBoard> crewBoards = crewService.getCrewBoard(projectName, sort);
         return ResponseEntity.ok(crewBoards);
     }
+
 
     // 크루 모집 상세 조회
     @GetMapping("/detail/{crew_id}")
@@ -78,6 +82,17 @@ public class CrewController {
         }
 
     }
+
+    // 크루 모집 수정
+//    @PutMapping("/{crewId}")
+//    public ResponseEntity<String> update(
+//            @PathVariable("crewId") Long crewId,
+//            @RequestBody CrewBoardRequest crewBoardRequest
+//
+//    ) {
+//        String result = crewService.update(crewId);
+//        return ResponseEntity.ok(result);
+//    }
 
     // 크루 모집 삭제
     @DeleteMapping("/{crewId}")

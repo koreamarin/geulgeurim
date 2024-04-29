@@ -14,6 +14,7 @@ import com.geulgrim.common.crew.domain.entity.enums.CrewStatus;
 import com.geulgrim.common.crew.domain.repository.CrewImageRepository;
 import com.geulgrim.common.crew.domain.repository.CrewRepository;
 import com.geulgrim.common.crew.domain.repository.CrewRequestRepository;
+import com.geulgrim.common.crew.exception.CrewErrorCode;
 import com.geulgrim.common.crew.exception.CrewException;
 import com.geulgrim.common.user.domain.entity.User;
 import com.geulgrim.common.user.domain.repository.UserRepository;
@@ -37,7 +38,10 @@ public class CrewService {
     private final CrewImageRepository crewImageRepository;
     private final CrewRequestRepository crewRequestRepository;
 
-    public List<CrewBoard> getCrewBoard() {
+    public List<CrewBoard> getCrewBoard(String projectName, String sort) {
+        // 정렬 조건: latest, hottest (
+
+
         List<Crew> crews = crewRepository.findAll();
         List<CrewBoard> crewBoards = new ArrayList<>(crews.size());
 
@@ -62,6 +66,7 @@ public class CrewService {
         }
         return crewBoards;
     }
+
 
     public CrewBoardDetail getCrewBoardDetail(Long crewId) {
 
@@ -153,6 +158,15 @@ public class CrewService {
         crewImageRepository.saveAll(crewImages);
     }
 
+//    public String update(Long crewId) {
+//
+//        Crew crew = crewRepository.findById(crewId)
+//                .orElseThrow(() -> new CrewException(NOT_EXISTS_CREW_BOARD));
+//
+//        Crew crew = Crew.builder().build();
+//
+//    }
+
     public String delete(Long crewId) {
         Crew crew = crewRepository.findById(crewId)
                 .orElseThrow(() -> new CrewException(NOT_EXISTS_CREW_BOARD));
@@ -169,6 +183,13 @@ public class CrewService {
 
         User user = userRepository.findById(crewJoinRequest.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+
+        // 이미 지원한 신청자인지 체크
+        CrewRequest existingRequest = crewRequestRepository.findByUserIdAndCrewId(
+                crewJoinRequest.getUserId(), crewId);
+        if (existingRequest != null) {
+            throw new CrewException(CrewErrorCode.ALREADY_SUBMITTED);
+        }
 
         CrewRequest crewRequest = CrewRequest.builder()
                 .crew(crew)
@@ -213,5 +234,6 @@ public class CrewService {
         return crewRequest.getCrewRequestId();
 
     }
+
 
 }
