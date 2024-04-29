@@ -26,7 +26,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        System.out.println(1);
         http
             .csrf(config -> config.disable())
             .authorizeHttpRequests(config -> config.anyRequest().permitAll())
@@ -41,43 +40,42 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationSuccessHandler successHandler() {
-        System.out.println(3);
         return ((request, response, authentication) -> {
-            DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
+//            DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
 
-            Map<String, Object> properties = defaultOAuth2User.getAttributes();
-            Map<String, Object> kakao_account = (Map<String, Object>) properties.get("kakao_account");
+//            Map<String, Object> properties = defaultOAuth2User.getAttributes();
+//            Map<String, Object> kakao_account = (Map<String, Object>) properties.get("kakao_account");
 
-            String id = defaultOAuth2User.getAttributes().get("id").toString();
-            String connected_at = defaultOAuth2User.getAttributes().get("connected_at").toString();
-            String thumbnail_image_url = (String) ((Map<String, Object>) kakao_account.get("profile")).get("thumbnail_image_url");
-            String nickname = (String) ((Map<String, Object>) kakao_account.get("profile")).get("nickname");
-            String name = (String) kakao_account.get("name");
-            String email = (String) kakao_account.get("email");
-            String phone_number = (String) kakao_account.get("phone_number");
-            String birthyear = (String) kakao_account.get("birthyear");
-            String birthday = (String) kakao_account.get("birthday");
-
-            String body = """
-                    {
-                        "id":"%s",
-                        "connected_at":"%s",
-                        "thumbnail_image_url":"%s",
-                        "nickname":"%s",
-                        "name":"%s",
-                        "email":"%s",
-                        "phone_number":"%s",
-                        "birthyear":"%s",
-                        "birthday":"%s"
-                    }
-                    """.formatted(id, connected_at, thumbnail_image_url, nickname, name, email, phone_number, birthyear, birthday);
+//            String id = defaultOAuth2User.getAttributes().get("id").toString();
+//            String connected_at = defaultOAuth2User.getAttributes().get("connected_at").toString();
+//            String thumbnail_image_url = (String) ((Map<String, Object>) kakao_account.get("profile")).get("thumbnail_image_url");
+//            String nickname = (String) ((Map<String, Object>) kakao_account.get("profile")).get("nickname");
+//            String name = (String) kakao_account.get("name");
+//            String email = (String) kakao_account.get("email");
+//            String phone_number = (String) kakao_account.get("phone_number");
+//            String birthyear = (String) kakao_account.get("birthyear");
+//            String birthday = (String) kakao_account.get("birthday");
+//
+//            String body = """
+//                    {
+//                        "id":"%s",
+//                        "connected_at":"%s",
+//                        "thumbnail_image_url":"%s",
+//                        "nickname":"%s",
+//                        "name":"%s",
+//                        "email":"%s",
+//                        "phone_number":"%s",
+//                        "birthyear":"%s",
+//                        "birthday":"%s"
+//                    }
+//                    """.formatted(id, connected_at, thumbnail_image_url, nickname, name, email, phone_number, birthyear, birthday);
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
-            PrintWriter writer = response.getWriter();
-            writer.println(body);
-            writer.flush();
+//            PrintWriter writer = response.getWriter();
+//            writer.println(body);
+//            writer.flush();
         });
     }
 }
