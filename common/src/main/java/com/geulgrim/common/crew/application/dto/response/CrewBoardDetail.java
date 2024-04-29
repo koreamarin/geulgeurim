@@ -1,0 +1,26 @@
+package com.geulgrim.common.crew.application.dto.response;
+
+import com.geulgrim.common.crew.domain.entity.enums.BoardStatus;
+import lombok.Builder;
+import lombok.Setter;
+
+import java.util.ArrayList;
+
+@Builder
+@Setter
+public class CrewBoardDetail {
+
+    private Long crewId;
+    private String projectName;
+    private String content;
+    private Integer pen;
+    private Integer color;
+    private Integer bg;
+    private Integer pd;
+    private Integer story;
+    private Integer conti;
+    private BoardStatus status;
+    private ArrayList<String> images;
+    private ArrayList<CrewInfo> crew;
+
+}

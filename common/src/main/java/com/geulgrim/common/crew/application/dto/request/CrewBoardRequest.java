@@ -1,4 +1,4 @@
-package com.geulgrim.common.crew.application.dto;
+package com.geulgrim.common.crew.application.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.geulgrim.common.crew.domain.entity.enums.BoardStatus;
