@@ -229,6 +229,8 @@ export function AuthProvider({ children }: Props) {
           .catch(error => {
             console.error('Error sending token to server:', error);
           });
+      }else {
+        console.log('No FCM token available. Request permission to generate one.');
       }
 
         // 로컬 상태 업데이트
@@ -242,9 +244,7 @@ export function AuthProvider({ children }: Props) {
             },
           },
         });
-      } else {
-        console.log('No FCM token available. Request permission to generate one.');
-      }
+
     } catch (error) {
       console.error('Login failed:', error);
     }
