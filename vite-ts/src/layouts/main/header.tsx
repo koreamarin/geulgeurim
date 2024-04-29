@@ -80,7 +80,12 @@ export default function Header() {
             )}
 
             {!token && mdUp && (
-              <Button variant="contained" target="_blank" rel="noopener" href={paths.minimalUI}>
+              <Button
+                variant="contained"
+                target="_blank"
+                rel="noopener"
+                href={paths.auth.jwt.register}
+              >
                 회원가입
               </Button>
             )}
