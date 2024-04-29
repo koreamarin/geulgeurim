@@ -14,7 +14,7 @@ export default function ShareDetailPage() {
   return (
     <>
       <Helmet>
-        <title>그림평가게시판 상세보기</title>
+        <title>그림 평가 게시판 상세보기</title>
       </Helmet>
 
       <ShareDetailsView id={`${id}`} />

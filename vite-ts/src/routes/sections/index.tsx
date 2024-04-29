@@ -9,6 +9,7 @@ import { recruitRoutes } from './recruit';
 import { authDemoRoutes } from './auth-demo';
 import { HomePage, mainRoutes } from './main';
 import { dashboardRoutes } from './dashboard';
+import { communityRoutes } from './community';
 import { componentsRoutes } from './components';
 
 // ----------------------------------------------------------------------
@@ -50,6 +51,7 @@ export default function Router() {
     // Custom routes
     ...customRoutes,
     ...recruitRoutes,
+    ...communityRoutes,
 
     // No match 404
     { path: '*', element: <Navigate to="/404" replace /> },
