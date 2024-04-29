@@ -10,9 +10,9 @@ import { SplashScreen } from 'src/components/loading-screen';
 // RECRUIT
 const RecruitMainPage = lazy(() => import('src/pages/recruit'));
 const RecruitDetailPage = lazy(() => import('src/pages/recruit/detail'));
-const RecruitSubmittedForm = lazy(() => import('src/pages/recruit/submitted/form'));
-const RecruitSubmittedSuccess = lazy(() => import('src/pages/recruit/submitted/success'));
-const RecruitSubmittedFail = lazy(() => import('src/pages/recruit/submitted/fail'));
+const RecruitApplyForm = lazy(() => import('src/pages/recruit/apply/form'));
+const RecruitApplySuccess = lazy(() => import('src/pages/recruit/apply/success'));
+const RecruitApplyFail = lazy(() => import('src/pages/recruit/apply/fail'));
 
 // ----------------------------------------------------------------------
 
@@ -32,20 +32,20 @@ export const recruitRoutes = [
         element: <RecruitMainPage />,
       },
       {
-        path: 'detail/:id',
+        path: ':id',
         element: <RecruitDetailPage />,
       },
       {
-        path: 'submitted/:id',
-        element: <RecruitSubmittedForm />,
+        path: 'apply/:id',
+        element: <RecruitApplyForm />,
       },
       {
-        path: 'submitted/fail/:id',
-        element: <RecruitSubmittedFail />,
+        path: 'apply/:id/fail',
+        element: <RecruitApplyFail />,
       },
       {
-        path: 'submitted/success/:id',
-        element: <RecruitSubmittedSuccess />,
+        path: 'apply/:id/success',
+        element: <RecruitApplySuccess />,
       },
     ],
   },

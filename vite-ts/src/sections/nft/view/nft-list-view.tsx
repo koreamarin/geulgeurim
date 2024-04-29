@@ -1,14 +1,12 @@
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
-type Props = {
-  id: string;
-};
-
-export default function CrewApplyView({ id }: Props) {
+export default function NFTListView() {
   return (
     <Container>
-      <Box>크루 모집하기 {id}</Box>
+      <Box>
+        <header>NFT 메인페이지</header>
+      </Box>
     </Container>
   );
 }
