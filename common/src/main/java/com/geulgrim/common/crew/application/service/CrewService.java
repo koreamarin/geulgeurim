@@ -110,6 +110,14 @@ public class CrewService {
         crewImageRepository.saveAll(crewImages);
     }
 
+    public String delete(Long crewId) {
+        Crew crew = crewRepository.findById(crewId)
+                .orElseThrow(() -> new CrewException(NOT_EXISTS_CREW_BOARD));
+
+        crewRepository.delete(crew);
+        return "성공적으로 삭제되었습니다.";
+    }
+
 
     public Long apply(Long crewId, CrewJoinRequest crewJoinRequest) {
 
@@ -162,4 +170,6 @@ public class CrewService {
         return crewRequest.getCrewRequestId();
 
     }
+
+
 }

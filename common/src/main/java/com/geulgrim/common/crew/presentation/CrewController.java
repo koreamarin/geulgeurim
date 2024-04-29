@@ -71,6 +71,15 @@ public class CrewController {
 
     }
 
+    // 크루 모집 삭제
+    @DeleteMapping("/{crewId}")
+    public ResponseEntity<String> delete(
+            @PathVariable("crewId") Long crewId
+    ) {
+        String result = crewService.delete(crewId);
+        return ResponseEntity.ok(result);
+    }
+
     // 크루 모집 신청
     @PostMapping("/request/{crewId}")
     public ResponseEntity<Long> apply(
