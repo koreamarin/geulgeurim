@@ -2,12 +2,13 @@ package com.geulgrim.common.crew.application.dto.response;
 
 import com.geulgrim.common.crew.domain.entity.enums.BoardStatus;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 
 @Builder
-@Setter
+@Setter @Getter
 public class CrewBoardDetail {
 
     private Long crewId;
@@ -21,6 +22,6 @@ public class CrewBoardDetail {
     private Integer conti;
     private BoardStatus status;
     private ArrayList<String> images;
-    private ArrayList<CrewInfo> crew;
+    private ArrayList<String> crewInfo;
 
 }

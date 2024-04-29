@@ -49,9 +49,16 @@ public class CrewService {
                 .build();
 
         // 이미지 넣기
+        ArrayList<String> imageUrls = new ArrayList<>();
+        ArrayList<CrewImage> crewImages = crewImageRepository.findByCrew_CrewId(crewId);
+        for (CrewImage crewImage: crewImages) {
+            imageUrls.add(crewImage.getFileUrl());
+            log.info(crewImage.getFileUrl());
+        }
+        crewBoardDetail.setImages(imageUrls);
 
-
-        // crew 넣기
+//        // crew 넣기
+//        crewBoardDetail.setCrewInfo(imageUrls);
 
         return crewBoardDetail;
 
