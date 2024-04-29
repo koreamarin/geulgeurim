@@ -28,5 +28,9 @@ public class User {
     private String phoneNum;
     private String fcmToken;
 
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
 
 }

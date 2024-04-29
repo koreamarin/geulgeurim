@@ -63,6 +63,7 @@ public class PushService {
         mailSender.sendMailPush(push, rcvEmail, rcvNickname);
 
         //fcm
+        log.info("fcm웹푸시 시작");
         FCMDto fcmDto = FCMDto.of(rcvUser, push);
         webSender.sendWebPush(fcmDto);
 
