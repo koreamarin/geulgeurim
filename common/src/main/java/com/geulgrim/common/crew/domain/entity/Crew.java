@@ -8,6 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -35,7 +36,8 @@ public class Crew extends BaseEntity {
     private Integer pd;
     private Integer story;
     private Integer conti;
-    private BoardStatus status;
 
+    @Enumerated(STRING)
+    private BoardStatus status;
 
 }

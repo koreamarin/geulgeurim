@@ -2,6 +2,7 @@ package com.geulgrim.common.crew.application.service;
 
 import com.geulgrim.common.crew.application.dto.request.CrewBoardRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewJoinRequest;
+import com.geulgrim.common.crew.application.dto.response.CrewApplicant;
 import com.geulgrim.common.crew.application.dto.response.CrewBoardDetail;
 import com.geulgrim.common.crew.domain.entity.Crew;
 import com.geulgrim.common.crew.domain.entity.CrewImage;
@@ -127,5 +128,23 @@ public class CrewService {
 
         return crewRequest.getCrewRequestId();
 
+    }
+
+    public List<CrewApplicant> getCrewApplicants(Long crewId) {
+        List<CrewRequest> crewRequests = crewRequestRepository.findByCrew_CrewId(crewId);
+
+        List<CrewApplicant> crewApplicants = new ArrayList<>();
+
+        for (CrewRequest crewRequest: crewRequests) {
+            log.info(crewRequest.getMessage());
+            CrewApplicant crewApplicant = CrewApplicant.builder()
+                    .userId(crewRequest.getUser().getUserId())
+                    .position(crewRequest.getPosition())
+                    .message(crewRequest.getMessage())
+                    .build();
+            crewApplicants.add(crewApplicant);
+        }
+
+        return crewApplicants;
     }
 }

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -36,8 +37,12 @@ public class CrewRequest extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+    @Enumerated(STRING)
     private Position position;
+
+    @Enumerated(STRING)
     private CrewStatus status;
+
     private String message;
 
 }

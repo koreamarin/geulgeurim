@@ -2,6 +2,7 @@ package com.geulgrim.common.crew.presentation;
 
 import com.geulgrim.common.crew.application.dto.request.CrewBoardRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewJoinRequest;
+import com.geulgrim.common.crew.application.dto.response.CrewApplicant;
 import com.geulgrim.common.crew.application.dto.response.CrewBoardDetail;
 import com.geulgrim.common.crew.application.service.CrewService;
 import com.geulgrim.common.global.s3.S3UploadService;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/crew")
@@ -80,6 +82,14 @@ public class CrewController {
     }
 
 
+    // 크루 모집 신청자 전체 조회
+    @GetMapping("/request/{crew_id}")
+    public ResponseEntity<List<CrewApplicant>> getCrewApplicants(
+            @PathVariable("crew_id") Long crewId
+    ) {
+        List<CrewApplicant> crewApplicants = crewService.getCrewApplicants(crewId);
+        return ResponseEntity.ok(crewApplicants);
+    }
 
 
 }
