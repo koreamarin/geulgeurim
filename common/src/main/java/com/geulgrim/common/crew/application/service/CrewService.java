@@ -3,13 +3,20 @@ package com.geulgrim.common.crew.application.service;
 import com.geulgrim.common.crew.application.dto.request.CrewBoardRequest;
 import com.geulgrim.common.crew.application.dto.response.CrewBoardDetail;
 import com.geulgrim.common.crew.domain.entity.Crew;
+import com.geulgrim.common.crew.domain.entity.CrewImage;
+import com.geulgrim.common.crew.domain.repository.CrewImageRepository;
 import com.geulgrim.common.crew.domain.repository.CrewRepository;
 import com.geulgrim.common.crew.exception.CrewException;
 import com.geulgrim.common.user.domain.entity.User;
 import com.geulgrim.common.user.domain.repository.UserRepository;
+import jakarta.mail.Multipart;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.geulgrim.common.crew.exception.CrewErrorCode.NOT_EXISTS_CREW_BOARD;
 import static com.geulgrim.common.portfolio.exception.PortfolioErrorCode.NOT_EXISTS_PORTFOLIO;
@@ -21,6 +28,7 @@ public class CrewService {
 
     private final CrewRepository crewRepository;
     private final UserRepository userRepository;
+    private final CrewImageRepository crewImageRepository;
 
     public CrewBoardDetail getCrewBoardDetail(Long crewId) {
 
@@ -58,6 +66,7 @@ public class CrewService {
 
         Crew crew = Crew.builder()
                 .projectName(crewBoardRequest.getProjectName())
+                .user(user)
                 .content(crewBoardRequest.getContent())
                 .pen(crewBoardRequest.getPen())
                 .color(crewBoardRequest.getColor())
@@ -75,5 +84,20 @@ public class CrewService {
     }
 
 
+    public void addCrewBoardImages(Long crewId, ArrayList<String> fileUrls) {
 
+        Crew crew = crewRepository.findById(crewId)
+                .orElseThrow(() -> new CrewException(NOT_EXISTS_CREW_BOARD));
+
+        List<CrewImage> crewImages = new ArrayList<>();
+        for (String fileUrl : fileUrls) {
+            CrewImage crewImage = CrewImage.builder()
+                    .crew(crew)
+                    .fileUrl(fileUrl)
+                    .build();
+            crewImages.add(crewImage);
+        }
+
+        crewImageRepository.saveAll(crewImages);
+    }
 }
