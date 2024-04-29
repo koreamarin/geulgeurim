@@ -4,10 +4,13 @@ import com.geulgrim.common.crew.application.dto.request.CrewBoardRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewJoinRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewReply;
 import com.geulgrim.common.crew.application.dto.response.CrewApplicant;
+import com.geulgrim.common.crew.application.dto.response.CrewBoard;
 import com.geulgrim.common.crew.application.dto.response.CrewBoardDetail;
+import com.geulgrim.common.crew.application.dto.response.CrewInfo;
 import com.geulgrim.common.crew.domain.entity.Crew;
 import com.geulgrim.common.crew.domain.entity.CrewImage;
 import com.geulgrim.common.crew.domain.entity.CrewRequest;
+import com.geulgrim.common.crew.domain.entity.enums.CrewStatus;
 import com.geulgrim.common.crew.domain.repository.CrewImageRepository;
 import com.geulgrim.common.crew.domain.repository.CrewRepository;
 import com.geulgrim.common.crew.domain.repository.CrewRequestRepository;
@@ -17,6 +20,8 @@ import com.geulgrim.common.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import static com.geulgrim.common.crew.exception.CrewErrorCode.NOT_EXISTS_CREW_BOARD;
@@ -31,6 +36,32 @@ public class CrewService {
     private final UserRepository userRepository;
     private final CrewImageRepository crewImageRepository;
     private final CrewRequestRepository crewRequestRepository;
+
+    public List<CrewBoard> getCrewBoard() {
+        List<Crew> crews = crewRepository.findAll();
+        List<CrewBoard> crewBoards = new ArrayList<>(crews.size());
+
+        for (Crew crew : crews) {
+            List<CrewImage> crewImages = crewImageRepository.findByCrew_CrewId(crew.getCrewId());
+            String thumbnail = !crewImages.isEmpty() ? crewImages.get(0).getFileUrl() : null;
+
+            CrewBoard crewBoard = CrewBoard.builder()
+                    .crewId(crew.getCrewId())
+                    .projectName(crew.getProjectName())
+                    .pen(crew.getPen())
+                    .color(crew.getColor())
+                    .bg(crew.getBg())
+                    .pd(crew.getPd())
+                    .story(crew.getStory())
+                    .conti(crew.getConti())
+                    .thumbnail(thumbnail)
+                    .date(LocalDate.from(crew.getCreatedAt()))
+                    .build();
+
+            crewBoards.add(crewBoard);
+        }
+        return crewBoards;
+    }
 
     public CrewBoardDetail getCrewBoardDetail(Long crewId) {
 
@@ -59,8 +90,20 @@ public class CrewService {
         }
         crewBoardDetail.setImages(imageUrls);
 
-//        // crew 넣기
-//        crewBoardDetail.setCrewInfo(imageUrls);
+        // crew 넣기
+        ArrayList<CrewInfo> realCrews = new ArrayList<>();
+        List<CrewRequest> crewRequests = crewRequestRepository.findByCrew_CrewId(crewId);
+        for (CrewRequest crewRequest: crewRequests) {
+            if (crewRequest.getStatus() == CrewStatus.SUCCESS) { // 승인을 받은 유저만 realCrews에 add
+                CrewInfo crewInfo = CrewInfo.builder()
+                        .userId(crewRequest.getUser().getUserId())
+                        .nickname(crewRequest.getUser().getName())
+                        .position(crewRequest.getPosition())
+                        .build();
+                realCrews.add(crewInfo);
+            }
+        }
+        crewBoardDetail.setCrewInfo(realCrews);
 
         return crewBoardDetail;
 
@@ -170,6 +213,5 @@ public class CrewService {
         return crewRequest.getCrewRequestId();
 
     }
-
 
 }

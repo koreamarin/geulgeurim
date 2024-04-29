@@ -4,6 +4,7 @@ import com.geulgrim.common.crew.application.dto.request.CrewBoardRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewJoinRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewReply;
 import com.geulgrim.common.crew.application.dto.response.CrewApplicant;
+import com.geulgrim.common.crew.application.dto.response.CrewBoard;
 import com.geulgrim.common.crew.application.dto.response.CrewBoardDetail;
 import com.geulgrim.common.crew.application.service.CrewService;
 import com.geulgrim.common.global.s3.S3UploadService;
@@ -24,6 +25,13 @@ public class CrewController {
 
     private final CrewService crewService;
     private final S3UploadService s3UploadService;
+
+    // 크루 모집 전체 조회
+    @GetMapping
+    public ResponseEntity<List<CrewBoard>> getCrewBoard() {
+        List<CrewBoard> crewBoards = crewService.getCrewBoard();
+        return ResponseEntity.ok(crewBoards);
+    }
 
     // 크루 모집 상세 조회
     @GetMapping("/detail/{crew_id}")
