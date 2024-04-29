@@ -1,11 +1,14 @@
 package com.geulgrim.common.crew.application.service;
 
 import com.geulgrim.common.crew.application.dto.request.CrewBoardRequest;
+import com.geulgrim.common.crew.application.dto.request.CrewJoinRequest;
 import com.geulgrim.common.crew.application.dto.response.CrewBoardDetail;
 import com.geulgrim.common.crew.domain.entity.Crew;
 import com.geulgrim.common.crew.domain.entity.CrewImage;
+import com.geulgrim.common.crew.domain.entity.CrewRequest;
 import com.geulgrim.common.crew.domain.repository.CrewImageRepository;
 import com.geulgrim.common.crew.domain.repository.CrewRepository;
+import com.geulgrim.common.crew.domain.repository.CrewRequestRepository;
 import com.geulgrim.common.crew.exception.CrewException;
 import com.geulgrim.common.user.domain.entity.User;
 import com.geulgrim.common.user.domain.repository.UserRepository;
@@ -29,6 +32,7 @@ public class CrewService {
     private final CrewRepository crewRepository;
     private final UserRepository userRepository;
     private final CrewImageRepository crewImageRepository;
+    private final CrewRequestRepository crewRequestRepository;
 
     public CrewBoardDetail getCrewBoardDetail(Long crewId) {
 
@@ -106,5 +110,27 @@ public class CrewService {
         }
 
         crewImageRepository.saveAll(crewImages);
+    }
+
+
+    public Long apply(Long crewId, CrewJoinRequest crewJoinRequest) {
+
+        Crew crew = crewRepository.findById(crewId)
+                .orElseThrow(() -> new CrewException(NOT_EXISTS_CREW_BOARD));
+
+        User user = userRepository.findById(crewJoinRequest.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+
+        CrewRequest crewRequest = CrewRequest.builder()
+                .crew(crew)
+                .user(user)
+                .position(crewJoinRequest.getPosition())
+                .message(crewJoinRequest.getMessage())
+                .build();
+
+        crewRequestRepository.save(crewRequest);
+
+        return crewRequest.getCrewRequestId();
+
     }
 }

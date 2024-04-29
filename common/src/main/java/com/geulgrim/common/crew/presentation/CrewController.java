@@ -1,6 +1,7 @@
 package com.geulgrim.common.crew.presentation;
 
 import com.geulgrim.common.crew.application.dto.request.CrewBoardRequest;
+import com.geulgrim.common.crew.application.dto.request.CrewJoinRequest;
 import com.geulgrim.common.crew.application.dto.response.CrewBoardDetail;
 import com.geulgrim.common.crew.application.service.CrewService;
 import com.geulgrim.common.global.s3.S3UploadService;
@@ -30,7 +31,7 @@ public class CrewController {
         return ResponseEntity.ok(detail);
     }
 
-    // 크루 모집 등록
+    // 크루 모집 게시글 등록
     @PostMapping("/{userId}")
     public ResponseEntity<Long> addCrewBoard(
             @RequestBody CrewBoardRequest crewBoardRequest,
@@ -65,6 +66,17 @@ public class CrewController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 저장에 실패했습니다.");
         }
 
+    }
+
+    // 크루 모집 신청
+    @PostMapping("/request/{crewId}")
+    public ResponseEntity<Long> apply(
+            @RequestBody CrewJoinRequest crewJoinRequest,
+            @PathVariable("crewId") Long crewId
+    ) {
+
+        Long crewRequestId = crewService.apply(crewId, crewJoinRequest);
+        return ResponseEntity.ok(crewRequestId);
     }
 
 
