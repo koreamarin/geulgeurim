@@ -1,5 +1,6 @@
 package com.geulgrim.common.crew.presentation;
 
+import com.geulgrim.common.crew.application.dto.request.CrewBoardModifyRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewBoardRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewJoinRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewReply;
@@ -84,15 +85,15 @@ public class CrewController {
     }
 
     // 크루 모집 수정
-//    @PutMapping("/{crewId}")
-//    public ResponseEntity<String> update(
-//            @PathVariable("crewId") Long crewId,
-//            @RequestBody CrewBoardRequest crewBoardRequest
-//
-//    ) {
-//        String result = crewService.update(crewId);
-//        return ResponseEntity.ok(result);
-//    }
+    @PutMapping("{crewId}")
+    public ResponseEntity<String> update(
+            @PathVariable("crewId") Long crewId,
+            @RequestBody CrewBoardModifyRequest modifyRequest
+
+    ) {
+        String result = crewService.update(crewId, modifyRequest);
+        return ResponseEntity.ok(result);
+    }
 
     // 크루 모집 삭제
     @DeleteMapping("/{crewId}")

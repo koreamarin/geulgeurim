@@ -1,5 +1,6 @@
 package com.geulgrim.common.crew.application.service;
 
+import com.geulgrim.common.crew.application.dto.request.CrewBoardModifyRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewBoardRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewJoinRequest;
 import com.geulgrim.common.crew.application.dto.request.CrewReply;
@@ -39,9 +40,6 @@ public class CrewService {
     private final CrewRequestRepository crewRequestRepository;
 
     public List<CrewBoard> getCrewBoard(String projectName, String sort) {
-        // 정렬 조건: latest, hottest (
-
-
         List<Crew> crews = crewRepository.findAll();
         List<CrewBoard> crewBoards = new ArrayList<>(crews.size());
 
@@ -158,14 +156,33 @@ public class CrewService {
         crewImageRepository.saveAll(crewImages);
     }
 
-//    public String update(Long crewId) {
-//
-//        Crew crew = crewRepository.findById(crewId)
-//                .orElseThrow(() -> new CrewException(NOT_EXISTS_CREW_BOARD));
-//
-//        Crew crew = Crew.builder().build();
-//
-//    }
+    public String update(Long crewId, CrewBoardModifyRequest modifyRequest) {
+
+        Crew existingCrew = crewRepository.findById(crewId)
+                .orElseThrow(() -> new CrewException(NOT_EXISTS_CREW_BOARD));
+
+        User user = userRepository.findById(modifyRequest.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+
+        Crew crew = Crew.builder()
+                .crewId(crewId)
+                .projectName(modifyRequest.getProjectName())
+                .user(user)
+                .content(modifyRequest.getContent())
+                .pen(modifyRequest.getPen())
+                .color(modifyRequest.getColor())
+                .bg(modifyRequest.getBg())
+                .pd(modifyRequest.getPd())
+                .story(modifyRequest.getStory())
+                .conti(modifyRequest.getConti())
+                .status(modifyRequest.getStatus())
+                .build();
+
+        crewRepository.save(crew);
+
+        return "수정이 완료되었습니다.";
+
+    }
 
     public String delete(Long crewId) {
         Crew crew = crewRepository.findById(crewId)
