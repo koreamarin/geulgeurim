@@ -15,6 +15,7 @@ const ROOTS = {
   RECRUIT: '/recruit',
   COMMUNITY: '/community',
   NFT: '/nft',
+  MYPAGE: '/mypage',
 };
 
 // ----------------------------------------------------------------------
@@ -51,6 +52,15 @@ export const paths = {
   nft: {
     root: `${ROOTS.NFT}`,
     detail: (id: number) => `${ROOTS.NFT}/${id}`,
+  },
+
+  mypage: {
+    root: `${ROOTS.MYPAGE}`,
+    apply: `${ROOTS.MYPAGE}/apply`,
+    interest: `${ROOTS.MYPAGE}/interest`,
+    portfolio: `${ROOTS.MYPAGE}/portfolio`,
+    resume: `${ROOTS.MYPAGE}/resume`,
+    works: `${ROOTS.MYPAGE}/works`,
   },
 
   comingSoon: '/coming-soon',

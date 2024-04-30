@@ -2,15 +2,11 @@ import Box from "@mui/material/Box"
 import Container from "@mui/material/Container"
 
 
-type Props = {
-  id: string;
-};
-
-export default function RecruitApplySuccessView({ id }: Props) {
+export default function InterestView() {
   return (
     <Container>
       <Box>
-        제출성공
+        관심 공고들
       </Box>
     </Container>
   )

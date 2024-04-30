@@ -1,14 +1,13 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 
-import MainLayout from 'src/layouts/main';
-
 // import { PATH_AFTER_LOGIN } from 'src/config-global';
 import { nftRoutes } from './nft';
 import { authRoutes } from './auth';
+import { mainRoutes } from './main';
 import { customRoutes } from './custom';
+import { mypageRoutes } from './mypage';
 import { recruitRoutes } from './recruit';
 import { authDemoRoutes } from './auth-demo';
-import { HomePage, mainRoutes } from './main';
 import { dashboardRoutes } from './dashboard';
 import { communityRoutes } from './community';
 import { componentsRoutes } from './components';
@@ -29,11 +28,8 @@ export default function Router() {
     // SET INDEX PAGE WITH HOME PAGE
     {
       path: '/',
-      element: (
-        <Navigate replace to="/recruit" />
-      ),
+      element: <Navigate replace to="/recruit" />,
     },
-
 
     // Auth routes
     ...authRoutes,
@@ -53,6 +49,7 @@ export default function Router() {
     ...recruitRoutes,
     ...communityRoutes,
     ...nftRoutes,
+    ...mypageRoutes,
 
     // No match 404
     { path: '*', element: <Navigate to="/404" replace /> },
