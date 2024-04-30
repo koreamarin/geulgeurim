@@ -24,6 +24,7 @@ import LoginButton from '../common/login-button';
 import HeaderShadow from '../common/header-shadow';
 import SettingsButton from '../common/settings-button';
 import AccountPopover from '../common/nav-account-popover';
+import NotificationsPopover from '../common/notifications-popover';
 
 // ----------------------------------------------------------------------
 
@@ -78,6 +79,7 @@ export default function Header() {
                 }}
               />
             )}
+            {token && mdUp && <NotificationsPopover />}
 
             {!token && mdUp && (
               <Button variant="contained" target="_blank" rel="noopener" href={paths.minimalUI}>
@@ -92,6 +94,8 @@ export default function Header() {
                 <AccountPopover />
               </Stack>
             )}
+
+            {token && !mdUp && <NotificationsPopover />}
             {!mdUp && (
               <SettingsButton
                 sx={{
