@@ -88,11 +88,6 @@ public class PushService {
 
     public List<PushResponseDto> getPush(Long id) {
         List<Push> response = pushRespository.findAllByreceiverIdOrderByIdDesc(id);
-//        List<PushResponseDto> dtos = new ArrayList<>();
-//        for (Push push : response) {
-//            dtos.add(new PushResponseDto().from(push));
-//        }
-//        return dtos;
         return response.stream()
                 .map(PushResponseDto::from)
                 .collect(Collectors.toList());
