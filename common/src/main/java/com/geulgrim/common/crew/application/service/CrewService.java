@@ -12,6 +12,7 @@ import com.geulgrim.common.crew.domain.entity.Crew;
 import com.geulgrim.common.crew.domain.entity.CrewImage;
 import com.geulgrim.common.crew.domain.entity.CrewRequest;
 import com.geulgrim.common.crew.domain.entity.enums.CrewStatus;
+import com.geulgrim.common.crew.domain.repository.CrewDslRepository;
 import com.geulgrim.common.crew.domain.repository.CrewImageRepository;
 import com.geulgrim.common.crew.domain.repository.CrewRepository;
 import com.geulgrim.common.crew.domain.repository.CrewRequestRepository;
@@ -38,9 +39,10 @@ public class CrewService {
     private final UserRepository userRepository;
     private final CrewImageRepository crewImageRepository;
     private final CrewRequestRepository crewRequestRepository;
+    private final CrewDslRepository crewDslRepository;
 
-    public List<CrewBoard> getCrewBoard(String projectName, String sort) {
-        List<Crew> crews = crewRepository.findAll();
+    public List<CrewBoard> search(String keyword){
+        List<Crew> crews = crewDslRepository.search(keyword);
         List<CrewBoard> crewBoards = new ArrayList<>(crews.size());
 
         for (Crew crew : crews) {

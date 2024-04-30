@@ -8,6 +8,7 @@ import com.geulgrim.common.crew.application.dto.response.CrewApplicant;
 import com.geulgrim.common.crew.application.dto.response.CrewBoard;
 import com.geulgrim.common.crew.application.dto.response.CrewBoardDetail;
 import com.geulgrim.common.crew.application.service.CrewService;
+import com.geulgrim.common.crew.domain.entity.Crew;
 import com.geulgrim.common.global.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,14 +28,13 @@ public class CrewController {
     private final CrewService crewService;
     private final S3UploadService s3UploadService;
 
-    // 크루 모집 전체 조회
-    @GetMapping
-    public ResponseEntity<List<CrewBoard>> getCrewBoard(
-            @RequestParam(required = false) String projectName,
-            @RequestParam(required = false) String sort
+    // 크루 검색
+    @GetMapping("/search")
+    public ResponseEntity<List<CrewBoard>> search(
+            @RequestParam(required = false) String keyword
     ) {
-        List<CrewBoard> crewBoards = crewService.getCrewBoard(projectName, sort);
-        return ResponseEntity.ok(crewBoards);
+        List<CrewBoard> crews = crewService.search(keyword);
+        return ResponseEntity.ok(crews);
     }
 
 
