@@ -28,12 +28,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(config -> config.disable())
-            .authorizeHttpRequests(config -> config.anyRequest().permitAll())
-            .oauth2Login(oauth2Configurer -> oauth2Configurer
-                .loginPage("/login")
-                .successHandler(successHandler())
-                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                    .userService(oAuth2UserService)));
+            .authorizeHttpRequests(config -> config.anyRequest().permitAll());
+//            .oauth2Login(oauth2Configurer -> oauth2Configurer
+//                .loginPage("/login")
+//                .successHandler(successHandler())
+//                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+//                    .userService(oAuth2UserService)));
 
         return http.build();
     }
