@@ -29,7 +29,7 @@ const OPTIONS = [
   },
   {
     label: 'Profile',
-    linkTo: paths.dashboard.user.profile,
+    linkTo: paths.mypage.root,
   },
   {
     label: 'Settings',
@@ -75,7 +75,7 @@ export default function AccountPopover() {
           sx={{
             width: 40,
             height: 40,
-            marginRight: 1
+            marginRight: 1,
           }}
         >
           <Avatar
