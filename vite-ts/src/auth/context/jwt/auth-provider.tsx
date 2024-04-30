@@ -220,7 +220,7 @@ export function AuthProvider({ children }: Props) {
         console.log("token = ", generatedFcmtoken);
         console.log("user = ", user.id);
         const postData = {
-          id: 2, //로그인 유저 아이디로 변경 필요
+          id: 2, // 로그인 유저 아이디로 변경 필요
           fcmToken: generatedFcmtoken
         };
 
