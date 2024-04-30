@@ -3,15 +3,15 @@ package com.geulgrim.common.push.presentation;
 import com.geulgrim.common.push.application.PushService;
 import com.geulgrim.common.push.application.dto.request.PushCreateRequestDto;
 import com.geulgrim.common.push.application.dto.response.PushCreateResponseDto;
+import com.geulgrim.common.push.application.dto.response.PushResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +26,14 @@ public class PushController {
     public ResponseEntity<PushCreateResponseDto> create(@RequestBody PushCreateRequestDto dto) {
         log.info("push - 푸시 생성 요청 : {}", dto);
         return new ResponseEntity<>(pushService.create(dto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "푸시조회", description = "id가 수신한 푸시를 조회합니다.")
+    public ResponseEntity<List<PushResponseDto>> getPush(@PathVariable Long id) {
+        log.info("push - 푸시 조회 요청 id: {}", id);
+        return new ResponseEntity<>(pushService.getPush(id), HttpStatus.OK);
+        
     }
 
 }

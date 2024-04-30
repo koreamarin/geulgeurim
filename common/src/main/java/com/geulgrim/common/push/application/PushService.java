@@ -3,6 +3,7 @@ package com.geulgrim.common.push.application;
 import com.geulgrim.common.push.application.dto.request.FCMDto;
 import com.geulgrim.common.push.application.dto.request.PushCreateRequestDto;
 import com.geulgrim.common.push.application.dto.response.PushCreateResponseDto;
+import com.geulgrim.common.push.application.dto.response.PushResponseDto;
 import com.geulgrim.common.push.domain.Push;
 import com.geulgrim.common.push.domain.PushDomain;
 import com.geulgrim.common.push.domain.repository.PushRepository;
@@ -15,6 +16,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -78,6 +83,19 @@ public class PushService {
                 .title(push.getTitle())
                 .content(push.getContent())
                 .build();
+
+    }
+
+    public List<PushResponseDto> getPush(Long id) {
+        List<Push> response = pushRespository.findAllByreceiverIdOrderByIdDesc(id);
+//        List<PushResponseDto> dtos = new ArrayList<>();
+//        for (Push push : response) {
+//            dtos.add(new PushResponseDto().from(push));
+//        }
+//        return dtos;
+        return response.stream()
+                .map(PushResponseDto::from)
+                .collect(Collectors.toList());
 
     }
 }
