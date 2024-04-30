@@ -1,6 +1,6 @@
-package com.geulgrim.common.pushmail.domain;
+package com.geulgrim.common.push.domain;
 
-public class PushMailText {
+public class PushFormat {
 
     /* 협업 신청 요청*/
     public static final String CREW_REQUEST_TITLE = "님에게 협업 신청이 왔어요!"; //senderID 필요
@@ -25,5 +25,4 @@ public class PushMailText {
     /*작품 거래 */
     public static final String SOLD_PIECE_TITLE = "님에게 작품이 판매되었어요 !"; //senderId 필요
     public static final String SOLD_PIECE_CONTENT = "역시 멋있는 작품이에요 !";
-
 }

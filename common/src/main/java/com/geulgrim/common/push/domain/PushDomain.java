@@ -1,13 +1,13 @@
-package com.geulgrim.common.pushmail.domain;
+package com.geulgrim.common.push.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import static com.geulgrim.common.pushmail.domain.PushMailText.*;
+import static com.geulgrim.common.push.domain.PushFormat.*;
 
 @Getter
 @RequiredArgsConstructor
-public enum PushMailDomain {
+public enum PushDomain {
 
     CREW_REQUEST("CREW_REQUEST") {
         @Override
@@ -95,5 +95,4 @@ public enum PushMailDomain {
     public boolean isNeedJobTitle() {
         return domain.equals(FAVORITE_JOB_CLOSINGSOON.toString());
     }
-
 }
