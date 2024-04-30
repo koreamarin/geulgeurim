@@ -205,28 +205,31 @@ export function AuthProvider({ children }: Props) {
       // 로그인 요청
       const res = await axios.post(endpoints.auth.login, data);
       const { accessToken, user } = res.data;
+      console.log(user);
 
       // 세션 설정
       setSession(accessToken);
 
 
       // 알림 권한 요청 및 FCM 토큰 획득
-      const fcmToken = await requestNotificationPermissionAndGetToken(messaging, import.meta.env.VITE_FIREBASE_VAPID_ID);
-      console.log(fcmToken);
+      const generatedFcmtoken = await requestNotificationPermissionAndGetToken(messaging, import.meta.env.VITE_FIREBASE_VAPID_ID);
 
-      if(fcmToken){
+      if(generatedFcmtoken){
         const url = 'http://localhost:8080/api/v1/user/fcm';
-        const data = {
-          userId: user.id,
-          fcmToken: fcmToken
+
+        console.log("token = ", generatedFcmtoken);
+        console.log("user = ", user.id);
+        const postData = {
+          id: 2, //로그인 유저 아이디로 변경 필요
+          fcmToken: generatedFcmtoken
         };
 
         // Axios를 사용한 POST 요청
-        axiosOrigin.post(url, data)
-          .then(response => {
+        axiosOrigin.post(url, postData)
+          .then((response: { data: any; }) => {
             console.log('Server response:', response.data);
           })
-          .catch(error => {
+          .catch((error: any) => {
             console.error('Error sending token to server:', error);
           });
       }else {
@@ -240,7 +243,7 @@ export function AuthProvider({ children }: Props) {
             user: {
               ...user,
               accessToken,
-              fcmToken
+              generatedFcmtoken
             },
           },
         });
