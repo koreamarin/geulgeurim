@@ -1,5 +1,6 @@
 package com.geulgrim.common.crew.application.dto.response;
 
+import com.geulgrim.common.crew.domain.entity.enums.BoardStatus;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,4 +20,5 @@ public class CrewBoard {
     private Integer conti;
     private String thumbnail;
     private LocalDate date;
+    private BoardStatus status;
 }

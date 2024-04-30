@@ -41,8 +41,8 @@ public class CrewService {
     private final CrewRequestRepository crewRequestRepository;
     private final CrewDslRepository crewDslRepository;
 
-    public List<CrewBoard> search(String keyword){
-        List<Crew> crews = crewDslRepository.search(keyword);
+    public List<CrewBoard> search(String keyword, String category){
+        List<Crew> crews = crewDslRepository.search(keyword, category);
         List<CrewBoard> crewBoards = new ArrayList<>(crews.size());
 
         for (Crew crew : crews) {
@@ -60,6 +60,7 @@ public class CrewService {
                     .conti(crew.getConti())
                     .thumbnail(thumbnail)
                     .date(LocalDate.from(crew.getCreatedAt()))
+                    .status(crew.getStatus())
                     .build();
 
             crewBoards.add(crewBoard);

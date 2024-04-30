@@ -31,9 +31,10 @@ public class CrewController {
     // 크루 검색
     @GetMapping("/search")
     public ResponseEntity<List<CrewBoard>> search(
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String category
     ) {
-        List<CrewBoard> crews = crewService.search(keyword);
+        List<CrewBoard> crews = crewService.search(keyword, category);
         return ResponseEntity.ok(crews);
     }
 
