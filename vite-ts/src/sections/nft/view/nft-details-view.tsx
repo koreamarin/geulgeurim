@@ -5,10 +5,13 @@ type Props = {
   id: string;
 };
 
-export default function CrewApplyView({ id }: Props) {
+export default function NFTDetailsView({ id }: Props) {
   return (
     <Container>
-      <Box>크루 모집하기 {id}</Box>
+      <Box>
+        <header>NFT 상세정보</header>
+        상세정보{id}
+      </Box>
     </Container>
   );
 }

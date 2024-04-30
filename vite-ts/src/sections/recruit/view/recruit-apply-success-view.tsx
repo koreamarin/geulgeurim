@@ -6,12 +6,11 @@ type Props = {
   id: string;
 };
 
-
-export default function RecruitSubmittedFailView({ id }: Props) {
+export default function RecruitApplySuccessView({ id }: Props) {
   return (
     <Container>
       <Box>
-        제출실패
+        제출성공
       </Box>
     </Container>
   )

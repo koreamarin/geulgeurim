@@ -13,9 +13,9 @@ interface StyledLabelProps extends LabelProps {
 }
 
 export const StyledLabel = styled(Box)<StyledLabelProps>(({
-                                                            theme,
-                                                            ownerState,
-                                                          }: {
+  theme,
+  ownerState,
+}: {
   theme: Theme;
   ownerState: {
     color: LabelColor;
