@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:8081") // 클래스 레벨에서 CORS 허용, 프론트 서버에서 보내는 것 허용해놓기 위해서 임시로 해놨습니다
+@CrossOrigin(origins = "http://localhost:3000") // 클래스 레벨에서 CORS 허용, 프론트 서버에서 보내는 것 허용해놓기 위해서 임시로 해놨습니다
 public class UserController {
 
     private final UserService userService;
