@@ -1,6 +1,7 @@
 package com.geulgrim.auth.user.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.geulgrim.auth.user.application.dto.request.OAuthTokenRequest;
@@ -59,6 +60,7 @@ public class UserController {
         OAuthTokenRequest oAuthToken = null;
         try {
             oAuthToken = objectMapper.readValue(response.getBody(), OAuthTokenRequest.class);
+
         } catch (JsonMappingException e) {
             e.printStackTrace();
         } catch (JsonProcessingException e) {
@@ -86,9 +88,8 @@ public class UserController {
                 String.class // 요청 시 반환되는 데이터 타입
         );
 
-//        Object oAuthUserInfoRequest = response2.getBody();
+        ObjectMapper objectMapper2 = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
 
-        ObjectMapper objectMapper2 = new ObjectMapper();
         OAuthUserInfoRequest oAuthUserInfoRequest = null;
         try {
             oAuthUserInfoRequest = objectMapper2.readValue(response2.getBody(), OAuthUserInfoRequest.class);
@@ -97,7 +98,6 @@ public class UserController {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        System.out.println(oAuthUserInfoRequest);
 
         return new ResponseEntity<>(response2.getBody(), HttpStatus.OK);
     }
