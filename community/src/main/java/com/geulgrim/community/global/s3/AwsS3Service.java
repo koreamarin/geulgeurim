@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.geulgrim.community.board.domain.entity.enums.ImageType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class AwsS3Service {
 
     private final AmazonS3 amazonS3;
 
-    public String uploadFile(Long babyId, MultipartFile file, Timestamp time, String type){
+    public String uploadFile(Long babyId, MultipartFile file, Timestamp time, ImageType type){
         String fileName = createFileName(babyId,file.getOriginalFilename(),time,type);
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getSize());
@@ -46,7 +47,7 @@ public class AwsS3Service {
         
         return getUrl(fileName);
     }
-    public List<String> uploadFile(Long babyId, List<MultipartFile> multipartFiles, Timestamp time, String type){
+    public List<String> uploadFile(Long babyId, List<MultipartFile> multipartFiles, Timestamp time, ImageType type){
         List<String> fileNameList = new ArrayList<>();
 
         // forEach 구문을 통해 multipartFiles 리스트로 넘어온 파일들을 순차적으로 fileNameList 에 추가
@@ -68,7 +69,7 @@ public class AwsS3Service {
         return fileNameList;
     }
 
-    public String createFileName(Long babyId, String fileName, Timestamp time, String type) {
+    public String createFileName(Long babyId, String fileName, Timestamp time, ImageType type) {
         // 파일명 생성에 사용될 날짜 포맷 설정
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
 
