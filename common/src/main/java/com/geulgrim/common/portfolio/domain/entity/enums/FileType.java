@@ -1,5 +1,6 @@
 package com.geulgrim.common.portfolio.domain.entity.enums;
 
-public enum NftType {
-    NFT, URL
+public enum FileType {
+
+    PIECE, UPLOAD
 }
