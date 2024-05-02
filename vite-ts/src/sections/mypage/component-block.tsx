@@ -30,7 +30,7 @@ export default function ComponentBlock({ title, sx, children, ...other }: BlockP
         justifyContent="center"
         flexWrap="wrap"
         sx={{
-          p: 5,
+          p: 2,
           minHeight: 180,
           ...sx,
         }}
