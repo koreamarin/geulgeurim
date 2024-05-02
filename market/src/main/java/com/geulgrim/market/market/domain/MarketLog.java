@@ -1,4 +1,4 @@
-package com.geulgrim.market.piece.domain;
+package com.geulgrim.market.market.domain;
 
 import com.geulgrim.market.global.entity.BaseEntity;
 import jakarta.persistence.*;
