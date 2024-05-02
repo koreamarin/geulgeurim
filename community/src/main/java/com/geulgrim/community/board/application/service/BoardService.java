@@ -2,7 +2,7 @@ package com.geulgrim.community.board.application.service;
 
 import com.geulgrim.community.board.application.dto.request.BoardUpdateRequest;
 import com.geulgrim.community.board.application.dto.request.BoardWriteRequest;
-import com.geulgrim.community.board.application.dto.response.BoardResponse;
+import com.geulgrim.community.board.application.dto.response.BoardListResponse;
 import com.geulgrim.community.board.domain.entity.Board;
 import com.geulgrim.community.board.domain.entity.BoardImage;
 import com.geulgrim.community.board.domain.entity.enums.ImageType;
@@ -30,25 +30,25 @@ public class BoardService {
     private final AwsS3Service awsS3Service;
 
     // 메인 페이지 인기글 목록
-    public List<BoardResponse> mainBoardPopularList() {
-        List<BoardResponse> list = boardRepository.findBoardResponseList();
+    public List<BoardListResponse> mainBoardPopularList() {
+        List<BoardListResponse> list = boardRepository.findBoardResponseList();
         return list.subList(0, 6);
     }
 
     // 메인 페이지 신규글 목록
-    public List<BoardResponse> mainBoardNewList() {
-        List<BoardResponse> list = boardRepository.findBoardResponseList();
-        List<BoardResponse> newList = new ArrayList<BoardResponse>();
-        for(BoardResponse boardResponse : list) {
-            if(boardResponse.getHit() + boardResponse.getCommentCnt() >= 50) {
-                newList.add(boardResponse);
+    public List<BoardListResponse> mainBoardNewList() {
+        List<BoardListResponse> list = boardRepository.findBoardResponseList();
+        List<BoardListResponse> newList = new ArrayList<BoardListResponse>();
+        for(BoardListResponse boardListResponse : list) {
+            if(boardListResponse.getHit() + boardListResponse.getCommentCnt() >= 50) {
+                newList.add(boardListResponse);
             }
         }
         return newList.subList(0, 6);
     }
 
     // 자유게시판 전체 조회
-    public List<BoardResponse> boardList() {
+    public List<BoardListResponse> boardList() {
         return boardRepository.findBoardResponseList();
     }
 

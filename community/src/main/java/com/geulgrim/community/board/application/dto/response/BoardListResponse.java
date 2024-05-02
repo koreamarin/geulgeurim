@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardResponse {
+public class BoardListResponse {
     private long boardId;
     private long userId;
     private String title;
