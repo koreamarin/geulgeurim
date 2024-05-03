@@ -16,9 +16,6 @@ public class PortfolioRequest {
 
     private OpenState status;
 
-    @JsonProperty("file_url")
-    private String fileUrl;
-
     private ArrayList<PieceInfo> pieces;
 
 }

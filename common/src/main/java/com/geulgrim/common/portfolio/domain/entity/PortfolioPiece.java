@@ -26,6 +26,7 @@ public class PortfolioPiece {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Portfolio portfolio;
 
+    // 작품에서 선택
     @ManyToOne
     @JoinColumn(name = "piece_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -35,5 +36,8 @@ public class PortfolioPiece {
     private String program;
     private String contribution;
     private String content;
+
+    // 사용자가 업로드한 이미지 URL
+    private String fileUrl;
 
 }

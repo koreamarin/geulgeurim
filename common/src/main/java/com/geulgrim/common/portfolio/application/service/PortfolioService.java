@@ -3,6 +3,8 @@ package com.geulgrim.common.portfolio.application.service;
 import com.geulgrim.common.global.domain.entity.FileUrl;
 import com.geulgrim.common.global.domain.repository.FileUrlRepository;
 import com.geulgrim.common.global.s3.S3UploadService;
+import com.geulgrim.common.piece.domain.entity.Piece;
+import com.geulgrim.common.piece.domain.repository.PieceRepository;
 import com.geulgrim.common.portfolio.application.dto.request.PieceInfo;
 import com.geulgrim.common.portfolio.application.dto.request.PortfolioRequest;
 import com.geulgrim.common.portfolio.application.dto.request.PortfolioRequestMyFormat;
@@ -44,6 +46,7 @@ public class PortfolioService {
     private final PortfolioFileRepository portfolioFileRepository;
     private final PortfolioPieceRepository portfolioPieceRepository;
     private final S3UploadService s3UploadService;
+    private final PieceRepository pieceRepository;
 
 
     public List<PortfolioResponse> getPortfolios(Long userId) {
@@ -135,31 +138,83 @@ public class PortfolioService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
         // 추후 user exception 만들어서 수정해야 함
 
-        Portfolio portfolio = Portfolio.builder()
-                .user(user)
-                .pofolName(portfolioRequest.getPofolName())
-                .status(portfolioRequest.getStatus())
-                .format(Format.SERVICE)
-                .fileUrl(portfolioRequest.getPieces().get(0).getPieceUrl())
-                .build();
+        // Portfolio 저장
+        Portfolio portfolio = new Portfolio();
+        if (portfolioRequest.getPieces().get(0).getPieceId() == null) {
+            // 사용자가 작품 선택을 하지 않고 파일을 업로드했다면,
+            portfolio = Portfolio.builder()
+                    .user(user)
+                    .pofolName(portfolioRequest.getPofolName())
+                    .status(portfolioRequest.getStatus())
+                    .format(Format.SERVICE)
+                    // fileUrl은 S3에 저장하고 그 중 첫 번째 이미지로 선택.
+                    .build();
 
+        } else {
+            // 작품을 선택했다면
+            Piece piece = pieceRepository.findById(portfolioRequest.getPieces().get(0).getPieceId())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 작품이 없습니다."));
+
+            portfolio = Portfolio.builder()
+                    .user(user)
+                    .pofolName(portfolioRequest.getPofolName())
+                    .status(portfolioRequest.getStatus())
+                    .format(Format.SERVICE)
+                    .fileUrl(piece.getFileUrl())
+                    .build();
+        }
         portfolioRepository.save(portfolio);
 
+        ArrayList<String> fileUrls = new ArrayList<>();
         // PortfolioPiece에 저장
         for (PieceInfo pieceInfo: portfolioRequest.getPieces()) {
-            PortfolioPiece portfolioPiece = PortfolioPiece.builder()
-                    .portfolio(portfolio)
-                    .title(pieceInfo.getTitle())
-                    .program(pieceInfo.getProgram())
-                    .contribution(pieceInfo.getContribution())
-                    .content(pieceInfo.getContent())
-                    .pieceUrl(pieceInfo.getPieceUrl())
-                    .build();
+            PortfolioPiece portfolioPiece = new PortfolioPiece();
+            if (pieceInfo.getPieceId() == null) {
+                // 사용자가 작품 선택을 하지 않고 파일을 업로드했다면, S3에 저장하고 그 url을 저장
+
+                String fileUrl = "";
+                try {
+                    fileUrl = s3UploadService.saveFile(pieceInfo.getPieceUploaded());
+                    fileUrls.add(fileUrl);
+                }  catch (IOException e) {
+                    e.fillInStackTrace();
+                }
+
+                portfolioPiece = PortfolioPiece.builder()
+                        .portfolio(portfolio)
+                        .title(pieceInfo.getTitle())
+                        .program(pieceInfo.getProgram())
+                        .contribution(pieceInfo.getContribution())
+                        .content(pieceInfo.getContent())
+                        .fileUrl(fileUrl)
+                        .build();
+            } else {
+                // 작품을 선택했다면
+                Piece piece = pieceRepository.findById(pieceInfo.getPieceId())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 작품이 없습니다."));
+
+                fileUrls.add(piece.getFileUrl());
+
+                portfolioPiece = PortfolioPiece.builder()
+                        .portfolio(portfolio)
+                        .piece(piece)
+                        .title(pieceInfo.getTitle())
+                        .program(pieceInfo.getProgram())
+                        .contribution(pieceInfo.getContribution())
+                        .content(pieceInfo.getContent())
+                        .build();
+            }
 
             portfolioPieceRepository.save(portfolioPiece);
         }
 
-        return portfolioRepository.save(portfolio).getPofolId();
+        // 위의 로직에 따르면, fileUrl이 null일 수 있음.
+        if (portfolio.getFileUrl() == null) {
+            portfolio.setFileUrl(fileUrls.get(0));
+            portfolioRepository.save(portfolio);
+        }
+
+        return portfolio.getPofolId();
 
     }
 
@@ -214,7 +269,5 @@ public class PortfolioService {
         return "포트폴리오가 성공적으로 삭제되었습니다.";
 
     }
-
-
 
 }
