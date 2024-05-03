@@ -119,7 +119,7 @@ public class PortfolioService {
         ArrayList<String> fileUrls = new ArrayList<>();
 
         for(PortfolioFile file: portfolioFiles) {
-            fileUrls.add(file.getFileUrl().getFileUrl());
+            fileUrls.add(file.getFileUrl());
         }
 
         return PortfolioResponseDetailMyFormat.builder()
