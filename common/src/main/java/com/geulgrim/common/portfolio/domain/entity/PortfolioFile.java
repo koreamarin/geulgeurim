@@ -1,7 +1,6 @@
 package com.geulgrim.common.portfolio.domain.entity;
 
-import com.geulgrim.common.global.domain.entity.FileUrl;
-import com.geulgrim.common.user.domain.entity.User;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,21 +17,19 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Builder
 @Entity
 @Getter
-public class PortfolioFile {
+public class  PortfolioFile {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column
     private Long pofolFileId;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "file_url_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private FileUrl fileUrl;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "pofol_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Portfolio portfolio;
+
+    private String fileUrl;
 
 }

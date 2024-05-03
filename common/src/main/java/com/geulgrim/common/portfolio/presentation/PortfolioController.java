@@ -6,6 +6,7 @@ import com.geulgrim.common.portfolio.application.dto.response.PortfolioResponse;
 import com.geulgrim.common.portfolio.application.dto.response.PortfolioResponseDetail;
 import com.geulgrim.common.portfolio.application.dto.response.PortfolioResponseDetailMyFormat;
 import com.geulgrim.common.portfolio.application.service.PortfolioService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,8 @@ public class PortfolioController {
 
     private final PortfolioService portfolioService;
 
-    // 포트폴리오 전체 조회
     @GetMapping("/{userId}")
+    @Operation(summary = "내 포트폴리오 전체 조회", description = "모든 포트폴리오를 조회합니다.")
     public ResponseEntity<List<PortfolioResponse>> getPortfolios(
 //            @RequestHeader("X-Authorization-Id") Long memberId,
             @PathVariable("userId") Long userId
@@ -31,8 +32,9 @@ public class PortfolioController {
         return ResponseEntity.ok(responses);
     }
 
-    // 다른 사람 포트폴리오 조회
+
     @GetMapping("/guest/{userId}")
+    @Operation(summary = "포트폴리오 전체 조회", description = "다른 사람의 포트폴리오를 조회합니다.")
     public ResponseEntity<List<PortfolioResponse>> getOtherPortfolios(
 //            @RequestHeader("X-Authorization-Id") Long memberId,
             @PathVariable("userId") Long userId
@@ -41,8 +43,9 @@ public class PortfolioController {
         return ResponseEntity.ok(responses);
     }
 
-    // 내 포트폴리오 상세 조회 (글그림 포맷)
+
     @GetMapping("/detail/{pofol_id}")
+    @Operation(summary = "포트폴리오 상세 조회", description = "글그림 포맷의 포트폴리오를 상세 조회합니다.")
     public ResponseEntity<PortfolioResponseDetail> getPortfolioDetail(
             @PathVariable("pofol_id") Long pofolId
     ) {
@@ -50,8 +53,9 @@ public class PortfolioController {
         return ResponseEntity.ok(detail);
     }
 
-    // 내 포트폴리오 상세 조회 (사용자 포맷)
+
     @GetMapping("/detail/user/{pofol_id}")
+    @Operation(summary = "포트폴리오 상세 조회", description = "사용자 포맷의 포트폴리오를 상세 조회합니다.")
     public ResponseEntity<PortfolioResponseDetailMyFormat> getPortfolioDetailMyFormat(
             @PathVariable("pofol_id") Long pofolId
     ) {
@@ -60,8 +64,8 @@ public class PortfolioController {
     }
 
 
-    // 내 포트폴리오 등록 (글그림 포맷)
     @PostMapping("/{userId}")
+    @Operation(summary = "포트폴리오 등록", description = "글그림 포맷의 포트폴리오를 등록합니다.")
     public ResponseEntity<Long> addPortfolio(
             @RequestBody PortfolioRequest portfolioRequest,
             @PathVariable("userId") Long userId
@@ -72,6 +76,7 @@ public class PortfolioController {
 
     // 내 포트폴리오 등록 (사용자 포맷)
     @PostMapping("/user/{userId}")
+    @Operation(summary = "포트폴리오 등록", description = "사용자 포맷의 포트폴리오를 등록합니다.")
     public ResponseEntity<Long> addPortfolioMyFormat(
             @RequestBody PortfolioRequestMyFormat portfolioRequest,
             @PathVariable("userId") Long userId
@@ -80,16 +85,16 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioId);
     }
 
+
     // 내 포트폴리오 삭제
     @DeleteMapping("/{pofol_id}")
+    @Operation(summary = "포트폴리오 삭제", description = "포트폴리오를 삭제합니다.")
     public ResponseEntity<String> deletePortfolio(
             @PathVariable("pofol_id") Long pofol_id
     ) {
         String result = portfolioService.deletePortfolio(pofol_id);
         return ResponseEntity.ok(result);
     }
-
-
 
 
 }
