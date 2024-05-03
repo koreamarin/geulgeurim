@@ -3,6 +3,7 @@ package com.geulgrim.market.market.presentation;
 import com.geulgrim.market.market.application.MarketService;
 import com.geulgrim.market.market.application.dto.request.MarketCreateRequestDto;
 import com.geulgrim.market.market.application.dto.request.MarketUpdateRequestDto;
+import com.geulgrim.market.market.application.dto.response.ETHResponseDto;
 import com.geulgrim.market.market.application.dto.response.MarketResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +44,14 @@ public class MarketController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "게시글 상세 조회", description = "게시글을 상세 조회합니다")
+    @Operation(summary = "게시글 상세 조회", description = "게시글을 상세 조회합니다. 작품을 구매할 수 있는 페이지입니다")
     public ResponseEntity<MarketResponseDto> detail (@PathVariable Long id){
         return new ResponseEntity<>(marketService.detail(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/info")
+    @Operation(summary = "이더리움 정보 조회", description = "API를 이용해 현재 이더리움 정보를 조회합니다")
+    public ResponseEntity<ETHResponseDto> info () {
+        return new ResponseEntity<>(marketService.getETHinfo(), HttpStatus.OK);
     }
 }

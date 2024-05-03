@@ -1,16 +1,20 @@
 package com.geulgrim.market.market.application;
 
-import com.geulgrim.market.commonserver.piece.application.PieceService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.geulgrim.market.global.s3.S3UploadService;
 import com.geulgrim.market.market.application.dto.request.MarketCreateRequestDto;
 import com.geulgrim.market.market.application.dto.request.MarketUpdateRequestDto;
-import com.geulgrim.market.market.application.dto.request.ThumbnailUploadDto;
+import com.geulgrim.market.market.application.dto.response.ETHResponseDto;
 import com.geulgrim.market.market.application.dto.response.MarketResponseDto;
+import com.geulgrim.market.market.domain.ETHinfo.ETHInfo;
 import com.geulgrim.market.market.domain.Market;
 import com.geulgrim.market.market.domain.MarketLog;
 import com.geulgrim.market.market.domain.SearchAndOrderType;
 import com.geulgrim.market.market.domain.SearchType;
 import com.geulgrim.market.market.domain.repository.MarketRepository;
+import com.geulgrim.market.market.exception.GetApiFailedException;
+import com.geulgrim.market.market.exception.JsonProcessingFailedException;
 import com.geulgrim.market.market.exception.NoMarketExistException;
 import com.geulgrim.market.market.exception.NotSupportSuchTypeException;
 import jakarta.transaction.Transactional;
@@ -18,8 +22,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.ion.IonException;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 
 @Service
@@ -98,6 +107,29 @@ public class MarketService {
         }
         market.updateMarket(dto);
         return MarketResponseDto.from(market);
+    }
+
+    public ETHResponseDto getETHinfo() {
+        HttpResponse<String> response;
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://api.bithumb.com/public/ticker/ETH_KRW")).header("accept", "application/json").method("GET", HttpRequest.BodyPublishers.noBody()).build();
+        try {
+            response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            log.info("api 호출 결과 ={}", response.body());
+
+        } catch (IOException | InterruptedException e) {
+            throw new GetApiFailedException();
+        }
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ETHInfo ethInfo = mapper.readValue(response.body(), ETHInfo.class);
+            log.info("생성된 ethinfo 시가 ={}", ethInfo.getData().getOpening_price());
+            return ETHResponseDto.builder().openingPrice(ethInfo.getData().getOpening_price()).minPrice(ethInfo.getData().getMin_price()).build();
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new JsonProcessingFailedException();
+        }
     }
 
     public Market findById(Long id) {
