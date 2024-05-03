@@ -208,7 +208,7 @@ export default function InformationRecentPost() {
         {/* 페이지 네이션, 위치 상태함수로 저장 */}
 
       <Pagination
-            count={Math.floor(dummy.length / pageCount) + 1}
+            count={Math.floor((dummy.length - 1) / pageCount) + 1}
             defaultPage={1}
             siblingCount={1}
             sx={{
