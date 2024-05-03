@@ -10,7 +10,7 @@ export default function InformationView() {
       <Box>
 
         <InformationProfile />
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{pt:10}}>
           <Grid xsOffset={1} xs={10} md={5}>
             {/* 최근 글 */}
             <InformationRecentPost />
