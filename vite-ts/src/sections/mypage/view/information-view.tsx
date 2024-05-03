@@ -1,16 +1,27 @@
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
+import Grid from '@mui/material/Unstable_Grid2';
 
 import InformationProfile from '../information-profile';
+import InformationRecentPost from '../information-recent-post';
+import InformationRecentComment from '../information-recent-comment';
 
 export default function InformationView() {
   return (
-    <Container>
       <Box>
 
         <InformationProfile />
-        
+        <Grid container spacing={3}>
+          <Grid xsOffset={1} xs={10} md={5}>
+            {/* 최근 글 */}
+            <InformationRecentPost />
+          </Grid>
+
+          <Grid xsOffset={1} mdOffset={0} xs={10} md={5}>
+            {/* 최근 코멘트 */}
+            <InformationRecentComment />
+          </Grid>
+        </Grid>
+
       </Box>
-    </Container>
   );
 }
