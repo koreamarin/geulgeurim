@@ -18,21 +18,19 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Builder
 @Entity
 @Getter
-public class PortfolioFile {
+public class  PortfolioFile {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column
     private Long pofolFileId;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "file_url_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private FileUrl fileUrl;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "pofol_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Portfolio portfolio;
+
+    private String fileUrl;
 
 }

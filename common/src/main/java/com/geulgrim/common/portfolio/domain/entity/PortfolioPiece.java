@@ -1,5 +1,6 @@
 package com.geulgrim.common.portfolio.domain.entity;
 
+import com.geulgrim.common.piece.domain.entity.Piece;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,10 +26,14 @@ public class PortfolioPiece {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Portfolio portfolio;
 
+    @ManyToOne
+    @JoinColumn(name = "piece_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Piece piece;
+
     private String title;
     private String program;
     private String contribution;
     private String content;
-    private String pieceUrl;
 
 }
