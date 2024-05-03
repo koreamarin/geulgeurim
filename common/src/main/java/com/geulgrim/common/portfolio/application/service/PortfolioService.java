@@ -2,6 +2,7 @@ package com.geulgrim.common.portfolio.application.service;
 
 import com.geulgrim.common.global.domain.entity.FileUrl;
 import com.geulgrim.common.global.domain.repository.FileUrlRepository;
+import com.geulgrim.common.global.s3.S3UploadService;
 import com.geulgrim.common.portfolio.application.dto.request.PieceInfo;
 import com.geulgrim.common.portfolio.application.dto.request.PortfolioRequest;
 import com.geulgrim.common.portfolio.application.dto.request.PortfolioRequestMyFormat;
@@ -21,7 +22,12 @@ import com.geulgrim.common.user.domain.entity.User;
 import com.geulgrim.common.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,8 +42,8 @@ public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final UserRepository userRepository;
     private final PortfolioFileRepository portfolioFileRepository;
-    private final FileUrlRepository fileUrlRepository;
     private final PortfolioPieceRepository portfolioPieceRepository;
+    private final S3UploadService s3UploadService;
 
 
     public List<PortfolioResponse> getPortfolios(Long userId) {
@@ -163,12 +169,15 @@ public class PortfolioService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
 
-        List<FileUrl> fileUrls = new ArrayList<>();
-        for (String fileUrl : portfolioRequest.getFileUrl()) {
-            FileUrl url = FileUrl.builder()
-                    .fileUrl(fileUrl)
-                    .build();
-            fileUrls.add(fileUrlRepository.save(url));
+        List<String> fileUrls = new ArrayList<>();
+        for (MultipartFile fileUrl : portfolioRequest.getFileUrl()) {
+            try {
+                String fileName = s3UploadService.saveFile(fileUrl);
+                fileUrls.add(fileName);
+            }  catch (IOException e) {
+                e.fillInStackTrace();
+            }
+
         }
 
         Portfolio portfolio = Portfolio.builder()
@@ -176,13 +185,13 @@ public class PortfolioService {
                 .pofolName(portfolioRequest.getPofolName())
                 .status(portfolioRequest.getStatus())
                 .format(Format.USER)
-                .fileUrl(fileUrls.get(0).getFileUrl())
+                .fileUrl(fileUrls.get(0))
                 .build();
 
         portfolioRepository.save(portfolio);
 
         List<PortfolioFile> portfolioFiles = new ArrayList<>();
-        for (FileUrl fileUrl : fileUrls) {
+        for (String fileUrl : fileUrls) {
             PortfolioFile portfolioFile = PortfolioFile.builder()
                     .fileUrl(fileUrl)
                     .portfolio(portfolio)
