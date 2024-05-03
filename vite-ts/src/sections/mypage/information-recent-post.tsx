@@ -1,16 +1,21 @@
-import { useState, useCallback, useRef } from 'react';
+import { useRef, useState, useCallback } from 'react';
 
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table'
+import Stack from '@mui/material/Stack';
 import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import TableConttainer from '@mui/material/TableContainer'
 import InputAdornment from '@mui/material/InputAdornment';
-import Stack from '@mui/material/Stack';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
+
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 import Iconify from 'src/components/iconify';
 import { useTable } from 'src/components/table';
@@ -53,7 +58,7 @@ interface Column {
 
 const COLUMNS: Column[] = [
   { id: 'pk', label: '#', minWidth: 16 },
-  { id: 'title', label: '제목', minWidth: 160},
+  { id: 'title', label: '제목', minWidth: 170},
   {
     id: 'date',
     label: '날짜',
@@ -83,6 +88,8 @@ const POST_SEARCH_OPTIONS = [
 
 export default function InformationRecentPost() {
 
+  const router = useRouter();
+
   const changeSearchRef = useRef<string>('')
 
   const handleClick = () => {
@@ -95,7 +102,11 @@ export default function InformationRecentPost() {
     }
   };
 
-  const pageCount = 10
+  const handleRowClick = (pk:number) => {
+    router.push(paths.community.board.detail(pk));
+  }
+
+  const pageCount = 7
 
   const table = useTable({ defaultRowsPerPage: pageCount })
 
@@ -112,7 +123,12 @@ export default function InformationRecentPost() {
   }, []);
 
   return (
-      <Card>
+      <Card sx={{p:3}}>
+        <Box sx={{ borderBottom: '3px solid black'}}>
+          <Typography variant="h5" component="div" sx={{ color: 'gray', ml: 3, mb: 1, mt: 3 }}>
+            내가 작성한 글
+          </Typography>
+        </Box>
         {/* 필터 들어가기 => zustand 이용, 바뀔 때 pagination 초기화 */}
         <Stack direction="row" spacing={1}>
           {/* search 조건 */}
@@ -170,16 +186,16 @@ export default function InformationRecentPost() {
                     table.page * table.rowsPerPage,
                     table.page * table.rowsPerPage + table.rowsPerPage
                   ).map((row) => (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.pk}>
-                      {COLUMNS.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === 'number' ? column.format(value) : value}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.pk} onClick={() => handleRowClick(row.pk)} sx={{ cursor: 'pointer'}}>
+                        {COLUMNS.map((column) => {
+                          const value = row[column.id];
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.format && typeof value === 'number' ? column.format(value) : value}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
                   ))
                   )
                 }
