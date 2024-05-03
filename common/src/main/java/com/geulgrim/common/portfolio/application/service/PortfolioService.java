@@ -1,13 +1,13 @@
 package com.geulgrim.common.portfolio.application.service;
 
-import com.geulgrim.common.global.domain.entity.FileUrl;
-import com.geulgrim.common.global.domain.repository.FileUrlRepository;
+
 import com.geulgrim.common.global.s3.S3UploadService;
 import com.geulgrim.common.piece.domain.entity.Piece;
 import com.geulgrim.common.piece.domain.repository.PieceRepository;
 import com.geulgrim.common.portfolio.application.dto.request.PieceInfo;
 import com.geulgrim.common.portfolio.application.dto.request.PortfolioRequest;
 import com.geulgrim.common.portfolio.application.dto.request.PortfolioRequestMyFormat;
+import com.geulgrim.common.portfolio.application.dto.response.PieceInfoDetail;
 import com.geulgrim.common.portfolio.application.dto.response.PortfolioResponse;
 import com.geulgrim.common.portfolio.application.dto.response.PortfolioResponseDetail;
 import com.geulgrim.common.portfolio.application.dto.response.PortfolioResponseDetailMyFormat;
@@ -24,8 +24,6 @@ import com.geulgrim.common.user.domain.entity.User;
 import com.geulgrim.common.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -88,16 +86,33 @@ public class PortfolioService {
                 .orElseThrow(() -> new PortfolioException(NOT_EXISTS_PORTFOLIO));
 
         ArrayList<PortfolioPiece> portfolioPieces = portfolioPieceRepository.findAllByPortfolio_PofolId(pofolId);
-        ArrayList<PieceInfo> pieces = new ArrayList<>();
+        ArrayList<PieceInfoDetail> pieces = new ArrayList<>();
 
         for (PortfolioPiece portfolioPiece : portfolioPieces) {
-            pieces.add(PieceInfo.builder()
-                    .title(portfolioPiece.getTitle())
-                    .program(portfolioPiece.getProgram())
-                    .contribution(portfolioPiece.getContribution())
-                    .content(portfolioPiece.getContent())
-                    .pieceUrl(portfolioPiece.getPieceUrl())
-                    .build());
+            if (portfolioPiece.getPiece() != null) {
+                Piece piece = pieceRepository.findById(portfolioPiece.getPiece().getId())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 작품이 없습니다."));
+
+                // 작품을 선택했다면
+                pieces.add(PieceInfoDetail.builder()
+                        .pieceUrl(piece.getFileUrl())
+                        .title(portfolioPiece.getTitle())
+                        .program(portfolioPiece.getProgram())
+                        .contribution(portfolioPiece.getContribution())
+                        .content(portfolioPiece.getContent())
+                        .pieceUploaded(portfolioPiece.getFileUrl())
+                        .build());
+            } else {
+                // 파일을 업로드했다면
+                pieces.add(PieceInfoDetail.builder()
+                        .title(portfolioPiece.getTitle())
+                        .program(portfolioPiece.getProgram())
+                        .contribution(portfolioPiece.getContribution())
+                        .content(portfolioPiece.getContent())
+                        .pieceUrl(portfolioPiece.getFileUrl())
+                        .build());
+            }
+
         }
 
         return PortfolioResponseDetail.builder()
@@ -139,30 +154,13 @@ public class PortfolioService {
         // 추후 user exception 만들어서 수정해야 함
 
         // Portfolio 저장
-        Portfolio portfolio = new Portfolio();
-        if (portfolioRequest.getPieces().get(0).getPieceId() == null) {
-            // 사용자가 작품 선택을 하지 않고 파일을 업로드했다면,
-            portfolio = Portfolio.builder()
-                    .user(user)
-                    .pofolName(portfolioRequest.getPofolName())
-                    .status(portfolioRequest.getStatus())
-                    .format(Format.SERVICE)
-                    // fileUrl은 S3에 저장하고 그 중 첫 번째 이미지로 선택.
-                    .build();
+        Portfolio portfolio = Portfolio.builder()
+                .user(user)
+                .pofolName(portfolioRequest.getPofolName())
+                .status(portfolioRequest.getStatus())
+                .format(Format.SERVICE)
+                .build();
 
-        } else {
-            // 작품을 선택했다면
-            Piece piece = pieceRepository.findById(portfolioRequest.getPieces().get(0).getPieceId())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 작품이 없습니다."));
-
-            portfolio = Portfolio.builder()
-                    .user(user)
-                    .pofolName(portfolioRequest.getPofolName())
-                    .status(portfolioRequest.getStatus())
-                    .format(Format.SERVICE)
-                    .fileUrl(piece.getFileUrl())
-                    .build();
-        }
         portfolioRepository.save(portfolio);
 
         ArrayList<String> fileUrls = new ArrayList<>();
@@ -171,7 +169,6 @@ public class PortfolioService {
             PortfolioPiece portfolioPiece = new PortfolioPiece();
             if (pieceInfo.getPieceId() == null) {
                 // 사용자가 작품 선택을 하지 않고 파일을 업로드했다면, S3에 저장하고 그 url을 저장
-
                 String fileUrl = "";
                 try {
                     fileUrl = s3UploadService.saveFile(pieceInfo.getPieceUploaded());
@@ -208,11 +205,9 @@ public class PortfolioService {
             portfolioPieceRepository.save(portfolioPiece);
         }
 
-        // 위의 로직에 따르면, fileUrl이 null일 수 있음.
-        if (portfolio.getFileUrl() == null) {
-            portfolio.setFileUrl(fileUrls.get(0));
-            portfolioRepository.save(portfolio);
-        }
+        // 위의 로직에 따르면, fileUrl이 null 임.
+        portfolio.setFileUrl(fileUrls.get(0));
+        portfolioRepository.save(portfolio);
 
         return portfolio.getPofolId();
 
