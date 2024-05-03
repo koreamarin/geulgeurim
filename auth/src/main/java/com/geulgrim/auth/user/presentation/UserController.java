@@ -23,10 +23,11 @@ import org.springframework.web.client.RestTemplate;
 public class UserController {
     
     private final UserService userService;
-    @GetMapping
-    public ResponseEntity<String> test() {
-        return new ResponseEntity<>("ㅎㅇ", HttpStatus.OK);
-    }
+
+//    @GetMapping
+//    public ResponseEntity<String> test() {
+//        return new ResponseEntity<>("ㅎㅇ", HttpStatus.OK);
+//    }
 
     @GetMapping("/oauth2/code/kakao")
     public ResponseEntity<UserLoginResponse> kakaoCallback(String code) {      // code는 Authorization code 이다.

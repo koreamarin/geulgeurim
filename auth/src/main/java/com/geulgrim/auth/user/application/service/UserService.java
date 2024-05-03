@@ -50,7 +50,7 @@ public class UserService {
 
 
         // 요청하기 위해 헤더(Header)와 데이터(Body)를 합친다.
-        // kakaoTokenRequest는 데이터(Body)와 헤더(Header)를 Entity가 된다.
+        // kakaoTokenRequest는 데이터(Body)와 헤더(Header)가 Entity가 된다.
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
 
         // POST 방식으로 Http 요청한다. 그리고 response 변수의 응답 받는다.
