@@ -1,7 +1,9 @@
 package com.geulgrim.auth.user.application.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
+@Getter
 public class PropertiesRequest {
     @JsonProperty("nickname")
     private String nickname;
