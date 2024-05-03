@@ -11,8 +11,13 @@ import java.util.List;
 public interface FileUrlRepository extends JpaRepository<FileUrl, Long> {
 
     @Query("SELECT f FROM FileUrl f LEFT JOIN BoardImage b " +
-            "WHERE b.boardId = :boardId " +
+            "WHERE b.board.boardId = :boardId " +
             "GROUP BY f.fileUrlId")
     List<FileUrl> findFileUrlByBoardId(long boardId);
+
+    @Query("SELECT f FROM FileUrl f LEFT JOIN ShareImage s " +
+            "WHERE s.share.shareId = :shareId " +
+            "GROUP BY f.fileUrlId")
+    List<FileUrl> findFileUrlByShareId(long shareId);
 
 }

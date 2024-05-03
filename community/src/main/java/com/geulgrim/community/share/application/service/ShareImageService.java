@@ -1,6 +1,5 @@
-package com.geulgrim.community.board.application.service;
+package com.geulgrim.community.share.application.service;
 
-import com.geulgrim.community.board.domain.repository.BoardImageRepository;
 import com.geulgrim.community.global.file.entity.FileUrl;
 import com.geulgrim.community.global.file.repository.FileUrlRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +11,11 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class BoardImageService {
+public class ShareImageService {
 
     private final FileUrlRepository fileUrlRepository;
 
-    public List<FileUrl> getFileUrl(long boardImageId) {
-        return fileUrlRepository.findFileUrlByBoardId(boardImageId);
+    public List<FileUrl> getFileUrl(long shareImageId) {
+        return fileUrlRepository.findFileUrlByShareId(shareImageId);
     }
-
 }

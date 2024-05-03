@@ -16,10 +16,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,34 +29,26 @@ public class BoardController {
     private final BoardCommentService boardCommentService;
     private final BoardImageService boardImageService;
 
-    @GetMapping("/")
+    @GetMapping()
     @Operation(summary = "자유게시판 게시글 전체 조회", description = "자유게시판의 모든 게시글을 조회합니다.")
     public ResponseEntity<List<BoardListResponse>> getBoard() {
         return new ResponseEntity<>(boardService.boardList(), HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping()
     @Operation(summary = "자유게시판 게시글 작성", description = "자유게시판에 게시글을 1개 작성합니다.")
-    public ResponseEntity<Board> createBoard(@RequestBody BoardWriteRequest boardWriteRequest) {
+    public ResponseEntity<Board> createBoard(@RequestPart BoardWriteRequest boardWriteRequest,
+                                             @RequestPart(required = false) List<MultipartFile> files) {
         // 유저 아이디 수정
         long userId = 1;
+        boardWriteRequest.setImageList(files);
         return new ResponseEntity<>(boardService.writeBoard(userId, boardWriteRequest), HttpStatus.CREATED);
     }
 
     @GetMapping("/{boardId}")
     @Operation(summary = "자유게시판 게시글 상세 조회", description = "클릭한 자유게시판의 게시글을 상세 조회 합니다.")
     public ResponseEntity<BoardDetailResponse> boardDetail(@PathVariable long boardId) {
-        Board board = boardService.boardDetail(boardId);
-        List<BoardComment> comments = boardCommentService.commentList(boardId);
-        List<FileUrl> urls = boardImageService.getFileUrl(boardId);
-
-        BoardDetailResponse boardDetailResponse = BoardDetailResponse.builder()
-                .board(board)
-                .commentList(comments)
-                .urlList(urls)
-                .build();
-
-        return new ResponseEntity<>(boardDetailResponse, HttpStatus.OK);
+        return new ResponseEntity<>(boardService.boardDetail(boardId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}")

@@ -2,7 +2,6 @@ package com.geulgrim.community.board.application.service;
 
 import com.geulgrim.community.board.application.dto.request.BoardCommentUpdateRequest;
 import com.geulgrim.community.board.application.dto.request.BoardCommentWriteRequest;
-import com.geulgrim.community.board.application.dto.request.BoardWriteRequest;
 import com.geulgrim.community.board.domain.entity.Board;
 import com.geulgrim.community.board.domain.entity.BoardComment;
 import com.geulgrim.community.board.domain.repository.BoardCommentRepository;
@@ -33,20 +32,25 @@ public class BoardCommentService {
         boardCommentRepository.save(boardComment);
         return boardCommentRepository.findAllByBoardId(boardCommentWriteRequest.getBoardId());
     }
+
     // 조회
     public List<BoardComment> commentList(long boardId) {
         return boardCommentRepository.findAllByBoardId(boardId);
     }
+
     // 수정
-    public BoardComment modifyComment(BoardCommentUpdateRequest boardCommentUpdateRequest) {
+    public BoardComment modifyComment(long boardCommentId, BoardCommentUpdateRequest boardCommentUpdateRequest) {
         Board board = boardRepository.findByBoardId(boardCommentUpdateRequest.getBoardId());
+
         BoardComment boardComment = BoardComment.builder()
+                .boardCommentId(boardCommentId)
                 .content(boardCommentUpdateRequest.getContent())
                 .board(board)
                 .build();
         boardCommentRepository.save(boardComment);
         return boardComment;
     }
+
     // 삭제
     public void deleteComment(long boardCommentId) {
         boardCommentRepository.deleteBoardCommentByBoardCommentId(boardCommentId);

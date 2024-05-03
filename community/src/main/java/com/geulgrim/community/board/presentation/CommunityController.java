@@ -1,6 +1,7 @@
 package com.geulgrim.community.board.presentation;
 
 import com.geulgrim.community.board.application.service.BoardService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,8 @@ public class CommunityController {
 
 
     @GetMapping("/")
+    @Operation(summary = "커뮤니티 메인 화면",
+            description = "커뮤니티 메인 화면에 자유게시판 인기글 5개, 최신글 5개, 그림평가 게시판 최신글 5개, 크루모집 최신글 5개를 조회합니다.")
     public ResponseEntity<?> communityMain() {
         Map<String, List<?>> map = new HashMap<>();
         // 인기글
