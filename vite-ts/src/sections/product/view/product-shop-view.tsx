@@ -100,6 +100,7 @@ export default function ProductShopView() {
       alignItems={{ xs: 'flex-end', sm: 'center' }}
       direction={{ xs: 'column', sm: 'row' }}
     >
+      {/* 검색 부분 */}
       <ProductSearch
         query={debouncedQuery}
         results={searchResults}
@@ -107,7 +108,7 @@ export default function ProductShopView() {
         loading={searchLoading}
         hrefItem={(id: string) => paths.product.details(id)}
       />
-
+    {/* 필터 부분 */}
       <Stack direction="row" spacing={1} flexShrink={0}>
         <ProductFilters
           open={openFilters.value}
@@ -151,7 +152,7 @@ export default function ProductShopView() {
       sx={{
         mb: 15,
       }}
-    >
+    >qqqqqqqeee
       <CartIcon totalItems={checkout.totalItems} />
 
       <Typography
@@ -169,14 +170,20 @@ export default function ProductShopView() {
           mb: { xs: 3, md: 5 },
         }}
       >
+        ㅇㅇㅇㅇㅇ
+
         {renderFilters}
 
+        aaaa
+
         {canReset && renderResults}
+        qqqq
       </Stack>
 
       {(notFound || productsEmpty) && renderNotFound}
 
       <ProductList products={dataFiltered} loading={productsLoading} />
+      eerere
     </Container>
   );
 }

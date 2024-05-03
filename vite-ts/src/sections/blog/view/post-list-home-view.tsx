@@ -56,7 +56,7 @@ export default function PostListHomeView() {
           my: { xs: 3, md: 5 },
         }}
       >
-        Blog
+        Blogdd
       </Typography>
 
       <Stack
@@ -78,6 +78,7 @@ export default function PostListHomeView() {
       </Stack>
 
       <PostList posts={dataFiltered} loading={postsLoading} />
+      dd
     </Container>
   );
 }
