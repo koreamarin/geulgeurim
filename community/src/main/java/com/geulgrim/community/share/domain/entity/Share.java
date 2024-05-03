@@ -1,5 +1,6 @@
 package com.geulgrim.community.share.domain.entity;
 
+import com.geulgrim.community.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -12,7 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Share {
+public class Share extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long shareId;
@@ -20,10 +21,6 @@ public class Share {
     private String title;
     private String content;
     private long hit;
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "share", cascade = CascadeType.ALL)
     private List<ShareComment> commentList;

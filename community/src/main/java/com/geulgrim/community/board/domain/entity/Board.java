@@ -1,5 +1,6 @@
 package com.geulgrim.community.board.domain.entity;
 
+import com.geulgrim.community.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,11 +13,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Board {
+public class Board extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +25,6 @@ public class Board {
     private String title;
     private String content;
     private long hit;
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<BoardComment> commentList;
