@@ -82,9 +82,8 @@ public class AwsS3Service {
         String currentDate = dateFormat.format(new Date(time.getTime()));
 
         // 파일명 생성
-        String formattedFileName = String.format("%s/%d_%s.%s", boardType, userId, currentDate, getFileExtension(fileName));
 
-        return formattedFileName;
+        return String.format("%s/%d_%s.%s", boardType, userId, currentDate, getFileExtension(fileName));
     }
 
     // file 형식이 잘못된 경우를 확인하기 위해 만들어진 로직이며, 파일 타입과 상관없이 업로드할 수 있게 하기위해, "."의 존재 유무만 판단하였습니다.
