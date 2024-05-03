@@ -1,9 +1,6 @@
 package com.geulgrim.market.market.application.dto.request;
 
 import com.geulgrim.market.market.domain.Market;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,6 +31,7 @@ public class MarketCreateRequestDto {
                 .title(title)
                 .content(content)
                 .price(price)
+                .viewCount(0)
                 .build();
     }
 

@@ -1,6 +1,6 @@
 package com.geulgrim.market.market.domain;
 
-import com.geulgrim.market.global.entity.BaseEntity;
+import com.geulgrim.market.market.application.dto.request.MarketUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Market extends BaseEntity {
+public class Market {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +30,17 @@ public class Market extends BaseEntity {
 
     private Double price;
 
+    private int viewCount;
+
     public void uploadThumbnail(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public void updateMarket(MarketUpdateRequestDto dto) {
+        this.piece = dto.getPiece();
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.price = dto.getPrice();
     }
 
 }

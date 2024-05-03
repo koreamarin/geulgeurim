@@ -26,6 +26,8 @@ public class MarketResponseDto {
 
     private Double price;
 
+    private int viewCount;
+
     public static MarketResponseDto from(Market market) {
         return MarketResponseDto.builder()
                 .id(market.getId())
@@ -35,6 +37,7 @@ public class MarketResponseDto {
                 .title(market.getTitle())
                 .content(market.getContent())
                 .price(market.getPrice())
+                .viewCount(market.getViewCount())
                 .build();
     }
 }

@@ -18,11 +18,11 @@ public class MarketLog extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long buyerId;
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "piece_id")
+    private Long piece;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "piece_id")
-    private Piece piece;
+    private Long buyerId;
 
     private Double price;
 
