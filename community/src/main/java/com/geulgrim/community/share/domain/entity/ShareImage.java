@@ -1,6 +1,6 @@
-package com.geulgrim.community.board.domain.entity;
+package com.geulgrim.community.share.domain.entity;
 
-import com.geulgrim.community.board.domain.entity.enums.ImageType;
+import com.geulgrim.community.share.domain.entity.enums.ImageType;
 import com.geulgrim.community.global.file.entity.FileUrl;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class BoardImage {
+public class ShareImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +23,6 @@ public class BoardImage {
     private ImageType imageType;
 
     @ManyToOne
-    @JoinColumn(name = "board_id")
-    private Board board;
+    @JoinColumn(name = "share_id")
+    private Share share;
 }

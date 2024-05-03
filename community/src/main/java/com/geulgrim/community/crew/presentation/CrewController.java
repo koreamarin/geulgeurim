@@ -8,7 +8,7 @@ import com.geulgrim.community.crew.application.dto.response.CrewApplicant;
 import com.geulgrim.community.crew.application.dto.response.CrewBoard;
 import com.geulgrim.community.crew.application.dto.response.CrewBoardDetail;
 import com.geulgrim.community.crew.application.service.CrewService;
-import com.geulgrim.community.global.s3.S3UploadService;
+import com.geulgrim.community.global.s3.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import java.util.List;
 public class CrewController {
 
     private final CrewService crewService;
-    private final S3UploadService s3UploadService;
+    private final AwsS3Service s3UploadService;
 
     // 크루 검색
     @GetMapping("/search")
@@ -70,17 +71,17 @@ public class CrewController {
 
         ArrayList<String> fileUrls = new ArrayList<>();
 
-        try {
-            for (MultipartFile file : multipartFiles) {
-                String fileName = s3UploadService.saveFile(file);
-                fileUrls.add(fileName);
-                System.out.println("Uploaded file URL: " + fileName);
-            }
-            crewService.addCrewBoardImages(crewId, fileUrls);
-            return ResponseEntity.ok("이미지를 성공적으로 저장했습니다.");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 저장에 실패했습니다.");
+        // 유저 아이디 수정
+        long userId = 1;
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        for (MultipartFile file : multipartFiles) {
+            String fileName = s3UploadService.uploadFile(userId, file, timestamp, "crew");
+            fileUrls.add(fileName);
+            System.out.println("Uploaded file URL: " + fileName);
         }
+        crewService.addCrewBoardImages(crewId, fileUrls);
+        return ResponseEntity.ok("이미지를 성공적으로 저장했습니다.");
 
     }
 

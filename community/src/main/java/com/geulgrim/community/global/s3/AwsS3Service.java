@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.geulgrim.community.board.domain.entity.enums.ImageType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -31,8 +32,8 @@ public class AwsS3Service {
 
     private final AmazonS3 amazonS3;
 
-    public String uploadFile(Long babyId, MultipartFile file, Timestamp time, String type){
-        String fileName = createFileName(babyId,file.getOriginalFilename(),time,type);
+    public String uploadFile(Long userId, MultipartFile file, Timestamp time, String boardType){
+        String fileName = createFileName(userId,file.getOriginalFilename(),time, boardType);
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getSize());
         objectMetadata.setContentType(file.getContentType());
@@ -46,12 +47,12 @@ public class AwsS3Service {
         
         return getUrl(fileName);
     }
-    public List<String> uploadFile(Long babyId, List<MultipartFile> multipartFiles, Timestamp time, String type){
+    public List<String> uploadFile(Long userId, List<MultipartFile> multipartFiles, Timestamp time, String boardType){
         List<String> fileNameList = new ArrayList<>();
 
         // forEach 구문을 통해 multipartFiles 리스트로 넘어온 파일들을 순차적으로 fileNameList 에 추가
         multipartFiles.forEach(file -> {
-            String fileName = createFileName(babyId, file.getOriginalFilename(),time,type);
+            String fileName = createFileName(userId, file.getOriginalFilename(),time,boardType);
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentLength(file.getSize());
             objectMetadata.setContentType(file.getContentType());
@@ -65,20 +66,24 @@ public class AwsS3Service {
             fileNameList.add(fileName);
 
         });
-        return fileNameList;
+
+        List<String> url = new ArrayList<>();
+        for(String fileName : fileNameList){
+            url.add(getUrl(fileName));
+        }
+        return url;
     }
 
-    public String createFileName(Long babyId, String fileName, Timestamp time, String type) {
+    public String createFileName(Long userId, String fileName, Timestamp time, String boardType) {
         // 파일명 생성에 사용될 날짜 포맷 설정
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
         // 파일명 생성에 사용될 현재 날짜 문자열 가져오기
         String currentDate = dateFormat.format(new Date(time.getTime()));
 
         // 파일명 생성
-        String formattedFileName = String.format("%d_%s_%s.%s", babyId, type, currentDate, getFileExtension(fileName));
 
-        return formattedFileName;
+        return String.format("%s/%d_%s.%s", boardType, userId, currentDate, getFileExtension(fileName));
     }
 
     // file 형식이 잘못된 경우를 확인하기 위해 만들어진 로직이며, 파일 타입과 상관없이 업로드할 수 있게 하기위해, "."의 존재 유무만 판단하였습니다.

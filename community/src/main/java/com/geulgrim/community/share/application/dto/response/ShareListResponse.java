@@ -1,4 +1,4 @@
-package com.geulgrim.community.board.application.dto.response;
+package com.geulgrim.community.share.application.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardResponse {
-    private long boardId;
+public class ShareListResponse {
+    private long shareId;
     private long userId;
     private String title;
     private long hit;

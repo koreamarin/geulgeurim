@@ -1,5 +1,6 @@
-package com.geulgrim.community.board.domain.entity;
+package com.geulgrim.community.share.domain.entity;
 
+import com.geulgrim.community.board.domain.entity.Board;
 import com.geulgrim.community.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,16 +16,14 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardComment extends BaseEntity {
-
+public class ShareComment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardCommentId;
+    private Long shareCommentId;
     private Long userId;
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "board_id")
-    private Board board;
-
+    @JoinColumn(name = "share_id")
+    private Share share;
 }

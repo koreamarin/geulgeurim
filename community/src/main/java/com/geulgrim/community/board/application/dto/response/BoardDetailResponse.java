@@ -1,6 +1,8 @@
 package com.geulgrim.community.board.application.dto.response;
 
+import com.geulgrim.community.board.domain.entity.Board;
 import com.geulgrim.community.board.domain.entity.BoardComment;
+import com.geulgrim.community.global.file.entity.FileUrl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,12 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardDetailResponse {
-    private long boardId;
-    private long userId;
-    private String title;
-    private String content;
-    private long hit;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Board board;
     private List<BoardComment> commentList;
+    private List<FileUrl> urlList;
 }
