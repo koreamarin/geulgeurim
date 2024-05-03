@@ -24,6 +24,7 @@ repositories {
 
 ext {
 	set('snippetsDir', file("build/generated-snippets"))
+	springCloudVersion = "2023.0.1"
 }
 
 dependencies {
@@ -38,6 +39,12 @@ dependencies {
 
 	// eureka
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+	}
 }
 
 tasks.named('test') {
