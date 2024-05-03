@@ -1,7 +1,6 @@
 package com.geulgrim.common.portfolio.domain.entity;
 
-import com.geulgrim.common.global.domain.entity.FileUrl;
-import com.geulgrim.common.user.domain.entity.User;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

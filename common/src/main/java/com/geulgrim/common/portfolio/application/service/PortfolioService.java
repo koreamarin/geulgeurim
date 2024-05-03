@@ -166,6 +166,7 @@ public class PortfolioService {
         ArrayList<String> fileUrls = new ArrayList<>();
         // PortfolioPiece에 저장
         for (PieceInfo pieceInfo: portfolioRequest.getPieces()) {
+
             PortfolioPiece portfolioPiece = new PortfolioPiece();
             if (pieceInfo.getPieceId() == null) {
                 // 사용자가 작품 선택을 하지 않고 파일을 업로드했다면, S3에 저장하고 그 url을 저장
