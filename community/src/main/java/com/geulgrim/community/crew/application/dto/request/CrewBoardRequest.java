@@ -3,8 +3,12 @@ package com.geulgrim.community.crew.application.dto.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.geulgrim.community.crew.domain.entity.enums.BoardStatus;
 import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
-@Getter
+import java.util.List;
+
+@Getter @Setter
 public class CrewBoardRequest {
 
     @JsonProperty("project_name")
@@ -18,5 +22,6 @@ public class CrewBoardRequest {
     private Integer story;
     private Integer conti;
     private BoardStatus status;
+    private List<MultipartFile> imageList;
 
 }
