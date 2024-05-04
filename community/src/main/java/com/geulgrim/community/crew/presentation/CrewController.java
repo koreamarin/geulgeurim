@@ -9,6 +9,7 @@ import com.geulgrim.community.crew.application.dto.response.CrewBoard;
 import com.geulgrim.community.crew.application.dto.response.CrewBoardDetail;
 import com.geulgrim.community.crew.application.service.CrewService;
 import com.geulgrim.community.global.s3.AwsS3Service;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/crew")
+@RequestMapping("/api/v1/community/crew")
 @RestController
 public class CrewController {
 
     private final CrewService crewService;
     private final AwsS3Service s3UploadService;
 
-    // 크루 검색
+
     @GetMapping("/search")
+    @Operation(summary = "크루모집 게시판 검색", description = "크루 모집 게시판의 게시글을 검색합니다.")
     public ResponseEntity<List<CrewBoard>> search(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category
@@ -39,8 +41,9 @@ public class CrewController {
     }
 
 
-    // 크루 모집 상세 조회
+
     @GetMapping("/detail/{crew_id}")
+    @Operation(summary = "크루모집 게시글 상세 조회", description = "크루모집 게시판의 게시글을 상세 조회합니다.")
     public ResponseEntity<CrewBoardDetail> getCrewBoardDetail(
             @PathVariable("crew_id") Long crewId
     ) {
@@ -48,56 +51,33 @@ public class CrewController {
         return ResponseEntity.ok(detail);
     }
 
-    // 크루 모집 게시글 등록
-    @PostMapping("/{userId}")
-    public ResponseEntity<Long> addCrewBoard(
-            @RequestBody CrewBoardRequest crewBoardRequest,
-            @PathVariable("userId") Long userId
-    ) {
 
+    @PostMapping("/{userId}")
+    @Operation(summary = "크루모집 게시글 등록", description = "크루모집 게시판에 게시글을 등록합니다.")
+    public ResponseEntity<Long> addCrewBoard(
+            @PathVariable("userId") Long userId,
+            @RequestPart CrewBoardRequest crewBoardRequest,
+            @RequestPart(required = false) List<MultipartFile> files
+    ) {
+        crewBoardRequest.setImageList(files);
         Long crewId = crewService.addCrewBoard(userId, crewBoardRequest);
         return ResponseEntity.ok(crewId);
     }
 
-    // 크루 모집 이미지 등록
-    @PostMapping("/image/{crewId}")
-    public ResponseEntity<String> addCrewBoardImages(
-            @PathVariable("crewId") Long crewId,
-            @RequestPart(value = "crewBoardImg", required = false) ArrayList<MultipartFile> multipartFiles
-    ) {
-        if (multipartFiles == null || multipartFiles.isEmpty()) {
-            return ResponseEntity.badRequest().body("No files uploaded");
-        }
 
-        ArrayList<String> fileUrls = new ArrayList<>();
-
-        // 유저 아이디 수정
-        long userId = 1;
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-        for (MultipartFile file : multipartFiles) {
-            String fileName = s3UploadService.uploadFile(userId, file, timestamp, "crew");
-            fileUrls.add(fileName);
-            System.out.println("Uploaded file URL: " + fileName);
-        }
-        crewService.addCrewBoardImages(crewId, fileUrls);
-        return ResponseEntity.ok("이미지를 성공적으로 저장했습니다.");
-
-    }
-
-    // 크루 모집 수정
     @PutMapping("{crewId}")
+    @Operation(summary = "크루모집 게시글 수정", description = "크루모집 게시판의 게시글을 수정합니다.")
     public ResponseEntity<String> update(
             @PathVariable("crewId") Long crewId,
             @RequestBody CrewBoardModifyRequest modifyRequest
-
     ) {
         String result = crewService.update(crewId, modifyRequest);
         return ResponseEntity.ok(result);
     }
 
-    // 크루 모집 삭제
+
     @DeleteMapping("/{crewId}")
+    @Operation(summary = "크루모집 게시글 삭제", description = "크루모집 게시판의 게시글을 삭제합니다.")
     public ResponseEntity<String> delete(
             @PathVariable("crewId") Long crewId
     ) {
@@ -105,8 +85,9 @@ public class CrewController {
         return ResponseEntity.ok(result);
     }
 
-    // 크루 모집 신청
+
     @PostMapping("/request/{crewId}")
+    @Operation(summary = "크루 지원", description = "크루에 지원합니다.")
     public ResponseEntity<Long> apply(
             @RequestBody CrewJoinRequest crewJoinRequest,
             @PathVariable("crewId") Long crewId
@@ -117,8 +98,9 @@ public class CrewController {
     }
 
 
-    // 크루 모집 신청자 전체 조회
+
     @GetMapping("/request/{crew_id}")
+    @Operation(summary = "크루 모집 신청자 조회", description = "크루 모집 신청자를 전체 조회합니다.")
     public ResponseEntity<List<CrewApplicant>> getCrewApplicants(
             @PathVariable("crew_id") Long crewId
     ) {
@@ -126,8 +108,9 @@ public class CrewController {
         return ResponseEntity.ok(crewApplicants);
     }
 
-    // 크루 모집 신청에 대한 답변
+
     @PutMapping("/request/reply/{crew_request_id}")
+    @Operation(summary = "크루 지원에 대한 답변", description = "크루 신청을 승인 또는 거절합니다.")
     public ResponseEntity<Long> reply(
             @PathVariable("crew_request_id") Long requestId,
             @RequestBody CrewReply crewReply

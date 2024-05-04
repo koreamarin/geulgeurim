@@ -1,5 +1,6 @@
 package com.geulgrim.community.crew.application.service;
 
+import com.geulgrim.community.board.domain.entity.BoardImage;
 import com.geulgrim.community.crew.application.dto.request.CrewBoardModifyRequest;
 import com.geulgrim.community.crew.application.dto.request.CrewBoardRequest;
 import com.geulgrim.community.crew.application.dto.request.CrewJoinRequest;
@@ -17,12 +18,16 @@ import com.geulgrim.community.crew.domain.repository.CrewImageRepository;
 import com.geulgrim.community.crew.domain.repository.CrewRepository;
 import com.geulgrim.community.crew.domain.repository.CrewRequestRepository;
 import com.geulgrim.community.crew.exception.CrewException;
+import com.geulgrim.community.global.file.entity.FileUrl;
+import com.geulgrim.community.global.s3.AwsS3Service;
 import com.geulgrim.community.global.user.domain.entity.User;
 import com.geulgrim.community.global.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +45,7 @@ public class CrewService {
     private final CrewImageRepository crewImageRepository;
     private final CrewRequestRepository crewRequestRepository;
     private final CrewDslRepository crewDslRepository;
+    private final AwsS3Service awsS3Service;
 
     public List<CrewBoard> search(String keyword, String category){
         List<Crew> crews = crewDslRepository.search(keyword, category);
@@ -137,26 +143,21 @@ public class CrewService {
 
         crewRepository.save(crew);
 
-        return crew.getCrewId();
-
-    }
-
-
-    public void addCrewBoardImages(Long crewId, ArrayList<String> fileUrls) {
-
-        Crew crew = crewRepository.findById(crewId)
-                .orElseThrow(() -> new CrewException(NOT_EXISTS_CREW_BOARD));
-
-        List<CrewImage> crewImages = new ArrayList<>();
-        for (String fileUrl : fileUrls) {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        ArrayList<CrewImage> images = new ArrayList<>();
+        for(MultipartFile image : crewBoardRequest.getImageList()) {
+            String url = awsS3Service.uploadFile(userId, image, timestamp, "board");
+            log.info("URL : {}", url);
             CrewImage crewImage = CrewImage.builder()
                     .crew(crew)
-                    .fileUrl(fileUrl)
+                    .fileUrl(url)
                     .build();
-            crewImages.add(crewImage);
+            images.add(crewImage);
         }
+        crewImageRepository.saveAll(images);
 
-        crewImageRepository.saveAll(crewImages);
+        return crew.getCrewId();
+
     }
 
     public String update(Long crewId, CrewBoardModifyRequest modifyRequest) {
