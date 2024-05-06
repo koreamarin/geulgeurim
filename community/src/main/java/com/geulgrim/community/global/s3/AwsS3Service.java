@@ -89,9 +89,9 @@ public class AwsS3Service {
     // file 형식이 잘못된 경우를 확인하기 위해 만들어진 로직이며, 파일 타입과 상관없이 업로드할 수 있게 하기위해, "."의 존재 유무만 판단하였습니다.
     private String getFileExtension(String fileName){
         try{
-            return fileName.substring(fileName.lastIndexOf(".")+1);
-        } catch (StringIndexOutOfBoundsException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일" + fileName + ") 입니다.");
+                    return fileName.substring(fileName.lastIndexOf(".")+1);
+                } catch (StringIndexOutOfBoundsException e){
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일" + fileName + ") 입니다.");
         }
     }
 
