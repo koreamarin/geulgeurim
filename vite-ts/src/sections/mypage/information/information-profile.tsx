@@ -10,7 +10,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
 import { useMockedUser } from 'src/hooks/use-mocked-user';
 
-import ComponentBlock from './component-block';
+import ComponentBlock from '../component-block';
 
 // ----------------------------------------------------------------------
 

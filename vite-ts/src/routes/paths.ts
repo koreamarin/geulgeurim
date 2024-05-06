@@ -61,6 +61,7 @@ export const paths = {
     portfolio: `${ROOTS.MYPAGE}/portfolio`,
     resume: `${ROOTS.MYPAGE}/resume`,
     works: `${ROOTS.MYPAGE}/works`,
+    worksDetail: (id: number) => `${ROOTS.MYPAGE}/works/${id}`,
   },
 
   comingSoon: '/coming-soon',
