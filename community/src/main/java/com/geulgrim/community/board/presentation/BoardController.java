@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/board")
+@RequestMapping("/api/v1/community/board")
 @Slf4j
 public class BoardController {
     private final BoardService boardService;

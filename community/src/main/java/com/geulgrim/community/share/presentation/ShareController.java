@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/share")
+@RequestMapping("/api/v1/community/share")
 @Slf4j
 public class ShareController {
     private final ShareService shareService;

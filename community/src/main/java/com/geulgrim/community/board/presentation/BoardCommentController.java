@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/comment/board")
+@RequestMapping("/api/v1/community/comment/board")
 @Slf4j
 public class BoardCommentController {
 

@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/comment/share")
+@RequestMapping("/api/v1/community/comment/share")
 @Slf4j
 public class ShareCommentController {
     private final ShareCommentService shareCommentService;
