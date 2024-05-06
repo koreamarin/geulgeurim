@@ -14,13 +14,8 @@ export default function CommunityHome() {
       <Helmet>
         <title>Community 메인페이지</title>
       </Helmet>
-      
       <BoardMainView />
-
-      <h1>그림평가 게시판 영역</h1>
       <ShareMainView />
-
-      <h1>크루모집 영역</h1>
       <CrewMainView />
     </Container>
   );

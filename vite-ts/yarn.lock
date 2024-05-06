@@ -1832,10 +1832,10 @@
   resolved "https://registry.npmjs.org/@remix-run/router/-/router-1.13.1.tgz"
   integrity sha512-so+DHzZKsoOcoXrILB4rqDkMDy7NLMErRdOxvzvOKb507YINKUP4Di+shbTZDhSE/pBZ+vr7XGIpcOO0VLSA+Q==
 
-"@rollup/rollup-win32-x64-msvc@4.6.0":
-  version "4.6.0"
-  resolved "https://registry.npmjs.org/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.6.0.tgz"
-  integrity sha512-QqmCsydHS172Y0Kc13bkMXvipbJSvzeglBncJG3LsYJSiPlxYACz7MmJBs4A8l1oU+jfhYEIC/+AUSlvjmiX/g==
+"@rollup/rollup-win32-x64-msvc@4.17.2":
+  version "4.17.2"
+  resolved "https://registry.npmjs.org/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.17.2.tgz"
+  integrity sha512-TGGO7v7qOq4CYmSBVEYpI1Y5xDuCEnbVC5Vth8mOsW0gDSzxNrVERPc790IGHsrT2dQSimgMr9Ub3Y1Jci5/8w==
 
 "@smithy/abort-controller@^2.0.15":
   version "2.0.15"
@@ -2374,6 +2374,11 @@
   integrity sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==
   dependencies:
     "@types/ms" "*"
+
+"@types/estree@1.0.5":
+  version "1.0.5"
+  resolved "https://registry.npmjs.org/@types/estree/-/estree-1.0.5.tgz"
+  integrity sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==
 
 "@types/geojson@*":
   version "7946.0.13"
@@ -6107,10 +6112,10 @@ react-floater@^0.7.9:
     prop-types "^15.8.1"
     tree-changes "^0.9.1"
 
-react-helmet-async@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.npmjs.org/react-helmet-async/-/react-helmet-async-2.0.3.tgz"
-  integrity sha512-7/X3ehSCbjCaIljWa39Bb7F1Y2JWM23FN80kLozx2TdgzUmxKDSLN6qu06NG0Srzm8ljGOjgk7r7CXeEOx4MPw==
+react-helmet-async@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.npmjs.org/react-helmet-async/-/react-helmet-async-2.0.4.tgz"
+  integrity sha512-yxjQMWposw+akRfvpl5+8xejl4JtUlHnEBcji6u8/e6oc7ozT+P9PNTWMhCbz2y9tc5zPegw2BvKjQA+NwdEjQ==
   dependencies:
     invariant "^2.2.4"
     react-fast-compare "^3.2.2"
@@ -6444,23 +6449,29 @@ rimraf@^3.0.2:
   dependencies:
     glob "^7.1.3"
 
-rollup@^4.2.0:
-  version "4.6.0"
-  resolved "https://registry.npmjs.org/rollup/-/rollup-4.6.0.tgz"
-  integrity sha512-R8i5Her4oO1LiMQ3jKf7MUglYV/mhQ5g5OKeld5CnkmPdIGo79FDDQYqPhq/PCVuTQVuxsWgIbDy9F+zdHn80w==
+rollup@^4.17.2, rollup@^4.2.0:
+  version "4.17.2"
+  resolved "https://registry.npmjs.org/rollup/-/rollup-4.17.2.tgz"
+  integrity sha512-/9ClTJPByC0U4zNLowV1tMBe8yMEAxewtR3cUNX5BoEpGH3dQEWpJLr6CLp0fPdYRF/fzVOgvDb1zXuakwF5kQ==
+  dependencies:
+    "@types/estree" "1.0.5"
   optionalDependencies:
-    "@rollup/rollup-android-arm-eabi" "4.6.0"
-    "@rollup/rollup-android-arm64" "4.6.0"
-    "@rollup/rollup-darwin-arm64" "4.6.0"
-    "@rollup/rollup-darwin-x64" "4.6.0"
-    "@rollup/rollup-linux-arm-gnueabihf" "4.6.0"
-    "@rollup/rollup-linux-arm64-gnu" "4.6.0"
-    "@rollup/rollup-linux-arm64-musl" "4.6.0"
-    "@rollup/rollup-linux-x64-gnu" "4.6.0"
-    "@rollup/rollup-linux-x64-musl" "4.6.0"
-    "@rollup/rollup-win32-arm64-msvc" "4.6.0"
-    "@rollup/rollup-win32-ia32-msvc" "4.6.0"
-    "@rollup/rollup-win32-x64-msvc" "4.6.0"
+    "@rollup/rollup-android-arm-eabi" "4.17.2"
+    "@rollup/rollup-android-arm64" "4.17.2"
+    "@rollup/rollup-darwin-arm64" "4.17.2"
+    "@rollup/rollup-darwin-x64" "4.17.2"
+    "@rollup/rollup-linux-arm-gnueabihf" "4.17.2"
+    "@rollup/rollup-linux-arm-musleabihf" "4.17.2"
+    "@rollup/rollup-linux-arm64-gnu" "4.17.2"
+    "@rollup/rollup-linux-arm64-musl" "4.17.2"
+    "@rollup/rollup-linux-powerpc64le-gnu" "4.17.2"
+    "@rollup/rollup-linux-riscv64-gnu" "4.17.2"
+    "@rollup/rollup-linux-s390x-gnu" "4.17.2"
+    "@rollup/rollup-linux-x64-gnu" "4.17.2"
+    "@rollup/rollup-linux-x64-musl" "4.17.2"
+    "@rollup/rollup-win32-arm64-msvc" "4.17.2"
+    "@rollup/rollup-win32-ia32-msvc" "4.17.2"
+    "@rollup/rollup-win32-x64-msvc" "4.17.2"
     fsevents "~2.3.2"
 
 run-applescript@^5.0.0:

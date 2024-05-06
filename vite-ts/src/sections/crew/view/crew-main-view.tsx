@@ -5,8 +5,14 @@ import Container from "@mui/material/Container"
 export default function CrewMainView() {
   return (
     <Container>
-      <Box>
-        community 메인페이지를 위한 크루모집게시판 sections
+      <Box
+        width={800}
+        alignItems="center"
+        sx={{ border: '2px solid lightgrey' }}
+      >
+        <Box paddingLeft={3}>
+          <h2>자유게시판</h2>
+        </Box>
       </Box>
     </Container>
   )
