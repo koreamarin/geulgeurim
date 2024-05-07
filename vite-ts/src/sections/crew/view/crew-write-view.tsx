@@ -82,8 +82,9 @@ export default function CrewApplyView({ id }: Props) {
 
   return (
     <Container>
-      <Typography variant="h6">크루 모집하기 {id}</Typography>
+      <Typography variant="h3">크루 모집하기 {id}</Typography>
       <TextField
+        sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', gap: 2 }}
         label="제목"
         variant="outlined"
         fullWidth
@@ -107,50 +108,56 @@ export default function CrewApplyView({ id }: Props) {
           ))}
         </Box>
 
-        <Container sx={{ my: 10 }}>
-          <TextField
-            label="설명"
-            variant="outlined"
-            fullWidth
-            multiline
-            rows={4}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <Stack spacing={5}>
-            <Card>
-              <CardHeader
-                title="Upload Multi File"
-                action={
-                  <FormControlLabel
-                    control={<Switch checked={preview.value} onClick={preview.onToggle} />}
-                    label="Show Thumbnail"
-                  />
-                }
-              />
-              <CardContent>
-                <Upload
-                  multiple
-                  thumbnail={preview.value}
-                  files={files}
-                  onDrop={handleDropMultiFile}
-                  onRemove={handleRemoveFile}
-                  onRemoveAll={handleRemoveAllFiles}
-                  onUpload={() => console.info('ON UPLOAD')}
+        <TextField
+          label="설명"
+          variant="outlined"
+          fullWidth
+          multiline
+          rows={4}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <Stack spacing={5}>
+          <Card>
+            <CardHeader
+              title="이미지 업로드"
+              action={
+                <FormControlLabel
+                  control={<Switch checked={preview.value} onClick={preview.onToggle} />}
+                  label="Show Thumbnail"
                 />
-              </CardContent>
-            </Card>
-          </Stack>
+              }
+            />
+            <CardContent>
+              <Upload
+                multiple
+                thumbnail={preview.value}
+                files={files}
+                onDrop={handleDropMultiFile}
+                onRemove={handleRemoveFile}
+                onRemoveAll={handleRemoveAllFiles}
+                onUpload={() => console.info('ON UPLOAD')}
+              />
+            </CardContent>
+          </Card>
+        </Stack>
 
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, marginTop: 4 }}>
-            <Button variant="contained" onClick={handleSubmit}>
-              등록
-            </Button>
-            <Button variant="outlined" onClick={handleCancel}>
-              취소
-            </Button>
-          </Box>
-        </Container>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: 1,
+            marginTop: 2,
+            marginBottom: 4,
+          }}
+        >
+          <Button variant="contained" onClick={handleSubmit}>
+            등록
+          </Button>
+          <Button variant="outlined" onClick={handleCancel}>
+            취소
+          </Button>
+        </Box>
       </Box>
     </Container>
   );
