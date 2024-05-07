@@ -13,6 +13,7 @@ import com.geulgrim.community.board.domain.repository.BoardRepository;
 import com.geulgrim.community.global.file.entity.FileUrl;
 import com.geulgrim.community.global.file.repository.FileUrlRepository;
 import com.geulgrim.community.global.s3.AwsS3Service;
+import com.geulgrim.community.global.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ public class BoardService {
     private final AwsS3Service awsS3Service;
     private final BoardImageRepository boardImageRepository;
     private final BoardCommentRepository boardCommentRepository;
+    private final UserRepository userRepository;
 
     // 메인 페이지 신규글 목록
     public List<BoardListResponse> mainBoardPopularList() {
@@ -44,11 +46,12 @@ public class BoardService {
         List<BoardListResponse> list = boardRepository.findBoardResponseList();
         List<BoardListResponse> newList = new ArrayList<BoardListResponse>();
         for(BoardListResponse boardListResponse : list) {
+            if(newList.size() >= 6) break;
             if(boardListResponse.getHit() + boardListResponse.getCommentCnt() >= 50) {
                 newList.add(boardListResponse);
             }
         }
-        return newList.subList(0, 6);
+        return newList;
     }
 
     // 자유게시판 전체 조회
@@ -80,7 +83,7 @@ public class BoardService {
         }
 
         Board board = Board.builder()
-                .userId(userId)
+                .user(userRepository.findUserByUserId(userId))
                 .title(boardWriteRequest.getTitle())
                 .content(boardWriteRequest.getContent())
                 .imageList(boardImageList)
@@ -116,7 +119,7 @@ public class BoardService {
         }
 
         Board board = Board.builder()
-                .userId(userId)
+                .user(userRepository.findUserByUserId(userId))
                 .title(boardUpdateRequest.getTitle())
                 .content(boardUpdateRequest.getContent())
                 .imageList(boardImageList)

@@ -1,13 +1,15 @@
 package com.geulgrim.community.share.domain.entity;
 
 import com.geulgrim.community.global.entity.BaseEntity;
+import com.geulgrim.community.global.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.LocalDateTime;
 import java.util.List;
+
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Builder
@@ -17,7 +19,10 @@ public class Share extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long shareId;
-    private long userId;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User user;
     private String title;
     private String content;
     private long hit;

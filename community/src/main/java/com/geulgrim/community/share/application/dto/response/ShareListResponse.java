@@ -13,7 +13,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ShareListResponse {
     private long shareId;
+    private String shareImageFileUrl;
     private long userId;
+    private String userNickname;
+    private String userFileUrl;
     private String title;
     private long hit;
     private LocalDateTime createdAt;

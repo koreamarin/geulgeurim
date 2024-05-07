@@ -11,15 +11,15 @@ import java.util.List;
 
 @Repository
 public interface ShareRepository extends JpaRepository<Share, Long> {
-    @Query("SELECT s.shareId, s.userId, s.title, s.hit, s.createdAt, s.updatedAt, COUNT(c) " +
+    @Query("SELECT s.shareId, s.imageList, s.user.userId, s.user.nickname, s.title, s.hit, s.createdAt, s.updatedAt, COUNT(c) " +
             "FROM Share s LEFT JOIN s.commentList c " +
             "GROUP BY s.shareId")
     List<ShareListResponse> findShareResponseList();
 
     // 유저 아이디로 게시글 검색
-    @Query("SELECT s.shareId, s.userId, s.title, s.hit, s.createdAt, s.updatedAt, COUNT(c) " +
+    @Query("SELECT s.shareId, s.imageList, s.user.userId, s.title, s.hit, s.createdAt, s.updatedAt, COUNT(c) " +
             "FROM Share s LEFT JOIN s.commentList c " +
-            "WHERE s.userId = :userId " +
+            "WHERE s.user.userId = :userId " +
             "GROUP BY s.shareId")
     List<ShareListResponse> findSharesByUserId(Long userId);
 

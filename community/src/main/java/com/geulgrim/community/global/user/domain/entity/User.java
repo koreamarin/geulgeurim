@@ -1,6 +1,7 @@
 package com.geulgrim.community.global.user.domain.entity;
 
 
+import com.geulgrim.community.global.file.entity.FileUrl;
 import com.geulgrim.community.global.user.domain.entity.enums.UserType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -20,11 +21,10 @@ public class User {
     private Long userId;
     private String email;
     private String birthday;
-    private String name;
+    private String nickname;
     private String wallet;
     @Enumerated(STRING)
     private UserType userType;
     private String phoneNum;
-
-
+    private String fileUrl;
 }
