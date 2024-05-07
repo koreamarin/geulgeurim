@@ -1,5 +1,7 @@
 package com.geulgrim.auth.security.config;
 
+import com.geulgrim.auth.security.jwt.JWTUtil;
+import com.geulgrim.auth.user.application.dto.response.UserLoginResponse;
 import com.geulgrim.auth.user.application.service.OAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,25 +17,29 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     private final OAuth2UserService oAuth2UserService;
+    private final JWTUtil jwtUtil;
 
-    public SecurityConfig(OAuth2UserService oAuth2UserService) {
+    public SecurityConfig(OAuth2UserService oAuth2UserService, JWTUtil jwtUtil) {
         this.oAuth2UserService = oAuth2UserService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(config -> config.disable())
-            .authorizeHttpRequests(config -> config.anyRequest().permitAll());
-//            .oauth2Login(oauth2Configurer -> oauth2Configurer
-//                .loginPage("/login")
-//                .successHandler(successHandler())
-//                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-//                    .userService(oAuth2UserService)));
+            .authorizeHttpRequests(config -> config.anyRequest().permitAll())
+//            .defaultSuccessUrl("/home")
+            .oauth2Login(oauth2Configurer -> oauth2Configurer
+                .loginPage("/login")
+                .successHandler(successHandler())
+                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                    .userService(oAuth2UserService)));
 
         return http.build();
     }
@@ -41,41 +47,29 @@ public class SecurityConfig {
     @Bean
     public AuthenticationSuccessHandler successHandler() {
         return ((request, response, authentication) -> {
-//            DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
 
-//            Map<String, Object> properties = defaultOAuth2User.getAttributes();
-//            Map<String, Object> kakao_account = (Map<String, Object>) properties.get("kakao_account");
+            DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
 
-//            String id = defaultOAuth2User.getAttributes().get("id").toString();
-//            String connected_at = defaultOAuth2User.getAttributes().get("connected_at").toString();
-//            String thumbnail_image_url = (String) ((Map<String, Object>) kakao_account.get("profile")).get("thumbnail_image_url");
-//            String nickname = (String) ((Map<String, Object>) kakao_account.get("profile")).get("nickname");
-//            String name = (String) kakao_account.get("name");
-//            String email = (String) kakao_account.get("email");
-//            String phone_number = (String) kakao_account.get("phone_number");
-//            String birthyear = (String) kakao_account.get("birthyear");
-//            String birthday = (String) kakao_account.get("birthday");
-//
-//            String body = """
-//                    {
-//                        "id":"%s",
-//                        "connected_at":"%s",
-//                        "thumbnail_image_url":"%s",
-//                        "nickname":"%s",
-//                        "name":"%s",
-//                        "email":"%s",
-//                        "phone_number":"%s",
-//                        "birthyear":"%s",
-//                        "birthday":"%s"
-//                    }
-//                    """.formatted(id, connected_at, thumbnail_image_url, nickname, name, email, phone_number, birthyear, birthday);
+            Map<String, Object> properties = defaultOAuth2User.getAttributes();
+            Map<String, Object> kakao_account = (Map<String, Object>) properties.get("kakao_account");
+            UserLoginResponse userLoginResponse = (UserLoginResponse) kakao_account.get("userLoginResponse");
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
-//            PrintWriter writer = response.getWriter();
-//            writer.println(body);
-//            writer.flush();
+            // 토큰발급
+            String AccessToken = jwtUtil.createAccessToken(userLoginResponse.getUser_id(), userLoginResponse.getUserType());
+            String RefrashToken = jwtUtil.createRefreshToken(userLoginResponse.getUser_id(), userLoginResponse.getUserType());
+
+            // 헤더에 토큰 추가
+            response.addHeader("Authorization", "Bearer " + AccessToken);
+            response.addHeader("RefrashAuthorization", "Bearer " + RefrashToken);
+//            response.addHeader("user_id", String.valueOf(userLoginResponse.getUser_id()));        // Body에 있으므로 필요없음
+//            response.addHeader("user_type", String.valueOf(userLoginResponse.getUserType()));     // Body에 있으므로 필요없음
+
+            PrintWriter writer = response.getWriter();
+            writer.println(userLoginResponse);
+            writer.flush();
         });
     }
 }

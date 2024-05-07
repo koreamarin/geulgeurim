@@ -1,5 +1,10 @@
 # 배포용 yml
 spring:
+  jwt:
+    salt: geulgrimkeygeulgrimkeygeulgrimkeygeulgrimkeygeulgrimkey
+    expiretime :
+      access-token : 36000000  #10 hour (millis)
+      refresh-token : 2592000000 # 30 days (millis)
   servlet:
     multipart:
       maxFileSize: 5000MB
@@ -22,6 +27,18 @@ spring:
       web:
         pageable:
           one-indexed-parameters: true
+  cloud:
+    aws:
+      s3:
+        bucket: geulgrim
+      credentials:
+        access-key: AKIA3FLD4W5GUUUH7HEY
+        secret-key: 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
+      region:
+        static: ap-northeast-2
+        auto: false
+      stack:
+        auto: false
   security:
     oauth2:
       client:

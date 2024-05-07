@@ -38,4 +38,7 @@ public class User extends BaseEntity {
     private String file_url;
     @Column(nullable = false, length = 20)
     private String phone_num;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch=FetchType.LAZY)
+    private EnterUser enterUser;
 }

@@ -1,38 +1,65 @@
 package com.geulgrim.auth.user.presentation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.geulgrim.auth.user.application.dto.request.OAuthTokenRequest;
-import com.geulgrim.auth.user.application.dto.request.OAuthUserInfoRequest;
+import com.geulgrim.auth.user.application.dto.request.EnterUserLoginRequest;
+import com.geulgrim.auth.user.application.dto.request.EnterUserSignUpRequest;
+import com.geulgrim.auth.user.application.dto.response.EnterUserSignUpResponse;
 import com.geulgrim.auth.user.application.dto.response.UserLoginResponse;
 import com.geulgrim.auth.user.application.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/user/auth/")
 public class UserController {
     
     private final UserService userService;
-    @GetMapping
-    public ResponseEntity<String> test() {
-        return new ResponseEntity<>("ㅎㅇ", HttpStatus.OK);
+
+
+    // 기업 회원가입
+    @PostMapping("/signup")
+    public ResponseEntity<EnterUserSignUpResponse> EnterUserSingUp(
+            @RequestPart EnterUserSignUpRequest enterUserSignUpRequest,
+            @RequestPart MultipartFile image_file
+    ) {
+        EnterUserSignUpResponse result = userService.enterUserSignup(enterUserSignUpRequest, image_file);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/oauth2/code/kakao")
-    public ResponseEntity<UserLoginResponse> kakaoCallback(String code) {      // code는 Authorization code 이다.
-
-        UserLoginResponse userLoginResponse = userService.getUser(code);
-
-        return new ResponseEntity<>(userLoginResponse, HttpStatus.OK);
+    // 이메일 중복확인
+    @GetMapping("/emailcheck")
+    public ResponseEntity<Map<String, String>> EnterUserEmailCheck(@RequestParam String email) {
+        Map<String, String> message = new HashMap<>();
+        String status = userService.UserEmailCheck(email);
+        message.put("message", status);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
+
+    // 기업 사업자 가입여부 확인
+    @GetMapping("/businesscheck")
+    public ResponseEntity<Map<String, String>> EnterUserBusinessCheck(@RequestParam String code) {
+        Map<String, String> message = new HashMap<>();
+        String status = userService.BusinessCheck(code);
+        message.put("message", status);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    // 기업 회원 로그인
+    @PostMapping("/login")
+    public ResponseEntity<UserLoginResponse> EnterUserLogin(@RequestBody EnterUserLoginRequest enterUserLoginRequest) {
+
+        System.out.println(enterUserLoginRequest);
+
+        UserLoginResponse userLoginResponse = userService.EnterUserLogin(enterUserLoginRequest);
+
+
+
+        return new ResponseEntity<UserLoginResponse>(userLoginResponse, HttpStatus.OK);
+    }
+
 }
