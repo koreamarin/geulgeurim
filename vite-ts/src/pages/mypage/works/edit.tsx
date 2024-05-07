@@ -2,11 +2,11 @@ import { Helmet } from 'react-helmet-async';
 
 import { useParams } from 'src/routes/hooks';
 
-import WorksDetailView from 'src/sections/mypage/view/works-detail-view';
+import WorksEditView from 'src/sections/mypage/view/works-edit-view';
 
 // ----------------------------------------------------------------------
 
-export default function WorksDetailPage() {
+export default function WorksEditPage() {
   const params = useParams();
 
   const { id } = params;
@@ -14,10 +14,10 @@ export default function WorksDetailPage() {
   return (
     <>
       <Helmet>
-        <title>작품상세</title>
+        <title>작품수정</title>
       </Helmet>
 
-      <WorksDetailView id={`${id}`} />
+      <WorksEditView id={`${id}`} />
     </>
   );
 }

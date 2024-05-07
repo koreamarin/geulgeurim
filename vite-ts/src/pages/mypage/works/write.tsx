@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { WorksView } from 'src/sections/mypage/view';
+import WorksFormView from 'src/sections/mypage/view/works-form-view';
 
 // ----------------------------------------------------------------------
 
-export default function WorksHome() {
+export default function WorksWritePage() {
   return (
     <>
       <Helmet>
-        <title>내 작품</title>
+        <title>작품등록</title>
       </Helmet>
 
-      <WorksView />
+      <WorksFormView />
     </>
   );
 }

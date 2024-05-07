@@ -50,9 +50,9 @@ export default function Upload({
     <Stack spacing={3} alignItems="center" justifyContent="center" flexWrap="wrap">
       <UploadIllustration sx={{ width: 1, maxWidth: 200 }} />
       <Stack spacing={1} sx={{ textAlign: 'center' }}>
-        <Typography variant="h6">Drop or Select file</Typography>
+        <Typography variant="h6">파일을 놓거나 선택해주세요</Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Drop files here or click
+          파일을 이곳에 드래그하여 놓거나
           <Box
             component="span"
             sx={{
@@ -61,9 +61,9 @@ export default function Upload({
               textDecoration: 'underline',
             }}
           >
-            browse
+            여기
           </Box>
-          thorough your machine
+          를 클릭해 파일을 선택해주세요
         </Typography>
       </Stack>
     </Stack>

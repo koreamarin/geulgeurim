@@ -80,6 +80,10 @@ export default function WorksListPosts() {
     }
   };
 
+  const moveWrite = () => {
+    router.push(paths.mypage.worksWrite)
+  }
+
   const [optionBy, setOptionBy] = useState('title');
 
   const handleOptionBy = useCallback((newValue: string) => {
@@ -119,7 +123,7 @@ export default function WorksListPosts() {
 
           {/* sort */}
           <WorksListSort sort={sortBy} onSort={handleSortBy} sortOptions={WORKS_SORT_OPTIONS} />
-          <Button style={{height:'2.8rem', fontSize:'1rem'}} variant="contained" color="success" size="medium">
+          <Button style={{height:'2.8rem', fontSize:'1rem'}} variant="contained" color="success" size="medium" onClick={moveWrite}>
             작품 등록
           </Button>
         </Stack>
