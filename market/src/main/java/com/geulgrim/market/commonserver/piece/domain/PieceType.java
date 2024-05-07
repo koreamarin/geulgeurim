@@ -1,5 +1,5 @@
 package com.geulgrim.market.commonserver.piece.domain;
 
-public enum Type {
+public enum PieceType {
     PEN, COLOR, BG, PD, STORY, CONTI
 }

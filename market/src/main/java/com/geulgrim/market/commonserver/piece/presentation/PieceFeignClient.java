@@ -5,10 +5,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "common-feign-client", url = "https://k10c108.p.ssafy.io:8081")
+@FeignClient(name = "eureka-client-common", url = "https://k10c108.p.ssafy.io:8081")
 public interface PieceFeignClient {
 
-    @GetMapping("/api/v1/piece/{id}")
-    public PieceResponseDto findById( @PathVariable("id") Long id);
 
+    @GetMapping("/api/v1/piece/{id}")
+    public PieceResponseDto findPieceByIdFromCommon(@PathVariable("id") Long pieceId);
 }

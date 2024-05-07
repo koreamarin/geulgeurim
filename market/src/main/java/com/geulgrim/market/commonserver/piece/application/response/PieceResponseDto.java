@@ -1,6 +1,6 @@
 package com.geulgrim.market.commonserver.piece.application.response;
 
-import com.geulgrim.market.commonserver.piece.domain.Type;
+import com.geulgrim.market.commonserver.piece.domain.PieceType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,12 +16,12 @@ public class PieceResponseDto {
 
     private Long ownerId;
 
-    private String thumbnailUrl;
+    private String fileUrl;
 
     private String name;
 
     private String description;
 
-    private Type type;
+    private PieceType pieceType;
 
 }
