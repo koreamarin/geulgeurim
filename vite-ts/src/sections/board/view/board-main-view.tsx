@@ -10,7 +10,7 @@ export default function BoardMainView() {
         sx={{ border: '2px solid lightgrey' }}
       >
         <Box paddingLeft={3}>
-          <h2>자유게시판</h2>
+          <h2>자유 게시판</h2>
         </Box>
 
         <Box display="flex" sx={{ borderTop: '1px solid lightgrey'}}>

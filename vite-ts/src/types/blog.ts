@@ -64,3 +64,109 @@ export type IPostItem = {
     avatarUrl: string;
   };
 };
+
+export type BoardMainItem = {
+  boardId: number;
+  userId: number;
+  userNickname: string;
+  title: string;
+  hit: number;
+  createdAt: Date;
+  updateAt: Date;
+  commentCnt: number;
+};
+
+export type BoardItem = {
+  boardId: number;
+  user: {
+    userId: number;
+    email: string;
+    birthday: Date;
+    nickname: string;
+    wallet: string;
+    userType: string;
+    createdAt: Date;
+    name: string;
+    phoneNum: string;
+    fileUrl: string;
+  }
+  title: string;
+  content: string;
+  hit: number;
+  commentList: [
+    {
+      boardCommentId: number;
+      content: string;
+    }
+  ];
+  imageList: [
+    {
+      boardImageId: number;
+      imageType: string;
+      fileUrl: string;
+    }
+  ];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type ShareMainItem = {
+  shareId: number;
+  shareImageFileUrl: string;
+  userId: number;
+  userNickname: string;
+  userFileUrl: string;
+  title: string;
+  hit: number;
+  createdAt: Date;
+  updateAt: Date;
+  commentCnt: number;
+};
+
+export type ShareItem = {
+  boardId: number;
+  user: {
+    userId: number;
+    email: string;
+    birthday: Date;
+    nickname: string;
+    wallet: string;
+    userType: string;
+    createdAt: Date;
+    name: string;
+    phoneNum: string;
+    fileUrl: string;
+  }
+  title: string;
+  content: string;
+  hit: number;
+  commentList: [
+    {
+      boardCommentId: number;
+      content: string;
+    }
+  ];
+  imageList: [
+    {
+      boardImageId: number;
+      imageType: string;
+      fileUrl: string;
+    }
+  ];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type CrewMainItem = {
+  crewId: number;
+  projectName: string;
+  pen: number;
+  color: number;
+  bg: number;
+  pd: number;
+  story: number;
+  conti: number;
+  thumbnail: string;
+  date: Date;
+  status: string;
+};
