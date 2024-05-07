@@ -2,26 +2,25 @@ import { useRef, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 import { alpha, useTheme } from '@mui/material/styles';
+import InputAdornment from '@mui/material/InputAdornment';
+import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 import { useMockedUser } from 'src/hooks/use-mocked-user';
 
-import Pagination, { paginationClasses } from '@mui/material/Pagination';
+import Image from 'src/components/image';
+import Iconify from 'src/components/iconify';
 
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-
-import WorksListSearchOption from './works-list-search-option';
 import WorksListSort from './works-list-sort';
+import WorksListSearchOption from './works-list-search-option';
 
 
 // ----------------------------------------------------------------------
@@ -64,7 +63,7 @@ export default function WorksListPosts() {
   const { user } = useMockedUser();
 
   const gallery = dummy
-  
+
   const theme = useTheme();
 
   const pageCount = 12
@@ -137,9 +136,9 @@ export default function WorksListPosts() {
       >
         {gallery.map((image) => {
 
-          const category = () => { 
+          const category = () => {
           if (image.type === 'PEN') {
-            return '스케치'
+            return '선화'
           } if (image.type === 'COLOR') {
             return '채색'
           } if (image.type === 'BG') {
@@ -150,10 +149,10 @@ export default function WorksListPosts() {
             return '스토리'
           } if (image.type === 'CONT') {
             return '콘티'
-          } 
+          }
             return '기타'
         }
-        
+
           return (
           <Card key={image.piece_id} sx={{ cursor: 'pointer', color: 'common.white' }} onClick={() => router.push(paths.mypage.worksDetail(image.piece_id))}>
             <ListItemText
