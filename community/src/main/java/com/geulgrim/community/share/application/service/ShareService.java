@@ -1,5 +1,6 @@
 package com.geulgrim.community.share.application.service;
 
+import com.geulgrim.community.global.user.domain.repository.UserRepository;
 import com.geulgrim.community.share.application.dto.request.ShareUpdateRequest;
 import com.geulgrim.community.share.domain.entity.Share;
 import com.geulgrim.community.share.domain.entity.ShareImage;
@@ -34,6 +35,7 @@ public class ShareService {
     private final AwsS3Service awsS3Service;
     private final ShareImageRepository shareImageRepository;
     private final ShareCommentRepository shareCommentRepository;
+    private final UserRepository userRepository;
 
     // 메인 페이지 신규 그림평가글 목록
     public List<ShareListResponse> mainShareNewList() {
@@ -70,7 +72,7 @@ public class ShareService {
         }
 
         Share share = Share.builder()
-                .userId(userId)
+                .user(userRepository.findUserByUserId(userId))
                 .title(shareWriteRequest.getTitle())
                 .content(shareWriteRequest.getContent())
                 .imageList(shareImageList)
@@ -105,7 +107,7 @@ public class ShareService {
         }
 
         Share share = Share.builder()
-                .userId(userId)
+                .user(userRepository.findUserByUserId(userId))
                 .title(shareUpdateRequest.getTitle())
                 .content(shareUpdateRequest.getContent())
                 .imageList(shareImageList)

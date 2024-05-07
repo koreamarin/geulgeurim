@@ -11,15 +11,15 @@ import java.util.List;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
     // 게시글 전체 리스트 조회
-    @Query("SELECT b.boardId, b.userId, b.title, b.hit, b.createdAt, b.updatedAt, COUNT(c) " +
+    @Query("SELECT b.boardId, b.user.userId, b.user.nickname, b.title, b.hit, b.createdAt, b.updatedAt, COUNT(c) " +
             "FROM Board b LEFT JOIN b.commentList c " +
             "GROUP BY b.boardId")
     List<BoardListResponse> findBoardResponseList();
 
     // 유저 아이디로 게시글 검색
-    @Query("SELECT b.boardId, b.userId, b.title, b.hit, b.createdAt, b.updatedAt, COUNT(c) " +
+    @Query("SELECT b.boardId, b.user.userId, b.title, b.hit, b.createdAt, b.updatedAt, COUNT(c) " +
             "FROM Board b LEFT JOIN b.commentList c " +
-            "WHERE b.userId = :userId " +
+            "WHERE b.user.userId = :userId " +
             "GROUP BY b.boardId")
     List<BoardListResponse> findBoardsByUserId(Long userId);
 

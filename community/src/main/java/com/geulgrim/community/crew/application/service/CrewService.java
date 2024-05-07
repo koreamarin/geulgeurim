@@ -109,7 +109,7 @@ public class CrewService {
             if (crewRequest.getStatus() == CrewStatus.SUCCESS) { // 승인을 받은 유저만 realCrews에 add
                 CrewInfo crewInfo = CrewInfo.builder()
                         .userId(crewRequest.getUser().getUserId())
-                        .nickname(crewRequest.getUser().getName())
+                        .nickname(crewRequest.getUser().getNickname())
                         .position(crewRequest.getPosition())
                         .build();
                 realCrews.add(crewInfo);

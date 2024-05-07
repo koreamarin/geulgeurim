@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class BoardListResponse {
     private long boardId;
     private long userId;
+    private String userNickname;
     private String title;
     private long hit;
     private LocalDateTime createdAt;
