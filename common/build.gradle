@@ -34,6 +34,9 @@ dependencies {
     //swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.5.0'
 
+    //     OpenFeign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -44,8 +47,10 @@ dependencies {
     // AWS S3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+
     // test
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+
 
 }
 
