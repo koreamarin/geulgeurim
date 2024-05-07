@@ -6,14 +6,10 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
-
 import { useDebounce } from 'src/hooks/use-debounce';
-
 import { POST_SORT_OPTIONS } from 'src/_mock';
 import { useGetPosts, useSearchPosts } from 'src/api/blog';
-
 import { useSettingsContext } from 'src/components/settings';
-
 import { IPostItem } from 'src/types/blog';
 
 // import PostList from 'src/sections/blog/post-list';
