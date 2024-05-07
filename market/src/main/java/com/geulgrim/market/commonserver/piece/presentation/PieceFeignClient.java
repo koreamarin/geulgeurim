@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface PieceFeignClient {
 
 
-    @GetMapping("/api/v1/piece/{id}")
+    @GetMapping("/api/v1/common/piece/{id}")
     public PieceResponseDto findPieceByIdFromCommon(@PathVariable("id") Long pieceId);
 }
