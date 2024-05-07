@@ -1,6 +1,6 @@
 import { Box, Card, Button, Container, Typography, Paper } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useNavigate } from 'react-router-dom';
 
 function createDummyData(
   crew_id: number, user_id: number, project_name: string, content: string, created_at: string, updated_at: string,
@@ -82,6 +82,7 @@ type Props = {
 };
 
 export default function CrewDetailView({ id }: Props) {
+  const navigate = useNavigate();
   const dummyData = dummy.find((item) => item.crew_id === parseInt(id, 10));
   const getStatusProps = (status) => {
     switch (status) {
@@ -94,6 +95,10 @@ export default function CrewDetailView({ id }: Props) {
     }
   };
   const statusProps = dummyData ? getStatusProps(dummyData.status) : { color: 'inherit', text: '' };
+
+  const handleApplyClick = () => {
+    navigate(`/community/crew/apply/${id}`);
+  };
 
 
   return (
@@ -113,23 +118,13 @@ export default function CrewDetailView({ id }: Props) {
         >
           {statusProps.text}
         </Typography>
-
-         {/* {dummyData?.fileUrl && <Image
-            alt="gallery"
-            width='100%'
-            src={dummyData?.fileUrl}
-        />} */}
       </Grid>
 
       <Grid xsOffset={1} mdOffset={2} xs={10} md={8}>
       <Typography variant="body2" textAlign='right'>
-            등록일 : {dummyData?.created_at}
-          </Typography>
-        {/* {dummyData?.fileUrl && <Image
-            alt="gallery"
-            width='100%'
-            src={dummyData?.fileUrl}
-        />} */}
+        등록일 : {dummyData?.created_at}
+      </Typography>
+
         <Card sx={{marginTop:8, padding: 5}}>
         <Grid sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 0, marginBottom: 2 }}>
             <Typography variant="h4">
@@ -159,7 +154,7 @@ export default function CrewDetailView({ id }: Props) {
 
         </Card>
         <Grid container justifyContent="center" mt={3}>
-          <Button  style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined"
+          <Button style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" onClick={handleApplyClick}
           color="success" size="medium" sx={{ marginBottom: 5, marginTop: 3 }}>
             지원하기
           </Button>

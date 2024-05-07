@@ -33,6 +33,7 @@ export default function CrewList({ posts, loading, disabledIndex }: Props) {
       {posts.map((post, index) => (
         <Grid key={post.id} xs={12} sm={6} md={!disabledIndex && index === 0 ? 6 : 3}>
           <PostItem post={post} index={!disabledIndex ? index : undefined} />
+
           {/* 이게 item 하나하나 */}
         </Grid>
       ))}
