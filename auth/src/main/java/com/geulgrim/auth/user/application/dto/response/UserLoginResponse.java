@@ -8,8 +8,20 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 public class UserLoginResponse {
-    private Long id;
+    private Long user_id;
     private String nickname;
     private UserType userType;
     private String profile_url;
+
+    @Override
+    public String toString() {
+        return """
+                    {
+                        "user_id":"%s",
+                        "thumbnail_image_url":"%s",
+                        "nickname":"%s",
+                        "user_type":"%s"
+                    }
+                    """.formatted(user_id, profile_url, nickname, userType);
+    }
 }

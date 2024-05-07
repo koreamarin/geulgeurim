@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class AuthApplication {
 
     public static void main(String[] args) {
+        System.setProperty("server.servlet.context-path", "/api/v1/auth");
         SpringApplication.run(AuthApplication.class, args);
     }
 
