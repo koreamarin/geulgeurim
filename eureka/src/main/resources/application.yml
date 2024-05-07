@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: 8086
 
 eureka:
   server:
@@ -9,7 +9,7 @@ eureka:
     register-with-eureka: false # default:true 레지스트리에 자신을 등록할지에 대한 여부
     fetch-registry: false # default:true 레지스트리에 있는 정보를 가져올지에 대한 여부 -> true시 Eureka server 호출 대신 레지스트리가 로컬로 캐싱 -> eureka client가 30초마다 ereka 레지스트이 변경사항 여부 확인
     service-url:
-      defaultZone: https://글그림.com:8000/eureka
+      defaultZone: https://글그림.com:8086/eureka
 
 spring:
   application:
