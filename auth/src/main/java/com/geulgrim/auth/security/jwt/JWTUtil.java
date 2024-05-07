@@ -94,10 +94,9 @@ public class JWTUtil {
         }
     }
 
-    public String getUserId(String authorization) {
+    public Integer getUserId(String authorization) {
         Jws<Claims> claims = null;
         try {
-//            claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(authorization);
             claims = Jwts.parser()
                     .verifyWith(this.getSigningKey())
                     .build()
@@ -109,7 +108,24 @@ public class JWTUtil {
 //        Map<String, Object> value = claims.getBody();
         Map<String, Object> value = claims.getPayload();
         log.info("value : {}", value);
-        return (String) value.get("userId");
+        return (Integer) value.get("userId");
+    }
+
+    public String getUserType(String authorization) {
+        Jws<Claims> claims = null;
+        try {
+            claims = Jwts.parser()
+                    .verifyWith(this.getSigningKey())
+                    .build()
+                    .parseSignedClaims(authorization);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new UnAuthorizedException();
+        }
+//        Map<String, Object> value = claims.getBody();
+        Map<String, Object> value = claims.getPayload();
+        log.info("value : {}", value);
+        return (String) value.get("userType");
     }
 
 }

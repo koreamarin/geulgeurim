@@ -1,5 +1,6 @@
 package com.geulgrim.auth.user.presentation;
 
+import com.geulgrim.auth.security.jwt.JWTUtil;
 import com.geulgrim.auth.user.application.dto.request.EnterUserLoginRequest;
 import com.geulgrim.auth.user.application.dto.request.EnterUserSignUpRequest;
 import com.geulgrim.auth.user.application.dto.response.EnterUserSignUpResponse;
@@ -15,10 +16,11 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/user/auth/")
+@RequestMapping
 public class UserController {
     
     private final UserService userService;
+    private final JWTUtil jwtUtil;
 
 
     // 기업 회원가입
@@ -52,14 +54,22 @@ public class UserController {
     // 기업 회원 로그인
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponse> EnterUserLogin(@RequestBody EnterUserLoginRequest enterUserLoginRequest) {
-
-        System.out.println(enterUserLoginRequest);
+        HttpHeaders headers = new HttpHeaders();
 
         UserLoginResponse userLoginResponse = userService.EnterUserLogin(enterUserLoginRequest);
 
+        // 토큰발급
+        String AccessToken = jwtUtil.createAccessToken(userLoginResponse.getUser_id(), userLoginResponse.getUserType());
+        String RefrashToken = jwtUtil.createRefreshToken(userLoginResponse.getUser_id(), userLoginResponse.getUserType());
 
+        headers.add("Authorization", "Bearer " + AccessToken);
+        headers.add("RefrashAuthorization", "Bearer " + RefrashToken);
 
-        return new ResponseEntity<UserLoginResponse>(userLoginResponse, HttpStatus.OK);
+//        return new ResponseEntity<UserLoginResponse>(userLoginResponse, HttpStatus.OK);
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(userLoginResponse);
     }
+
 
 }

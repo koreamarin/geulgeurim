@@ -1,13 +1,19 @@
 package com.geulgrim.auth.security.config;
 
 import com.geulgrim.auth.security.jwt.JWTUtil;
+import com.geulgrim.auth.security.jwt.JwtAuthorizationFilter;
 import com.geulgrim.auth.user.application.dto.response.UserLoginResponse;
 import com.geulgrim.auth.user.application.service.OAuth2UserService;
+import com.geulgrim.auth.user.domain.repository.AuthRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -23,20 +29,37 @@ import java.util.Map;
 public class SecurityConfig {
     private final OAuth2UserService oAuth2UserService;
     private final JWTUtil jwtUtil;
+    private final AuthenticationConfiguration authenticationConfiguration;
 
-    public SecurityConfig(OAuth2UserService oAuth2UserService, JWTUtil jwtUtil) {
+    private AuthRepository authRepository;
+
+    public SecurityConfig(OAuth2UserService oAuth2UserService, JWTUtil jwtUtil, final AuthenticationConfiguration authenticationConfiguration) {
         this.oAuth2UserService = oAuth2UserService;
         this.jwtUtil = jwtUtil;
+        this.authenticationConfiguration = authenticationConfiguration;
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager () throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
+//        http.authenticationManager(authenticationManager);
+
         http
             .csrf(config -> config.disable())
             .authorizeHttpRequests(config -> config.anyRequest().permitAll())
-//            .defaultSuccessUrl("/home")
+            .addFilter(new JwtAuthorizationFilter(authenticationManager, authRepository, jwtUtil))
             .oauth2Login(oauth2Configurer -> oauth2Configurer
-                .loginPage("/login")
+                .loginPage("/api/v1/auth/oauth2/authorization/kakao")
                 .successHandler(successHandler())
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                     .userService(oAuth2UserService)));
@@ -47,7 +70,6 @@ public class SecurityConfig {
     @Bean
     public AuthenticationSuccessHandler successHandler() {
         return ((request, response, authentication) -> {
-
             DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
 
             Map<String, Object> properties = defaultOAuth2User.getAttributes();
@@ -64,8 +86,6 @@ public class SecurityConfig {
             // 헤더에 토큰 추가
             response.addHeader("Authorization", "Bearer " + AccessToken);
             response.addHeader("RefrashAuthorization", "Bearer " + RefrashToken);
-//            response.addHeader("user_id", String.valueOf(userLoginResponse.getUser_id()));        // Body에 있으므로 필요없음
-//            response.addHeader("user_type", String.valueOf(userLoginResponse.getUserType()));     // Body에 있으므로 필요없음
 
             PrintWriter writer = response.getWriter();
             writer.println(userLoginResponse);
