@@ -234,12 +234,12 @@ export default function InformationProfile() {
 
                   {/* ================== birthday ================= */}
 
-                  <Grid xs={3} pb={1} sx={{ borderBottom: '1px solid #ccc', display: 'flex', alignItems: 'center' }}>
+                  <Grid xs={3} pb={1} sx={{ borderBottom: '1px solid #ccc', display: 'flex', alignItems: 'center', marginBottom: 4}}>
                     <Typography variant="subtitle1" color="gray">
                       생년월일
                     </Typography>
                   </Grid>
-                  <Grid xs={editMode.birthday?4:6} pb={1} sx={{ borderBottom: '1px solid #ccc', display: 'flex', alignItems: 'center' }}>
+                  <Grid xs={editMode.birthday?4:6} pb={1} sx={{ borderBottom: '1px solid #ccc', display: 'flex', alignItems: 'center', marginBottom: 4}}>
                   {editMode.birthday ? (
                       <MobileDatePicker
                         orientation="portrait"
@@ -261,7 +261,7 @@ export default function InformationProfile() {
                   ) : userBirthday.toLocaleDateString()
                   }
                   </Grid>
-                  <Grid xs={editMode.birthday?5:3} pb={1} textAlign="end" sx={{ borderBottom: '1px solid #ccc' }}>
+                  <Grid xs={editMode.birthday?5:3} pb={1} textAlign="end" sx={{ borderBottom: '1px solid #ccc', marginBottom: 4}}>
                     {!editMode.birthday ?
                     <Button style={{minWidth:'45px', fontSize:'0.6rem', padding:'2px 5px'}} variant="outlined" color="success" size="small" onClick={() => {
                       handleEdit('birthday')
