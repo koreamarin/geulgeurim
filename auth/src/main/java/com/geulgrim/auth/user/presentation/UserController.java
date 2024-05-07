@@ -22,6 +22,11 @@ public class UserController {
     private final UserService userService;
     private final JWTUtil jwtUtil;
 
+    @GetMapping
+    public ResponseEntity<String> Test() {
+        return new ResponseEntity<>("gd", HttpStatus.OK);
+    }
+
 
     // 기업 회원가입
     @PostMapping("/signup")
