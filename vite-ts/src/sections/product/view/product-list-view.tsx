@@ -265,7 +265,7 @@ export default function ProductListView() {
             },
           }}
         />
-
+        sdafs
         <Card
           sx={{
             height: { xs: 800, md: 2 },
@@ -274,6 +274,7 @@ export default function ProductListView() {
             flexDirection: { md: 'column' },
           }}
         >
+          qqq
           <DataGrid
             checkboxSelection
             disableRowSelectionOnClick
@@ -295,6 +296,7 @@ export default function ProductListView() {
             slots={{
               toolbar: () => (
                 <>
+                qqqq
                   <GridToolbarContainer>
                     <ProductTableToolbar
                       filters={filters}
@@ -302,8 +304,10 @@ export default function ProductListView() {
                       stockOptions={PRODUCT_STOCK_OPTIONS}
                       publishOptions={PUBLISH_OPTIONS}
                     />
-
+                    dd
+                    {/* 서치바! */}
                     <GridToolbarQuickFilter />
+                    qq
 
                     <Stack
                       spacing={1}
@@ -350,6 +354,7 @@ export default function ProductListView() {
             }}
           />
         </Card>
+        ddd
       </Container>
 
       <ConfirmDialog

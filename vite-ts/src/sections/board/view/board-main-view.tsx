@@ -1,7 +1,12 @@
+import { Link } from 'react-router-dom';
+
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
+import { paths } from 'src/routes/paths';
+
 export default function BoardMainView() {
+  const board = paths.community.board.main;
   return (
     <Container sx={{marginBottom: 5}}>
       <Box
@@ -14,7 +19,7 @@ export default function BoardMainView() {
         </Box>
 
         <Box display="flex" sx={{ borderTop: '1px solid lightgrey'}}>
-          <Box display="flex" paddingLeft={5} paddingRight={5} sx={{ width: '100%'}}>
+          <Box display="flex" paddingLeft={5} sx={{ width: '100%'}}>
             <Box display="flex" width="50%" sx={{ flexDirection: 'column' }}>
               <Box display="flex" alignItems="center" marginBottom={-3}>
                 <img src="src/assets/icons/popular.png" alt=""/>
@@ -27,13 +32,16 @@ export default function BoardMainView() {
                   <li>3</li>
                   <li>4</li>
                 </ul>
+              </Box>
+              <Box textAlign='right' mr={1} fontSize={10}>
+                <Link to={board} style={{textDecoration: 'none', color: 'black'}}>더보기  &gt;</Link>
               </Box>
             </Box>
-            <Box display="flex" paddingLeft={5} paddingRight={5} alignItems="center" sx={{borderLeft: '1px solid lightgrey', width:'50%'}}>
-            <Box display="flex" width="50%" sx={{ flexDirection: 'column' }}>
+            <Box display="flex" paddingLeft={5} alignItems="center" sx={{borderLeft: '1px solid lightgrey', width:'50%'}}>
+            <Box display="flex" width="100%" sx={{ flexDirection: 'column' }}>
               <Box display="flex" alignItems="center" marginBottom={-3}>
-                <img src="src/assets/icons/popular.png" alt=""/>
-                <h3 style={{ marginLeft: 5 }}>인기글</h3>
+                <img src="src/assets/icons/new.png" alt=""/>
+                <h3 style={{ marginLeft: 5 }}>최신글</h3>
               </Box>
               <Box paddingLeft={3}>
                 <ul style={{paddingLeft: '0'}}>
@@ -42,6 +50,9 @@ export default function BoardMainView() {
                   <li>3</li>
                   <li>4</li>
                 </ul>
+              </Box>
+              <Box textAlign='right' mr={1} fontSize={10}>
+                <Link to={board} style={{textDecoration: 'none', color: 'black'}}>더보기  &gt;</Link>
               </Box>
             </Box>
             </Box>

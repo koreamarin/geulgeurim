@@ -1,12 +1,22 @@
+import { useNavigate } from 'react-router-dom';
+
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import Container from "@mui/material/Container"
 import { margin, textAlign } from "@mui/system"
 
 import ShareItem from "src/sections/blog/share-item"
+import { paths } from 'src/routes/paths';
 
 
 export default function ShareMainView() {
+
+  const share = paths.community.share.main;
+  const navigate = useNavigate();
+
+  const moveToShareMain = () => {
+    navigate(share);
+  }
 
   const list = [
     
@@ -38,7 +48,7 @@ export default function ShareMainView() {
           </table>
         </Box>
         <Box style={{width: '100%', textAlign:'center', marginBottom: 10}}>
-          <Button variant="outlined">더보기</Button>
+          <Button variant="outlined" onClick={moveToShareMain}>더보기</Button>
         </Box>
       </Box>
     </Container>
