@@ -23,14 +23,14 @@ public class MarketController {
 
     private final MarketService marketService;
 
-    @PostMapping("/create")
+    @PostMapping
     @Operation(summary = "게시글 생성", description = "마켓에 게시글을 생성합니다")
     public ResponseEntity<Long> create(@RequestPart(value = "files", required = false) MultipartFile image, @RequestPart MarketCreateRequestDto dto) throws IOException {
 
         return new ResponseEntity<>(marketService.create(image, dto), HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "게시글 수정", description = "마켓 게시글을 수정합니다")
     public ResponseEntity<MarketResponseDto> update(@PathVariable Long id, @RequestPart(value = "files", required = false) MultipartFile image, @RequestPart MarketUpdateRequestDto dto) throws IOException {
         return new ResponseEntity<>(marketService.update(id, image, dto), HttpStatus.OK);
