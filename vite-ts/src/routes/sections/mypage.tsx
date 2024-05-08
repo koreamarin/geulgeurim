@@ -13,6 +13,8 @@ const Apply = lazy(() => import('src/pages/mypage/apply'));
 const Interest = lazy(() => import('src/pages/mypage/interest'));
 const Portfolio = lazy(() => import('src/pages/mypage/portfolio'));
 const PortfolioDetail = lazy(() => import('src/pages/mypage/portfolio-detail'));
+const PortfolioWriteView = lazy(() => import('src/pages/mypage/portfolio-write'));
+const PortfolioWriteUserFormatView = lazy(() => import('src/pages/mypage/portfolio-write-user-format'));
 const Works = lazy(() => import('src/pages/mypage/wokrs'));
 const Resume = lazy(() => import('src/pages/mypage/resume'));
 
@@ -44,6 +46,14 @@ export const mypageRoutes = [
           {
             path: 'detail/:id',
             element: <PortfolioDetail />
+          },
+          {
+            path: 'write',
+            element: <PortfolioWriteView />
+          },
+          {
+            path: 'write/user',
+            element: <PortfolioWriteUserFormatView />
           },
 
         ]
