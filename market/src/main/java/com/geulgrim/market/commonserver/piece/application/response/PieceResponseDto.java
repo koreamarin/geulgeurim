@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PieceResponseDto {
 
-    private Long id;
+    private Long pieceId;
 
     private Long ownerId;
 
@@ -22,6 +22,6 @@ public class PieceResponseDto {
 
     private String description;
 
-    private PieceType pieceType;
+    private PieceType type;
 
 }
