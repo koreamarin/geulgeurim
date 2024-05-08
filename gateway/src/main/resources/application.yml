@@ -6,9 +6,11 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://k10c108.p.ssafy.io:8086/eureka
+      defaultZone: http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8086/eureka
 
 spring:
+  main:
+    web-application-type: reactive
   application:
     name: apigateway-service
   cloud:
@@ -59,15 +61,15 @@ spring:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
       globalcors:
         corsConfigurations:
-          '[/**]':
+          "[/**]":
             allowedOrigins:
-             - "http://k10c108.p.ssafy.io/"
-             - "https://k10c108.p.ssafy.io/"
-             - "http://localhost:3000/"
-             - "https://localhost:3000/"
-             - "http://localhost/"
-             - "https://localhost/"
-            allow-credentials: true   
+              - "http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com/"
+              - "https://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com/"
+              - "http://localhost:3000/"
+              - "https://localhost:3000/"
+              - "http://localhost/"
+              - "https://localhost/"
+            allow-credentials: true
             allowedHeaders:
               - x-requested-with
               - authorization
