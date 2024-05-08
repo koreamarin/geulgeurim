@@ -74,6 +74,7 @@ public class SecurityConfig {
 
             Map<String, Object> properties = defaultOAuth2User.getAttributes();
             Map<String, Object> kakao_account = (Map<String, Object>) properties.get("kakao_account");
+
             UserLoginResponse userLoginResponse = (UserLoginResponse) kakao_account.get("userLoginResponse");
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);

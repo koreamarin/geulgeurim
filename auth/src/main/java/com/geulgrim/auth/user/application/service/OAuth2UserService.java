@@ -39,9 +39,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 .getUserNameAttributeName();
 
         // DB 저장로직이 필요하면 추가
-
-        System.out.println("123123");
-
         Map<String, Object> properties = oAuth2User.getAttributes();
         Map<String, Object> kakao_account = (Map<String, Object>) properties.get("kakao_account");
 
@@ -79,8 +76,10 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         // USER정보 RESPONSE용 DTO에 값 넣기
         UserLoginResponse userLoginResponse = UserLoginResponse.builder()
+                .user_id(user.getUser_id())
                 .nickname(user.getNickname())
                 .profile_url(user.getFile_url())
+                .userType(user.getUserType())
                 .build();
 
         kakao_account.put("userLoginResponse", userLoginResponse);

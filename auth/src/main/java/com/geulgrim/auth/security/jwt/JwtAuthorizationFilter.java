@@ -31,8 +31,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         String jwtToken = request.getHeader("Authorization").replace("Bearer ","");
 
-        response.addHeader("user_id", String.valueOf(jwtUtil.getUserId(jwtToken)));        // Body에 있으므로 필요없음
-        response.addHeader("user_type", jwtUtil.getUserType(jwtToken));     // Body에 있으므로 필요없음
+        response.addHeader("user_id", String.valueOf(jwtUtil.getUserId(jwtToken)));
+        response.addHeader("user_type", jwtUtil.getUserType(jwtToken));
 
         chain.doFilter(request, response);
     }

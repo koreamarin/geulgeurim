@@ -58,8 +58,7 @@ public class UserController {
 
     // 기업 회원 로그인
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponse> EnterUserLogin(@RequestBody EnterUserLoginRequest enterUserLoginRequest) {
-        HttpHeaders headers = new HttpHeaders();
+    public ResponseEntity<UserLoginResponse> EnterUserLogin(@RequestBody EnterUserLoginRequest enterUserLoginRequest, @RequestHeader HttpHeaders headers) {
 
         UserLoginResponse userLoginResponse = userService.EnterUserLogin(enterUserLoginRequest);
 
