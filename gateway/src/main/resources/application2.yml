@@ -11,8 +11,6 @@ eureka:
 spring:
   jwt:
     salt: geulgrimkeygeulgrimkeygeulgrimkeygeulgrimkeygeulgrimkey
-  main:
-    web-application-type: reactive
   application:
     name: apigateway-service
   cloud:
@@ -30,64 +28,48 @@ spring:
           uri: lb://EUREKA-CLIENT-COMMON
           predicates:
             - Path=/api/v1/common/**
-          filters:
-            - AuthFilter
         - id: common-service-swagger
           uri: lb://EUREKA-CLIENT-COMMON
           predicates:
             - Path=/common-service/**
-          filters:
-            - AuthFilter
         - id: eureka-client-community
           uri: lb://EUREKA-CLIENT-COMMUNITY
           predicates:
             - Path=/api/v1/community/**
-          filters:
-            - AuthFilter
         - id: community-service-swagger
           uri: lb://EUREKA-CLIENT-COMMUNITY
           predicates:
             - Path=/community-service/**
-          filters:
-            - AuthFilter
         - id: eureka-client-recruit
           uri: lb://EUREKA-CLIENT-RECRUIT
           predicates:
             - Path=/api/v1/recruit/**
-          filters:
-            - AuthFilter
         - id: recruit-service-swagger
           uri: lb://EUREKA-CLIENT-RECRUIT
           predicates:
             - Path=/recruit-service/**
-          filters:
-            - AuthFilter
         - id: eureka-client-market
           uri: lb://EUREKA-CLIENT-MARKET
           predicates:
             - Path=/api/v1/market/**
-          filters:
-            - AuthFilter
         - id: market-service-swagger
           uri: lb://EUREKA-CLIENT-MARKET
           predicates:
             - Path=/market-service/**
-          filters:
-            - AuthFilter
 
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
       globalcors:
         corsConfigurations:
-          "[/**]":
+          '[/**]':
             allowedOrigins:
-              - "http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com/"
-              - "https://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com/"
-              - "http://localhost:3000/"
-              - "https://localhost:3000/"
-              - "http://localhost/"
-              - "https://localhost/"
-            allow-credentials: true
+             - "http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com/"
+             - "https://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com/"
+             - "http://localhost:3000/"
+             - "https://localhost:3000/"
+             - "http://localhost/"
+             - "https://localhost/"
+            allow-credentials: true   
             allowedHeaders:
               - x-requested-with
               - authorization
