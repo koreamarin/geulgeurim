@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Container, Typography, FormControl, FormControlLabel,
-  Radio, RadioGroup,
-  TextField,
-  Button
+  Radio, RadioGroup, TextField, Button,
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
 } from '@mui/material';
-import { useLocation } from 'react-router-dom';
 import ComponentBlock from 'src/sections/_examples/component-block';
 
 type CrewDetail = {
@@ -30,21 +29,57 @@ type Props = {
 };
 
 export default function CrewApplyView({ id }: Props) {
-  const [message, setMessage] = useState('');
   const location = useLocation();
+  const navigate = useNavigate();
   const crewDetails = location.state?.crewDetails as CrewDetail;
+  const crewId = crewDetails?.crew_id;
+
+  const [position, setPosition] = useState('');
+  const [message, setMessage] = useState('');
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
   };
 
-  const handleSubmit = () => {
-    // 백엔드로 {
-//     "user_id": 2,
-//     "position": "CONTI",
-//     "message": "저는 완벽하기 때문에 팀에 기여할 것이라 자신합니다! 데헿"
-// } 이런 식으로 데이터 보내야 함. 
-    console.log('Submitted message:', message);
+  const handleSubmit = async () => {
+    if (!position || !message) {
+      alert("Please select a position and enter a message.");
+      return;
+    }
+
+    const payload = {
+      user_id: 2,
+      position,
+      message
+    };
+
+    setOpenDialog(true);
+
+    // try {
+    //   const response = await fetch('http://localhost:8080/api/v1/community/crew/request/${crewId}', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(payload)
+    //   });
+
+    //   if (!response.ok) {
+    //     throw new Error('에러가 발생했어요.');
+    //   }
+
+    //   const responseData = await response.json();
+    //   console.log('Submit response:', responseData);
+    //   setOpenDialog(true);
+    // } catch (error) {
+    //   console.error('Failed to submit:', error);
+    // }
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    navigate(`/community/crew/${crewDetails?.crew_id}`);  // 다시 크루 모집 상세페이지로
   };
 
   return (
@@ -62,24 +97,28 @@ export default function CrewApplyView({ id }: Props) {
       {/* 포지션 선택: 0이면 disable */}
       <ComponentBlock title="포지션">
         <FormControl component="fieldset">
-          <RadioGroup row>
+          <RadioGroup
+          row
+          value={position}
+          onChange={(event) => setPosition(event.target.value)}
+          >
             {crewDetails?.pen > 0 && (
-              <FormControlLabel value="pen" control={<Radio size="medium" />} label="선화" />
+              <FormControlLabel value="PEN" control={<Radio size="medium" />} label="선화" />
             )}
             {crewDetails?.color > 0 && (
-              <FormControlLabel value="color" control={<Radio size="medium" />} label="채색" />
+              <FormControlLabel value="COLOR" control={<Radio size="medium" />} label="채색" />
             )}
             {crewDetails?.bg > 0 && (
-              <FormControlLabel value="bg" control={<Radio size="medium" />} label="배경" />
+              <FormControlLabel value="BG" control={<Radio size="medium" />} label="배경" />
             )}
             {crewDetails?.pd > 0 && (
-              <FormControlLabel value="pd" control={<Radio size="medium" />} label="PD" />
+              <FormControlLabel value="PD" control={<Radio size="medium" />} label="PD" />
             )}
             {crewDetails?.story > 0 && (
-              <FormControlLabel value="story" control={<Radio size="medium" />} label="스토리" />
+              <FormControlLabel value="STORY" control={<Radio size="medium" />} label="스토리" />
             )}
             {crewDetails?.conti > 0 && (
-              <FormControlLabel value="conti" control={<Radio size="medium" />} label="콘티" />
+              <FormControlLabel value="CONTI" control={<Radio size="medium" />} label="콘티" />
             )}
           </RadioGroup>
         </FormControl>
@@ -106,6 +145,26 @@ export default function CrewApplyView({ id }: Props) {
       >
         제출하기
       </Button>
+
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">제출 완료</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            제출이 완료되었습니다. 결과를 기다려주세요!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary" autoFocus>
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </Container>
   );
 }

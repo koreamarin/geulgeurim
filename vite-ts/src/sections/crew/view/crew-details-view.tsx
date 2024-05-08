@@ -102,7 +102,7 @@ export default function CrewDetailView({ id }: Props) {
               {crewDetails.content}
             </Typography>
             <Typography variant="h6" sx={{ mt: 2 }}>
-              선화: {crewDetails.pen} · 색상: {crewDetails.color} · 배경: {crewDetails.bg} · PD: {crewDetails.pd} · 스토리: {crewDetails.story} · 컨티: {crewDetails.conti}
+              선화: {crewDetails.pen} · 채색: {crewDetails.color} · 배경: {crewDetails.bg} · PD: {crewDetails.pd} · 스토리: {crewDetails.story} · 콘티: {crewDetails.conti}
             </Typography>
           </Card>
         </Grid>
