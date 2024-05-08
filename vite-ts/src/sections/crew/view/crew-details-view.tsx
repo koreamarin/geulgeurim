@@ -68,7 +68,7 @@ export default function CrewDetailView({ id }: Props) {
 
   if (!crewDetails) return <div>Loading...</div>;
 
-  const getStatusProps = (status) => {
+  const getStatusProps = (status: string) => {
     switch (status) {
       case "INPROGRESS":
         return { color: 'green', text: '모집중' };
