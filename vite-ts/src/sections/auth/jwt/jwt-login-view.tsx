@@ -112,7 +112,9 @@ export default function JwtLoginView() {
         cursor: 'pointer',
       }}
     >
-      <a href="http://localhost:8080/oauth2/authorization/kakao">카카오 로그인</a>
+      <a href="http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8085/api/v1/auth/oauth2/authorization/kakao">
+        카카오 로그인
+      </a>
     </button>
   );
 
