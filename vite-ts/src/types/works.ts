@@ -1,9 +1,9 @@
 export type IWorksItem = {
-  id: string;
-  title: string;
-  category: string;
-  publish: boolean;
-  coverUrl: string;
+  piece_id: number;
+  name: string;
+  type: string;
+  status: 'PRIVATE' | 'PUBLIC';
+  fileUrl: string;
   description: string;
   createdAt: Date;
 };
