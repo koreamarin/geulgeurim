@@ -10,8 +10,6 @@ import com.geulgrim.community.board.domain.entity.enums.ImageType;
 import com.geulgrim.community.board.domain.repository.BoardCommentRepository;
 import com.geulgrim.community.board.domain.repository.BoardImageRepository;
 import com.geulgrim.community.board.domain.repository.BoardRepository;
-import com.geulgrim.community.global.file.entity.FileUrl;
-import com.geulgrim.community.global.file.repository.FileUrlRepository;
 import com.geulgrim.community.global.s3.AwsS3Service;
 import com.geulgrim.community.global.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +27,6 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final FileUrlRepository fileUrlRepository;
     private final AwsS3Service awsS3Service;
     private final BoardImageRepository boardImageRepository;
     private final BoardCommentRepository boardCommentRepository;
@@ -64,7 +61,7 @@ public class BoardService {
         return BoardDetailResponse.builder()
                 .board(boardRepository.findByBoardId(boardId))
                 .commentList(boardCommentRepository.findAllByBoardId(boardId))
-                .urlList(fileUrlRepository.findFileUrlByBoardId(boardId))
+                .imageList(boardImageRepository.findByBoardId(boardId))
                 .build();
     }
 
@@ -74,25 +71,24 @@ public class BoardService {
         List<BoardImage> boardImageList = new ArrayList<>();
         for(MultipartFile image : boardWriteRequest.getImageList()) {
             String url = awsS3Service.uploadFile(userId, image, timestamp, "board");
-            FileUrl fileUrl = new FileUrl();
-            log.info("URL : {}", fileUrl.getFileUrl());
             BoardImage boardImage = new BoardImage();
-            fileUrl.setFileUrl(url);
-            boardImage.setFileUrl(fileUrlRepository.save(fileUrl));
+            boardImage.setFileUrl(url);
+            boardImage.setImageType(ImageType.URL);
+            log.info("URL : {}", boardImage.getFileUrl());
             boardImageList.add(boardImage);
         }
 
-        Board board = Board.builder()
+        Board board = boardRepository.save(
+                Board.builder()
                 .user(userRepository.findUserByUserId(userId))
                 .title(boardWriteRequest.getTitle())
                 .content(boardWriteRequest.getContent())
                 .imageList(boardImageList)
-                .build();
+                .build()
+        );
 
-        board = boardRepository.save(board);
         for(BoardImage boardImage : boardImageList) {
             boardImage.setBoard(board);
-            boardImage.setImageType(ImageType.URL);
             boardImageRepository.save(boardImage);
         }
 
@@ -111,20 +107,28 @@ public class BoardService {
         List<BoardImage> boardImageList = new ArrayList<>();
         for(MultipartFile image : boardUpdateRequest.getImageList()) {
             String url = awsS3Service.uploadFile(userId, image, timestamp, "board");
-            FileUrl fileUrl = new FileUrl();
             BoardImage boardImage = new BoardImage();
-            fileUrl.setFileUrl(url);
-            boardImage.setFileUrl(fileUrlRepository.save(fileUrl));
+            boardImage.setFileUrl(url);
+            boardImage.setImageType(ImageType.URL);
+            log.info("URL : {}", boardImage.getFileUrl());
             boardImageList.add(boardImage);
         }
 
-        Board board = Board.builder()
+        Board board = boardRepository.save(
+                Board.builder()
+                .boardId(boardUpdateRequest.getBoardId())
                 .user(userRepository.findUserByUserId(userId))
                 .title(boardUpdateRequest.getTitle())
                 .content(boardUpdateRequest.getContent())
                 .imageList(boardImageList)
-                .build();
+                .build()
+        );
 
-        return boardRepository.save(board);
+
+        for(BoardImage boardImage : boardImageList) {
+            boardImage.setBoard(board);
+            boardImageRepository.save(boardImage);
+        }
+        return board;
     }
 }

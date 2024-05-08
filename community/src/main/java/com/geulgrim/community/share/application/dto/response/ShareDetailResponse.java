@@ -1,8 +1,8 @@
 package com.geulgrim.community.share.application.dto.response;
 
-import com.geulgrim.community.global.file.entity.FileUrl;
 import com.geulgrim.community.share.domain.entity.Share;
 import com.geulgrim.community.share.domain.entity.ShareComment;
+import com.geulgrim.community.share.domain.entity.ShareImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,5 +17,5 @@ import java.util.List;
 public class ShareDetailResponse {
     private Share share;
     private List<ShareComment> commentList;
-    private List<FileUrl> urlList;
+    private List<ShareImage> imageList;
 }

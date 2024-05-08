@@ -1,7 +1,6 @@
 package com.geulgrim.community.board.domain.entity;
 
 import com.geulgrim.community.board.domain.entity.enums.ImageType;
-import com.geulgrim.community.global.file.entity.FileUrl;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,11 +12,9 @@ public class BoardImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardImageId;
+    private long boardImageId;
 
-    @ManyToOne
-    @JoinColumn(name = "file_url_id")
-    private FileUrl fileUrl;
+    private String fileUrl;
 
     @Enumerated(EnumType.STRING)
     private ImageType imageType;

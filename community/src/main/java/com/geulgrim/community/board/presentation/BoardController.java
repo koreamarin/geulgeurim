@@ -8,8 +8,6 @@ import com.geulgrim.community.board.application.service.BoardCommentService;
 import com.geulgrim.community.board.application.service.BoardImageService;
 import com.geulgrim.community.board.application.service.BoardService;
 import com.geulgrim.community.board.domain.entity.Board;
-import com.geulgrim.community.board.domain.entity.BoardComment;
-import com.geulgrim.community.global.file.entity.FileUrl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import io.swagger.v3.oas.annotations.Operation;

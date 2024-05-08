@@ -19,8 +19,8 @@ public class BoardComment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardCommentId;
-    private Long userId;
+    private long boardCommentId;
+    private long userId;
     private String content;
 
     @ManyToOne

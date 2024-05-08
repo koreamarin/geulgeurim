@@ -7,8 +7,6 @@ import com.geulgrim.community.share.domain.entity.ShareImage;
 import com.geulgrim.community.share.domain.entity.Share;
 import com.geulgrim.community.share.domain.entity.ShareImage;
 import com.geulgrim.community.share.domain.entity.enums.ImageType;
-import com.geulgrim.community.global.file.entity.FileUrl;
-import com.geulgrim.community.global.file.repository.FileUrlRepository;
 import com.geulgrim.community.global.s3.AwsS3Service;
 import com.geulgrim.community.share.application.dto.request.ShareWriteRequest;
 import com.geulgrim.community.share.application.dto.response.ShareDetailResponse;
@@ -31,7 +29,6 @@ import java.util.List;
 public class ShareService {
 
     private final ShareRepository shareRepository;
-    private final FileUrlRepository fileUrlRepository;
     private final AwsS3Service awsS3Service;
     private final ShareImageRepository shareImageRepository;
     private final ShareCommentRepository shareCommentRepository;
@@ -53,7 +50,7 @@ public class ShareService {
         return ShareDetailResponse.builder()
                 .share(shareRepository.findByShareId(shareId))
                 .commentList(shareCommentRepository.findAllByShareId(shareId))
-                .urlList(fileUrlRepository.findFileUrlByShareId(shareId))
+                .imageList(shareImageRepository.findByShareId(shareId))
                 .build();
     }
     
@@ -63,22 +60,22 @@ public class ShareService {
         List<ShareImage> shareImageList = new ArrayList<>();
         for(MultipartFile image : shareWriteRequest.getImageList()) {
             String url = awsS3Service.uploadFile(userId, image, timestamp, "share");
-            FileUrl fileUrl = new FileUrl();
-            log.info("URL : {}", fileUrl.getFileUrl());
             ShareImage shareImage = new ShareImage();
-            fileUrl.setFileUrl(url);
-            shareImage.setFileUrl(fileUrlRepository.save(fileUrl));
+            shareImage.setFileUrl(url);
+            shareImage.setImageType(ImageType.URL);
             shareImageList.add(shareImage);
+            log.info("URL : {}", fileUrl.getFileUrl());
         }
 
-        Share share = Share.builder()
+        Share share = shareRepository.save(
+                Share.builder()
                 .user(userRepository.findUserByUserId(userId))
                 .title(shareWriteRequest.getTitle())
                 .content(shareWriteRequest.getContent())
                 .imageList(shareImageList)
-                .build();
+                .build()
+        );
 
-        share = shareRepository.save(share);
         for(ShareImage shareImage : shareImageList) {
             shareImage.setShare(share);
             shareImage.setImageType(ImageType.URL);
@@ -99,20 +96,27 @@ public class ShareService {
         List<ShareImage> shareImageList = new ArrayList<>();
         for(MultipartFile image : shareUpdateRequest.getImageList()) {
             String url = awsS3Service.uploadFile(userId, image, timestamp, "share");
-            FileUrl fileUrl = new FileUrl();
             ShareImage shareImage = new ShareImage();
-            fileUrl.setFileUrl(url);
-            shareImage.setFileUrl(fileUrlRepository.save(fileUrl));
+            shareImage.setFileUrl(url);
+            shareImage.setImageType(ImageType.URL);
             shareImageList.add(shareImage);
         }
 
-        Share share = Share.builder()
+        Share share = shareRepository.save(
+                Share.builder()
+                .shareId(shareUpdateRequest.getShareId())
                 .user(userRepository.findUserByUserId(userId))
                 .title(shareUpdateRequest.getTitle())
                 .content(shareUpdateRequest.getContent())
                 .imageList(shareImageList)
-                .build();
+                .build()
+        );
 
-        return shareRepository.save(share);
+        for(ShareImage shareImage : shareImageList) {
+            shareImage.setShare(share);
+            shareImage.setImageType(ImageType.URL);
+            shareImageRepository.save(shareImage);
+        }
+        return share;
     }
 }
