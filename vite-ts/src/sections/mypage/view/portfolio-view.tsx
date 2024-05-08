@@ -1,4 +1,7 @@
-import React from 'react';
+// import React from 'react';
+
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
   Box,
   Container,
@@ -8,8 +11,6 @@ import {
   Button,
   IconButton
 } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function PortfolioView() {
   return (
@@ -30,9 +31,9 @@ export default function PortfolioView() {
                 <Typography>내맘대로 작업</Typography>
                 <Typography variant="body2" color="text.secondary">사용 프로그램: Clip Studio</Typography>
               </Box>
-              <IconButton>
+              {/* <IconButton>
                 <MoreVertIcon />
-              </IconButton>
+              </IconButton> */}
             </Box>
             <img src="https://source.unsplash.com/random" alt="portfolio" style={{ width: '100%', height: 'auto' }} />
           </Grid>
