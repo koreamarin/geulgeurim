@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "eureka-client-common", url = "https://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8081")
+@FeignClient(name = "eureka-client-common", url = "http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8081")
 public interface PieceFeignClient {
 
 

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MarketLog extends BaseEntity {
+public class MarketLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static jakarta.persistence.EnumType.STRING;
 
@@ -17,19 +19,20 @@ import static jakarta.persistence.EnumType.STRING;
 @Builder
 public class MarketDetailResponseDto {
 
+    private static final Logger log = LoggerFactory.getLogger(MarketDetailResponseDto.class);
     private Long id; //게시글 아이디
 
-    private String fileUrl; //작품 이미지
+    private String pieceFileUrl; //작품 이미지
 
     // 작품 이름
-    private String name;
+    private String pieceName;
 
     // 작품 설명
-    private String description;
+    private String pieceDescription;
 
     // 작품 종류
     @Enumerated(STRING)
-    private PieceType type;
+    private PieceType pieceType;
 
     private Long seller; //auth 서버 유저id 필요
 
@@ -42,12 +45,13 @@ public class MarketDetailResponseDto {
     private int viewCount;
 
     public static MarketDetailResponseDto from(Market market, PieceResponseDto dto) {
+        log.info("pieceType ={}", dto.getType());
         return MarketDetailResponseDto.builder()
                 .id(market.getId())
-                .fileUrl(dto.getFileUrl())
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .type(dto.getPieceType())
+                .pieceFileUrl(dto.getFileUrl())
+                .pieceName(dto.getName())
+                .pieceDescription(dto.getDescription())
+                .pieceType(dto.getType())
                 .seller(market.getSeller())
                 .title(market.getTitle())
                 .content(market.getContent())
