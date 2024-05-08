@@ -59,6 +59,7 @@ export const paths = {
     apply: `${ROOTS.MYPAGE}/apply`,
     interest: `${ROOTS.MYPAGE}/interest`,
     portfolio: `${ROOTS.MYPAGE}/portfolio`,
+    portfolioDetail: (id:number) => `${ROOTS.MYPAGE}/portfolio/detail/${id}`,
     resume: `${ROOTS.MYPAGE}/resume`,
     works: `${ROOTS.MYPAGE}/works`,
   },

@@ -17,7 +17,7 @@ import { Upload } from 'src/components/upload';
 import { useNavigate } from 'react-router-dom';
 
 type Props = {
-  id?: string;
+  id?: number;
 };
 
 export default function CrewApplyView({ id }: Props) {

@@ -12,6 +12,7 @@ const Inforamtion = lazy(() => import('src/pages/mypage'));
 const Apply = lazy(() => import('src/pages/mypage/apply'));
 const Interest = lazy(() => import('src/pages/mypage/interest'));
 const Portfolio = lazy(() => import('src/pages/mypage/portfolio'));
+const PortfolioDetail = lazy(() => import('src/pages/mypage/portfolio-detail'));
 const Works = lazy(() => import('src/pages/mypage/wokrs'));
 const Resume = lazy(() => import('src/pages/mypage/resume'));
 
@@ -33,9 +34,24 @@ export const mypageRoutes = [
       { path: '', element: <Inforamtion /> },
       { path: 'apply', element: <Apply /> },
       { path: 'interest', element: <Interest /> },
-      { path: 'portfolio', element: <Portfolio /> },
+      {
+        path: 'portfolio',
+        children: [
+          {
+            path: '',
+            element: <Portfolio />
+          },
+          {
+            path: 'detail/:id',
+            element: <PortfolioDetail />
+          },
+
+        ]
+
+       },
       { path: 'works', element: <Works /> },
       { path: 'resume', element: <Resume /> },
     ],
+
   },
 ];
