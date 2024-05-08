@@ -71,6 +71,7 @@ export default function PostItem({ post, index }: Props) {
             height: 360,
           }}
         />
+
       </Card>
     );
   }

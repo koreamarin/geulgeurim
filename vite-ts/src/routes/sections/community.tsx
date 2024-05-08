@@ -91,16 +91,16 @@ export const communityRoutes = [
             element: <CrewMainPage />,
           },
           {
+            path: 'apply/:id',
+            element: <CrewApplyPage />,
+          },
+          {
             path: ':id',
             element: <CrewDetailPage />,
           },
           {
             path: 'write',
             element: <CrewWritePage />,
-          },
-          {
-            path: 'apply/:id',
-            element: <CrewApplyPage />,
           },
         ],
       },

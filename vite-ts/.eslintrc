@@ -51,6 +51,12 @@
     "react/function-component-definition": 0,
     "@typescript-eslint/naming-convention": 0,
     "jsx-a11y/control-has-associated-label": 0,
+    "jsx-a11y/label-has-associated-control": [ 2, {
+      "required": {
+        "some": [ "nesting", "id" ]
+      }
+    }],
+
     "@typescript-eslint/no-use-before-define": 0,
     "react/jsx-no-useless-fragment": [
       1,
