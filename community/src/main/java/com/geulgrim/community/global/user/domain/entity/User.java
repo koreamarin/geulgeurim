@@ -1,7 +1,6 @@
 package com.geulgrim.community.global.user.domain.entity;
 
 
-import com.geulgrim.community.global.file.entity.FileUrl;
 import com.geulgrim.community.global.user.domain.entity.enums.UserType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;

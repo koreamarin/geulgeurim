@@ -64,7 +64,7 @@ public class ShareService {
             shareImage.setFileUrl(url);
             shareImage.setImageType(ImageType.URL);
             shareImageList.add(shareImage);
-            log.info("URL : {}", fileUrl.getFileUrl());
+            log.info("URL : {}", shareImage.getFileUrl());
         }
 
         Share share = shareRepository.save(

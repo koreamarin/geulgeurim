@@ -18,7 +18,6 @@ import com.geulgrim.community.crew.domain.repository.CrewImageRepository;
 import com.geulgrim.community.crew.domain.repository.CrewRepository;
 import com.geulgrim.community.crew.domain.repository.CrewRequestRepository;
 import com.geulgrim.community.crew.exception.CrewException;
-import com.geulgrim.community.global.file.entity.FileUrl;
 import com.geulgrim.community.global.s3.AwsS3Service;
 import com.geulgrim.community.global.user.domain.entity.User;
 import com.geulgrim.community.global.user.domain.repository.UserRepository;
