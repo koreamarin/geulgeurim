@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ShareImageRepository extends JpaRepository<ShareImage, Long> {
-    List<ShareImage> findByShareId(Long shareId);
+    List<ShareImage> findByShareShareId(Long shareId);
 }

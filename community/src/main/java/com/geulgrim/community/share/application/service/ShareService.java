@@ -50,7 +50,7 @@ public class ShareService {
         return ShareDetailResponse.builder()
                 .share(shareRepository.findByShareId(shareId))
                 .commentList(shareCommentRepository.findAllByShareId(shareId))
-                .imageList(shareImageRepository.findByShareId(shareId))
+                .imageList(shareImageRepository.findByShareShareId(shareId))
                 .build();
     }
     

@@ -61,7 +61,7 @@ public class BoardService {
         return BoardDetailResponse.builder()
                 .board(boardRepository.findByBoardId(boardId))
                 .commentList(boardCommentRepository.findAllByBoardId(boardId))
-                .imageList(boardImageRepository.findByBoardId(boardId))
+                .imageList(boardImageRepository.findByBoardBoardId(boardId))
                 .build();
     }
 
