@@ -7,6 +7,9 @@ import com.geulgrim.market.market.application.dto.response.ETHResponseDto;
 import com.geulgrim.market.market.application.dto.response.MarketResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,7 @@ import java.util.List;
 @RequestMapping("/api/v1/market")
 public class MarketController {
 
+    private static final Logger log = LoggerFactory.getLogger(MarketController.class);
     private final MarketService marketService;
 
     @PostMapping("/create")
@@ -53,5 +57,18 @@ public class MarketController {
     @Operation(summary = "이더리움 정보 조회", description = "API를 이용해 현재 이더리움 정보를 조회합니다")
     public ResponseEntity<ETHResponseDto> info () {
         return new ResponseEntity<>(marketService.getETHinfo(), HttpStatus.OK);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity test(HttpRequest request) {
+        log.info("@@@@@@@@@@@ in test controller @@@@@@@@@@@@");
+
+        String userId = request.getHeaders().getFirst("user_id");
+        String userType = request.getHeaders().getFirst("user_type");
+
+        log.info("userId : ",userId);
+        log.info("userType : ",userType);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
