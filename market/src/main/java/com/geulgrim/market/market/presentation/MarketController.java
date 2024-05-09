@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,14 +62,14 @@ public class MarketController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity test(HttpRequest request) {
+    public ResponseEntity test(@RequestHeader HttpHeaders header) {
         log.info("@@@@@@@@@@@ in test controller @@@@@@@@@@@@");
 
-        String userId = request.getHeaders().getFirst("user_id");
-        String userType = request.getHeaders().getFirst("user_type");
+        String userId = header.getFirst("user_id");
+        String userType = header.getFirst("user_type");
 
-        log.info("userId : ",userId);
-        log.info("userType : ",userType);
+        log.info("userId : {}",userId);
+        log.info("userType : {}",userType);
 
         return new ResponseEntity(HttpStatus.OK);
     }
