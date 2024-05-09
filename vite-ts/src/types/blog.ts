@@ -112,15 +112,14 @@ export type BoardItem = {
 
 export type ShareMainItem = {
   shareId: number;
-  shareImageFileUrl: string;
-  userId: number;
   userNickname: string;
-  userFileUrl: string;
+  userProfile: string;
+  thumbnail: string;
   title: string;
-  hit: number;
-  createdAt: Date;
-  updateAt: Date;
-  commentCnt: number;
+  hit: string;
+  commentCnt: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type ShareItem = {
@@ -159,14 +158,18 @@ export type ShareItem = {
 
 export type CrewMainItem = {
   crewId: number;
-  projectName: string;
+  userNickname: string;
+  userProfile: string;
+  thumbnail: string;
+  title: string;
+  date: string;
+  hit: string;
+  commentCnt: string;
   pen: number;
   color: number;
   bg: number;
   pd: number;
   story: number;
   conti: number;
-  thumbnail: string;
-  date: Date;
-  status: string;
+  status: number;
 };

@@ -22,15 +22,15 @@ import Iconify from 'src/components/iconify';
 import TextMaxLine from 'src/components/text-max-line';
 
 import { CrewMainItem } from 'src/types/blog';
+import { Grid } from '@mui/material';
 
 // ----------------------------------------------------------------------
+type Props = {
+  crew: CrewMainItem;
+};
 
-export default function PostItem() {
-  const theme = useTheme();
-
-  const mdUp = useResponsive('up', 'md');
-
-  // const latestPost = index === 0 || index === 1 || index === 2;
+export default function PostItem(item: Props) {
+  const { crew } = item;
 
   return (
     <Card>
@@ -48,7 +48,7 @@ export default function PostItem() {
 
         <Avatar
           alt="123"
-          src="https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png"
+          src={crew.userProfile}
           sx={{
             left: 24,
             zIndex: 9,
@@ -57,23 +57,23 @@ export default function PostItem() {
           }}
         />
 
-        <Image
-          alt="123"
-          src="https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png"
-          ratio="4/3"
-        />
+        <Image alt="123" src={crew.thumbnail} ratio="4/3" />
       </Box>
 
       <CrewContent
-        crewId={Number('1')}
-        userNickname="박싸피"
-        title="abcd"
-        totalViews={Number('1')}
-        totalComments={Number('1')}
-        createdAt="2024-05-07"
-        status="INPROGRESS"
-        pen={Number('1')}
-        color={Number('1')}
+        crewId={crew.crewId}
+        userNickname={crew.userNickname}
+        title={crew.title}
+        createdAt={crew.date}
+        hit={crew.hit}
+        commentCnt={crew.commentCnt}
+        pen={crew.pen}
+        color={crew.color}
+        bg={crew.bg}
+        pd={crew.pd}
+        story={crew.story}
+        conti={crew.conti}
+        status={crew.status}
       />
     </Card>
   );
@@ -85,17 +85,16 @@ type CrewContentProps = {
   crewId: number;
   userNickname: string;
   title: string;
-  index?: number;
-  totalViews: number;
-  totalComments: number;
+  hit: string;
+  commentCnt: string;
   createdAt: Date | string | number;
-  pen?: number;
-  color?: number;
-  bg?: number;
-  pd?: number;
-  story?: number;
-  conti?: number;
-  status: string;
+  pen: number;
+  color: number;
+  bg: number;
+  pd: number;
+  story: number;
+  conti: number;
+  status: number;
 };
 
 export function CrewContent({
@@ -103,9 +102,8 @@ export function CrewContent({
   userNickname,
   title,
   createdAt,
-  totalViews,
-  totalComments,
-  index,
+  hit,
+  commentCnt,
   pen,
   color,
   bg,
@@ -117,10 +115,6 @@ export function CrewContent({
   const mdUp = useResponsive('up', 'md');
 
   const linkTo = paths.community.crew.detail(crewId);
-
-  const latestPostLarge = index === 0;
-
-  const latestPostSmall = index === 1 || index === 2;
 
   return (
     <CardContent
@@ -147,7 +141,7 @@ export function CrewContent({
             component={RouterLink}
             href={linkTo}
           >
-            <TextMaxLine variant={mdUp && latestPostLarge ? 'h5' : 'subtitle2'} line={1} persistent>
+            <TextMaxLine variant="subtitle2" line={1} persistent>
               {userNickname}
             </TextMaxLine>
           </Link>
@@ -155,13 +149,14 @@ export function CrewContent({
       </Stack>
 
       <Link color="inherit" component={RouterLink} href={linkTo}>
-        <TextMaxLine mt={1} variant={mdUp && latestPostLarge ? 'h5' : 'subtitle1'} line={2} persistent>
+        <TextMaxLine mt={1} variant="subtitle1" line={2} persistent>
           {title}
         </TextMaxLine>
       </Link>
 
-      <Stack
-        spacing={1.5}
+      <Grid
+        container
+        spacing={1}
         direction="row"
         justifyContent="flex-start"
         sx={{
@@ -172,54 +167,68 @@ export function CrewContent({
         }}
       >
         {pen ? (
-          <Stack direction="row" alignItems="center">
-            선화:
-            <Stack sx={{ fontWeight: 900 }}>&nbsp; {pen} </Stack> 명
-          </Stack>
+          <Grid item>
+            <Stack direction="row" alignItems="center">
+              선화:
+              <Stack sx={{ fontWeight: 900 }}>&nbsp; {pen} </Stack> 명
+            </Stack>
+          </Grid>
         ) : (
           <></>
         )}
+
         {color ? (
-          <Stack direction="row" alignItems="center">
-            채색:
-            <Stack sx={{ fontWeight: 900 }}>&nbsp; {color} </Stack> 명
-          </Stack>
+          <Grid item>
+            <Stack direction="row" alignItems="center">
+              채색:
+              <Stack sx={{ fontWeight: 900 }}>&nbsp; {color} </Stack> 명
+            </Stack>
+          </Grid>
         ) : (
           <></>
         )}
+
         {bg ? (
-          <Stack direction="row" alignItems="center">
-            배경:
-            <Stack sx={{ fontWeight: 900 }}>&nbsp; {bg} </Stack> 명
-          </Stack>
+          <Grid item>
+            <Stack direction="row" alignItems="center">
+              배경:
+              <Stack sx={{ fontWeight: 900 }}>&nbsp; {bg} </Stack> 명
+            </Stack>
+          </Grid>
         ) : (
           <></>
         )}
         {pd ? (
-          <Stack direction="row" alignItems="center">
-            기획/편집:
-            <Stack sx={{ fontWeight: 900 }}>&nbsp; {pd} </Stack> 명
-          </Stack>
+          <Grid item>
+            <Stack direction="row" alignItems="center">
+              기획/편집:
+              <Stack sx={{ fontWeight: 900 }}>&nbsp; {pd} </Stack> 명
+            </Stack>
+          </Grid>
         ) : (
           <></>
         )}
         {story ? (
-          <Stack direction="row" alignItems="center">
-            스토리:
-            <Stack sx={{ fontWeight: 900 }}>&nbsp; {story} </Stack> 명
-          </Stack>
+          <Grid item>
+            <Stack direction="row" alignItems="center">
+              스토리:
+              <Stack sx={{ fontWeight: 900 }}>&nbsp; {story} </Stack> 명
+            </Stack>
+          </Grid>
         ) : (
           <></>
         )}
         {conti ? (
-          <Stack direction="row" alignItems="center">
-            콘티:
-            <Stack sx={{ fontWeight: 900 }}>&nbsp; {conti} </Stack> 명
-          </Stack>
+          <Grid item>
+            <Stack direction="row" alignItems="center">
+              콘티:
+              <Stack sx={{ fontWeight: 900 }}>&nbsp; {conti} </Stack> 명
+            </Stack>
+          </Grid>
         ) : (
           <></>
         )}
-      </Stack>
+      </Grid>
 
       <Stack
         spacing={1.5}
@@ -233,12 +242,12 @@ export function CrewContent({
       >
         <Stack direction="row" alignItems="center">
           <Iconify icon="eva:message-circle-fill" width={16} sx={{ mr: 0.5 }} />
-          {fShortenNumber(totalComments)}
+          {fShortenNumber(commentCnt)}
         </Stack>
 
         <Stack direction="row" alignItems="center">
           <Iconify icon="solar:eye-bold" width={16} sx={{ mr: 0.5 }} />
-          {fShortenNumber(totalViews)}
+          {fShortenNumber(hit)}
         </Stack>
       </Stack>
       <Stack
@@ -247,18 +256,18 @@ export function CrewContent({
         sx={{
           typography: 'caption',
           color: 'text.disabled',
-          pt: 1
+          pt: 1,
         }}
       >
-      <Typography
-        variant="caption"
-        component="div"
-        sx={{
-          color: 'text.disabled',
-        }}
-      >
-        {fDate(createdAt)}
-      </Typography>
+        <Typography
+          variant="caption"
+          component="div"
+          sx={{
+            color: 'text.disabled',
+          }}
+        >
+          {fDate(createdAt)}
+        </Typography>
       </Stack>
     </CardContent>
   );

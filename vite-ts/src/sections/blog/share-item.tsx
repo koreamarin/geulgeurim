@@ -26,27 +26,11 @@ import { ShareMainItem } from 'src/types/blog';
 // ----------------------------------------------------------------------
 
 type shareProps = {
-    pk: number;
-    userNickname: string;
-    fullTitle: string;
-    date:string;
-    hit:number;
-    comment_count:number;
-    pen: number;
-    color: number;
-    bg: number;
-    pd: number;
-    story: number;
-    conti: number;
-    status: number;
+  share: ShareMainItem;
 };
 
-export default function PostItem(share: shareProps) {
-  const theme = useTheme();
-
-  const mdUp = useResponsive('up', 'md');
-  console.log('확인',share)
-  const shareItem = share;
+export default function PostItem(shareItem: shareProps) {
+  const { share } = shareItem;
   // eslint-disable-next-line react/destructuring-assignment
   // console.log('1', shareItem)
 
@@ -68,7 +52,7 @@ export default function PostItem(share: shareProps) {
 
         <Avatar
           alt="123"
-          src="https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png"
+          src={share.userProfile}
           sx={{
             left: 24,
             zIndex: 9,
@@ -77,20 +61,17 @@ export default function PostItem(share: shareProps) {
           }}
         />
 
-        <Image
-          alt="123"
-          src="https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png"
-          ratio="4/3"
-        />
+        <Image alt="123" src={share.thumbnail} ratio="4/3" />
       </Box>
 
       <ShareContent
-        shareId={shareItem.pk}
-        userNickname={shareItem.userNickname}
-        title={shareItem.fullTitle}
-        totalViews={shareItem.hit}
-        totalComments={shareItem.comment_count}
-        createdAt={shareItem.date}
+        shareId={share.shareId}
+        userNickname={share.userNickname}
+        title={share.title}
+        hit={share.hit}
+        commentCnt={share.commentCnt}
+        createdAt={share.createdAt}
+        updatedAt={share.updatedAt}
       />
     </Card>
   );
@@ -102,10 +83,10 @@ type ShareContentProps = {
   shareId: number;
   userNickname: string;
   title: string;
-  index?: number;
-  totalViews: number;
-  totalComments: number;
+  hit: string;
+  commentCnt: string;
   createdAt: Date | string | number;
+  updatedAt: Date | string | number;
 };
 
 export function ShareContent({
@@ -113,21 +94,15 @@ export function ShareContent({
   userNickname,
   title,
   createdAt,
-  totalViews,
-  totalComments,
-  index,
+  hit,
+  commentCnt,
+  updatedAt,
 }: ShareContentProps) {
-  const mdUp = useResponsive('up', 'md');
-
   const linkTo = paths.community.share.detail(shareId);
 
   // 상훈이형 오면 물어보기
   // const toProfile = paths.mypage.root;
   const toProfile = '';
-
-  const latestPostLarge = index === 0;
-
-  const latestPostSmall = index === 1 || index === 2;
 
   return (
     <CardContent
@@ -147,8 +122,13 @@ export function ShareContent({
         }}
       >
         <Stack direction="row" alignItems="center">
-          <Link color="inherit" style={{ textDecoration: 'none' }} component={RouterLink} href={toProfile} >
-            <TextMaxLine variant={mdUp && latestPostLarge ? 'h5' : 'subtitle2'} line={1} persistent>
+          <Link
+            color="inherit"
+            style={{ textDecoration: 'none' }}
+            component={RouterLink}
+            href={toProfile}
+          >
+            <TextMaxLine variant="subtitle2" line={1} persistent>
               {userNickname}
             </TextMaxLine>
           </Link>
@@ -156,7 +136,7 @@ export function ShareContent({
       </Stack>
 
       <Link color="inherit" component={RouterLink} href={linkTo}>
-        <TextMaxLine mt={1} variant={mdUp && latestPostLarge ? 'h5' : 'subtitle1'} line={2} persistent>
+        <TextMaxLine mt={1} variant="subtitle1" line={2} persistent>
           {title}
         </TextMaxLine>
       </Link>
@@ -173,12 +153,12 @@ export function ShareContent({
       >
         <Stack direction="row" alignItems="center">
           <Iconify icon="eva:message-circle-fill" width={16} sx={{ mr: 0.5 }} />
-          {fShortenNumber(totalComments)}
+          {fShortenNumber(commentCnt)}
         </Stack>
 
         <Stack direction="row" alignItems="center">
           <Iconify icon="solar:eye-bold" width={16} sx={{ mr: 0.5 }} />
-          {fShortenNumber(totalViews)}
+          {fShortenNumber(hit)}
         </Stack>
       </Stack>
       <Stack
@@ -187,18 +167,18 @@ export function ShareContent({
         sx={{
           typography: 'caption',
           color: 'text.disabled',
-          pt: 1
+          pt: 1,
         }}
       >
-      <Typography
-        variant="caption"
-        component="div"
-        sx={{
-          color: 'text.disabled',
-        }}
-      >
-        {fDate(createdAt)}
-      </Typography>
+        <Typography
+          variant="caption"
+          component="div"
+          sx={{
+            color: 'text.disabled',
+          }}
+        >
+          {fDate(createdAt)}
+        </Typography>
       </Stack>
     </CardContent>
   );
