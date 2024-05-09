@@ -1,11 +1,8 @@
 package com.geulgrim.gateway.util;
 
-import ch.qos.logback.classic.Logger;
 import com.geulgrim.gateway.dto.UserInfoResponseDto;
 import com.geulgrim.gateway.exception.UnAuthorizedException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
