@@ -1,11 +1,15 @@
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { useMemo, useCallback } from 'react';
+// import { useMemo, useEffect, useCallback, useContext, useState  } from 'react';
+import { useMemo, useCallback  } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
+// import { useLocation, useNavigate, UNSAFE_NavigationContext as NavigationContext } from 'react-router-dom';
+
+import { useBlocker } from 'react-router-dom';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-// import Button from '@mui/material/Button';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -15,6 +19,10 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+// import { useCallbackPrompt } from 'src/hooks/use-callbackprompt';
+
+// import { useBlocker } from 'src/hooks/use-blocker';
+
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFUpload,
@@ -23,7 +31,7 @@ import FormProvider, {
 } from 'src/components/hook-form';
 
 import WorksRHFSwitch from './works-form-switch';
-import WorksFormEscape from './works-form-escape';
+// import WorksFormEscape from './works-form-escape';
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +52,25 @@ const typeList:SelectCatgory[] = [
 
 export default function WorksForm() {
   const router = useRouter();
+
+
+  const a = true
+  const blocker = useBlocker((
+    {currentLocation, nextLocation}) =>
+    a && currentLocation.pathname !== nextLocation.pathname
+  )
+
+
+
+  // unstable_usePrompt({
+  //   message: "Are you sure?",
+  //   when: ({ currentLocation, nextLocation }) =>
+  //     a &&
+  //     currentLocation.pathname !== nextLocation.pathname,
+  // });
+
+  // const [showPrompt, confirmNavigation, cancelNavigation] = useCallbackPrompt(true);
+
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -71,14 +98,23 @@ export default function WorksForm() {
   const methods = useForm({
     resolver: yupResolver(NewWorksSchema),
     defaultValues,
+    mode: 'onChange'
   });
+
 
   const {
     reset,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
   } = methods;
+
+  console.log(isDirty, isSubmitting)
+
+  console.log('도착')
+
+  // usePreventPageChangeWhenDirty(isDirty);
+
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -115,6 +151,7 @@ export default function WorksForm() {
 
   const renderDetails = (
     <Grid xsOffset={1} mdOffset={2} xs={10} md={8}>
+      {!isDirty && '확인중'}
       <Typography variant="h3" sx={{display:'flex',  justifyContent: 'space-between',}}>
           작품 등록
           <WorksRHFSwitch name="status" label="공개여부" />
@@ -141,7 +178,7 @@ export default function WorksForm() {
 
         </Stack>
       </Card>
-      <Stack spacing={1.5}>
+      <Stack spacing={1.5} mb={4}>
         <Typography variant="h5">작품</Typography>
         {/* 업로드 */}
         <RHFUpload
@@ -157,16 +194,33 @@ export default function WorksForm() {
       >
         등록하기
       </LoadingButton>
+
+
     </Grid>
   );
 
 
 
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Grid container spacing={3}>
-        {renderDetails}
-      </Grid>
-    </FormProvider>
+    <>
+      <FormProvider methods={methods} onSubmit={onSubmit}>
+        <Grid container spacing={3}>
+          {renderDetails}
+        </Grid>
+      </FormProvider>
+      {/* {blocker.state === 'blocked' && (
+        <Grid>
+          <Button onClick={() => blocker.proceed()}>과연</Button>
+          <Button onClick={() => blocker.reset()}>되랏</Button>
+        </Grid>
+      )} */}
+        {/* <WorksFormEscape
+        open={showPrompt}
+        onClose={() => cancelNavigation}
+        onOpen={() => showPrompt}
+        onMove={confirmNavigation}
+        selectVariant='zoomIn'
+      /> */}
+    </>
   );
 }

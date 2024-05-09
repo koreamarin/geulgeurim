@@ -7,9 +7,6 @@ import DialogContent from '@mui/material/DialogContent';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import DialogActions from '@mui/material/DialogActions';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
-
 import getVariant from '../get-variant';
 
 // ----------------------------------------------------------------------
@@ -18,6 +15,7 @@ type WorksFormEscapeProps = {
   open: boolean;
   onOpen: VoidFunction;
   onClose: VoidFunction;
+  onMove: VoidFunction
   selectVariant: string;
 };
 
@@ -25,22 +23,11 @@ export default function WorksFormEscape({
   open,
   onOpen,
   onClose,
+  onMove,
   selectVariant,
   ...other
 }: WorksFormEscapeProps) {
-  const router = useRouter()
-  const deleteWorks = () => {
-    console.log('삭제!')
-    onClose()
-    // 성공하면 list로 이동!
-    router.push(paths.mypage.works)
-  }
   return (
-    <>
-      <Button  style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" onClick={onOpen}>
-        삭제하기
-      </Button>
-
       <AnimatePresence>
         {open && (
           <Dialog
@@ -64,13 +51,12 @@ export default function WorksFormEscape({
               <Button style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color='success' size="medium" onClick={onClose}>
                 취소하기
               </Button>
-              <Button style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" onClick={deleteWorks} autoFocus>
+              <Button style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" onClick={onMove} autoFocus>
                 벗어나기
               </Button>
             </DialogActions>
           </Dialog>
         )}
       </AnimatePresence>
-    </>
   );
 }
