@@ -1,9 +1,7 @@
-import { useLocation } from 'react-router-dom';
 import React, { useState } from 'react';
 import {
-  Box, Grid, Paper, Button, Switch, Tooltip, Container,
-  FormGroup, Typography, IconButton, FormControlLabel,
-  Dialog, DialogTitle, DialogContent, DialogActions
+  Box, Grid, Paper, Switch, Tooltip, Container,
+  FormGroup, Typography, IconButton, FormControlLabel
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -145,8 +143,6 @@ export default function PortfolioDetailView({ id }: Props) {
             </Grid>
           ))
         )}
-
-
     </Paper>
   </Container>
   )
