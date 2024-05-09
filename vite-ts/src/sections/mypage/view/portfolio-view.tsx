@@ -72,8 +72,6 @@ export default function PortfolioView() {
   const [open, setOpen] = useState(false);
 
   const handlePortfolioClick = (portfolioId: number) => {
-    const portfolioData = portfolioState.find(portfolio => portfolio.id === portfolioId);
-
     router.push(paths.mypage.portfolioDetail(portfolioId));
   };
 

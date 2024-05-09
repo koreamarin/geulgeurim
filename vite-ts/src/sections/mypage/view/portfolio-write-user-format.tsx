@@ -88,7 +88,7 @@ export default function PortfolioWriteUserFormatView() {
 
   return (
     <Container>
-    <Typography variant="h3">포트폴리오 추가</Typography>
+    <Typography variant="h3">포트폴리오 추가 (사용자 포맷)</Typography>
     <TextField
       sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', gap: 2 }}
       label="제목"
