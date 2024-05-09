@@ -3,6 +3,8 @@ package com.geulgrim.gateway.filter;
 import com.geulgrim.gateway.dto.UserInfoResponseDto;
 import com.geulgrim.gateway.exception.UnAuthorizedException;
 import com.geulgrim.gateway.util.JWTUtil;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -12,6 +14,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
+
+    public AuthFilter() {
+        super(Config.class);
+    }
 
     private final JWTUtil jwtUtil = new JWTUtil();
 
