@@ -2,10 +2,13 @@ package com.geulgrim.market.market.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.geulgrim.market.commonserver.piece.application.response.PieceResponseDto;
+import com.geulgrim.market.commonserver.piece.presentation.PieceFeignClient;
 import com.geulgrim.market.global.s3.S3UploadService;
 import com.geulgrim.market.market.application.dto.request.MarketCreateRequestDto;
 import com.geulgrim.market.market.application.dto.request.MarketUpdateRequestDto;
 import com.geulgrim.market.market.application.dto.response.ETHResponseDto;
+import com.geulgrim.market.market.application.dto.response.MarketDetailResponseDto;
 import com.geulgrim.market.market.application.dto.response.MarketResponseDto;
 import com.geulgrim.market.market.domain.ETHinfo.ETHInfo;
 import com.geulgrim.market.market.domain.Market;
@@ -22,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.ion.IonException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -41,9 +43,7 @@ public class MarketService {
 
     private final S3UploadService s3UploadService;
 
-//    private final PieceFeignClient pieceFeignClient;
-
-//    private final PieceService pieceService;
+    private final PieceFeignClient pieceFeignClient;
 
     public Long create(MultipartFile image, MarketCreateRequestDto dto) throws IOException {
         Market market = dto.toEntity();
@@ -85,9 +85,10 @@ public class MarketService {
         return markets.stream().map(MarketResponseDto::from).toList();
     }
 
-    public MarketResponseDto detail(Long id) {
+    public MarketDetailResponseDto detail(Long id) {
         Market market = marketRepository.findById(id).orElseThrow(NoMarketExistException::new);
-        return MarketResponseDto.from(market);
+        PieceResponseDto pieceResponse = pieceFeignClient.findPieceByIdFromCommon(market.getPiece());
+        return MarketDetailResponseDto.from(market, pieceResponse);
     }
 
 //    로그인 유저의 판매 게시글 조회, 이후 요청 시 넘어오는 로그인 유저 정보 활용
@@ -136,10 +137,9 @@ public class MarketService {
         return marketRepository.findById(id).orElseThrow(NoMarketExistException::new);
     }
 
-//    유레카 연결되면 piece 가져오기
-//    public PieceResponseDto findPieceFromPieceService(Long pieceId) {
-//        return pieceService.findPieceByIdFromCommon(pieceId);
-//    }
+    public PieceResponseDto findPieceFromCommonServer(Long pieceId) {
+        return pieceFeignClient.findPieceByIdFromCommon(pieceId);
+    }
 
     public List<MarketLog> findMarketLogByPieceId(Long pieceId) {
         return marketRepository.findMarketLogsByPieceId(pieceId);
