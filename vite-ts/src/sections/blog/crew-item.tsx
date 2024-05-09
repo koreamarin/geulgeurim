@@ -25,8 +25,6 @@ import { CrewMainItem } from 'src/types/blog';
 
 // ----------------------------------------------------------------------
 
-
-
 export default function PostItem() {
   const theme = useTheme();
 
@@ -49,8 +47,8 @@ export default function PostItem() {
         />
 
         <Avatar
-          alt='123'
-          src='https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png'
+          alt="123"
+          src="https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png"
           sx={{
             left: 24,
             zIndex: 9,
@@ -59,15 +57,23 @@ export default function PostItem() {
           }}
         />
 
-        <Image alt='123' src='https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png' ratio="4/3" />
+        <Image
+          alt="123"
+          src="https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png"
+          ratio="4/3"
+        />
       </Box>
 
-      <PostContent
-        title='abcd'
+      <CrewContent
+        crewId={Number('1')}
+        userNickname="박싸피"
+        title="abcd"
         totalViews={Number('1')}
         totalComments={Number('1')}
-        totalShares={Number('1')}
-        createdAt='2024-05-07'
+        createdAt="2024-05-07"
+        status="INPROGRESS"
+        pen={Number('1')}
+        color={Number('1')}
       />
     </Card>
   );
@@ -75,26 +81,42 @@ export default function PostItem() {
 
 // ----------------------------------------------------------------------
 
-type PostContentProps = {
+type CrewContentProps = {
+  crewId: number;
+  userNickname: string;
   title: string;
   index?: number;
   totalViews: number;
-  totalShares: number;
   totalComments: number;
   createdAt: Date | string | number;
+  pen?: number;
+  color?: number;
+  bg?: number;
+  pd?: number;
+  story?: number;
+  conti?: number;
+  status: string;
 };
 
-export function PostContent({
+export function CrewContent({
+  crewId,
+  userNickname,
   title,
   createdAt,
   totalViews,
-  totalShares,
   totalComments,
   index,
-}: PostContentProps) {
+  pen,
+  color,
+  bg,
+  pd,
+  story,
+  conti,
+  status,
+}: CrewContentProps) {
   const mdUp = useResponsive('up', 'md');
 
-  const linkTo = paths.post.details(title);
+  const linkTo = paths.community.crew.detail(crewId);
 
   const latestPostLarge = index === 0;
 
@@ -103,120 +125,37 @@ export function PostContent({
   return (
     <CardContent
       sx={{
-        pt: 6,
+        textAlign: 'left',
+        pt: 2,
         width: 1,
-        ...((latestPostLarge || latestPostSmall) && {
-          pt: 0,
-          zIndex: 9,
-          bottom: 0,
-          position: 'absolute',
-          color: 'common.white',
-        }),
       }}
     >
-      <Typography
-        variant="caption"
-        component="div"
-        sx={{
-          mb: 1,
-          color: 'text.disabled',
-          ...((latestPostLarge || latestPostSmall) && {
-            opacity: 0.64,
-            color: 'common.white',
-          }),
-        }}
-      >
-        {fDate(createdAt)}
-      </Typography>
-
-      <Link color="inherit" component={RouterLink} href={linkTo}>
-        <TextMaxLine variant={mdUp && latestPostLarge ? 'h5' : 'subtitle2'} line={2} persistent>
-          {title}
-        </TextMaxLine>
-      </Link>
-
       <Stack
-        spacing={1.5}
+        spacing={0.5}
         direction="row"
-        justifyContent="flex-end"
+        justifyContent="space-between"
         sx={{
-          mt: 3,
+          mt: 1.5,
           typography: 'caption',
           color: 'text.disabled',
-          ...((latestPostLarge || latestPostSmall) && {
-            opacity: 0.64,
-            color: 'common.white',
-          }),
         }}
       >
         <Stack direction="row" alignItems="center">
-          <Iconify icon="eva:message-circle-fill" width={16} sx={{ mr: 0.5 }} />
-          {fShortenNumber(totalComments)}
-        </Stack>
-
-        <Stack direction="row" alignItems="center">
-          <Iconify icon="solar:eye-bold" width={16} sx={{ mr: 0.5 }} />
-          {fShortenNumber(totalViews)}
-        </Stack>
-
-        <Stack direction="row" alignItems="center">
-          <Iconify icon="solar:share-bold" width={16} sx={{ mr: 0.5 }} />
-          {fShortenNumber(totalShares)}
+          <Link
+            color="inherit"
+            style={{ textDecoration: 'none' }}
+            component={RouterLink}
+            href={linkTo}
+          >
+            <TextMaxLine variant={mdUp && latestPostLarge ? 'h5' : 'subtitle2'} line={1} persistent>
+              {userNickname}
+            </TextMaxLine>
+          </Link>
         </Stack>
       </Stack>
-    </CardContent>
-  );
-}
-
-export function CrewContent(
-  // 전달받을 것들 넣기
-  {
-  title,
-  createdAt,
-  totalViews,
-  totalShares,
-  totalComments,
-  index,
-}: PostContentProps) {
-  const mdUp = useResponsive('up', 'md');
-
-  const linkTo = paths.post.details(title);
-
-  const latestPostLarge = index === 0;
-
-  const latestPostSmall = index === 1 || index === 2;
-
-  return (
-    <CardContent
-      sx={{
-        pt: 6,
-        width: 1,
-        ...((latestPostLarge || latestPostSmall) && {
-          pt: 0,
-          zIndex: 9,
-          bottom: 0,
-          position: 'absolute',
-          color: 'common.white',
-        }),
-      }}
-    >
-      <Typography
-        variant="caption"
-        component="div"
-        sx={{
-          mb: 1,
-          color: 'text.disabled',
-          ...((latestPostLarge || latestPostSmall) && {
-            opacity: 0.64,
-            color: 'common.white',
-          }),
-        }}
-      >
-        {fDate(createdAt)}
-      </Typography>
 
       <Link color="inherit" component={RouterLink} href={linkTo}>
-        <TextMaxLine variant={mdUp && latestPostLarge ? 'h5' : 'subtitle2'} line={2} persistent>
+        <TextMaxLine mt={1} variant={mdUp && latestPostLarge ? 'h5' : 'subtitle1'} line={2} persistent>
           {title}
         </TextMaxLine>
       </Link>
@@ -224,15 +163,72 @@ export function CrewContent(
       <Stack
         spacing={1.5}
         direction="row"
-        justifyContent="flex-end"
+        justifyContent="flex-start"
         sx={{
-          mt: 3,
+          mt: 1.5,
+          typography: 'caption',
+          color: 'black',
+          fontWeight: 500,
+        }}
+      >
+        {pen ? (
+          <Stack direction="row" alignItems="center">
+            선화:
+            <Stack sx={{ fontWeight: 900 }}>&nbsp; {pen} </Stack> 명
+          </Stack>
+        ) : (
+          <></>
+        )}
+        {color ? (
+          <Stack direction="row" alignItems="center">
+            채색:
+            <Stack sx={{ fontWeight: 900 }}>&nbsp; {color} </Stack> 명
+          </Stack>
+        ) : (
+          <></>
+        )}
+        {bg ? (
+          <Stack direction="row" alignItems="center">
+            배경:
+            <Stack sx={{ fontWeight: 900 }}>&nbsp; {bg} </Stack> 명
+          </Stack>
+        ) : (
+          <></>
+        )}
+        {pd ? (
+          <Stack direction="row" alignItems="center">
+            기획/편집:
+            <Stack sx={{ fontWeight: 900 }}>&nbsp; {pd} </Stack> 명
+          </Stack>
+        ) : (
+          <></>
+        )}
+        {story ? (
+          <Stack direction="row" alignItems="center">
+            스토리:
+            <Stack sx={{ fontWeight: 900 }}>&nbsp; {story} </Stack> 명
+          </Stack>
+        ) : (
+          <></>
+        )}
+        {conti ? (
+          <Stack direction="row" alignItems="center">
+            콘티:
+            <Stack sx={{ fontWeight: 900 }}>&nbsp; {conti} </Stack> 명
+          </Stack>
+        ) : (
+          <></>
+        )}
+      </Stack>
+
+      <Stack
+        spacing={1.5}
+        direction="row"
+        justifyContent="flex-start"
+        sx={{
+          mt: 1.5,
           typography: 'caption',
           color: 'text.disabled',
-          ...((latestPostLarge || latestPostSmall) && {
-            opacity: 0.64,
-            color: 'common.white',
-          }),
         }}
       >
         <Stack direction="row" alignItems="center">
@@ -244,11 +240,25 @@ export function CrewContent(
           <Iconify icon="solar:eye-bold" width={16} sx={{ mr: 0.5 }} />
           {fShortenNumber(totalViews)}
         </Stack>
-
-        <Stack direction="row" alignItems="center">
-          <Iconify icon="solar:share-bold" width={16} sx={{ mr: 0.5 }} />
-          {fShortenNumber(totalShares)}
-        </Stack>
+      </Stack>
+      <Stack
+        direction="row"
+        justifyContent="flex-end"
+        sx={{
+          typography: 'caption',
+          color: 'text.disabled',
+          pt: 1
+        }}
+      >
+      <Typography
+        variant="caption"
+        component="div"
+        sx={{
+          color: 'text.disabled',
+        }}
+      >
+        {fDate(createdAt)}
+      </Typography>
       </Stack>
     </CardContent>
   );

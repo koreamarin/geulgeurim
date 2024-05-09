@@ -26,7 +26,7 @@ export default function CrewMainView() {
         sx={{ border: '2px solid lightgrey' }}
       >
         <Box paddingLeft={3}>
-          <h2>그림 평가 게시판</h2>
+          <h2>크루 모집 게시판</h2>
         </Box>
         <Box paddingLeft={3} paddingRight={3}>
           <table style={{width: '100%', textAlign: "center", borderSpacing: "10px 10px"}}>

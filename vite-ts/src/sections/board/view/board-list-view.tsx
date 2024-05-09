@@ -87,7 +87,7 @@ const POST_SEARCH_OPTIONS = [
 ];
 
 
-export default function InformationRecentPost() {
+export default function BoardRecentPost() {
 
   const router = useRouter();
 

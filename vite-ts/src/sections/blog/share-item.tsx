@@ -25,12 +25,30 @@ import { ShareMainItem } from 'src/types/blog';
 
 // ----------------------------------------------------------------------
 
+type shareProps = {
+    pk: number;
+    userNickname: string;
+    fullTitle: string;
+    date:string;
+    hit:number;
+    comment_count:number;
+    pen: number;
+    color: number;
+    bg: number;
+    pd: number;
+    story: number;
+    conti: number;
+    status: number;
+};
 
-
-export default function PostItem() {
+export default function PostItem(share: shareProps) {
   const theme = useTheme();
 
   const mdUp = useResponsive('up', 'md');
+  console.log('확인',share)
+  const shareItem = share;
+  // eslint-disable-next-line react/destructuring-assignment
+  // console.log('1', shareItem)
 
   // const latestPost = index === 0 || index === 1 || index === 2;
 
@@ -49,8 +67,8 @@ export default function PostItem() {
         />
 
         <Avatar
-          alt='123'
-          src='https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png'
+          alt="123"
+          src="https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png"
           sx={{
             left: 24,
             zIndex: 9,
@@ -59,14 +77,20 @@ export default function PostItem() {
           }}
         />
 
-        <Image alt='123' src='https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png' ratio="4/3" />
+        <Image
+          alt="123"
+          src="https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png"
+          ratio="4/3"
+        />
       </Box>
 
-      <PostContent
-        title='abcd'
-        totalViews={Number('1')}
-        totalComments={Number('1')}
-        createdAt='2024-05-07'
+      <ShareContent
+        shareId={shareItem.pk}
+        userNickname={shareItem.userNickname}
+        title={shareItem.fullTitle}
+        totalViews={shareItem.hit}
+        totalComments={shareItem.comment_count}
+        createdAt={shareItem.date}
       />
     </Card>
   );
@@ -74,7 +98,9 @@ export default function PostItem() {
 
 // ----------------------------------------------------------------------
 
-type PostContentProps = {
+type ShareContentProps = {
+  shareId: number;
+  userNickname: string;
   title: string;
   index?: number;
   totalViews: number;
@@ -82,16 +108,22 @@ type PostContentProps = {
   createdAt: Date | string | number;
 };
 
-export function PostContent({
+export function ShareContent({
+  shareId,
+  userNickname,
   title,
   createdAt,
   totalViews,
   totalComments,
   index,
-}: PostContentProps) {
+}: ShareContentProps) {
   const mdUp = useResponsive('up', 'md');
 
-  const linkTo = paths.post.details(title);
+  const linkTo = paths.community.share.detail(shareId);
+
+  // 상훈이형 오면 물어보기
+  // const toProfile = paths.mypage.root;
+  const toProfile = '';
 
   const latestPostLarge = index === 0;
 
@@ -100,119 +132,31 @@ export function PostContent({
   return (
     <CardContent
       sx={{
-        pt: 6,
+        textAlign: 'left',
+        pt: 4,
         width: 1,
-        ...((latestPostLarge || latestPostSmall) && {
-          pt: 0,
-          zIndex: 9,
-          bottom: 0,
-          position: 'absolute',
-          color: 'common.white',
-        }),
       }}
     >
-      <Typography
-        variant="caption"
-        component="div"
-        sx={{
-          mb: 1,
-          color: 'text.disabled',
-          ...((latestPostLarge || latestPostSmall) && {
-            opacity: 0.64,
-            color: 'common.white',
-          }),
-        }}
-      >
-        {fDate(createdAt)}
-      </Typography>
-
-      <Link color="inherit" component={RouterLink} href={linkTo}>
-        <TextMaxLine variant={mdUp && latestPostLarge ? 'h5' : 'subtitle2'} line={2} persistent>
-          {title}
-        </TextMaxLine>
-      </Link>
-
       <Stack
-        spacing={1.5}
+        spacing={0.5}
         direction="row"
-        justifyContent="flex-end"
+        justifyContent="flex-start"
         sx={{
-          mt: 3,
           typography: 'caption',
           color: 'text.disabled',
-          ...((latestPostLarge || latestPostSmall) && {
-            opacity: 0.64,
-            color: 'common.white',
-          }),
         }}
       >
         <Stack direction="row" alignItems="center">
-          <Iconify icon="eva:message-circle-fill" width={16} sx={{ mr: 0.5 }} />
-          {fShortenNumber(totalComments)}
-        </Stack>
-
-        <Stack direction="row" alignItems="center">
-          <Iconify icon="solar:eye-bold" width={16} sx={{ mr: 0.5 }} />
-          {fShortenNumber(totalViews)}
-        </Stack>
-
-        <Stack direction="row" alignItems="center">
-          <Iconify icon="solar:share-bold" width={16} sx={{ mr: 0.5 }} />
-          1
+          <Link color="inherit" style={{ textDecoration: 'none' }} component={RouterLink} href={toProfile} >
+            <TextMaxLine variant={mdUp && latestPostLarge ? 'h5' : 'subtitle2'} line={1} persistent>
+              {userNickname}
+            </TextMaxLine>
+          </Link>
         </Stack>
       </Stack>
-    </CardContent>
-  );
-}
-
-export function CrewContent(
-  // 전달받을 것들 넣기
-  {
-  title,
-  createdAt,
-  totalViews,
-  totalComments,
-  index,
-}: PostContentProps) {
-  const mdUp = useResponsive('up', 'md');
-
-  const linkTo = paths.post.details(title);
-
-  const latestPostLarge = index === 0;
-
-  const latestPostSmall = index === 1 || index === 2;
-
-  return (
-    <CardContent
-      sx={{
-        pt: 6,
-        width: 1,
-        ...((latestPostLarge || latestPostSmall) && {
-          pt: 0,
-          zIndex: 9,
-          bottom: 0,
-          position: 'absolute',
-          color: 'common.white',
-        }),
-      }}
-    >
-      <Typography
-        variant="caption"
-        component="div"
-        sx={{
-          mb: 1,
-          color: 'text.disabled',
-          ...((latestPostLarge || latestPostSmall) && {
-            opacity: 0.64,
-            color: 'common.white',
-          }),
-        }}
-      >
-        {fDate(createdAt)}
-      </Typography>
 
       <Link color="inherit" component={RouterLink} href={linkTo}>
-        <TextMaxLine variant={mdUp && latestPostLarge ? 'h5' : 'subtitle2'} line={2} persistent>
+        <TextMaxLine mt={1} variant={mdUp && latestPostLarge ? 'h5' : 'subtitle1'} line={2} persistent>
           {title}
         </TextMaxLine>
       </Link>
@@ -220,15 +164,11 @@ export function CrewContent(
       <Stack
         spacing={1.5}
         direction="row"
-        justifyContent="flex-end"
+        justifyContent="flex-start"
         sx={{
           mt: 3,
           typography: 'caption',
           color: 'text.disabled',
-          ...((latestPostLarge || latestPostSmall) && {
-            opacity: 0.64,
-            color: 'common.white',
-          }),
         }}
       >
         <Stack direction="row" alignItems="center">
@@ -240,11 +180,25 @@ export function CrewContent(
           <Iconify icon="solar:eye-bold" width={16} sx={{ mr: 0.5 }} />
           {fShortenNumber(totalViews)}
         </Stack>
-
-        <Stack direction="row" alignItems="center">
-          <Iconify icon="solar:share-bold" width={16} sx={{ mr: 0.5 }} />
-          1
-        </Stack>
+      </Stack>
+      <Stack
+        direction="row"
+        justifyContent="flex-end"
+        sx={{
+          typography: 'caption',
+          color: 'text.disabled',
+          pt: 1
+        }}
+      >
+      <Typography
+        variant="caption"
+        component="div"
+        sx={{
+          color: 'text.disabled',
+        }}
+      >
+        {fDate(createdAt)}
+      </Typography>
       </Stack>
     </CardContent>
   );
