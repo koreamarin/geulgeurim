@@ -1,11 +1,12 @@
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMemo, useEffect, useCallback } from 'react';
+import { useMemo, useEffect, useCallback, useState } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-// import Button from '@mui/material/Button';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -21,12 +22,31 @@ import FormProvider, {
   RHFSelect,
   RHFTextField
 } from 'src/components/hook-form';
-
-import { IWorksItem } from 'src/types/works';
+import SvgColor from 'src/components/svg-color/svg-color';
 
 import WorksRHFSwitch from './works-form-switch';
+import NFTRegistrationModal from './works-edit-NFT';
 
 // ----------------------------------------------------------------------
+function createDummyData(piece_id: number, fileUrl: string, type: string, name: string, create_at: Date, description: string,  nft_type: string, status:string) {
+  const date:string = create_at.toLocaleDateString()
+  return { piece_id, fileUrl, type, name, description, nft_type, status, date };
+}
+
+const dummy = [
+  createDummyData(1, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_1.jpg', 'PEN', '그림1', new Date('2024-05-03'), '그림 설명하기 귀찮아요...', 'NFT', 'PRIVATE'),
+  createDummyData(2, '', 'STORY', '스토리1', new Date('2024-05-03'), '그림 설명하기 귀찮아요...', 'URL', 'PRIVATE'),
+  createDummyData(3, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_2.jpg', 'COLOR', '그림2', new Date('2024-05-03'), '그림 설명하기 귀찮아요...', 'URL', 'PUBLIC'),
+  createDummyData(4, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_3.jpg', 'BG', '그림3', new Date('2024-05-03'), '그림 설명하기 귀찮아요...', 'URL', 'PUBLIC'),
+  createDummyData(5, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_4.jpg', 'PD', '그림4', new Date('2024-05-03'), '그림 설명하기 귀찮아요...', 'URL', 'PUBLIC'),
+  createDummyData(6, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_5.jpg', 'CONT', '그림5', new Date('2024-05-03'), '그림 설명하기 귀찮아요...', 'URL', 'PRIVATE'),
+  createDummyData(7, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_6.jpg', 'PEN', '그림6', new Date('2024-05-03'), '그림 설명하기 귀찮아요...', 'URL', 'PUBLIC'),
+  createDummyData(8, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_7.jpg', 'PEN', '그림7', new Date('2024-05-03'), '그림 설명하기 귀찮아요...', 'URL', 'PRIVATE'),
+  createDummyData(9, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_8.jpg', 'PEN', '그림8', new Date('2024-05-03'), '그림 설명하기 귀찮아요...', 'NFT', 'PUBLIC'),
+  createDummyData(10, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_9.jpg', 'PEN', '그림9', new Date('2024-05-03'), '그림 설명하기 귀찮아요...', 'NFT', 'PRIVATE'),
+  createDummyData(11, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_10.jpg', 'PEN', '그림10', new Date('2024-05-03'), '그림 설명하기 귀찮아요...', 'NFT', 'PUBLIC'),
+  createDummyData(12, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_11.jpg', 'PEN', '그림11', new Date('2024-05-03'), '그림 설명하기 귀찮아요...', 'NFT', 'PUBLIC'),
+];
 
 type SelectCatgory = {
   label: string,
@@ -34,7 +54,6 @@ type SelectCatgory = {
 }
 
 type Props = {
-  currentPost?: IWorksItem;
   workId: string
 };
 
@@ -48,8 +67,10 @@ const typeList:SelectCatgory[] = [
 ]
 
 
-export default function WorksEdit({ currentPost, workId }: Props) {
+export default function WorksEdit({ workId }: Props) {
   const router = useRouter();
+
+  const dummyData = dummy.find((item) => item.piece_id === parseInt(workId, 10))
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -64,55 +85,65 @@ export default function WorksEdit({ currentPost, workId }: Props) {
 
   const defaultValues = useMemo(
     () => ({
-      name: currentPost?.name || '',
-      description: currentPost?.description || '',
-      type: currentPost?.type || '',
-      status: currentPost?.status || 'PRIVATE',
+      piece_id: dummyData?.piece_id,
+      nft_type: dummyData?.nft_type,
+      
+      name: dummyData?.name || '',
+      description: dummyData?.description || '',
+      type: dummyData?.type || '',
+      status: dummyData?.status || 'PRIVATE',
 
-      fileUrl: currentPost?.fileUrl || null
+      fileUrl: dummyData?.fileUrl || null
     }),
-    [currentPost]
+    [dummyData]
   );
 
+  
   const methods = useForm({
     resolver: yupResolver(NewWorksSchema),
     defaultValues,
+    mode: 'onChange'
   });
-
+  
   const {
     reset,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
+    // formState: { isSubmitting },
   } = methods;
-
+  
   useEffect(() => {
-    if (currentPost) {
+    if (dummyData) {
       reset(defaultValues);
     }
-  }, [currentPost, defaultValues, reset]);
-
+  }, [dummyData, defaultValues, reset]);
+  
   const onSubmit = handleSubmit(async (data) => {
+    // 변화 없을 때 바로 route
+    if (!isDirty) {
+      router.push(paths.mypage.worksDetail(parseInt(workId, 10)));
+    } else {
     try {
       // api로 바꿔야함
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
-      enqueueSnackbar(currentPost ? '작품 수정 성공!' : '작품 등록 성공!');
-      router.push(paths.mypage.works);
+      enqueueSnackbar('작품 수정 성공!');
+      router.push(paths.mypage.worksDetail(parseInt(workId, 10)));
       console.log('DATA', data);
     } catch (error) {
       console.error(error);
-    }
+    }}
   });
-
+  
   const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
-
+      
       const newFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
-
+      
       if (file) {
         setValue('fileUrl', newFile, { shouldValidate: true });
       }
@@ -120,14 +151,25 @@ export default function WorksEdit({ currentPost, workId }: Props) {
     [setValue]
   );
 
+  // NFT 등록 창 띄우기
+  const [NFTRegister, setNFTRegister] = useState<boolean>(false);
+
+  const handleOpenRegister = () => setNFTRegister(true);
+  const handleCloseRegister = () => setNFTRegister(false);
+  
+
+  const checkNFT = dummyData?.nft_type === 'NFT'
+
+  
   const handleRemoveFile = useCallback(() => {
     setValue('fileUrl', null);
   }, [setValue]);
 
   const renderDetails = (
     <Grid xsOffset={1} mdOffset={2} xs={10} md={8}>
+      {!isDirty && '확인중'}
       <Typography variant="h3" sx={{display:'flex',  justifyContent: 'space-between',}}>
-          작품 등록
+          작품 수정
           <WorksRHFSwitch name="status" label="공개여부" />
       </Typography>
       <Card sx={{marginBottom: 4}}>
@@ -141,7 +183,7 @@ export default function WorksEdit({ currentPost, workId }: Props) {
 
           {/* 카테고리 */}
           <RHFSelect name="type" label="카테고리">
-            <MenuItem value="">None</MenuItem>
+            <MenuItem>선택해주세요</MenuItem>
             <Divider sx={{ borderStyle: 'dashed' }} />
             {typeList.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -152,32 +194,86 @@ export default function WorksEdit({ currentPost, workId }: Props) {
 
         </Stack>
       </Card>
-      <Stack spacing={1.5}>
-        <Typography variant="h5">작품</Typography>
-        {/* 업로드 */}
+      <Stack spacing={1.5} mb={4}>
+        <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Stack direction="row" alignItems="center" justifyContent="end">
+            작품
+            {checkNFT && <SvgColor src='/assets/icons/mypage/ic_nft.svg' ml={2} sx={{ width: 20, height: 20 }}/>}
+          </Stack>
+          {dummyData?.nft_type !== 'NFT' && <Tooltip title="이미 NFT 작품입니다" disableHoverListener={dummyData?.nft_type !== 'NFT'}>
+            <div>
+              <Button type="submit" disabled={checkNFT}
+                  style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="info" size="medium" sx={{marginRight:3}} onClick={handleOpenRegister}>
+                NFT 등록
+              </Button>
+            </div>
+          </Tooltip>}
+        </Typography>
+        <NFTRegistrationModal open={NFTRegister} onClose={handleCloseRegister} /> 
+        {/* 업로드, NFT 여부를 통한 수정 확인 */}
+        {dummyData?.nft_type === 'NFT' && 
+          <Tooltip title="NFT 작품은 수정할 수 없습니다">
+            <div>
+              <RHFUpload
+                name="fileUrl"
+                onDrop={handleDrop}
+                disabled={checkNFT}
+              />
+            </div>
+          </Tooltip>}
+        {dummyData?.nft_type === 'URL' && 
         <RHFUpload
           name="fileUrl"
           onDrop={handleDrop}
           onDelete={handleRemoveFile}
-        />
+        />}
+        
       </Stack>
-      <LoadingButton
-          type="submit"
-          style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="success" size="medium" sx={{marginRight:3}}
-          loading={isSubmitting}
-        >
-          {!currentPost ? '작품등록' : '수정하기'}
-        </LoadingButton>
+      <Stack mb={4} direction="row" alignItems="center" justifyContent="space-between">
+        {/* <Button style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" sx={{marginRight:3}} onClick={handleNFT}>
+          삭제하기
+        </Button> */}
+
+        <Stack direction="row" alignItems="center" justifyContent="end">
+          <Button type="submit"
+              style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" sx={{marginRight:3}} onClick={() => router.push(paths.mypage.works)}>
+            취소하기
+          </Button>
+          
+          <LoadingButton
+              type="submit"
+              style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="success" size="medium" sx={{marginRight:3}}
+              loading={isSubmitting}
+          >
+            수정하기
+          </LoadingButton>
+        </Stack>
+      </Stack>
     </Grid>
   );
 
 
 
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Grid container spacing={3}>
-        {renderDetails}
-      </Grid>
-    </FormProvider>
+    <>
+      <FormProvider methods={methods} onSubmit={onSubmit}>
+        <Grid container spacing={3}>
+          {renderDetails}
+        </Grid>
+      </FormProvider>
+      {/* {blocker.state === 'blocked' && (
+        <Grid>
+          <Button onClick={() => blocker.proceed()}>과연</Button>
+          <Button onClick={() => blocker.reset()}>되랏</Button>
+        </Grid>
+      )} */}
+        {/* <WorksFormEscape
+        open={showPrompt}
+        onClose={() => cancelNavigation}
+        onOpen={() => showPrompt}
+        onMove={confirmNavigation}
+        selectVariant='zoomIn'
+      /> */}
+    </>
   );
 }

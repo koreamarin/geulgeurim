@@ -1,11 +1,9 @@
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-// import { useMemo, useEffect, useCallback, useContext, useState  } from 'react';
 import { useMemo, useCallback  } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-// import { useLocation, useNavigate, UNSAFE_NavigationContext as NavigationContext } from 'react-router-dom';
 
-import { useBlocker } from 'react-router-dom';
+// import { useBlocker } from 'react-router-dom';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -18,10 +16,6 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-
-// import { useCallbackPrompt } from 'src/hooks/use-callbackprompt';
-
-// import { useBlocker } from 'src/hooks/use-blocker';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
@@ -54,23 +48,11 @@ export default function WorksForm() {
   const router = useRouter();
 
 
-  const a = true
-  const blocker = useBlocker((
-    {currentLocation, nextLocation}) =>
-    a && currentLocation.pathname !== nextLocation.pathname
-  )
-
-
-
-  // unstable_usePrompt({
-  //   message: "Are you sure?",
-  //   when: ({ currentLocation, nextLocation }) =>
-  //     a &&
-  //     currentLocation.pathname !== nextLocation.pathname,
-  // });
-
-  // const [showPrompt, confirmNavigation, cancelNavigation] = useCallbackPrompt(true);
-
+  // const a = true
+  // const blocker = useBlocker((
+  //   {currentLocation, nextLocation}) =>
+  //   a && currentLocation.pathname !== nextLocation.pathname
+  // )
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -101,17 +83,13 @@ export default function WorksForm() {
     mode: 'onChange'
   });
 
-
   const {
     reset,
     setValue,
     handleSubmit,
-    formState: { isSubmitting, isDirty },
+    // formState: { isSubmitting, isDirty },
+    formState: { isSubmitting },
   } = methods;
-
-  console.log(isDirty, isSubmitting)
-
-  console.log('도착')
 
   // usePreventPageChangeWhenDirty(isDirty);
 
@@ -151,7 +129,7 @@ export default function WorksForm() {
 
   const renderDetails = (
     <Grid xsOffset={1} mdOffset={2} xs={10} md={8}>
-      {!isDirty && '확인중'}
+      {/* {!isDirty && '확인중'} */}
       <Typography variant="h3" sx={{display:'flex',  justifyContent: 'space-between',}}>
           작품 등록
           <WorksRHFSwitch name="status" label="공개여부" />
@@ -167,7 +145,7 @@ export default function WorksForm() {
 
           {/* 카테고리 */}
           <RHFSelect name="type" label="카테고리">
-            <MenuItem value="">None</MenuItem>
+            <MenuItem>선택해주세요</MenuItem>
             <Divider sx={{ borderStyle: 'dashed' }} />
             {typeList.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -187,15 +165,20 @@ export default function WorksForm() {
           onDelete={handleRemoveFile}
         />
       </Stack>
-      <LoadingButton
-          type="submit"
-          style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="success" size="medium" sx={{marginRight:3}}
-          loading={isSubmitting}
-      >
-        등록하기
-      </LoadingButton>
-
-
+      <Stack mb={4} direction="row" alignItems="center" justifyContent="end">
+        <Button type="submit"
+            style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" sx={{marginRight:3}} onClick={() => router.push(paths.mypage.works)}>
+          취소하기
+        </Button>
+        
+        <LoadingButton
+            type="submit"
+            style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="success" size="medium" sx={{marginRight:3}}
+            loading={isSubmitting}
+        >
+          등록하기
+        </LoadingButton>
+      </Stack>
     </Grid>
   );
 
