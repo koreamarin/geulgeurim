@@ -15,5 +15,4 @@ public class CreateAwardRequest {
     private LocalDateTime acquisitionDate;
     private String institution;
     private String score;
-
 }

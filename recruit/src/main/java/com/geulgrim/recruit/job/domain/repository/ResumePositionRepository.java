@@ -1,5 +1,6 @@
 package com.geulgrim.recruit.job.domain.repository;
 
+import com.geulgrim.recruit.job.domain.entity.Position;
 import com.geulgrim.recruit.job.domain.entity.Resume;
 import com.geulgrim.recruit.job.domain.entity.ResumePosition;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,7 @@ import java.util.Optional;
 public interface ResumePositionRepository extends JpaRepository<ResumePosition, Long> {
 
     Optional<List<ResumePosition>> findByResume(Resume resume);
+    Optional<ResumePosition> findByResumeAndPosition(Resume resume, Position position);
+
 
 }

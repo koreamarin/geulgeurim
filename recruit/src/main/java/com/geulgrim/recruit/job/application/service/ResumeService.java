@@ -27,6 +27,54 @@ public class ResumeService {
     private final AwardRepository awardRepository;
     private final ExperienceRepository experienceRepository;
 
+    // 구인구직 등록
+
+    // 구인구직 리스트 조회
+
+    // 내가 작성한 구인구직 리스트 조회
+
+    // 구인구직 상세 조회
+
+    // 구인구직 수정 (3순위)
+
+    // 구인구직 삭제 (2순위)
+
+    // 구인구직 포지션 등록
+
+    // 구인구직 포지션 삭제
+
+    // 구인구직 신청
+
+    // 지원자 이력서 리스트 조회
+
+    // 지원자 합격여부 수정
+
+    // 구인구직 관심 등록
+
+    // 나의 구인구직 관심 리스트조회
+
+    // 구인구직 관심 삭제
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // 내 이력서 등록
     public Map<String, Long> createResume(
             HttpHeaders headers,
@@ -274,6 +322,296 @@ public class ResumeService {
                 .build();
 
         return getResumeResponse;
+    }
+
+
+    // 내 이력서 수정 (3순위)
+
+    // 내 이력서 삭제 (2순위)
+
+    // 이력서 포지션 생성
+    public String createResumePosition(
+            HttpHeaders headers, Long resumeId, Long positionId) {
+
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Resume resume = resumeRepository.findByResumeId(resumeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이력서 입니다."));
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        Position position = positionRepository.findByPositionId(positionId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 positionId 입니다."));
+
+        // 이미 생성되어있는지 확인하는 절차
+        Optional<ResumePosition> resumePositionOptional = resumePositionRepository.findByResumeAndPosition(resume, position);
+        if(resumePositionOptional.isPresent()) {    // 생성되어 있을 시
+            return "생성실패"; // 이미 생성되어 있습니다.
+        }
+
+        // 생성되어 있지 않을 시
+        ResumePosition resumePosition = ResumePosition.builder()
+                .resume(resume)
+                .position(position)
+                .build();
+
+        resumePositionRepository.save(resumePosition);
+
+        return "생성완료";
+    }
+
+    // 포지션 조회
+    public GetPositionsResponse getPositions() {
+        List<Position> positions = positionRepository.findAll();
+        return GetPositionsResponse.builder()
+                .positions(positions)
+                .build();
+    }
+
+    // 이력서 포지션 삭제
+    public String deleteResumePosition(
+            HttpHeaders headers, Long resumeId, Long positionId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Resume resume = resumeRepository.findByResumeId(resumeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이력서 입니다."));
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        Position position = positionRepository.findByPositionId(positionId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 positionId 입니다."));
+
+        // 삭제할 포지션을 찾는 절차
+        Optional<ResumePosition> resumePositionOptional = resumePositionRepository.findByResumeAndPosition(resume, position);
+        if(resumePositionOptional.isEmpty()) {
+            return "삭제실패"; // 삭제할 포지션이 존재하지 않습니다.
+        }
+
+        // 삭제할 포지션을 삭제하는 절차
+        resumePositionRepository.delete(resumePositionOptional.get());
+        return "삭제완료";
+    }
+
+    // 이력서 포토폴리오 생성
+    public String createResumePortfolio(
+            HttpHeaders headers, Long resumeId, Long pofolId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Resume resume = resumeRepository.findByResumeId(resumeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이력서 입니다."));
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        // 이미 생성되어있는지 확인하는 절차
+        Optional<ResumePortfolio> resumePortfolioOptional = resumePorfolioRepository.findByResumeAndPofolId(resume, pofolId);
+        if(resumePortfolioOptional.isPresent()) {    // 생성되어 있을 시
+            return "생성실패"; // 이미 생성되어 있습니다.
+        }
+
+        // 생성되어 있지 않을 시
+        ResumePortfolio resumePortfolio = ResumePortfolio.builder()
+                .resume(resume)
+                .pofolId(pofolId)
+                .build();
+
+        resumePorfolioRepository.save(resumePortfolio);
+
+        return "생성완료";
+    }
+
+    // 이력서 포토폴리오 삭제
+    public String deleteResumePortfolio(
+            HttpHeaders headers, Long resumeId, Long pofolId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Resume resume = resumeRepository.findByResumeId(resumeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이력서 입니다."));
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        // 삭제할 포트폴리오를 찾는 절차
+        Optional<ResumePortfolio> resumePortfolioOptional = resumePorfolioRepository.findByResumeAndPofolId(resume, pofolId);
+        if (resumePortfolioOptional.isEmpty()) {
+            return "삭제실패"; // 삭제할 포트폴리오가 존재하지 않습니다.
+        }
+
+        // 삭제할 포트폴리오를 삭제하는 절차
+        resumePorfolioRepository.delete(resumePortfolioOptional.get());
+        return "삭제완료";
+
+    }
+
+    // 학력사항 생성
+    public Map<String, Long> createEducation (
+            HttpHeaders headers, Long resumeId, CreateEducationRequest createEducationRequest) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Resume resume = resumeRepository.findByResumeId(resumeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이력서 입니다."));
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        Education education = Education.builder()
+                .resume(resume)
+                .institutionName(createEducationRequest.getInsitutionName())
+                .startDate(createEducationRequest.getStartDate())
+                .endDate(createEducationRequest.getEndDate())
+                .educationStatus(EducationStatus.valueOf(createEducationRequest.getEducationStatus()))
+                .gpa(createEducationRequest.getGpa())
+                .build();
+
+        educationRepository.save(education);
+
+        return Map.of("educationId", education.getEducationId());
+    }
+
+    // 학력사항 수정(3순위)
+
+
+    // 학력사항 삭제
+    public String deleteEducation (
+            HttpHeaders headers, Long educationId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Education education = educationRepository.findById(educationId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학력사항 입니다."));
+
+        Resume resume = education.getResume();
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        educationRepository.delete(education);
+
+        return "삭제완료";
+    }
+
+    // 경력사항 생성
+    public Map<String, Long> createWork (
+            HttpHeaders headers, Long resumeId, CreateWorkRequest createWorkRequest) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Resume resume = resumeRepository.findByResumeId(resumeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이력서 입니다."));
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        Work work = Work.builder()
+                .resume(resume)
+                .company(createWorkRequest.getCompany())
+                .startDate(createWorkRequest.getStartDate())
+                .endDate(createWorkRequest.getEndDate())
+                .content(createWorkRequest.getContent())
+                .build();
+
+        workRepository.save(work);
+
+        return Map.of("workId", work.getWorkId());
+    }
+
+    // 경력사항 수정 (3순위)
+
+    // 경력사항 삭제
+    public String deleteWork (
+            HttpHeaders headers, Long workId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Work work = workRepository.findById(workId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 경력사항 입니다."));
+
+        Resume resume = work.getResume();
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        workRepository.delete(work);
+
+        return "삭제완료";
+    }
+
+    // 자격/어학/수상 생성
+    public Map<String, Long> createAward (
+            HttpHeaders headers, Long resumeId, CreateAwardRequest createAwardRequest) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Resume resume = resumeRepository.findByResumeId(resumeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이력서 입니다."));
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        Award award = Award.builder()
+                .resume(resume)
+                .awardName(createAwardRequest.getAwardName())
+                .acquisitionDate(createAwardRequest.getAcquisitionDate())
+                .institution(createAwardRequest.getInstitution())
+                .score(createAwardRequest.getScore())
+                .build();
+
+        awardRepository.save(award);
+
+        return Map.of("awardId", award.getAwardId());
+    }
+
+
+    // 자격/어학/수상 수정 (3순위)
+
+
+    // 자격/어학/수상 삭제
+    public String deleteAward(
+            HttpHeaders headers, Long awardId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Award award = awardRepository.findById(awardId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 자격/어학/수상 입니다."));
+
+        Resume resume = award.getResume();
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        awardRepository.delete(award);
+
+        return "삭제완료";
+    }
+
+
+    // 경험/활동/교육 생성
+    public Map<String, Long> createExperience(
+            HttpHeaders headers, Long resumeId, CreateExperienceRequest createExperienceRequest) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Resume resume = resumeRepository.findByResumeId(resumeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이력서 입니다."));
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        Experience experience = Experience.builder()
+                .resume(resume)
+                .experienceTitle(createExperienceRequest.getExperienceTitle())
+                .experienceContent(createExperienceRequest.getExperienceContent())
+                .startDate(createExperienceRequest.getStartDate())
+                .endDate(createExperienceRequest.getEndDate())
+                .build();
+
+        experienceRepository.save(experience);
+
+        return Map.of("experienceId", experience.getExperienceId());
+    }
+
+    // 경험/활동/교육 수정 (3순위)
+
+    // 경험/활동/교육 삭제
+    public String deleteExperience(
+            HttpHeaders headers, Long experienceId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Experience experience = experienceRepository.findById(experienceId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 경험/활동/교육 입니다."));
+
+        Resume resume = experience.getResume();
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        experienceRepository.delete(experience);
+
+        return "삭제완료";
     }
 
 

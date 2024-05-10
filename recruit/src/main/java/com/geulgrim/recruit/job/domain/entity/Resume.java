@@ -30,7 +30,7 @@ public class Resume {
 
     @Column(name="open_status", nullable = false)
     @Enumerated(STRING)
-    private OpenStatus openStatus = OpenStatus.CLOSE;
+    private OpenStatus openStatus = OpenStatus.PRIVATE;
 
     @Column(name="file_url")
     private String fileUrl;

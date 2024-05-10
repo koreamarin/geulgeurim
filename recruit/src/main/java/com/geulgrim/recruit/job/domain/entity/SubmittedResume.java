@@ -4,7 +4,7 @@ import com.geulgrim.recruit.job.domain.entity.Enums.ResultStatus;
 import jakarta.persistence.*;
 
 @Entity
-public class Submitted_resume {
+public class SubmittedResume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="submitted_id")
