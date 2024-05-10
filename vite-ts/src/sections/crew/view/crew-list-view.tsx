@@ -75,7 +75,8 @@ export default function CrewListView() {
           <Stack
             direction="row"
             alignItems="center"
-            sx={{ my: 4 }}
+            sx={{ my: 3 }}
+
           >
             <Button
               variant="contained"
