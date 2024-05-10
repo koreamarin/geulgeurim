@@ -1,15 +1,14 @@
 package com.geulgrim.recruit.job.application.dto.response;
 
-import com.geulgrim.recruit.job.domain.entity.Enums.EducationStatus;
+import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class GetEducationResponse {
-    private Long educationId;
-    private String institutionName;
+public class GetWorkResponse {
+    private Long workId;
+    private String companyName;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private String educationStatus;
-    private BigDecimal gpa;
+    private String content;
 }

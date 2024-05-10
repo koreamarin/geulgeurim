@@ -3,7 +3,7 @@ package com.geulgrim.recruit.job.domain.entity;
 import jakarta.persistence.*;
 
 @Entity
-public class Position_job {
+public class PositionJob {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="position_job_id")

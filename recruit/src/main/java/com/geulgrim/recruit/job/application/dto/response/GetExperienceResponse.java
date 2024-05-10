@@ -2,10 +2,10 @@ package com.geulgrim.recruit.job.application.dto.response;
 
 import java.time.LocalDateTime;
 
-public class GetAwardResponse {
-    private Long awardId;
-    private String awardName;
-    private LocalDateTime acquistionDate;
-    private String institution;
-    private String score;
+public class GetExperienceResponse {
+    private Long experienceId;
+    private String experienceName;
+    private String experienceContent;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 }

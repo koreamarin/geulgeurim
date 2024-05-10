@@ -9,11 +9,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class GetResumeResponse {
+public class GetResumesResponse {
     private Long resumeId;
     private String resumeTitle;
     private String essay;
     private String openStatus;
     private String fileUrl;
-    private List<ResumePosition> resumePositions;
+    private List<GetResumePositionResponse> getResumePositionResponses;
 }

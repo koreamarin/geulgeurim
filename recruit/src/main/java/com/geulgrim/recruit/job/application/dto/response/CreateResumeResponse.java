@@ -1,11 +1,14 @@
 package com.geulgrim.recruit.job.application.dto.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-public class ResumeResponse {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class CreateResumeResponse {
     private Long resumeId;
-    private String resumeTitle;
-    private String essay;
-    private String openStatus;
-    private String fileUrl;
-    private Long pofolId;
 }

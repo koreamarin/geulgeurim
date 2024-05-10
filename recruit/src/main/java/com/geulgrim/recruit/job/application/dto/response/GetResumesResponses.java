@@ -1,6 +1,5 @@
 package com.geulgrim.recruit.job.application.dto.response;
 
-import com.geulgrim.recruit.job.domain.entity.ResumePosition;
 import lombok.*;
 
 import java.util.List;
@@ -10,6 +9,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class GetResumesResponse {
-    private List<GetResumeResponse> getResumesResponse;
+public class GetResumesResponses {
+    private List<GetResumesResponse> getResumesResponse;
 }

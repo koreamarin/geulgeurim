@@ -1,4 +1,4 @@
-package com.geulgrim.auth.user.domain.entity;
+package com.geulgrim.recruit.global.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -15,10 +15,10 @@ import java.time.LocalDateTime;
 @Getter
 public class BaseEntity {
     @CreatedDate
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
-//    @LastModifiedDate
-//    @Column(nullable = false)
-//    private LocalDateTime updatedAt;
+    @LastModifiedDate
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime updatedAt;
 }

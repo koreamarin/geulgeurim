@@ -1,9 +1,15 @@
 package com.geulgrim.recruit.job.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
-public class Resume_portfolio {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class ResumePortfolio {
     @Id
     @Column(name="resume_pofol_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
