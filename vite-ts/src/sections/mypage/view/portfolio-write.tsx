@@ -14,6 +14,7 @@ type Entry = {
   file: File | null;
   firstDropdownValue: string;
   secondDropdownValue: string;
+  image: number;
 };
 
 
@@ -24,8 +25,9 @@ export default function PortfolioWriteView() {
     contribution: '',
     content: '',
     file: null,
-    firstDropdownValue: '',
-    secondDropdownValue: ''
+    firstDropdownValue: '파일 업로드',
+    secondDropdownValue: '',
+    image: -1
   }]);
 
   const dummyPieces = {
@@ -54,9 +56,11 @@ export default function PortfolioWriteView() {
 
 
   const handleAddEntry = useCallback(() => {
+    console.log('변환전 확인', entries)
     setEntries(prevEntries => [
       ...prevEntries,
-      { title: '', program: '', contribution: '', content: '', file: null }
+      { title: '', program: '', contribution: '', content: '', file: null, firstDropdownValue: '',
+      secondDropdownValue: '', image: null}
     ]);
   }, []);
 
@@ -76,28 +80,31 @@ export default function PortfolioWriteView() {
     ));
   }, []);
 
-  const handleFirstDropdownChange = useCallback((event: ChangeEvent<{ value: unknown }>) => {
-    setFirstDropdownValue(event.target.value as string);
-    setSecondDropdownValue(''); // Reset second dropdown value when first dropdown changes
-  }, []);
+  // const handleFirstDropdownChange = useCallback((index: number, field: keyof Entry) => (event: ChangeEvent<{ value: unknown }>) => {
+  //   setEntries(prevEntries => prevEntries.map((entry, idx) =>
+  //     idx === index ? { ...entry, [field]: event.target.value } : entry
+  //   ));
+  //   setFirstDropdownValue(event.target.value as string);
+  //   setSecondDropdownValue(''); // Reset second dropdown value when first dropdown changes
+  // }, []);
 
-  const handleSecondDropdownChange = useCallback((event: ChangeEvent<{ value: unknown }>) => {
-    setSecondDropdownValue(event.target.value as string);
+  // const handleSecondDropdownChange = useCallback((event: ChangeEvent<{ value: unknown }>) => {
+  //   setSecondDropdownValue(event.target.value as string);
 
-    if (event.target.value === '선화') {
+  //   if (event.target.value === '선화') {
 
-      setPreviewImages([
-        'https://source.unsplash.com/random/6',
-        'https://source.unsplash.com/random/7',
-        'https://source.unsplash.com/random/8',
-        'https://source.unsplash.com/random/9',
-        'https://source.unsplash.com/random/10',
+  //     setPreviewImages([
+  //       'https://source.unsplash.com/random/6',
+  //       'https://source.unsplash.com/random/7',
+  //       'https://source.unsplash.com/random/8',
+  //       'https://source.unsplash.com/random/9',
+  //       'https://source.unsplash.com/random/10',
 
-      ]);
-    } else {
-      setPreviewImages([]);
-    }
-  }, []);
+  //     ]);
+  //   } else {
+  //     setPreviewImages([]);
+  //   }
+  // }, []);
 
   const handlePreviewImageClick = (index: number) => {
     setSelectedImageIndex(index);
@@ -135,6 +142,13 @@ export default function PortfolioWriteView() {
     </button>
   ));
 
+  const changeImage = (index:number, imageIndex:number) => {
+    console.log()
+    setEntries(prevEntries => prevEntries.map((entry, idx) =>
+      idx === index ? { ...entry, 'image': imageIndex } : entry
+    ));
+  }
+
 
 
   return (
@@ -157,18 +171,18 @@ export default function PortfolioWriteView() {
             <Grid item xs={12}>
               <Box sx={{ display: 'flex', width: '100%' }}>
                 <Select
-                  value={firstDropdownValue}
-                  onChange={handleFirstDropdownChange}
+                  value={entry.firstDropdownValue}
+                  onChange={handleChange(index, 'firstDropdownValue')}
                   fullWidth
                   sx={{ width: '50%' }}
                 >
                   <MenuItem value="파일 업로드">파일 업로드</MenuItem>
                   <MenuItem value="작품에서 가져오기">작품에서 가져오기</MenuItem>
                 </Select>
-                {firstDropdownValue === '작품에서 가져오기' && (
+                {entry.firstDropdownValue === '작품에서 가져오기' && (
                   <Select
-                    value={secondDropdownValue}
-                    onChange={handleSecondDropdownChange}
+                    value={entry.secondDropdownValue}
+                    onChange={handleChange(index, 'secondDropdownValue')}
                     fullWidth
                     sx={{ width: '50%', ml: 2 }}
                   >
@@ -187,7 +201,7 @@ export default function PortfolioWriteView() {
             {/* 이미지 미리보기 또는 파일 업로드 */}
 
             {/* 파일 업로드 또는 폼 */}
-      {firstDropdownValue === '파일 업로드' ? (
+      {entry.firstDropdownValue === '파일 업로드' ? (
       <>
         <Grid item xs={12} md={6}>
           <Upload
@@ -246,7 +260,13 @@ export default function PortfolioWriteView() {
 
           <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-              {renderImages}
+              {/* {renderImages} */}
+              {currentImages.map((url, idx) => (
+                <Box key={idx} sx={{ width: 'calc(20% - 8px)', marginBottom: 3, height: '150px', overflow: 'hidden', cursor: 'pointer' }} onClick={() => changeImage(index, indexOfFirstImage + idx)}>
+                  <img src={url} alt={`Piece ${indexOfFirstImage + idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} />
+                  {indexOfFirstImage + idx}
+                </Box>
+              ))}
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px', marginBottom: '10px' }}>
               {renderPageNumbers}
@@ -256,7 +276,9 @@ export default function PortfolioWriteView() {
           <Grid item xs={12} md={6}>
             {selectedImageIndex !== null && (
             <Box sx={{ mb: 2 }}>
-              <img src={dummyPieces.pieceUrl[selectedImageIndex]} alt="Selected" style={{ width: '100%', height: '330px', objectFit: 'cover' }} />
+              {/* <img src={dummyPieces.pieceUrl[selectedImageIndex]} alt="Selected" style={{ width: '100%', height: '330px', objectFit: 'cover' }} /> */}
+              {/* {entries[index].image} */}
+              <img src={dummyPieces.pieceUrl[entries[index].image]} alt="Selected" style={{ width: '100%', height: '330px', objectFit: 'cover' }} />
             </Box>
           )}
         </Grid>
@@ -347,7 +369,7 @@ export default function PortfolioWriteView() {
           variant="contained"
           onClick={handleAddEntry}
         >
-          Add Another Entry
+          작품 추가
         </Button>
       </Box>
     </Container>
