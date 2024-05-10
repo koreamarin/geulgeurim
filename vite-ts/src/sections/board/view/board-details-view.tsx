@@ -32,13 +32,14 @@ import PostDetailsToolbar from '../../blog/post-details-toolbar';
 // ----------------------------------------------------------------------
 
 type Props = {
-  id: string;
+  boardId: string;
 };
 
-export default function PostDetailsView({ id }: Props) {
+export default function PostDetailsView({ boardId }: Props) {
+  console.log("boardId: ", boardId);
   const [publish, setPublish] = useState('');
 
-  const { post, postLoading, postError } = useGetPost(id);
+  const { post, postLoading, postError } = useGetPost(boardId);
 
   const handleChangePublish = useCallback((newValue: string) => {
     setPublish(newValue);

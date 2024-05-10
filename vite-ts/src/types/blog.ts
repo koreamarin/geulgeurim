@@ -71,9 +71,9 @@ export type BoardMainItem = {
   userNickname: string;
   title: string;
   hit: number;
+  comment_cnt: number;
   createdAt: Date;
   updateAt: Date;
-  commentCnt: number;
 };
 
 export type BoardItem = {
@@ -175,3 +175,10 @@ export type CrewMainItem = {
   conti: number;
   status: number;
 };
+
+export type communityMainItem = {
+  boardNew: BoardMainItem[];
+  boardRecent: BoardMainItem[];
+  shareRecent: ShareMainItem[];
+  crewRecent: ShareMainItem[];
+}
