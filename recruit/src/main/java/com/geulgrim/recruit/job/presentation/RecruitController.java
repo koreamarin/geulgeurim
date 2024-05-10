@@ -37,8 +37,7 @@ public class RecruitController {
             @RequestHeader HttpHeaders headers,
             @PathVariable Long resumeId) {
 
-        System.out.println(resumeId);
         GetResumeResponse getResumeResponse = resumeService.getResume(headers, resumeId);
-        return new ResponseEntity<>("getResumeResponse", HttpStatus.OK);
+        return new ResponseEntity<>(getResumeResponse, HttpStatus.OK);
     }
 }

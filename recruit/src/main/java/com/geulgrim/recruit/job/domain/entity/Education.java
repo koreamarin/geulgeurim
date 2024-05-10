@@ -2,10 +2,7 @@ package com.geulgrim.recruit.job.domain.entity;
 
 import com.geulgrim.recruit.job.domain.entity.Enums.EducationStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class Education {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

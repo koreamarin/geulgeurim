@@ -1,14 +1,13 @@
 package com.geulgrim.recruit.job.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class ResumePortfolio {
     @Id
     @Column(name="resume_pofol_id")

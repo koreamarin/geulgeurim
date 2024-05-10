@@ -3,6 +3,7 @@ package com.geulgrim.recruit.job.domain.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class Experience {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
