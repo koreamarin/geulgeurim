@@ -76,6 +76,8 @@ export default function PortfolioWriteUserFormatView() {
     // } catch (error) {
     //   console.error('Error posting data:', error);
     // }
+
+    router.push(paths.mypage.portfolio)
   };
 
 

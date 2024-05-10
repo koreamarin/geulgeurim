@@ -3,7 +3,8 @@ import React, { useState, useCallback, ChangeEvent } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {
-  Box, Grid, Paper, Button, Select, MenuItem, Container, TextField, Typography, IconButton, Stack
+  Box, Grid, Paper, Button, Select, MenuItem, Container, TextField, Typography, IconButton,
+  Dialog, DialogTitle, DialogActions, DialogContent,
 } from '@mui/material';
 
 import { Upload } from 'src/components/upload';
@@ -24,6 +25,7 @@ type Entry = {
 
 export default function PortfolioWriteView() {
   const router = useRouter()
+  const [openDialog, setOpenDialog] = useState(false);
   const [entries, setEntries] = useState<Entry[]>([{
     title: '',
     program: '',
@@ -137,6 +139,16 @@ export default function PortfolioWriteView() {
     router.push(paths.mypage.portfolio)
   };
 
+  const handleCancel = () => {
+    console.log("작성 취소!")
+    setOpenDialog(true);
+  };
+
+  const handleClose = (confirm: boolean) => {
+    setOpenDialog(false);
+    router.push(paths.mypage.portfolio);
+  };
+
 
   return (
 
@@ -145,29 +157,42 @@ export default function PortfolioWriteView() {
         포트폴리오 추가 (글그림 포맷)
       </Typography>
 
-      <Grid container justifyContent="flex-end">
-        <Grid item>
-          <Stack direction="row" alignItems="center" sx={{ my: 4 }}>
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              sx={{
-                backgroundColor: '#4CAF50',
-                color: 'white',
-                padding: '10px 22px',
-                fontSize: '17px',
-                '&:hover': {
-                  backgroundColor: '#388E3C',
-                },
-              }}
-            >
-              등록
-            </Button>
-          </Stack>
-        </Grid>
-      </Grid>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          gap: 1,
+          marginTop: 2,
+          marginBottom: 4,
+        }}
+      >
+        <Button variant="contained" onClick={handleSubmit}>
+          등록
+        </Button>
+        <Button variant="outlined" onClick={handleCancel}>
+          취소
+        </Button>
+      </Box>
 
-
+      <Dialog
+        open={openDialog}
+        onClose={() => handleClose(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">포트폴리오 생성을 중단할까요?</DialogTitle>
+        <DialogContent>
+          포트폴리오 생성 과정을 취소하시면 지금까지의 변경사항이 저장되지 않습니다.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleClose(true)} color="primary">
+            네
+          </Button>
+          <Button onClick={() => handleClose(false)} color="primary" autoFocus>
+            아니요, 계속 만들래요
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {entries.map((entry, index) => (
         <Paper key={index} sx={{ mb: 4, position: 'relative', padding: 2 }}>
