@@ -5,9 +5,10 @@ import { format, getTime, formatDistanceToNow } from 'date-fns';
 type InputValue = Date | string | number | null | undefined;
 
 export function fDate(date: InputValue, newFormat?: string) {
-  const fm = newFormat || 'dd MMM yyyy';
+  const fm = newFormat || 'yyyy-MM-dd';
 
-  return date ? format(new Date(date), fm) : '';
+  const d = new Date(date ? format(new Date(date), fm) : '');
+  return `${d.getFullYear()}-${(`0${d.getMonth()+1}`).slice(-2)}-${(`0${d.getDate()}`).slice(-2)}`;
 }
 
 export function fTime(date: InputValue, newFormat?: string) {
