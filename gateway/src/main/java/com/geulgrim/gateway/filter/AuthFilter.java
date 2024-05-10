@@ -39,10 +39,10 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                 String token = header.replace("Bearer ","");
                 log.info("token {}",token);
                 UserInfoResponseDto dto = jwtUtil.getUserInfo(token);
-                log.info("userId {}",dto.getUserId());
-                log.info("userType {}",dto.getUserType());
-                request.mutate().header("userId", String.valueOf(dto.getUserId()));
-                request.mutate().header("userType", dto.getUserType());
+                log.info("user_id {}",dto.getUserId());
+                log.info("user_type {}",dto.getUserType());
+                request.mutate().header("user_id", String.valueOf(dto.getUserId()));
+                request.mutate().header("user_type", dto.getUserType());
                 log.info("At the end of the filter request.getHeaders() {}", request.getHeaders());
             }
             return chain.filter(exchange.mutate().request(request).build());
