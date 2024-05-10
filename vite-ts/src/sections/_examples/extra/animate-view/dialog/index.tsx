@@ -29,6 +29,7 @@ export default function DialogView() {
             onClose={view.onFalse}
             selectVariant={selectVariant}
           />
+          asdfasf
         </Grid>
         <Grid xs={12} md={3}>
           <ControlPanel

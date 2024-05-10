@@ -31,10 +31,13 @@ type shareProps = {
 
 export default function PostItem(shareItem: shareProps) {
   const { share } = shareItem;
-  // eslint-disable-next-line react/destructuring-assignment
-  // console.log('1', shareItem)
+  const linkTo = paths.community.share.detail(share.shareId);
 
-  // const latestPost = index === 0 || index === 1 || index === 2;
+  // 작성자 프로필로 이동
+  // const toProfile = paths.mypage.root;
+  const toProfile = () => {
+    console.log(share.userId);
+  };
 
   return (
     <Card>
@@ -50,22 +53,32 @@ export default function PostItem(shareItem: shareProps) {
           }}
         />
 
-        <Avatar
-          alt="123"
-          src={share.userProfile}
-          sx={{
-            left: 24,
-            zIndex: 9,
-            bottom: -24,
-            position: 'absolute',
-          }}
-        />
+        <Link
+          component={RouterLink}
+          href=""
+          // href={toProfile}
+          onClick={toProfile}
+        >
+          <Avatar
+            alt="123"
+            src={share.userProfile}
+            sx={{
+              left: 24,
+              zIndex: 9,
+              bottom: -24,
+              position: 'absolute',
+            }}
+          />
+        </Link>
 
-        <Image alt="123" src={share.thumbnail} ratio="4/3" />
+        <Link component={RouterLink} href={linkTo}>
+          <Image alt="123" src={share.thumbnail} ratio="4/3" />
+        </Link>
       </Box>
 
       <ShareContent
         shareId={share.shareId}
+        userId={share.userId}
         userNickname={share.userNickname}
         title={share.title}
         hit={share.hit}
@@ -81,6 +94,7 @@ export default function PostItem(shareItem: shareProps) {
 
 type ShareContentProps = {
   shareId: number;
+  userId: number;
   userNickname: string;
   title: string;
   hit: string;
@@ -91,6 +105,7 @@ type ShareContentProps = {
 
 export function ShareContent({
   shareId,
+  userId,
   userNickname,
   title,
   createdAt,
@@ -100,9 +115,11 @@ export function ShareContent({
 }: ShareContentProps) {
   const linkTo = paths.community.share.detail(shareId);
 
-  // 상훈이형 오면 물어보기
+  // 작성자 프로필로 이동
   // const toProfile = paths.mypage.root;
-  const toProfile = '';
+  const toProfile = () => {
+    console.log(userId);
+  };
 
   return (
     <CardContent
@@ -126,7 +143,9 @@ export function ShareContent({
             color="inherit"
             style={{ textDecoration: 'none' }}
             component={RouterLink}
-            href={toProfile}
+            href=""
+            // href={toProfile}
+            onClick={toProfile}
           >
             <TextMaxLine variant="subtitle2" line={1} persistent>
               {userNickname}

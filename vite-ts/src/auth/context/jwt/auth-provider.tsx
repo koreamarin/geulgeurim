@@ -1,7 +1,7 @@
 import axiosOrigin from 'axios';
 import { initializeApp } from 'firebase/app';
 import { useMemo, useEffect, useReducer, useCallback } from 'react';
-import { Messaging, getMessaging, getToken } from 'firebase/messaging';
+import { getToken, Messaging, getMessaging } from 'firebase/messaging';
 
 import axios, { endpoints } from 'src/utils/axios';
 

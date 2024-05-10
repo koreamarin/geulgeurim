@@ -32,8 +32,15 @@ type Props = {
 export default function PostItem(item: Props) {
   const { crew } = item;
 
+  const linkTo = paths.community.crew.detail(crew.crewId);
+
+  // 작성자 프로필로 이동
+  const toProfile = () => {
+    console.log('작성자 ID: ', crew.userId);
+  };
+
   return (
-    <Card>
+    <Card >
       <Box sx={{ position: 'relative' }}>
         <AvatarShape
           sx={{
@@ -46,22 +53,27 @@ export default function PostItem(item: Props) {
           }}
         />
 
-        <Avatar
-          alt="123"
-          src={crew.userProfile}
-          sx={{
-            left: 24,
-            zIndex: 9,
-            bottom: -24,
-            position: 'absolute',
-          }}
-        />
+        <Link component={RouterLink} href="" onClick={toProfile}>
+          <Avatar
+            alt="123"
+            src={crew.userProfile}
+            sx={{
+              left: 24,
+              zIndex: 9,
+              bottom: -24,
+              position: 'absolute',
+            }}
+          />
+        </Link>
 
-        <Image alt="123" src={crew.thumbnail} ratio="4/3" />
+        <Link component={RouterLink} href={linkTo}>
+          <Image alt="123" src={crew.thumbnail} ratio="4/3" />
+        </Link>
       </Box>
 
       <CrewContent
         crewId={crew.crewId}
+        userId={crew.userId}
         userNickname={crew.userNickname}
         title={crew.title}
         createdAt={crew.date}
@@ -83,6 +95,7 @@ export default function PostItem(item: Props) {
 
 type CrewContentProps = {
   crewId: number;
+  userId: number;
   userNickname: string;
   title: string;
   hit: string;
@@ -99,6 +112,7 @@ type CrewContentProps = {
 
 export function CrewContent({
   crewId,
+  userId,
   userNickname,
   title,
   createdAt,
@@ -112,9 +126,13 @@ export function CrewContent({
   conti,
   status,
 }: CrewContentProps) {
-  const mdUp = useResponsive('up', 'md');
 
   const linkTo = paths.community.crew.detail(crewId);
+
+  // const toProfile = paths.mypage.root;
+  const toProfile = () => {
+    console.log('작성자 ID: ', userId);
+  };
 
   return (
     <CardContent
@@ -139,7 +157,8 @@ export function CrewContent({
             color="inherit"
             style={{ textDecoration: 'none' }}
             component={RouterLink}
-            href={linkTo}
+            href=""
+            onClick={toProfile}
           >
             <TextMaxLine variant="subtitle2" line={1} persistent>
               {userNickname}
@@ -148,11 +167,24 @@ export function CrewContent({
         </Stack>
       </Stack>
 
-      <Link color="inherit" component={RouterLink} href={linkTo}>
-        <TextMaxLine mt={1} variant="subtitle1" line={2} persistent>
-          {title}
-        </TextMaxLine>
-      </Link>
+      {status === 1 ? (
+        <Link color="inherit" component={RouterLink} href={linkTo}>
+          <TextMaxLine mt={1} variant="subtitle1" line={2} persistent>
+            {title}
+          </TextMaxLine>
+        </Link>
+      ) : (
+        <>
+          <Link color="inherit" component={RouterLink} href={linkTo}>
+            <TextMaxLine mt={1} variant="subtitle2" line={1} persistent>
+              <del>{title}</del>
+            </TextMaxLine>
+          </Link>
+          <TextMaxLine mt={1} variant="subtitle1" line={1} persistent>
+            (모집 종료)
+          </TextMaxLine>
+        </>
+      )}
 
       <Grid
         container
@@ -164,6 +196,7 @@ export function CrewContent({
           typography: 'caption',
           color: 'black',
           fontWeight: 500,
+          height: 80
         }}
       >
         {pen ? (

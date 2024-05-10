@@ -59,8 +59,16 @@ export const paths = {
     apply: `${ROOTS.MYPAGE}/apply`,
     interest: `${ROOTS.MYPAGE}/interest`,
     portfolio: `${ROOTS.MYPAGE}/portfolio`,
+    portfolioDetail: (id:number) => `${ROOTS.MYPAGE}/portfolio/detail/${id}`,
+    portfolioWrite: `${ROOTS.MYPAGE}/portfolio/write`,
+    portfolioWriteUserFormat: `${ROOTS.MYPAGE}/portfolio/write/user`,
     resume: `${ROOTS.MYPAGE}/resume`,
+
+    // 내 작품
     works: `${ROOTS.MYPAGE}/works`,
+    worksWrite: `${ROOTS.MYPAGE}/works/write`,
+    worksDetail: (id: number) => `${ROOTS.MYPAGE}/works/${id}`,
+    worksEdit: (id: number) => `${ROOTS.MYPAGE}/works/${id}/edit`,
   },
 
   comingSoon: '/coming-soon',

@@ -112,6 +112,7 @@ export type BoardItem = {
 
 export type ShareMainItem = {
   shareId: number;
+  userId: number;
   userNickname: string;
   userProfile: string;
   thumbnail: string;
@@ -158,6 +159,7 @@ export type ShareItem = {
 
 export type CrewMainItem = {
   crewId: number;
+  userId: number;
   userNickname: string;
   userProfile: string;
   thumbnail: string;

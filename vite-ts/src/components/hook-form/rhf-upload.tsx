@@ -70,7 +70,7 @@ export function RHFUpload({ name, multiple, helperText, ...other }: Props) {
             helperText={
               (!!error || helperText) && (
                 <FormHelperText error={!!error} sx={{ px: 2 }}>
-                  {error ? error?.message : helperText}
+                  {error ? error?.message : helperText}ㄹㄹㄹ
                 </FormHelperText>
               )
             }

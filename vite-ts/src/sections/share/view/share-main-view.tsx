@@ -10,65 +10,65 @@ import { paths } from 'src/routes/paths';
 
 // prettier-ignore
 function createDummyData(
-  shareId: number, userNickname: string, userProfile: string, thumbnail: string, title: string, created_at: Date, updated_at: Date, views:number, comment_count:number ) {
+  shareId: number, userId: number, userNickname: string, userProfile: string, thumbnail: string, title: string, created_at: Date, updated_at: Date, views:number, comment_count:number ) {
   const createdAt = created_at.toLocaleDateString();
   const updatedAt = updated_at.toLocaleDateString();
   const hit = views.toString();
   const commentCnt = comment_count.toString();
 
-  return { shareId, userNickname, userProfile, thumbnail, title, hit, commentCnt, createdAt, updatedAt};
+  return { shareId, userId, userNickname, userProfile, thumbnail, title, hit, commentCnt, createdAt, updatedAt};
 }
 // prettier-ignore
 const dummy = [
-  createDummyData(1, '김싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
-    'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
-    '제 그림 어때요?', new Date('2024-05-03'), new Date('2024-05-04'), 10, 5),
+  createDummyData(1, 1, '김싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+    'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png', '제 그림 어때요?',
+    new Date('2024-05-03'), new Date('2024-05-04'), 10, 5),
   
-  createDummyData(3, '이싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
-    'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
-    '펜터치 조절이 어렵네요', new Date('2024-05-03'), new Date('2024-05-04'), 3, 1),
+  createDummyData(3, 2, '이싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+    'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png', '펜터치 조절이 어렵네요',
+    new Date('2024-05-03'), new Date('2024-05-04'), 3, 1),
   
-  createDummyData(4, '박싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+  createDummyData(4, 3, '박싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     '쁘띠 그림체입니다.', new Date('2024-05-03'), new Date('2024-05-04'), 1, 0),
   
-  createDummyData(6, '최싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+  createDummyData(6, 4, '최싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     '나보다 잘 그리는 사람?', new Date('2024-05-03'), new Date('2024-05-04'), 200, 10),
   
-  createDummyData(21, '정싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+  createDummyData(21, 5, '정싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     '침착맨 그림체 따라하기', new Date('2024-05-03'), new Date('2024-05-04'), 13, 2),
   
-  createDummyData(30, '조싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+  createDummyData(30, 6, '조싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     '이런 독창적인 그림체 어떤가요?', new Date('2024-05-03'), new Date('2024-05-04'), 5, 0),
   
-  createDummyData(41, '유싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+  createDummyData(41, 7, '유싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     '안녕하세요? 그림 평가 해주세요', new Date('2024-05-03'), new Date('2024-05-04'), 0, 0),
   
-  createDummyData(50, '선우싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+  createDummyData(50, 8, '선우싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     '데뷔할 수 있을까요?', new Date('2024-05-03'), new Date('2024-05-04'), 1, 0),
   
-  createDummyData(76, '남궁싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+  createDummyData(76, 9, '남궁싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     '간만에 수채화 그렸는데 어떤가요?', new Date('2024-05-03'), new Date('2024-05-04'), 1, 0),
   
-  createDummyData(101, '배싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+  createDummyData(101, 10, '배싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     '제 동생 그림입니다.', new Date('2024-05-03'), new Date('2024-05-04'), 503, 15),
   
-  createDummyData(109, '류싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+  createDummyData(109, 11, '류싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     '포폴용 웹툰 만드실 분', new Date('2024-05-03'), new Date('2024-05-04'), 20, 2),
   
-  createDummyData(109, '윤싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+  createDummyData(109, 12, '윤싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     '10~12화 완결 프로젝트 같이 하실 분', new Date('2024-05-03'), new Date('2024-05-04'), 20, 2),
   
-  createDummyData(109, '지싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+  createDummyData(109, 13, '지싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     '5화짜리 프로젝트 ㄱㄱ?', new Date('2024-05-03'), new Date('2024-05-04'), 20, 2),
 ];

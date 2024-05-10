@@ -31,7 +31,7 @@ export default function ControlPanel({
           {variantKey.map((variant) => (
             <Box key={variant.type} sx={{ my: 1.5 }}>
               <Typography variant="overline" sx={{ px: 1, mb: 1, display: 'block' }}>
-                {variant.type}
+                {variant.type}asdf
               </Typography>
               {variant.values.map((value) => (
                 <FormControlLabel
