@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
@@ -43,14 +44,8 @@ export default function JwtLoginView() {
     password: Yup.string().required('Password is required'),
   });
 
-  const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
-  };
-
   const methods = useForm({
     resolver: yupResolver(LoginSchema),
-    defaultValues,
   });
 
   const {
@@ -73,19 +68,67 @@ export default function JwtLoginView() {
 
   const renderHead = (
     <Stack spacing={2} sx={{ mb: 5 }}>
-      <Typography variant="h4">Sign in to Minimal</Typography>
-
-      <Stack direction="row" spacing={0.5}>
-        <Typography variant="body2">New user?</Typography>
-
-        <Link component={RouterLink} href={paths.auth.jwt.register} variant="subtitle2">
-          Create an account
-        </Link>
-      </Stack>
+      <Typography variant="h4">글, 그림</Typography>
     </Stack>
   );
 
-  const renderForm = (
+  const NaverLoginBtn = (
+    <button
+      type="button"
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        border: 'none',
+        alignItems: 'center',
+        width: '360px',
+        height: '56px',
+        backgroundColor: '#0edd6c',
+        borderRadius: '13px',
+        color: 'white',
+        fontSize: '23px',
+        fontWeight: '900',
+        cursor: 'pointer',
+      }}
+    >
+      네이버 로그인
+    </button>
+  );
+
+  const KakaoLoginBtn = (
+    <button
+      type="button"
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        border: 'none',
+        alignItems: 'center',
+        width: '360px',
+        height: '56px',
+        backgroundColor: '#FEE500',
+        borderRadius: '13px',
+        color: '#181600',
+        fontSize: '23px',
+        fontWeight: '900',
+        cursor: 'pointer',
+      }}
+    >
+      <a href="http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8085/api/v1/auth/oauth2/authorization/kakao">
+        카카오 로그인
+      </a>
+    </button>
+  );
+
+  const indiRenderForm = (
+    <Stack spacing={2.5}>
+      {NaverLoginBtn}
+      {KakaoLoginBtn}
+      <Link component={RouterLink} href={paths.auth.jwt.register} variant="subtitle2">
+        회원가입
+      </Link>
+    </Stack>
+  );
+
+  const enterRenderForm = (
     <Stack spacing={2.5}>
       <RHFTextField name="email" label="Email address" />
 
@@ -104,13 +147,13 @@ export default function JwtLoginView() {
         }}
       />
 
-      <Link variant="body2" color="inherit" underline="always" sx={{ alignSelf: 'flex-end' }}>
-        Forgot password?
+      <Link component={RouterLink} href={paths.auth.jwt.register} variant="subtitle2">
+        회원가입
       </Link>
 
       <LoadingButton
         fullWidth
-        color="inherit"
+        color="success"
         size="large"
         type="submit"
         variant="contained"
@@ -121,23 +164,60 @@ export default function JwtLoginView() {
     </Stack>
   );
 
+  const [alignment, setAlignment] = useState('indi');
+
+  const handleChange = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
+    if (newAlignment === null) {
+      if (alignment === 'indi') {
+        newAlignment = 'indi';
+      } else if (alignment === 'enter') {
+        newAlignment = 'enter';
+      }
+    }
+    setAlignment(newAlignment);
+  };
+
+  const selectUserType = (
+    <Stack spacing={1.5}>
+      <ToggleButtonGroup
+        color="primary"
+        value={alignment}
+        exclusive
+        onChange={handleChange}
+        aria-label="Platform"
+      >
+        <ToggleButton value="indi" sx={{ width: 1 }}>
+          개인 회원
+        </ToggleButton>
+        <ToggleButton value="enter" sx={{ width: 1 }}>
+          기업회원
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </Stack>
+  );
+
   return (
     <>
       {renderHead}
 
-      <Alert severity="info" sx={{ mb: 3 }}>
-        Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
-      </Alert>
+      {selectUserType}
+
+      <br />
 
       {!!errorMsg && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {errorMsg}
         </Alert>
       )}
-
-      <FormProvider methods={methods} onSubmit={onSubmit}>
-        {renderForm}
-      </FormProvider>
+      {alignment === 'indi' ? (
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+          {indiRenderForm}
+        </FormProvider>
+      ) : (
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+          {enterRenderForm}
+        </FormProvider>
+      )}
     </>
   );
 }

@@ -110,7 +110,7 @@ export default function InformationRecentPost() {
           </Typography>
         </Box>
         {/* 필터 들어가기 => zustand 이용, 바뀔 때 pagination 초기화 */}
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} alignItems='center'>
           {/* search */}
           <TextField
             placeholder="검색"
