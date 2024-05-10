@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  Container, Typography, FormControl, FormControlLabel,
+  Container, Typography, FormControl, FormControlLabel, Box,
   Radio, RadioGroup, TextField, Button,
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
 } from '@mui/material';
@@ -48,7 +48,7 @@ export default function CrewApplyView({ id }: Props) {
 
   const handleSubmit = async () => {
     if (!position || !message) {
-      alert("Please select a position and enter a message.");
+      alert("포지션과 메세지를 입력해주세요!");
       return;
     }
 
@@ -142,14 +142,17 @@ export default function CrewApplyView({ id }: Props) {
         sx={{ my: 2 }}  // margin top and bottom for spacing
       />
 
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleSubmit}
-        sx={{ mb: 2 }}
-      >
-        제출하기
-      </Button>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          sx={{ mb: 3 }}
+        >
+          제출하기
+        </Button>
+      </Box>
+
 
       <Dialog
         open={openDialog}

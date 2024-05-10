@@ -26,6 +26,7 @@ type Entry = {
 export default function PortfolioWriteView() {
   const router = useRouter()
   const [openDialog, setOpenDialog] = useState(false);
+  // 1st item
   const [entries, setEntries] = useState<Entry[]>([{
     title: '',
     program: '',
@@ -65,13 +66,13 @@ export default function PortfolioWriteView() {
 
 
   const handleAddEntry = useCallback(() => {
-    console.log('변환전 확인', entries)
+    // next items
     setEntries(prevEntries => [
       ...prevEntries,
       { title: '', program: '', contribution: '', content: '', file: null, firstDropdownValue: '파일 업로드',
       secondDropdownValue: '', image: -1}
     ]);
-  }, [entries]);
+  }, []);
 
   const handleRemoveEntry = useCallback((index: number) => {
     setEntries(prevEntries => prevEntries.filter((_, idx) => idx !== index));
@@ -135,12 +136,10 @@ export default function PortfolioWriteView() {
   }, []);
 
   const handleSubmit = () => {
-    console.log('등록하자!!');
     router.push(paths.mypage.portfolio)
   };
 
   const handleCancel = () => {
-    console.log("작성 취소!")
     setOpenDialog(true);
   };
 

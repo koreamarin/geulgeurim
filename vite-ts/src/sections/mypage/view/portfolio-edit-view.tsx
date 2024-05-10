@@ -40,7 +40,7 @@ const portfolio_service_format = {
       title: "Digital Landscape",
       program: "Photoshop",
       contribution: "100%",
-      content: "",
+      content: "이것은 첫 번째 작품입니다.",
       pieceUrl: "https://source.unsplash.com/random/1"
     },
     {
