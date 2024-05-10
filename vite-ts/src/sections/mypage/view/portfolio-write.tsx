@@ -1,9 +1,11 @@
 import React, { useState, useCallback, ChangeEvent } from 'react';
-import {
-  Container, Button, TextField, Box, Typography, Grid, IconButton, Paper, Select, MenuItem
-} from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+
 import CloseIcon from '@mui/icons-material/Close';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import {
+  Box, Grid, Paper, Button, Select, MenuItem, Container, TextField, Typography, IconButton
+} from '@mui/material';
+
 import { Upload } from 'src/components/upload';
 
 type Entry = {
@@ -11,7 +13,7 @@ type Entry = {
   program: string;
   contribution: string;
   content: string;
-  file: File | null;
+  file: File | string | null;
   firstDropdownValue: string;
   secondDropdownValue: string;
   image: number;
@@ -47,9 +49,9 @@ export default function PortfolioWriteView() {
   };
 
 
-  const [firstDropdownValue, setFirstDropdownValue] = useState('');
-  const [secondDropdownValue, setSecondDropdownValue] = useState('');
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  // const [firstDropdownValue, setFirstDropdownValue] = useState('');
+  // const [secondDropdownValue, setSecondDropdownValue] = useState('');
+  // const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const imagesPerPage = 5;
@@ -60,19 +62,19 @@ export default function PortfolioWriteView() {
     setEntries(prevEntries => [
       ...prevEntries,
       { title: '', program: '', contribution: '', content: '', file: null, firstDropdownValue: '',
-      secondDropdownValue: '', image: null}
+      secondDropdownValue: '', image: -1}
     ]);
-  }, []);
+  }, [entries]);
 
   const handleRemoveEntry = useCallback((index: number) => {
     setEntries(prevEntries => prevEntries.filter((_, idx) => idx !== index));
   }, []);
 
-  const handleFileChange = useCallback((file: File | null, index: number) => {
-    setEntries(prevEntries => prevEntries.map((entry, idx) =>
-      idx === index ? { ...entry, file } : entry
-    ));
-  }, []);
+  // const handleFileChange = useCallback((file: File | null, index: number) => {
+  //   setEntries(prevEntries => prevEntries.map((entry, idx) =>
+  //     idx === index ? { ...entry, file } : entry
+  //   ));
+  // }, []);
 
   const handleChange = useCallback((index: number, field: keyof Entry) => (event: ChangeEvent<HTMLInputElement>) => {
     setEntries(prevEntries => prevEntries.map((entry, idx) =>
@@ -106,28 +108,28 @@ export default function PortfolioWriteView() {
   //   }
   // }, []);
 
-  const handlePreviewImageClick = (index: number) => {
-    setSelectedImageIndex(index);
-  };
+  // const handlePreviewImageClick = (index: number) => {
+  //   setSelectedImageIndex(index);
+  // };
 
   // 페이지네이션
   const indexOfLastImage = currentPage * imagesPerPage;
   const indexOfFirstImage = indexOfLastImage - imagesPerPage;
   const currentImages = dummyPieces.pieceUrl.slice(indexOfFirstImage, indexOfLastImage);
 
-  const renderImages = currentImages.map((url, index) => (
-    <Box key={index} sx={{ width: 'calc(20% - 8px)', marginBottom: 3, height: '150px', overflow: 'hidden', cursor: 'pointer' }} onClick={() => handlePreviewImageClick(indexOfFirstImage + index)}>
-      <img src={url} alt={`Piece ${indexOfFirstImage + index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} />
-    </Box>
-  ));
+  // const renderImages = currentImages.map((url, index) => (
+  //   <Box key={index} sx={{ width: 'calc(20% - 8px)', marginBottom: 3, height: '150px', overflow: 'hidden', cursor: 'pointer' }} onClick={() => handlePreviewImageClick(indexOfFirstImage + index)}>
+  //     <img src={url} alt={`Piece ${indexOfFirstImage + index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} />
+  //   </Box>
+  // ));
 
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(dummyPieces.pieceUrl.length / imagesPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(dummyPieces.pieceUrl.length / imagesPerPage); i+=1) {
     pageNumbers.push(i);
   }
 
   const renderPageNumbers = pageNumbers.map(number => (
-    <button key={number} onClick={() => setCurrentPage(number)}
+    <Button key={number} onClick={() => setCurrentPage(number)}
       style={{
         fontSize: '12px',
         padding: '5px 8px', // Adjusted padding
@@ -139,7 +141,7 @@ export default function PortfolioWriteView() {
         borderRadius: '4px'
       }}>
       {number}
-    </button>
+    </Button>
   ));
 
   const changeImage = (index:number, imageIndex:number) => {
@@ -149,6 +151,30 @@ export default function PortfolioWriteView() {
     ));
   }
 
+  const setFile = (file:Entry['file'], index:number) => {
+    setEntries(prevEntries => prevEntries.map((entry, idx) =>
+      idx === index ? { ...entry, file } : entry
+    ));
+  }
+
+
+  // useCallback((index: number, field: keyof Entry) => (event: ChangeEvent<HTMLInputElement>) => {
+  //   setEntries(prevEntries => prevEntries.map((entry, idx) =>
+  //     idx === index ? { ...entry, [field]: event.target.value } : entry
+  //   ));
+  // }, []);
+
+
+  const handleDropSingleFile = useCallback((index:number, acceptedFiles: File[]) => {
+    const newFile = acceptedFiles[0];
+    if (newFile) {
+      setFile(
+        Object.assign(newFile, {
+          preview: URL.createObjectURL(newFile),
+        }), index
+      );
+    }
+  }, []);
 
 
   return (
@@ -205,8 +231,10 @@ export default function PortfolioWriteView() {
       <>
         <Grid item xs={12} md={6}>
           <Upload
+            accept={{ 'image/*': [] }}
             file={entry.file}
-            onFileChange={(file) => handleFileChange(file, index)}
+            // onFileChange={(file) => handleFileChange(file, index)}
+            onDrop={(acceptedFiles) => handleDropSingleFile(index, acceptedFiles)} onDelete={() => setFile(null, index)}
           />
         </Grid>
         <Grid item xs={12} md={6}>
