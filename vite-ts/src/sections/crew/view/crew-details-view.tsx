@@ -57,7 +57,6 @@ export default function CrewDetailView({ id }: Props) {
   const [crewDetails, setCrewDetails] = useState<CrewDetail | undefined>();
 
   useEffect(() => {
-    // Simulate fetching data
     const foundData = dummyDataArray.find(item => item.crew_id === parseInt(id, 10));
     setCrewDetails(foundData);
   }, [id]);

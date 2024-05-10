@@ -7,6 +7,9 @@ import {
 } from '@mui/material';
 import ComponentBlock from 'src/sections/_examples/component-block';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 type CrewDetail = {
   crew_id: number;
   user_id: number;
@@ -31,8 +34,9 @@ type Props = {
 export default function CrewApplyView({ id }: Props) {
   const location = useLocation();
   const navigate = useNavigate();
+  const router = useRouter()
   const crewDetails = location.state?.crewDetails as CrewDetail;
-  const crewId = crewDetails?.crew_id; 
+  const crewId = crewDetails?.crew_id;
 
   const [position, setPosition] = useState('');
   const [message, setMessage] = useState('');
@@ -77,10 +81,11 @@ export default function CrewApplyView({ id }: Props) {
     // }
   };
 
-  const handleCloseDialog = () => {
+  const handleCloseDialog = (crew_id: number) => {
     setOpenDialog(false);
-    navigate(`/community/crew/${crewDetails?.crew_id}`);  // 다시 크루 모집 상세페이지로
+    router.push(paths.community.crew.detail(crew_id))
   };
+
 
   return (
     <Container>
@@ -148,7 +153,7 @@ export default function CrewApplyView({ id }: Props) {
 
       <Dialog
         open={openDialog}
-        onClose={handleCloseDialog}
+        onClose={() => handleCloseDialog(crewId)}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -159,7 +164,7 @@ export default function CrewApplyView({ id }: Props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary" autoFocus>
+          <Button onClick={() => handleCloseDialog(crewId)} color="primary" autoFocus>
             확인
           </Button>
         </DialogActions>

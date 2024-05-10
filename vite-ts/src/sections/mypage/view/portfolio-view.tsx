@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import {
-  Box, Grid, Paper, Button, Switch, Tooltip, Container,
-  FormGroup, Typography, IconButton, FormControlLabel,
+  Box, Grid, Paper, Button, Tooltip, Container,
+  FormGroup, Typography, IconButton,
   Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 
@@ -96,6 +96,10 @@ export default function PortfolioView() {
     router.push(paths.mypage.portfolioWriteUserFormat)
   };
 
+  const handleEditClick = (portfolioId: number) => {
+    router.push(paths.mypage.portfolioEdit(portfolioId))
+  };
+
   return (
     <Container>
       {portfolioState.map((portfolio) => (
@@ -106,7 +110,7 @@ export default function PortfolioView() {
           {/* Toggle Switch and Edit Button grouped together */}
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
             <FormGroup sx={{ flexDirection: 'row', alignItems: 'center' }}>
-            <FormControlLabel
+            {/* <FormControlLabel
               control={
                 <Switch
                   checked={portfolio.status === "PUBLIC"}
@@ -115,20 +119,18 @@ export default function PortfolioView() {
               }
               label={portfolio.status === 'PUBLIC' ? "Public" : "Private"}
               labelPlacement="start"
-            />
+            /> */}
               <Tooltip title="Edit">
-                <IconButton color="primary" onClick={(e) => {
-                  e.stopPropagation();
-                }}>
+              <IconButton color="primary" onClick={() => handleEditClick(portfolio.id)}>
                   <EditIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title="Delete">
                 <IconButton color="secondary" onClick={(e) => {
-                  e.stopPropagation(); // Prevent triggering any higher level click events
-                  console.log('Delete action triggered'); // Replace with actual delete function call
+
+                  console.log('Delete action triggered');
                 }}>
-                  <DeleteIcon />
+                  <DeleteIcon sx={{ color: 'grey' }} />
                 </IconButton>
               </Tooltip>
             </FormGroup>

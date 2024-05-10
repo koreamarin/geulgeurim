@@ -17,6 +17,7 @@ const Portfolio = lazy(() => import('src/pages/mypage/portfolio'));
 const PortfolioDetail = lazy(() => import('src/pages/mypage/portfolio-detail'));
 const PortfolioWriteView = lazy(() => import('src/pages/mypage/portfolio-write'));
 const PortfolioWriteUserFormatView = lazy(() => import('src/pages/mypage/portfolio-write-user-format'));
+const PortfolioEdit = lazy(() => import('src/pages/mypage/portfolio-edit'));
 // 작품
 const Works = lazy(() => import('src/pages/mypage/works'));
 const WorksDetail = lazy(() => import('src/pages/mypage/works/detail'));
@@ -61,7 +62,10 @@ export const mypageRoutes = [
             path: 'write/user',
             element: <PortfolioWriteUserFormatView />
           },
-
+          {
+            path: 'edit/:id',
+            element: <PortfolioEdit />
+          },
         ]
 
        },

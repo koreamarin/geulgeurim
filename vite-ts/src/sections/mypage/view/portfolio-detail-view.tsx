@@ -106,7 +106,7 @@ export default function PortfolioDetailView({ id }: Props) {
                   e.stopPropagation(); // Prevent triggering any higher level click events
                   console.log('Delete action triggered'); // Replace with actual delete function call
                 }}>
-                  <DeleteIcon />
+                  <DeleteIcon sx={{ color: 'grey' }} />
                 </IconButton>
               </Tooltip>
       </Box>

@@ -62,6 +62,7 @@ export const paths = {
     portfolioDetail: (id:number) => `${ROOTS.MYPAGE}/portfolio/detail/${id}`,
     portfolioWrite: `${ROOTS.MYPAGE}/portfolio/write`,
     portfolioWriteUserFormat: `${ROOTS.MYPAGE}/portfolio/write/user`,
+    portfolioEdit: (id:number) => `${ROOTS.MYPAGE}/portfolio/edit/${id}`,
     resume: `${ROOTS.MYPAGE}/resume`,
 
     // 내 작품
