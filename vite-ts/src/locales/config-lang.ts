@@ -6,6 +6,7 @@ import {
   enUS as enUSAdapter,
   zhCN as zhCNAdapter,
   arSA as arSAAdapter,
+  ko as koAdapter,
 } from 'date-fns/locale';
 
 // date pickers (MUI)
@@ -14,6 +15,7 @@ import {
   frFR as frFRDate,
   viVN as viVNDate,
   zhCN as zhCNDate,
+  koKR as koKRDate,
 } from '@mui/x-date-pickers/locales';
 // core (MUI)
 import {
@@ -22,6 +24,7 @@ import {
   viVN as viVNCore,
   zhCN as zhCNCore,
   arSA as arSACore,
+  koKR as koKRCore,
 } from '@mui/material/locale';
 // data grid (MUI)
 import {
@@ -30,6 +33,7 @@ import {
   viVN as viVNDataGrid,
   zhCN as zhCNDataGrid,
   arSD as arSDDataGrid,
+  koKR as koKRDataGrid,
 } from '@mui/x-data-grid';
 
 // PLEASE REMOVE `LOCAL STORAGE` WHEN YOU CHANGE SETTINGS.
@@ -37,14 +41,14 @@ import {
 
 export const allLangs = [
   {
-    label: 'English',
-    value: 'en',
-    systemValue: merge(enUSDate, enUSDataGrid, enUSCore),
-    adapterLocale: enUSAdapter,
+    label: 'Korean',
+    value: 'ko',
+    systemValue: merge(koKRDate, koKRDataGrid, koKRCore),
+    adapterLocale: koAdapter,
     icon: 'flagpack:gb-nir',
     numberFormat: {
-      code: 'en-US',
-      currency: 'USD',
+      code: 'ko-KR',
+      currency: 'KRW',
     },
   },
   {
