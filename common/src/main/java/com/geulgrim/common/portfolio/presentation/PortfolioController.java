@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/portfolio")
+@RequestMapping("/api/v1/common/portfolio")
 @RestController
 @Slf4j
 public class PortfolioController {
@@ -74,7 +74,7 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioId);
     }
 
-    // 내 포트폴리오 등록 (사용자 포맷)
+
     @PostMapping("/user/{userId}")
     @Operation(summary = "포트폴리오 등록", description = "사용자 포맷의 포트폴리오를 등록합니다.")
     public ResponseEntity<Long> addPortfolioMyFormat(
@@ -86,7 +86,6 @@ public class PortfolioController {
     }
 
 
-    // 내 포트폴리오 삭제
     @DeleteMapping("/{pofol_id}")
     @Operation(summary = "포트폴리오 삭제", description = "포트폴리오를 삭제합니다.")
     public ResponseEntity<String> deletePortfolio(
@@ -95,6 +94,5 @@ public class PortfolioController {
         String result = portfolioService.deletePortfolio(pofol_id);
         return ResponseEntity.ok(result);
     }
-
 
 }
