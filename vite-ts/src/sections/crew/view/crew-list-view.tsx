@@ -1,10 +1,7 @@
 import orderBy from 'lodash/orderBy';
 import { useState, useCallback } from 'react';
-
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-
+import { useRouter } from 'src/routes/hooks';
+import { Button, Stack, Typography, Container, Grid } from '@mui/material';
 import { paths } from 'src/routes/paths';
 import { useDebounce } from 'src/hooks/use-debounce';
 import { POST_SORT_OPTIONS } from 'src/_mock';
@@ -19,16 +16,12 @@ import CrewList from '../crew-list';
 
 export default function CrewListView() {
   const settings = useSettingsContext();
-
   const [sortBy, setSortBy] = useState('latest');
-
   const [searchQuery, setSearchQuery] = useState('');
-
   const debouncedQuery = useDebounce(searchQuery);
-
   const { posts, postsLoading } = useGetPosts();
-
   const { searchResults, searchLoading } = useSearchPosts(debouncedQuery);
+  const router = useRouter();
 
   const dataFiltered = applyFilter({
     inputData: posts,
@@ -42,6 +35,11 @@ export default function CrewListView() {
   const handleSearch = useCallback((inputValue: string) => {
     setSearchQuery(inputValue);
   }, []);
+
+  const handleCreatePost = () => {
+      router.push(paths.community.crew.write)
+  };
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <Typography
@@ -60,6 +58,7 @@ export default function CrewListView() {
         direction={{ xs: 'column', sm: 'row' }}
         sx={{ mb: { xs: 3, md: 5 } }}
       >
+
         <PostSearch
           query={debouncedQuery}
           results={searchResults}
@@ -70,6 +69,26 @@ export default function CrewListView() {
 
         <PostSort sort={sortBy} onSort={handleSortBy} sortOptions={POST_SORT_OPTIONS} />
       </Stack>
+
+      <Grid container justifyContent="flex-end">
+        <Grid item>
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{ my: 4 }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={handleCreatePost}
+            >
+              글쓰기
+            </Button>
+          </Stack>
+        </Grid>
+      </Grid>
+
 
       {/* 게시글들 */}
       <CrewList posts={dataFiltered} loading={postsLoading} />
