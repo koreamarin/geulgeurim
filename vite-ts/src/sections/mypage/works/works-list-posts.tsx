@@ -186,7 +186,7 @@ export default function WorksListPosts() {
             <Image
               alt="gallery"
               ratio="1/1"
-              src={image.fileUrl ? image.fileUrl : `/public/no_image.png`}
+              src={image.fileUrl ? image.fileUrl : `/no_image.png`}
               padding={image.fileUrl ? 0 : 10}
               overlay={`linear-gradient(to bottom, ${alpha(theme.palette.grey[900], 0)} 0%, ${
                 theme.palette.grey[900]
