@@ -20,7 +20,7 @@ export default function WorksRHFSwitch({ name, helperText, ...other }: Props) {
       control={control}
       render={({ field, fieldState: { error } }) => {
         const handleChange = (event: { target: { checked: any; }; }) => {
-            setValue(name, event.target.checked ? 'PUBLIC' : 'PRIVATE', { shouldValidate: true });
+            setValue(name, event.target.checked ? 'PUBLIC' : 'PRIVATE', { shouldValidate: true, shouldDirty: true });
           };
         return (
             <div>

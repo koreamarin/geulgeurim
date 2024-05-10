@@ -7,6 +7,9 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import Image from 'src/components/image';
@@ -74,6 +77,8 @@ export default function WorksDetail({workId}:Props) {
 
   const selectVariant = 'zoomIn';
 
+  const router = useRouter()
+
   return (
     <Grid container spacing={3} sx={{pt:3}}>
       <Grid xsOffset={1} mdOffset={2} xs={10} md={8} mb={2} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -111,7 +116,7 @@ export default function WorksDetail({workId}:Props) {
           </Typography>
         </Card>
         <Grid container justifyContent="flex-end" mt={3}>
-          <Button  style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="success" size="medium" sx={{marginRight:3}}>
+          <Button  style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="success" size="medium" sx={{marginRight:3}} onClick={() => router.push(paths.mypage.worksEdit(parseInt(workId, 10)))}>
             수정하기
           </Button>
 
@@ -120,6 +125,7 @@ export default function WorksDetail({workId}:Props) {
             onOpen={view.onTrue}
             onClose={view.onFalse}
             selectVariant={selectVariant}
+            deleteWorks={workId}
           />
 
         </Grid>

@@ -132,7 +132,7 @@ export default function WorksForm() {
       {/* {!isDirty && '확인중'} */}
       <Typography variant="h3" sx={{display:'flex',  justifyContent: 'space-between',}}>
           작품 등록
-          <WorksRHFSwitch name="status" label="공개여부" />
+          <WorksRHFSwitch name="status" label="공개여부" labelPlacement='start'/>
       </Typography>
       <Card sx={{marginBottom: 4}}>
         <Stack spacing={3} sx={{ p: 3 }}>
@@ -166,11 +166,11 @@ export default function WorksForm() {
         />
       </Stack>
       <Stack mb={4} direction="row" alignItems="center" justifyContent="end">
-        <Button type="submit"
-            style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" sx={{marginRight:3}} onClick={() => router.push(paths.mypage.works)}>
+        <Button
+            style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" onClick={() => router.push(paths.mypage.works)}>
           취소하기
         </Button>
-        
+
         <LoadingButton
             type="submit"
             style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="success" size="medium" sx={{marginRight:3}}

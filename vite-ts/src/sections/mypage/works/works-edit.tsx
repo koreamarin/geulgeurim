@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch  } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMemo, useEffect, useCallback, useState } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -16,16 +16,19 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useBoolean } from 'src/hooks/use-boolean';
+
 import { useSnackbar } from 'src/components/snackbar';
+import SvgColor from 'src/components/svg-color/svg-color';
 import FormProvider, {
   RHFUpload,
   RHFSelect,
   RHFTextField
 } from 'src/components/hook-form';
-import SvgColor from 'src/components/svg-color/svg-color';
 
 import WorksRHFSwitch from './works-form-switch';
 import NFTRegistrationModal from './works-edit-NFT';
+import WorksDetailDelete from './works-detail-delete';
 
 // ----------------------------------------------------------------------
 function createDummyData(piece_id: number, fileUrl: string, type: string, name: string, create_at: Date, description: string,  nft_type: string, status:string) {
@@ -87,7 +90,7 @@ export default function WorksEdit({ workId }: Props) {
     () => ({
       piece_id: dummyData?.piece_id,
       nft_type: dummyData?.nft_type,
-      
+
       name: dummyData?.name || '',
       description: dummyData?.description || '',
       type: dummyData?.type || '',
@@ -98,30 +101,31 @@ export default function WorksEdit({ workId }: Props) {
     [dummyData]
   );
 
-  
+
   const methods = useForm({
     resolver: yupResolver(NewWorksSchema),
     defaultValues,
     mode: 'onChange'
   });
-  
+
   const {
     reset,
     setValue,
     handleSubmit,
     formState: { isSubmitting, isDirty },
-    // formState: { isSubmitting },
+    control
   } = methods;
-  
+
   useEffect(() => {
     if (dummyData) {
       reset(defaultValues);
     }
   }, [dummyData, defaultValues, reset]);
-  
+
   const onSubmit = handleSubmit(async (data) => {
     // 변화 없을 때 바로 route
     if (!isDirty) {
+      console.log('not change')
       router.push(paths.mypage.worksDetail(parseInt(workId, 10)));
     } else {
     try {
@@ -135,15 +139,15 @@ export default function WorksEdit({ workId }: Props) {
       console.error(error);
     }}
   });
-  
+
   const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
-      
+
       const newFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
-      
+
       if (file) {
         setValue('fileUrl', newFile, { shouldValidate: true });
       }
@@ -152,25 +156,35 @@ export default function WorksEdit({ workId }: Props) {
   );
 
   // NFT 등록 창 띄우기
-  const [NFTRegister, setNFTRegister] = useState<boolean>(false);
+  const [nftRegister, setNftRegister] = useState<boolean>(false);
 
-  const handleOpenRegister = () => setNFTRegister(true);
-  const handleCloseRegister = () => setNFTRegister(false);
-  
+  const handleOpenRegister = () => {
+    setNftRegister(true)
+  }
+  const handleCloseRegister = () => setNftRegister(false);
+
 
   const checkNFT = dummyData?.nft_type === 'NFT'
 
-  
+
   const handleRemoveFile = useCallback(() => {
     setValue('fileUrl', null);
   }, [setValue]);
 
+  const watchedFileUrl = useWatch({
+    control,
+    name: 'fileUrl', // 관찰할 필드 이름
+  });
+
+  const view = useBoolean();
+  const selectVariant = 'zoomIn'
+
   const renderDetails = (
     <Grid xsOffset={1} mdOffset={2} xs={10} md={8}>
-      {!isDirty && '확인중'}
+      {/* {!isDirty && '확인중'} */}
       <Typography variant="h3" sx={{display:'flex',  justifyContent: 'space-between',}}>
           작품 수정
-          <WorksRHFSwitch name="status" label="공개여부" />
+          <WorksRHFSwitch name="status" label="공개여부" labelPlacement='start'/>
       </Typography>
       <Card sx={{marginBottom: 4}}>
         <Stack spacing={3} sx={{ p: 3 }}>
@@ -200,18 +214,18 @@ export default function WorksEdit({ workId }: Props) {
             작품
             {checkNFT && <SvgColor src='/assets/icons/mypage/ic_nft.svg' ml={2} sx={{ width: 20, height: 20 }}/>}
           </Stack>
-          {dummyData?.nft_type !== 'NFT' && <Tooltip title="이미 NFT 작품입니다" disableHoverListener={dummyData?.nft_type !== 'NFT'}>
+          {dummyData?.nft_type !== 'NFT' && watchedFileUrl && <Tooltip title="이미 NFT 작품입니다" disableHoverListener={dummyData?.nft_type !== 'NFT'}>
             <div>
-              <Button type="submit" disabled={checkNFT}
-                  style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="info" size="medium" sx={{marginRight:3}} onClick={handleOpenRegister}>
+              <Button disabled={checkNFT}
+                  style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="info" size="medium" onClick={handleOpenRegister}>
                 NFT 등록
               </Button>
             </div>
           </Tooltip>}
         </Typography>
-        <NFTRegistrationModal open={NFTRegister} onClose={handleCloseRegister} /> 
+        <NFTRegistrationModal open={nftRegister} onClose={handleCloseRegister} worksId={dummyData?.piece_id} fileUrl={dummyData?.fileUrl}/>
         {/* 업로드, NFT 여부를 통한 수정 확인 */}
-        {dummyData?.nft_type === 'NFT' && 
+        {dummyData?.nft_type === 'NFT' &&
           <Tooltip title="NFT 작품은 수정할 수 없습니다">
             <div>
               <RHFUpload
@@ -221,28 +235,32 @@ export default function WorksEdit({ workId }: Props) {
               />
             </div>
           </Tooltip>}
-        {dummyData?.nft_type === 'URL' && 
+        {dummyData?.nft_type === 'URL' &&
         <RHFUpload
           name="fileUrl"
           onDrop={handleDrop}
           onDelete={handleRemoveFile}
         />}
-        
+
       </Stack>
       <Stack mb={4} direction="row" alignItems="center" justifyContent="space-between">
-        {/* <Button style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" sx={{marginRight:3}} onClick={handleNFT}>
-          삭제하기
-        </Button> */}
+          <WorksDetailDelete
+          open={view.value}
+          onOpen={view.onTrue}
+          onClose={view.onFalse}
+          selectVariant={selectVariant}
+          deleteWorks={workId}
+          />
 
         <Stack direction="row" alignItems="center" justifyContent="end">
-          <Button type="submit"
-              style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" sx={{marginRight:3}} onClick={() => router.push(paths.mypage.works)}>
+          <Button
+              style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" sx={{marginRight:3}} onClick={() => router.push(paths.mypage.worksDetail(parseInt(workId, 10)))}>
             취소하기
           </Button>
-          
+
           <LoadingButton
               type="submit"
-              style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="success" size="medium" sx={{marginRight:3}}
+              style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="success" size="medium"
               loading={isSubmitting}
           >
             수정하기

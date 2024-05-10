@@ -19,6 +19,7 @@ type WorksDetailDeleteProps = {
   onOpen: VoidFunction;
   onClose: VoidFunction;
   selectVariant: string;
+  deleteWorks: string
 };
 
 export default function WorksDetailDelete({
@@ -26,11 +27,11 @@ export default function WorksDetailDelete({
   onOpen,
   onClose,
   selectVariant,
-  ...other
+  deleteWorks
 }: WorksDetailDeleteProps) {
   const router = useRouter()
-  const deleteWorks = () => {
-    console.log('삭제!')
+  const deleteWorksFunction = () => {
+    console.log(deleteWorks, '번 작품삭제!')
     onClose()
     // 성공하면 list로 이동!
     router.push(paths.mypage.works)
@@ -62,7 +63,7 @@ export default function WorksDetailDelete({
 
             <DialogActions>
               <Button style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color='success' size="medium" onClick={onClose}>취소하기</Button>
-              <Button style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" onClick={deleteWorks} autoFocus>
+              <Button style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" onClick={deleteWorksFunction} autoFocus>
                 삭제하기
               </Button>
             </DialogActions>
