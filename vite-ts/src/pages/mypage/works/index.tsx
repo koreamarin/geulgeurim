@@ -4,7 +4,7 @@ import { WorksView } from 'src/sections/mypage/view';
 
 // ----------------------------------------------------------------------
 
-export default function RecruitHome() {
+export default function WorksHome() {
   return (
     <>
       <Helmet>

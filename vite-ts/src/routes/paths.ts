@@ -60,7 +60,12 @@ export const paths = {
     interest: `${ROOTS.MYPAGE}/interest`,
     portfolio: `${ROOTS.MYPAGE}/portfolio`,
     resume: `${ROOTS.MYPAGE}/resume`,
+
+    // 내 작품
     works: `${ROOTS.MYPAGE}/works`,
+    worksWrite: `${ROOTS.MYPAGE}/works/write`,
+    worksDetail: (id: number) => `${ROOTS.MYPAGE}/works/${id}`,
+    worksEdit: (id: number) => `${ROOTS.MYPAGE}/works/${id}/edit`,
   },
 
   comingSoon: '/coming-soon',
