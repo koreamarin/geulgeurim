@@ -28,13 +28,13 @@ export const mypageRoutes = [
   {
     path: 'mypage',
     element: (
-      <AuthGuard>
+      // <AuthGuard>
         <DashboardLayout>
           <Suspense fallback={<LoadingScreen />}>
             <Outlet />
           </Suspense>
         </DashboardLayout>
-      </AuthGuard>
+      // </AuthGuard>
     ),
     children: [
       { path: '', element: <Inforamtion /> },

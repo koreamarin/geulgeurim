@@ -1,4 +1,4 @@
-export const cities: { [key: number]: string } = {
+export const positionList: { [key: number]: string } = {
   1:'선화',
   2:'밑색',
   3:'명암',
