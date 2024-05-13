@@ -1,7 +1,6 @@
 package com.geulgrim.auth.security.jwt;
 
 
-import com.geulgrim.auth.security.exception.UnAuthorizedException;
 import com.geulgrim.auth.user.domain.entity.Enums.UserType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -71,61 +70,4 @@ public class JWTUtil {
         byte[] keyBytes = Decoders.BASE64.decode(this.salt);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
-    //	전달 받은 토큰이 제대로 생성된것인지 확인 하고 문제가 있다면 UnauthorizedException을  발생.
-    public boolean checkToken(String token) {
-        try {
-//			Json Web Signature? 서버에서 인증을 근거로 인증정보를 서버의 private key로 서명 한것을 토큰화 한것
-//			setSigningKey : JWS 서명 검증을 위한  secret key 세팅
-//			parseClaimsJws : 파싱하여 원본 jws 만들기
-            CharSequence charSequence = token;
-//            Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(authorization);
-            Jws<Claims> claims = Jwts.parser()
-                    .verifyWith((this.getSigningKey()))
-                    .build()
-                    .parseSignedClaims(token);
-
-//			Claims 는 Map의 구현체 형태
-            log.debug("claims: {}", claims);
-            return true;
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return false;
-        }
-    }
-
-    public Integer getUserId(String authorization) {
-        Jws<Claims> claims = null;
-        try {
-            claims = Jwts.parser()
-                    .verifyWith(this.getSigningKey())
-                    .build()
-                    .parseSignedClaims(authorization);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new UnAuthorizedException();
-        }
-//        Map<String, Object> value = claims.getBody();
-        Map<String, Object> value = claims.getPayload();
-        log.info("value : {}", value);
-        return (Integer) value.get("userId");
-    }
-
-    public String getUserType(String authorization) {
-        Jws<Claims> claims = null;
-        try {
-            claims = Jwts.parser()
-                    .verifyWith(this.getSigningKey())
-                    .build()
-                    .parseSignedClaims(authorization);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new UnAuthorizedException();
-        }
-//        Map<String, Object> value = claims.getBody();
-        Map<String, Object> value = claims.getPayload();
-        log.info("value : {}", value);
-        return (String) value.get("userType");
-    }
-
 }

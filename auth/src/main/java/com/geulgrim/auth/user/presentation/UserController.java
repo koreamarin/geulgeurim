@@ -69,10 +69,13 @@ public class UserController {
         headers.add("Authorization", "Bearer " + AccessToken);
         headers.add("RefrashAuthorization", "Bearer " + RefrashToken);
 
-//        return new ResponseEntity<UserLoginResponse>(userLoginResponse, HttpStatus.OK);
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(userLoginResponse);
+        System.out.println("왜 이러냐고");
+        System.out.println(userLoginResponse);
+
+        return new ResponseEntity<>(userLoginResponse, headers, HttpStatus.OK);
+//        return ResponseEntity.ok()
+//                .headers(headers)
+//                .body(userLoginResponse);
     }
 
 

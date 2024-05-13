@@ -1,7 +1,6 @@
 package com.geulgrim.auth.security.config;
 
 import com.geulgrim.auth.security.jwt.JWTUtil;
-import com.geulgrim.auth.security.jwt.JwtAuthorizationFilter;
 import com.geulgrim.auth.user.application.dto.response.UserLoginResponse;
 import com.geulgrim.auth.user.application.service.OAuth2UserService;
 import com.geulgrim.auth.user.domain.repository.AuthRepository;
@@ -57,7 +56,6 @@ public class SecurityConfig {
         http
             .csrf(config -> config.disable())
             .authorizeHttpRequests(config -> config.anyRequest().permitAll())
-            .addFilter(new JwtAuthorizationFilter(authenticationManager, authRepository, jwtUtil))
             .oauth2Login(oauth2Configurer -> oauth2Configurer
                 .loginPage("/api/v1/auth/oauth2/authorization/kakao")
                 .successHandler(successHandler())

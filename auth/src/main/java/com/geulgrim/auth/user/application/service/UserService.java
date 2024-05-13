@@ -108,17 +108,17 @@ public class UserService {
     public UserLoginResponse EnterUserLogin(EnterUserLoginRequest enterUserLoginRequest) {
         UserLoginResponse userLoginResponse = null;
 
-        Optional<User> user = userRepository.findByEmail(enterUserLoginRequest.getEmail());
-        if(user.isEmpty()) throw new NotFoundException("아이디를 찾을 수 없습니다.");
-        Optional<EnterUser> enterUser = enterUserRepository.findByUser(user.get());
-        if(enterUser.isEmpty()) throw new NotFoundException("아이디를 찾을 수 없습니다.");
+        User user = userRepository.findByEmail(enterUserLoginRequest.getEmail())
+                .orElseThrow(() -> new NotFoundException("이메일 아이디를 찾을 수 없습니다."));
+        EnterUser enterUser = enterUserRepository.findByUser(user)
+                .orElseThrow(() -> new NotFoundException("기업계정을 찾을 수 없습니다."));
 
-        if(bCryptPasswordEncoder.matches(enterUserLoginRequest.getPassword(), enterUser.get().getPassword())) {
+        if(bCryptPasswordEncoder.matches(enterUserLoginRequest.getPassword(), enterUser.getPassword())) {
             userLoginResponse = UserLoginResponse.builder()
-                    .user_id(user.get().getUser_id())
-                    .profile_url(user.get().getFile_url())
-                    .nickname(user.get().getNickname())
-                    .userType(user.get().getUserType())
+                    .user_id(user.getUser_id())
+                    .profile_url(user.getFile_url())
+                    .nickname(user.getNickname())
+                    .userType(user.getUserType())
                     .build();
         }
 
