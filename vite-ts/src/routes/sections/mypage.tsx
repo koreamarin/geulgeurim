@@ -20,8 +20,11 @@ const WorksDetail = lazy(() => import('src/pages/mypage/works/detail'));
 const WorksEdit = lazy(() => import('src/pages/mypage/works/edit'));
 const WorksWrite = lazy(() => import('src/pages/mypage/works/write'));
 
+// 이력서
 const Resume = lazy(() => import('src/pages/mypage/resume'));
-
+const ResumeDetail = lazy(() => import('src/pages/mypage/resume/detail'));
+const ResumeEdit = lazy(() => import('src/pages/mypage/resume/edit'));
+const ResumeWrite = lazy(() => import('src/pages/mypage/resume/write'));
 // ----------------------------------------------------------------------
 
 export const mypageRoutes = [
@@ -62,7 +65,27 @@ export const mypageRoutes = [
           },
         ],
       },
-      { path: 'resume', element: <Resume /> },
+      { 
+        path: 'resume', 
+        children: [
+          {
+            path: '',
+            element: <Resume />,
+          },
+          {
+            path: 'write',
+            element: <ResumeWrite />,
+          },
+          {
+            path: ':id',
+            element: <ResumeDetail />,
+          },
+          {
+            path: ':id/edit',
+            element: <ResumeEdit />,
+          },
+        ],
+      },
     ],
   },
 ];

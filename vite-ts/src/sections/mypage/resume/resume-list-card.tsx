@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 
 import Card from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
@@ -10,8 +10,8 @@ import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Button, { ButtonProps } from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
 
 
 import Iconify from 'src/components/iconify';
@@ -128,7 +128,7 @@ export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus
             <Typography variant="h6">
               직군
               <Typography variant="body2" color="text.secondary">
-                {position?.map(item => positionList[item]).join(', ')}
+                {position?.map(item => positionList.find(positionItem => positionItem.value === item.toString())?.label).join(', ')}
               </Typography>
             </Typography>
           {/* 컨텐츠 */}

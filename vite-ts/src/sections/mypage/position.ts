@@ -1,17 +1,16 @@
-export const positionList: { [key: number]: string } = {
-  1:'선화',
-  2:'밑색',
-  3:'명암',
-  4:'후보정',
-  5:'작화',
-  6:'어시',
-  7:'각색',
-  8:'콘티',
-  9:'표지',
-  10:'삽화',
-  11:'배경',
-  12:'채색',
-  13:'편집',
-  14:'작가',
-}
-
+export const positionList = [
+  {value:'1', label:'선화'},
+  {value:'2', label:'밑색'},
+  {value:'3', label:'명암'},
+  {value:'4', label:'후보정'},
+  {value:'5', label:'작화'},
+  {value:'6', label:'어시'},
+  {value:'7', label:'각색'},
+  {value:'8', label:'콘티'},
+  {value:'9', label:'표지'},
+  {value:'10', label:'삽화'},
+  {value:'11', label:'배경'},
+  {value:'12', label:'채색'},
+  {value:'13', label:'편집'},
+  {value:'14', label:'작가'},
+];

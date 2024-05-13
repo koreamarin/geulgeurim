@@ -1,22 +1,22 @@
 import { useRef, useState, useCallback } from 'react';
 
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography  from '@mui/material/Typography';
+import InputAdornment from '@mui/material/InputAdornment';
+import Pagination, { paginationClasses } from '@mui/material/Pagination';
+
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
+import { useMockedUser } from 'src/hooks/use-mocked-user';
+
+import Iconify from 'src/components/iconify';
+
 import ResumeListCard from './resume-list-card';
-
-  // interface ExpandMoreProps extends IconButtonProps {
-  //   expand: boolean;
-  // }
-
-  // const ExpandMore = styled((props: ExpandMoreProps) => {
-  //   const { expand, ...other } = props;
-  //   return <IconButton {...other} />;
-  // })(({ theme, expand }) => ({
-  //   transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  //   marginLeft: 'auto',
-  //   transition: theme.transitions.create('transform', {
-  //     duration: theme.transitions.duration.shortest,
-  //   }),
-  // }));
-
+import ResumeListSort from './resume-list-sort';
+import ResumeListSearchOption from './resume-list-search-option';
 
 // ----------------------------------------------------------------------
 
@@ -30,21 +30,13 @@ const dummy = {
         "fileUrl": "https://k.kakaocdn.net/dn/cD4BaL/btsAaYmkBz8/2YJ6o7gqIk52caVsddDW10/img_110x110.jpg",
         "getResumePositionResponses": [
           {
-              "resumePositionId": 69,
+              "resumePositionId": 65,
               "positionId": 1
           },
           {
-              "resumePositionId": 70,
+              "resumePositionId": 66,
               "positionId": 2
           },
-          {
-              "resumePositionId": 71,
-              "positionId": 1
-          },
-          {
-              "resumePositionId": 74,
-              "positionId": 3
-          }
         ]
       },
       {
@@ -76,25 +68,105 @@ const WORKS_SORT_OPTIONS = [
 ];
 
 const WORKS_SEARCH_OPTIONS = [
-  { value: 'content&title', label: '제목+내용' },
-  { value: 'content', label: '내용' },
+  { value: 'essay&title', label: '제목+자소서' },
+  { value: 'essay', label: '자소서' },
   { value: 'title', label: '제목' },
 ];
 
 
 export default function ResumeList() {
-    // const [expanded, setExpanded] = useState(false);
+  const router = useRouter()
 
-    // const handleExpandClick = () => {
-    //   setExpanded(!expanded);
-    // };
+  // 유저 더미
+  const { user } = useMockedUser();
+
+  // 검색 창 입력 값
+  const changeSearchRef = useRef<string>('')
+
+  // 검색 창 입력 값 출력(추후 api에 추가)
+  const handleClick = () => {
+    console.log(changeSearchRef.current)
+  };
+
+  // 검색 조건
+  const [optionBy, setOptionBy] = useState('title');
+
+  // 검색 조건 변경
+  const handleOptionBy = useCallback((newValue: string) => {
+    setOptionBy(newValue);
+  }, []);
+
+  // 검색 입력 후 enter
+  const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleClick();
+    }
+  };
+
+  // 정렬 조건
+  const [sortBy, setSortBy] = useState('latest');
+  
+  // 정렬 조건 변경
+  const handleSortBy = useCallback((newValue: string) => {
+    setSortBy(newValue);
+  }, []);
+
+  // 새 이력서 form 이동
+  const moveWrite = () => {
+    router.push(paths.mypage.worksWrite)
+  }
+
+  const pageCount = 8
 
     return (
-      dummy.getResumesResponse.map((item, index) => {
-        const positionList: number[] = item.getResumePositionResponses.map((positionItem) => positionItem.positionId)
-        return <ResumeListCard key={index} resumeId={item.resumeId} resumeTitle={item.resumeTitle} essay={item.essay}
-        openStatus={item.openStatus} fileUrl={item.fileUrl} position={positionList} />
-      })
+      <>
+        <Typography variant="h3" sx={{ mb: 5 }}>
+          {user?.displayName} 님의 이력서
+        </Typography>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          {/* search 조건 */}
+          <ResumeListSearchOption searchOption={optionBy} onOption={handleOptionBy} searchOptionOptions={WORKS_SEARCH_OPTIONS}/>
+
+          {/* search */}
+          <TextField
+            placeholder="검색"
+            onKeyUp={handleKeyUp}
+            sx={{ flexGrow: 1, my: 1 }}
+            onChange={(event) => {changeSearchRef.current = event.target.value}}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ ml: 1, color: 'text.disabled' }} onClick={handleClick} />
+                </InputAdornment>
+              )
+            }}
+          />
+
+          {/* sort */}
+          <ResumeListSort sort={sortBy} onSort={handleSortBy} sortOptions={WORKS_SORT_OPTIONS} />
+          <Button style={{height:'2.8rem', fontSize:'1rem'}} variant="contained" color="success" size="medium" onClick={moveWrite}>
+            새 이력서
+          </Button>
+        </Stack>
+
+        {dummy.getResumesResponse.map((item, index) => {
+          const positionList: number[] = item.getResumePositionResponses.map((positionItem) => positionItem.positionId)
+          return <ResumeListCard key={index} resumeId={item.resumeId} resumeTitle={item.resumeTitle} essay={item.essay}
+          openStatus={item.openStatus} fileUrl={item.fileUrl} position={positionList} />
+        })}
+        <Pagination
+            count={Math.floor((dummy.getResumesResponse.length - 1) / pageCount) + 1}
+            defaultPage={1}
+            siblingCount={1}
+            sx={{
+              mt: 3,
+              mb: 3,
+              [`& .${paginationClasses.ul}`]: {
+                justifyContent: 'center',
+              },
+            }}
+          />
+      </>
     );
   }
 

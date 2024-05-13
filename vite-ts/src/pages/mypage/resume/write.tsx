@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { ResumeView } from 'src/sections/mypage/view';
+import ResumeFormView from 'src/sections/mypage/view/resume-form-view';
 
 // ----------------------------------------------------------------------
 
-export default function RecruitHome() {
+export default function ResumeWritePage() {
   return (
     <>
       <Helmet>
-        <title>이력서</title>
+        <title>이력서등록</title>
       </Helmet>
 
-      <ResumeView />
+      <ResumeFormView />
     </>
   );
 }
