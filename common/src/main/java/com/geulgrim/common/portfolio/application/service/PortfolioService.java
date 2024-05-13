@@ -171,12 +171,12 @@ public class PortfolioService {
             if (pieceInfo.getPieceId() == null) {
                 // 사용자가 작품 선택을 하지 않고 파일을 업로드했다면, S3에 저장하고 그 url을 저장
                 String fileUrl = "";
-                try {
-                    fileUrl = s3UploadService.saveFile(pieceInfo.getPieceUploaded());
-                    fileUrls.add(fileUrl);
-                }  catch (IOException e) {
-                    e.fillInStackTrace();
-                }
+//                try {
+//                    fileUrl = s3UploadService.saveFile(pieceInfo.getPieceUploaded());
+//                    fileUrls.add(fileUrl);
+//                }  catch (IOException e) {
+//                    e.fillInStackTrace();
+//                }
 
                 portfolioPiece = PortfolioPiece.builder()
                         .portfolio(portfolio)

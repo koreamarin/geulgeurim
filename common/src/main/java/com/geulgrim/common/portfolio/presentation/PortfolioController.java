@@ -9,10 +9,12 @@ import com.geulgrim.common.portfolio.application.service.PortfolioService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/common/portfolio")
@@ -22,23 +24,23 @@ public class PortfolioController {
 
     private final PortfolioService portfolioService;
 
-    @GetMapping("/{userId}")
+    @GetMapping
     @Operation(summary = "내 포트폴리오 전체 조회", description = "모든 포트폴리오를 조회합니다.")
     public ResponseEntity<List<PortfolioResponse>> getPortfolios(
-//            @RequestHeader("X-Authorization-Id") Long memberId,
-            @PathVariable("userId") Long userId
+            @RequestHeader HttpHeaders headers
     ) {
+        Long userId = Long.parseLong(Objects.requireNonNull(headers.get("user_id")).get(0));
         List<PortfolioResponse> responses = portfolioService.getPortfolios(userId);
         return ResponseEntity.ok(responses);
     }
 
 
-    @GetMapping("/guest/{userId}")
+    @GetMapping("/guest")
     @Operation(summary = "포트폴리오 전체 조회", description = "다른 사람의 포트폴리오를 조회합니다.")
     public ResponseEntity<List<PortfolioResponse>> getOtherPortfolios(
-//            @RequestHeader("X-Authorization-Id") Long memberId,
-            @PathVariable("userId") Long userId
+            @RequestHeader HttpHeaders headers
     ) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
         List<PortfolioResponse> responses = portfolioService.getOtherPortfolios(userId);
         return ResponseEntity.ok(responses);
     }
@@ -64,23 +66,25 @@ public class PortfolioController {
     }
 
 
-    @PostMapping("/{userId}")
+    @PostMapping
     @Operation(summary = "포트폴리오 등록", description = "글그림 포맷의 포트폴리오를 등록합니다.")
     public ResponseEntity<Long> addPortfolio(
             @RequestBody PortfolioRequest portfolioRequest,
-            @PathVariable("userId") Long userId
+            @RequestHeader HttpHeaders headers
     ) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
         Long portfolioId = portfolioService.addPortfolio(userId, portfolioRequest);
         return ResponseEntity.ok(portfolioId);
     }
 
 
-    @PostMapping("/user/{userId}")
+    @PostMapping("/user")
     @Operation(summary = "포트폴리오 등록", description = "사용자 포맷의 포트폴리오를 등록합니다.")
     public ResponseEntity<Long> addPortfolioMyFormat(
             @RequestBody PortfolioRequestMyFormat portfolioRequest,
-            @PathVariable("userId") Long userId
+            @RequestHeader HttpHeaders headers
     ) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
         Long portfolioId = portfolioService.addPortfolioMyFormat(userId, portfolioRequest);
         return ResponseEntity.ok(portfolioId);
     }
