@@ -28,10 +28,10 @@ public class Education {
     @Column(name="start_date", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime startDate;
 
-    @Column(name="end_date", nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(name="end_date", nullable = true, columnDefinition = "TIMESTAMP")
     private LocalDateTime endDate;
 
-    @Column(name="education_status")
+    @Column(name="education_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private EducationStatus educationStatus;
 

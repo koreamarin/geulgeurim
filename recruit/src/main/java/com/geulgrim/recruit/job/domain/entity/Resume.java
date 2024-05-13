@@ -1,5 +1,6 @@
 package com.geulgrim.recruit.job.domain.entity;
 
+import com.geulgrim.recruit.global.entity.BaseEntity;
 import com.geulgrim.recruit.job.domain.entity.Enums.OpenStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +15,7 @@ import static jakarta.persistence.EnumType.STRING;
 @NoArgsConstructor
 @Getter
 @ToString
-public class Resume {
+public class Resume extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="resume_id")
