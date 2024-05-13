@@ -25,6 +25,7 @@ type Entry = {
 
 export default function PortfolioWriteView() {
   const router = useRouter()
+  const [title, setTitle] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   // 1st item
   const [entries, setEntries] = useState<Entry[]>([{
@@ -145,7 +146,9 @@ export default function PortfolioWriteView() {
 
   const handleClose = (confirm: boolean) => {
     setOpenDialog(false);
-    router.push(paths.mypage.portfolio);
+    if (confirm) {
+      router.push(paths.mypage.portfolio);
+    }
   };
 
 
@@ -171,7 +174,30 @@ export default function PortfolioWriteView() {
         <Button variant="outlined" onClick={handleCancel}>
           취소
         </Button>
+
       </Box>
+
+    <TextField
+      sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', gap: 2 }}
+      label="제목"
+      variant="outlined"
+      fullWidth
+      value={title}
+      onChange={(e) => setTitle(e.target.value)}
+    />
+
+    <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          gap: 1,
+          marginTop: 2,
+          marginBottom: 4,
+        }}
+      >
+         <div style={{ height: '1px' }} />
+      </Box>
+
 
       <Dialog
         open={openDialog}
@@ -192,6 +218,7 @@ export default function PortfolioWriteView() {
           </Button>
         </DialogActions>
       </Dialog>
+
 
       {entries.map((entry, index) => (
         <Paper key={index} sx={{ mb: 4, position: 'relative', padding: 2 }}>
@@ -241,6 +268,7 @@ export default function PortfolioWriteView() {
       <>
         <Grid item xs={12} md={6}>
           <Upload
+            name="file"
             accept={{ 'image/*': [] }}
             file={entry.file}
             onDrop={(acceptedFiles) => handleDropSingleFile(index, acceptedFiles)} onDelete={() => setFile(null, index)}

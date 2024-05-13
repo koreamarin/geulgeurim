@@ -59,6 +59,7 @@ export default function PortfolioWriteUserFormatView() {
     const formData = new FormData();
     formData.append('pofol_name', title);
     formData.append('status', "PUBLIC");
+
     files.forEach(file => {
       if (file instanceof File) {
         formData.append('file_url', file, file.name);
@@ -87,9 +88,10 @@ export default function PortfolioWriteUserFormatView() {
 
   const handleClose = (confirm: boolean) => {
     setOpenDialog(false);
-    router.push(paths.mypage.portfolio);
+    if (confirm) {
+      router.push(paths.mypage.portfolio);
+    }
   };
-
 
 
   return (

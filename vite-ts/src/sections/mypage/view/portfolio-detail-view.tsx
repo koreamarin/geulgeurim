@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
@@ -45,7 +47,7 @@ const portfolio = {
       title: "Digital Landscape",
       program: "Photoshop",
       contribution: "100%",
-      content: "",
+      content: "제 첫번째 작품입니다!",
       pieceUrl: "https://source.unsplash.com/random/1"
     },
     {
@@ -71,14 +73,18 @@ const portfolio_user_format = {
 
 
 export default function PortfolioDetailView({ id }: Props) {
+  const router = useRouter()
   const [portfolioState, setPortfolioState] = useState<Portfolio>(portfolio);
-
 
   const handleTogglePublic = () => {
     setPortfolioState(currentState => ({
       ...currentState,
       status: (currentState.status === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC')
     }));
+  };
+
+  const handleEditClick = (portfolioId: number) => {
+    router.push(paths.mypage.portfolioEdit(portfolioId))
   };
 
   return (
@@ -94,21 +100,20 @@ export default function PortfolioDetailView({ id }: Props) {
             labelPlacement="start"
           />
         </FormGroup>
+
         <Tooltip title="Edit">
-                <IconButton color="primary" onClick={(e) => {
-                  e.stopPropagation();
-                }}>
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Delete">
-                <IconButton color="secondary" onClick={(e) => {
-                  e.stopPropagation(); // Prevent triggering any higher level click events
-                  console.log('Delete action triggered'); // Replace with actual delete function call
-                }}>
-                  <DeleteIcon sx={{ color: 'grey' }} />
-                </IconButton>
-              </Tooltip>
+          <IconButton color="primary" onClick={() => handleEditClick(portfolio.id)}>
+              <EditIcon />
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title="Delete">
+          <IconButton color="secondary" onClick={(e) => {
+            console.log('Delete action triggered'); // Replace with actual delete function call
+          }}>
+            <DeleteIcon sx={{ color: 'grey' }} />
+          </IconButton>
+        </Tooltip>
       </Box>
 
       {/* 글그림 포맷 */}

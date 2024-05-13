@@ -138,7 +138,7 @@ export default function PortfolioView() {
 
         </Box>
 
-          <Typography variant="body1" sx={{ mb: 2 }}>{portfolio.description}</Typography>
+          {/* <Typography variant="body1" sx={{ mb: 2 }}>{portfolio.description}</Typography> */}
 
           <Grid container spacing={2}>
             {portfolio.artworks.map((artwork, index) => (

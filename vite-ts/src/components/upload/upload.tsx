@@ -18,6 +18,7 @@ import SingleFilePreview from './preview-single-file';
 // ----------------------------------------------------------------------
 
 export default function Upload({
+  name,
   disabled,
   multiple = false,
   error,
