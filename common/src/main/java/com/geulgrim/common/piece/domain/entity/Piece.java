@@ -1,7 +1,9 @@
 package com.geulgrim.common.piece.domain.entity;
 
+import com.geulgrim.common.global.domain.entity.BaseEntity;
 import com.geulgrim.common.piece.domain.entity.enums.NftType;
 import com.geulgrim.common.piece.domain.entity.enums.PieceType;
+import com.geulgrim.common.piece.domain.entity.enums.Status;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +18,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Builder
 @Entity
 @Getter
-public class Piece {
+public class Piece extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -39,5 +41,9 @@ public class Piece {
     // 작품 NFT 여부
     @Enumerated(STRING)
     private NftType nftType;
+
+    //작품 공개여부
+    @Enumerated(STRING)
+    private Status status;
 
 }
