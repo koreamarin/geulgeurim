@@ -2,8 +2,16 @@ package com.geulgrim.recruit.job.domain.entity;
 
 import com.geulgrim.recruit.job.domain.entity.Enums.ResultStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class SubmittedResume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,5 +27,6 @@ public class SubmittedResume {
     private Resume resume;
 
     @Column(name="result", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ResultStatus resultStatus = ResultStatus.PENDING;
 }

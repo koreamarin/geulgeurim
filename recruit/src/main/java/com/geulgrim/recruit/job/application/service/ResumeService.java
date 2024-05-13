@@ -3,8 +3,7 @@ package com.geulgrim.recruit.job.application.service;
 import com.geulgrim.recruit.job.application.dto.request.*;
 import com.geulgrim.recruit.job.application.dto.response.*;
 import com.geulgrim.recruit.job.domain.entity.*;
-import com.geulgrim.recruit.job.domain.entity.Enums.EducationStatus;
-import com.geulgrim.recruit.job.domain.entity.Enums.OpenStatus;
+import com.geulgrim.recruit.job.domain.entity.Enums.*;
 import com.geulgrim.recruit.job.domain.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -26,34 +25,382 @@ public class ResumeService {
     private final WorkRepository workRepository;
     private final AwardRepository awardRepository;
     private final ExperienceRepository experienceRepository;
+    private final SecondLocateRepository secondLocateRepository;
+    private final JobRepository jobRepository;
+    private final JobPositionRepository jobPositionRepository;
+    private final SubmittedResumeRepository submittedResumeRepository;
+    private final StarRepository starRepository;
 
     // 구인구직 등록
+    public Map<String, Long> createJob(
+            HttpHeaders headers,
+            CreateJobRequest createJobRequest) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        SecondLocate secondLocateOptional = secondLocateRepository.findBySecondLocateKey(createJobRequest.getSecondLocateKey())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 2차 지역 입니다."));
+
+        // 구인구직 저장 파트
+        Job job = Job.builder()
+                .secondLocate(secondLocateOptional)
+                .userId(userId)
+                .startDate(createJobRequest.getStartDate())
+                .endDate(createJobRequest.getEndDate())
+                .url(createJobRequest.getUrl())
+                .title(createJobRequest.getTitle())
+                .content(createJobRequest.getContent())
+                .companyName(createJobRequest.getCompanyName())
+                .companyUrl(createJobRequest.getCompanyUrl())
+                .jobType(createJobRequest.getJobType())
+                .experienceType(ExperienceTypeEnum.valueOf(createJobRequest.getExperienceType()))
+                .minExperience(createJobRequest.getMinExperience())
+                .education(EducationEnum.valueOf(createJobRequest.getEducation()))
+                .perk(createJobRequest.getPerk())
+                .procedureInfo(createJobRequest.getProcedureInfo())
+                .salary(createJobRequest.getSalary())
+                .closeType(CloseType.valueOf(createJobRequest.getCloseType()))
+                .openStatus(OpenStatus.valueOf(createJobRequest.getOpenStatus()))
+                .fileUrl(createJobRequest.getFileUrl())
+                .build();
+
+        jobRepository.save(job);
+
+        // 구인구직 포지션 저장 파트
+        List<Long> positionIds = createJobRequest.getPositionIds();
+        for (Long positionId : positionIds) {
+            Position position = positionRepository.findByPositionId(positionId)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 positionId 입니다."));
+            JobPosition jobPosition = JobPosition.builder()
+                    .job(job)
+                    .position(position)
+                    .build();
+            jobPositionRepository.save(jobPosition);
+        }
+
+        return Map.of("jobId", job.getJobId());
+    }
 
     // 구인구직 리스트 조회
+    public GetJobsResponses getJobs(
+            List<Long> positionIds,
+            List<String> experienceTypes,
+            List<String> closeTypes) {
+        if(positionIds.isEmpty())
+            positionIds = positionRepository.findAll().stream().map(Position::getPositionId).toList();
+
+        if(experienceTypes.isEmpty())
+            for(ExperienceTypeEnum experienceTypeEnum : ExperienceTypeEnum.values())
+                experienceTypes.add(experienceTypeEnum.name());
+
+        if(closeTypes.isEmpty())
+            for(CloseType closeType : CloseType.values())
+                closeTypes.add(closeType.name());
+
+        List<Job> jobs = jobRepository.getJobs(positionIds, experienceTypes, closeTypes);
+
+        List<GetJobsResponse> getJobsResponses = new ArrayList<>();
+
+        for(Job job : jobs) {
+            List<Long> positionIdsResponse = new ArrayList<>();
+            for(JobPosition jobPosition : job.getJobPositions()) {
+                positionIdsResponse.add(jobPosition.getPosition().getPositionId());
+            }
+
+            GetJobsResponse getJobsResponse = GetJobsResponse.builder()
+                    .jobId(job.getJobId())
+                    .secondLocate(job.getSecondLocate())
+                    .startDate(job.getStartDate())
+                    .endDate(job.getEndDate())
+                    .title(job.getTitle())
+                    .companyName(job.getCompanyName())
+                    .positionIds(positionIdsResponse)
+                    .build();
+            getJobsResponses.add(getJobsResponse);
+        }
+
+        return GetJobsResponses.builder()
+                .getJobsResponses(getJobsResponses)
+                .build();
+    }
 
     // 내가 작성한 구인구직 리스트 조회
+    public GetJobsResponses getMyJobs(
+            HttpHeaders headers) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        List<Job> jobs = jobRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("작성한 구인구직이 없습니다."));
+        List<GetJobsResponse> getJobsResponses = new ArrayList<>();
+
+        for(Job job : jobs) {
+            GetJobsResponse getJobsResponse = GetJobsResponse.builder()
+                    .jobId(job.getJobId())
+                    .secondLocate(job.getSecondLocate())
+                    .startDate(job.getStartDate())
+                    .endDate(job.getEndDate())
+                    .title(job.getTitle())
+                    .companyName(job.getCompanyName())
+                    .positionIds(job.getJobPositions().stream().map(jobPosition -> jobPosition.getPosition().getPositionId()).toList())
+                    .build();
+            getJobsResponses.add(getJobsResponse);
+        }
+
+        return GetJobsResponses.builder()
+                .getJobsResponses(getJobsResponses)
+                .build();
+
+    }
 
     // 구인구직 상세 조회
+    public GetJobResponse getJob(
+            HttpHeaders headers, Long jobId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 구인구직 입니다."));
+
+        Boolean star = starRepository.findByJobAndUserId(job, userId).isPresent();
+
+        List<Long> positionIds = job.getJobPositions().stream().map(jobPosition -> jobPosition.getPosition().getPositionId()).toList();
+
+        GetJobResponse getJobResponse = GetJobResponse.builder()
+                .jobId(job.getJobId())
+                .secondLocate(job.getSecondLocate())
+                .startDate(job.getStartDate())
+                .endDate(job.getEndDate())
+                .url(job.getUrl())
+                .title(job.getTitle())
+                .content(job.getContent())
+                .companyName(job.getCompanyName())
+                .companyUrl(job.getCompanyUrl())
+                .jobType(job.getJobType())
+                .experienceType(job.getExperienceType().name())
+                .minExperience(job.getMinExperience())
+                .education(job.getEducation().name())
+                .perk(job.getPerk())
+                .procedureInfo(job.getProcedureInfo())
+                .salary(job.getSalary())
+                .closeType(job.getCloseType().name())
+                .openStatus(job.getOpenStatus().name())
+                .fileUrl(job.getFileUrl())
+                .positionIds(positionIds)
+                .star(star)
+                .build();
+
+        return getJobResponse;
+    }
+
 
     // 구인구직 수정 (3순위)
 
     // 구인구직 삭제 (2순위)
 
     // 구인구직 포지션 등록
+    public String createJobPosition(
+            HttpHeaders headers, Long jobId, Long positionId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 구인구직 입니다."));
+
+        if (!job.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        Position position = positionRepository.findByPositionId(positionId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 positionId 입니다."));
+
+        // 이미 생성되어있는지 확인하는 절차
+        Optional<JobPosition> jobPositionOptional = jobPositionRepository.findByJobAndPosition(job, position);
+        if(jobPositionOptional.isPresent()) {    // 생성되어 있을 시
+            return "생성실패"; // 이미 생성되어 있습니다.
+        }
+
+        // 생성되어 있지 않을 시
+        JobPosition jobPosition = JobPosition.builder()
+                .job(job)
+                .position(position)
+                .build();
+
+        jobPositionRepository.save(jobPosition);
+
+        return "생성완료";
+    }
 
     // 구인구직 포지션 삭제
+    public String deleteJobPosition(
+            HttpHeaders headers, Long jobId, Long positionId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
 
-    // 구인구직 신청
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 구인구직 입니다."));
+
+        if (!job.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        Position position = positionRepository.findByPositionId(positionId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 positionId 입니다."));
+
+        // 삭제할 포지션을 찾는 절차
+        Optional<JobPosition> jobPositionOptional = jobPositionRepository.findByJobAndPosition(job, position);
+        if(jobPositionOptional.isEmpty()) {
+            return "삭제실패"; // 삭제할 포지션이 존재하지 않습니다.
+        }
+
+        // 삭제할 포지션을 삭제하는 절차
+        jobPositionRepository.delete(jobPositionOptional.get());
+        return "삭제완료";
+    }
+
+    // 구인구직 지원 신청
+    public String submmitedJob(
+            HttpHeaders headers, Long jobId, Long resumeId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 구인구직 입니다."));
+
+        Resume resume = resumeRepository.findById(resumeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이력서 입니다."));
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        // 이미 지원되어있는지 확인하는 절차
+        Optional<SubmittedResume> submittedResumeOptional = submittedResumeRepository.findByJobAndResume(job, resume);
+        if(submittedResumeOptional.isPresent()) {    // 지원되어 있을 시
+            return "이미 해당 이력서로 지원한 공고입니다."; // 이미 지원되어 있습니다.
+        }
+
+        // 지원되어 있지 않을 시
+        SubmittedResume submittedResume = SubmittedResume.builder()
+                .job(job)
+                .resume(resume)
+                .resultStatus(ResultStatus.PENDING)
+                .build();
+
+        submittedResumeRepository.save(submittedResume);
+
+        return "지원완료";
+    }
 
     // 지원자 이력서 리스트 조회
+    public GetSubmittedResumesResponse getSubmittedResumes(
+            HttpHeaders headers, Long jobId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 구인구직 입니다."));
+
+        if (!job.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        List<SubmittedResume> submittedResumes = submittedResumeRepository.findByJob(job)
+                .orElseThrow(() -> new IllegalArgumentException("지원자가 없습니다."));
+
+        List<GetSubmittedResumeResponse> getSubmittedResumeResponses = new ArrayList<>();
+        for(SubmittedResume submittedResume : submittedResumes) {
+            GetSubmittedResumeResponse getSubmittedResumeResponse = GetSubmittedResumeResponse.builder()
+                    .resumeId(submittedResume.getResume().getResumeId())
+                    .resultStatus(String.valueOf(submittedResume.getResultStatus()))
+                    .build();
+            getSubmittedResumeResponses.add(getSubmittedResumeResponse);
+        }
+
+        return GetSubmittedResumesResponse.builder()
+                .getSubmittedResumesResponse(getSubmittedResumeResponses)
+                .build();
+    }
 
     // 지원자 합격여부 수정
+    public String updateSubmittedResume(
+            HttpHeaders headers, Long jobId, Long resumeId,
+            UpdateSubmittedResumeRequest updateSubmittedResumeRequest) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 구인구직 입니다."));
+
+        if (!job.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        Resume resume = resumeRepository.findById(resumeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이력서 입니다."));
+
+        SubmittedResume submittedResume = submittedResumeRepository.findByJobAndResume(job, resume)
+                .orElseThrow(() -> new IllegalArgumentException("해당 구인공고에 지원하지 않은 이력서입니다."));
+
+        submittedResume.setResultStatus(ResultStatus.valueOf(updateSubmittedResumeRequest.getResultStatus()));
+
+        submittedResumeRepository.save(submittedResume);
+
+        return "수정완료";
+    }
+
 
     // 구인구직 관심 등록
+    public String createStar(
+            HttpHeaders headers, Map<String,Long> createStarRequest) {
+
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Job job = jobRepository.findById(createStarRequest.get("jobId"))
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 구인구직 입니다."));
+
+        // 이미 생성되어있는지 확인하는 절차
+        Optional<Star> starOptional = starRepository.findByJobAndUserId(job, userId);
+
+        if(starOptional.isPresent()) {    // 생성되어 있을 시
+            return "이미 관심등록되어 있습니다"; // 이미 생성되어 있습니다.
+        }
+
+        // 생성되어 있지 않을 시
+        Star star = Star.builder()
+                .job(job)
+                .userId(userId)
+                .build();
+
+        starRepository.save(star);
+
+        return "관심등록완료";
+    }
+
 
     // 나의 구인구직 관심 리스트조회
+    public GetStarsResponse getStars(
+            HttpHeaders headers) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        List<Star> stars = starRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("관심등록한 구인구직이 없습니다."));
+
+        List<GetJobsResponse> getJobsResponses = new ArrayList<>();
+        for(Star star : stars) {
+            getJobsResponses.add(GetJobsResponse.builder()
+                    .jobId(star.getJob().getJobId())
+                    .secondLocate(star.getJob().getSecondLocate())
+                    .startDate(star.getJob().getStartDate())
+                    .endDate(star.getJob().getEndDate())
+                    .title(star.getJob().getTitle())
+                    .companyName(star.getJob().getCompanyName())
+                    .positionIds(star.getJob().getJobPositions().stream().map(jobPosition -> jobPosition.getPosition().getPositionId()).toList())
+                    .build());
+        }
+
+        return GetStarsResponse.builder()
+                .getJobsResponses(getJobsResponses)
+                .build();
+    }
 
     // 구인구직 관심 삭제
+    public String deleteStar(
+            HttpHeaders headers, Map<String,Long> deleteStarRequest) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Job job = jobRepository.findById(deleteStarRequest.get("jobId"))
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 구인구직 입니다."));
+
+        Star star = starRepository.findByJobAndUserId(job, userId)
+                .orElseThrow(() -> new IllegalArgumentException("관심등록되지 않은 구인구직입니다."));
+
+        starRepository.delete(star);
+
+        return "관심삭제완료";
+    }
+
 
 
 
@@ -165,8 +512,7 @@ public class ResumeService {
              experienceRepository.save(experience);
         }
 
-        Map<String, Long> map = Map.of("resumeId", resume.getResumeId());
-        return map;
+        return Map.of("resumeId", resume.getResumeId());
     }
 
     // 내 이력서 전체 조회

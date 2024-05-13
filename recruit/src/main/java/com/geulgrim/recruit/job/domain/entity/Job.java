@@ -1,24 +1,34 @@
 package com.geulgrim.recruit.job.domain.entity;
 
+import com.geulgrim.recruit.job.domain.entity.Enums.CloseType;
 import com.geulgrim.recruit.job.domain.entity.Enums.EducationEnum;
 import com.geulgrim.recruit.job.domain.entity.Enums.ExperienceTypeEnum;
 import com.geulgrim.recruit.job.domain.entity.Enums.OpenStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static jakarta.persistence.EnumType.STRING;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Job {
     @Id
     @Column(name="job_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long jobId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="second_locate_key", referencedColumnName = "second_locate_key")
-    private SecondLocate secondLocateKey;
+    private SecondLocate secondLocate;
 
     @Column(name="user_id", nullable = false)
     private Long userId;
@@ -51,8 +61,8 @@ public class Job {
     @Enumerated(STRING)
     private ExperienceTypeEnum experienceType;
 
-    @Column(name="minExperience")
-    private int min_experience;
+    @Column(name="min_experience")
+    private int minExperience;
 
     @Column(nullable=false, length = 31)
     @Enumerated(STRING)
@@ -66,15 +76,16 @@ public class Job {
     private String salary;
 
     @Column(name="close_type", nullable = false)
-    private String closeType;
+    @Enumerated(STRING)
+    private CloseType closeType;
 
     @Column(name="open_status", nullable = false)
     @Enumerated(STRING)
     private OpenStatus openStatus;
 
-    @Column(nullable = false)
-    private int hit;
+    @Column(name="file_url", nullable = false)
+    private String fileUrl;
 
-    @Column(nullable = false)
-    private String file_url;
+    @OneToMany(mappedBy = "job", fetch = FetchType.EAGER)
+    private List<JobPosition> jobPositions;
 }

@@ -2,10 +2,12 @@ package com.geulgrim.recruit.job.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Position {
     @Id

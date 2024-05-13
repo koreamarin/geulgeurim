@@ -1,9 +1,7 @@
 package com.geulgrim.recruit.job.presentation;
 
 import com.geulgrim.recruit.job.application.dto.request.*;
-import com.geulgrim.recruit.job.application.dto.response.GetPositionsResponse;
-import com.geulgrim.recruit.job.application.dto.response.GetResumeResponse;
-import com.geulgrim.recruit.job.application.dto.response.GetResumesResponses;
+import com.geulgrim.recruit.job.application.dto.response.*;
 import com.geulgrim.recruit.job.application.service.ResumeService;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,32 +19,122 @@ public class RecruitController {
     private final ResumeService resumeService;
 
     // 구인구직 등록
+    @PostMapping("/job")
+    public ResponseEntity<?> createJob(
+            @RequestHeader HttpHeaders headers,
+            @RequestBody CreateJobRequest createJobRequest) {
+        Map<String, Long> map = resumeService.createJob(headers, createJobRequest);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
 
     // 구인구직 리스트 조회
+    @GetMapping("/job")
+    public ResponseEntity<?> getJobs(
+            @RequestParam List<Long> positionIds,
+            @RequestParam List<String> experienceTypes,
+            @RequestParam List<String> closeTypes) {
+        GetJobsResponses getJobsResponses = resumeService.getJobs(positionIds, experienceTypes, closeTypes);
+        return new ResponseEntity<>(getJobsResponses, HttpStatus.OK);
+    }
 
     // 내가 작성한 구인구직 리스트 조회
+    @GetMapping("/job/myjob")
+    public ResponseEntity<?> getMyJobs(
+            @RequestHeader HttpHeaders headers) {
+        GetJobsResponses getJobsResponses = resumeService.getMyJobs(headers);
+        return new ResponseEntity<>(getJobsResponses, HttpStatus.OK);
+    }
 
     // 구인구직 상세 조회
+    @GetMapping("/job/{jobId}")
+    public ResponseEntity<?> getJob(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable Long jobId) {
+        GetJobResponse getResumeResponse = resumeService.getJob(headers, jobId);
+        return new ResponseEntity<>(getResumeResponse, HttpStatus.OK);
+    }
 
     // 구인구직 수정 (3순위)
 
     // 구인구직 삭제 (2순위)
 
     // 구인구직 포지션 등록
+    @PostMapping("/job/{jobId}/position/{positionId}")
+    public ResponseEntity<?> createJobPosition(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable Long jobId,
+            @PathVariable Long positionId) {
+        String result = resumeService.createJobPosition(headers, jobId, positionId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     // 구인구직 포지션 삭제
+    @DeleteMapping("/job/{jobId}/position/{positionId}")
+    public ResponseEntity<?> deleteJobPosition(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable Long jobId,
+            @PathVariable Long positionId) {
+        String result = resumeService.deleteJobPosition(headers, jobId, positionId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
     // 구인구직 신청
+    @PostMapping("/job/{jobId}/submitted/{resumeId}")
+    public ResponseEntity<?> createJobSubmitted(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable Long jobId,
+            @PathVariable Long resumeId) {
+        String result = resumeService.submmitedJob(headers, jobId, resumeId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     // 지원자 이력서 리스트 조회
+    @GetMapping("/job/{jobId}/submitted")
+    public ResponseEntity<?> getSubmittedResumes(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable Long jobId) {
+        GetSubmittedResumesResponse getSubmittedResumesResponse = resumeService.getSubmittedResumes(headers, jobId);
+        return new ResponseEntity<>(getSubmittedResumesResponse, HttpStatus.OK);
+    }
 
     // 지원자 합격여부 수정
+    @PutMapping("/job/{jobId}/submitted/{resumeId}")
+    public ResponseEntity<?> updateSubmittedResume(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable Long jobId,
+            @PathVariable Long resumeId,
+            @RequestBody UpdateSubmittedResumeRequest updateSubmittedResumeRequest) {
+        String result = resumeService.updateSubmittedResume(headers, jobId, resumeId, updateSubmittedResumeRequest);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     // 구인구직 관심 등록
+    @PostMapping("/star")
+    public ResponseEntity<?> createStar(
+            @RequestHeader HttpHeaders headers,
+            @RequestBody Map<String,Long> createStarRequest) {
+        String result = resumeService.createStar(headers, createStarRequest);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     // 나의 구인구직 관심 리스트조회
+    @GetMapping("/star")
+    public ResponseEntity<?> getStars(
+            @RequestHeader HttpHeaders headers) {
+        GetStarsResponse getStarsResponse = resumeService.getStars(headers);
+        return new ResponseEntity<>(getStarsResponse, HttpStatus.OK);
+    }
 
     // 구인구직 관심 삭제
+    @DeleteMapping("/star")
+    public ResponseEntity<?> deleteStar(
+            @RequestHeader HttpHeaders headers,
+            @RequestBody Map<String,Long> deleteStarRequest) {
+        String result = resumeService.deleteStar(headers, deleteStarRequest);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
 
 
