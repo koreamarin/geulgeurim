@@ -4,17 +4,15 @@ import { useMemo, useCallback  } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
+import TextField from '@mui/material/TextField';
+import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
-import TextField from '@mui/material/TextField';
-
-import { Work, Education, Award, Experience } from 'src/types/resume';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -27,11 +25,13 @@ import FormProvider, {
   RHFMultiSelect
 } from 'src/components/hook-form';
 
-import ResumeRHFSwitch from './resume-form-switch';
-import ResumeRHFUpload from './resume-form-image';
-import PortfolioRHFMultiSelect from './resume-form-portfolio';
-import { positionList } from '../position';
+import { Education, Award, Experience } from 'src/types/resume';
+
 import Test from './test';
+import { positionList } from '../position';
+import ResumeRHFUpload from './resume-form-image';
+import ResumeRHFSwitch from './resume-form-switch';
+import PortfolioRHFMultiSelect from './resume-form-portfolio';
 
 // ----------------------------------------------------------------------
 
@@ -250,7 +250,7 @@ const userDummy = {
   birthday : new Date('1996-08-06'),
   email : "test@test.com",
   phone_num : "010-1234-5678",
-  thumbnail: "aaa",
+  thumbnail: "",
 }
 
 
@@ -271,8 +271,11 @@ export default function ResumeForm({ copyId }: Props) {
         essay: findResume?.essay || '',
         openStatus: findResume?.openStatus || 'PRIVATE',
         fileUrl: findResume?.fileUrl || '',
-  
+
         positionIds: findResume?.resumePositionResponses.map(pos => pos.positionId) || [],
+
+        portfolioIds: findResume?.resumePortfolioResponses.map(pos => pos.pofolId) || [],
+
         createEducationRequests: findResume?.educationResponses.map(edu => ({
           institutionName: edu.institutionName,
           startDate: edu.startDate,
@@ -318,6 +321,8 @@ export default function ResumeForm({ copyId }: Props) {
     fileUrl: Yup.mixed<any>().nullable(),
     // 포지션
     positionIds: Yup.array(),
+    // 포트폴리오
+    portfolioIds: Yup.array(),
     // 학력사항
     createEducationRequests: Yup.array().of(
       Yup.object().shape({
@@ -450,10 +455,10 @@ export default function ResumeForm({ copyId }: Props) {
           </Grid>
 
           {/* 유저 정보 */}
-          <Grid xsOffset={1} mdOffset={0} xs={10} md={8} xl={9} sx={{ 
-              minHeight: '280px', 
-              display: 'flex', 
-              flexDirection: 'column', 
+          <Grid xsOffset={1} mdOffset={0} xs={10} md={8} xl={9} sx={{
+              minHeight: '280px',
+              display: 'flex',
+              flexDirection: 'column',
               justifyContent: 'space-between'
             }}>
               <TextField
@@ -474,7 +479,7 @@ export default function ResumeForm({ copyId }: Props) {
                 label="연락처"
                 defaultValue={userDummy.phone_num}
               />
-  
+
               <TextField
                 disabled
                 fullWidth
@@ -505,8 +510,7 @@ export default function ResumeForm({ copyId }: Props) {
       {/* 포트폴리오 선택 */}
       <Card sx={{ p: 3, mt:3 }}>
           <CardHeader sx={{ mb: 2, pt: 0 }} title="포트폴리오"/>
-          <PortfolioRHFMultiSelect 
-            chip
+          <PortfolioRHFMultiSelect
             checkbox
             name="positionIds"
             label="포트폴리오를 선택해주세요"
@@ -522,7 +526,7 @@ export default function ResumeForm({ copyId }: Props) {
           <RHFTextField name="name" label="제목" />
 
           {/* 기본정보 + default + position => selectbar 형태로  */}
-          
+
 
           {/* 자소서 */}
           <RHFSelect name="type" label="카테고리">
@@ -536,7 +540,7 @@ export default function ResumeForm({ copyId }: Props) {
           </RHFSelect>
 
           <Test />
-          
+
           {/* 학력사항 */}
 
           {/* 경력사항 */}
@@ -578,12 +582,10 @@ export default function ResumeForm({ copyId }: Props) {
 
 
   return (
-    <>
-      <FormProvider methods={methods} onSubmit={onSubmit}>
+    <FormProvider methods={methods} onSubmit={onSubmit}>
         <Grid container spacing={3}>
           {renderDetails}
         </Grid>
       </FormProvider>
-    </>
   );
 }

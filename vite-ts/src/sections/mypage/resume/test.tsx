@@ -1,156 +1,130 @@
 import { useState, useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 
 import Table from '@mui/material/Table';
-import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
+import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
-import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import {
-  useTable,
   emptyRows,
   getComparator,
   TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
 } from 'src/components/table';
+
+import ResumeFormPortfolioTable from './resume-form-portfolio-table';
 
 // ----------------------------------------------------------------------
 
-type RowDataType = {
-  name: string;
-  calories: number;
-  fat: number;
-  carbs: number;
-  protein: number;
-};
-
-
-function createData(name: string, calories: number, fat: number, carbs: number, protein: number) {
-  return { name, calories, fat, carbs, protein };
+type CustomRowDataType = {
+  pofolName : string,
+  pofolId : number,
+  createAt : Date,
+  updateAt : Date,
 }
 
-const TABLE_DATA = [
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Donut', 452, 25.0, 51, 4.9),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Honeycomb', 408, 3.2, 87, 6.5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0),
-  createData('KitKat', 518, 26.0, 65, 7.0),
-  createData('Lollipop', 392, 0.2, 98, 0.0),
-  createData('Marshmallow', 318, 0, 81, 2.0),
-  createData('Nougat', 360, 19.0, 9, 37.0),
-];
+const dummyData = [
+  {
+    pofolName : "더미데이터 제목1",
+	  pofolId : 1,
+    createAt: '2022-04-05',
+    updateAt: '2024-04-01',
+    status : 'PUBLIC'
+  },
+  {
+    pofolName : "더미데이터 제목2",
+	  pofolId : 2,
+    createAt: '2022-04-05',
+    updateAt: '2024-04-01',
+    status : 'PUBLIC'
+  }
+]
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Dessert (100g serving)', align: 'left' },
-  { id: 'calories', label: 'Calories', align: 'center' },
-  { id: 'fat', label: 'Fat (g)', align: 'center' },
-  { id: 'carbs', label: 'Carbs (g)', align: 'center' },
-  { id: 'protein', label: 'Protein (g)', align: 'center' },
-];
-
+const custom_TABLE_HEAD = [
+  { id: 'pofolName', label: '포트폴리오 제목', align: 'left' },
+  { id: 'createAt', label: '생성일', align: 'center' },
+  { id: 'updateAt', label: '최근 수정일', align: 'center' },
+]
 // ----------------------------------------------------------------------
 
 export default function Test() {
-  const table = useTable({
-    defaultOrderBy: 'calories',
-  });
+  const [page, setPage] = useState<number>(1);
+  const [tableData, setTableData] = useState<CustomRowDataType[]>([]);
 
-  const [tableData, setTableData] = useState<RowDataType[]>([]);
+  const denseHeight = 34;
 
   useEffect(() => {
-    setTableData(TABLE_DATA);
+    const dummyDataChangeType = dummyData.map(item => ({
+      pofolName: item.pofolName,
+      pofolId: item.pofolId,
+      createAt: new Date(item.createAt),
+      updateAt: new Date(item.updateAt),
+    }));
+    setTableData(dummyDataChangeType);
   }, []);
+
+  const table = ResumeFormPortfolioTable({
+    defaultOrderBy: 'createAt',
+  });
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
   });
 
-  const denseHeight = table.dense ? 34 : 34 + 20;
+  const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
+    setPage(newPage);
+  };
+
 
   return (
     <div>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 3 }}>
-        <Typography variant="h6">Sorting & Selecting</Typography>
-
-        <Tooltip title="Filter list">
-          <IconButton>
-            <Iconify icon="ic:round-filter-list" />
-          </IconButton>
-        </Tooltip>
-      </Stack>
-
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-        <TableSelectedAction
-          dense={table.dense}
-          numSelected={table.selected.length}
-          rowCount={dataFiltered.length}
-          onSelectAllRows={(checked) =>
-            table.onSelectAllRows(
-              checked,
-              dataFiltered.map((row) => row.name)
-            )
-          }
-          action={
-            <Tooltip title="Delete">
-              <IconButton color="primary">
-                <Iconify icon="solar:trash-bin-trash-bold" />
-              </IconButton>
-            </Tooltip>
-          }
-        />
-
+        {table.selected}
         <Scrollbar>
           <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+
+            {/* 테이블 헤더 */}
             <TableHeadCustom
               order={table.order}
               orderBy={table.orderBy}
-              headLabel={TABLE_HEAD}
+              headLabel={custom_TABLE_HEAD}
               rowCount={dataFiltered.length}
               numSelected={table.selected.length}
               onSort={table.onSort}
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  dataFiltered.map((row) => row.name)
+                  dataFiltered.map((row) => row.pofolId )
                 )
               }
             />
 
+            {/* 테이블 */}
             <TableBody>
               {dataFiltered
                 .slice(
-                  table.page * table.rowsPerPage,
-                  table.page * table.rowsPerPage + table.rowsPerPage
+                  (page - 1) * table.rowsPerPage,
+                  (page - 1) * table.rowsPerPage + table.rowsPerPage
                 )
                 .map((row) => (
                   <TableRow
                     hover
-                    key={row.name}
-                    onClick={() => table.onSelectRow(row.name)}
-                    selected={table.selected.includes(row.name)}
+                    key={row.pofolId }
+                    onClick={() => table.onSelectRow(row.pofolId )}
+                    selected={table.selected.includes(row.pofolId )}
                   >
                     <TableCell padding="checkbox">
-                      <Checkbox checked={table.selected.includes(row.name)} />
+                      <Checkbox checked={table.selected.includes(row.pofolId )} />
                     </TableCell>
-                    <TableCell> {row.name} </TableCell>
-                    <TableCell align="center">{row.calories}</TableCell>
-                    <TableCell align="center">{row.fat}</TableCell>
-                    <TableCell align="center">{row.carbs}</TableCell>
-                    <TableCell align="center">{row.protein}</TableCell>
+                    <TableCell> {row.pofolName } </TableCell>
+                    <TableCell align="center">{row.createAt.toLocaleDateString() }</TableCell>
+                    <TableCell align="center">{row.updateAt.toLocaleDateString()}</TableCell>
                   </TableRow>
                 ))}
 
@@ -162,17 +136,23 @@ export default function Test() {
           </Table>
         </Scrollbar>
       </TableContainer>
-
-      <TablePaginationCustom
-        count={dataFiltered.length}
-        page={table.page}
-        rowsPerPage={table.rowsPerPage}
-        onPageChange={table.onChangePage}
-        onRowsPerPageChange={table.onChangeRowsPerPage}
-        //
-        dense={table.dense}
-        onChangeDense={table.onChangeDense}
+      {/* 페이지네이션 */}
+      <Pagination
+        count={Math.ceil(dataFiltered.length / 5)}
+        defaultPage={1}
+        page={page}
+        onChange={handleChangePage}
+        siblingCount={1}
+        sx={{
+          mt: 3,
+          mb: 3,
+          [`& .${paginationClasses.ul}`]: {
+            justifyContent: 'center',
+          },
+        }}
       />
+
+
     </div>
   );
 }
@@ -183,7 +163,7 @@ function applyFilter({
   inputData,
   comparator,
 }: {
-  inputData: RowDataType[];
+  inputData: CustomRowDataType[];
   comparator: (a: any, b: any) => number;
 }) {
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);

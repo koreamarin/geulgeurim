@@ -26,7 +26,6 @@ type RHFMultiSelectProps = FormControlProps & {
 
 export default function PortfolioRHFMultiSelect({
   name,
-  chip,
   label,
   options,
   checkbox,
@@ -43,15 +42,6 @@ export default function PortfolioRHFMultiSelect({
       return <Box sx={{ color: 'text.disabled' }}>ㅇㄴㅁㄹㄴㅇㄹ{placeholder}</Box>;
     }
 
-    if (chip) {
-      return (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-          {selectedItems.map((item) => (
-            <Chip key={item.value} size="small" label={item.label} />
-          ))}
-        </Box>
-      );
-    }
 
     return selectedItems.map((item) => item.label).join(', ');
   };
@@ -62,6 +52,7 @@ export default function PortfolioRHFMultiSelect({
       control={control}
       render={({ field, fieldState: { error } }) => (
         <FormControl error={!!error} {...other}>
+          {/* 초기 선택 창 */}
           {label && <InputLabel id={name}> {label} </InputLabel>}
 
           <Select
@@ -71,13 +62,14 @@ export default function PortfolioRHFMultiSelect({
             id={`multiple-${name}`}
             labelId={name}
             label={label}
-            renderValue={renderValues}
+            // renderValue={renderValues}
           >
             {options.map((option) => {
               const selected = field.value.includes(option.value);
 
               return (
                 <MenuItem key={option.value} value={option.value}>
+                  ㅁㅇㄴㄹ
                   {checkbox && <Checkbox size="small" disableRipple checked={selected} />}
 
                   {option.label}ㅁㅇㄴㄻㄴㄹㅇㄴㄹ

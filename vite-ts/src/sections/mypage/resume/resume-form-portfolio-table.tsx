@@ -10,7 +10,7 @@ export type UseTableProps = {
   defaultDense?: boolean;
   defaultOrder?: 'asc' | 'desc';
   defaultOrderBy?: string;
-  defaultSelected?: string[];
+  defaultSelected?: number[];
   defaultRowsPerPage?: number;
   defaultCurrentPage?: number;
 };
@@ -26,7 +26,7 @@ export default function ResumeFormPortfolioTable(props?: UseTableProps): ReturnT
 
   const [order, setOrder] = useState<'asc' | 'desc'>(props?.defaultOrder || 'asc');
 
-  const [selected, setSelected] = useState<string[]>(props?.defaultSelected || []);
+  const [selected, setSelected] = useState<number[]>(props?.defaultSelected || []);
 
   const onSort = useCallback(
     (id: string) => {
@@ -40,7 +40,7 @@ export default function ResumeFormPortfolioTable(props?: UseTableProps): ReturnT
   );
 
   const onSelectRow = useCallback(
-    (inputValue: string) => {
+    (inputValue: number) => {
       const newSelected = selected.includes(inputValue)
         ? selected.filter((value) => value !== inputValue)
         : [...selected, inputValue];
@@ -59,7 +59,7 @@ export default function ResumeFormPortfolioTable(props?: UseTableProps): ReturnT
     setDense(event.target.checked);
   }, []);
 
-  const onSelectAllRows = useCallback((checked: boolean, inputValue: string[]) => {
+  const onSelectAllRows = useCallback((checked: boolean, inputValue: number[]) => {
     if (checked) {
       setSelected(inputValue);
       return;
