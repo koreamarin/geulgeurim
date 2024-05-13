@@ -13,6 +13,5 @@ public class PieceInfo {
     private String program;
     private String contribution;
     private String content;
-    private MultipartFile pieceUploaded;
 
 }
