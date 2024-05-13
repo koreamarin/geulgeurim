@@ -2,6 +2,7 @@ package com.geulgrim.common.portfolio.application.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Builder
