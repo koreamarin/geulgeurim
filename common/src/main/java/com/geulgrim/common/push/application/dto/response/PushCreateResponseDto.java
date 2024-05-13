@@ -1,5 +1,6 @@
 package com.geulgrim.common.push.application.dto.response;
 
+import com.geulgrim.common.push.domain.FavoriteJob;
 import com.geulgrim.common.push.domain.PushDomain;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.EnumType;
@@ -21,10 +22,8 @@ public class PushCreateResponseDto {
 
     private Long senderId;
 
-    @ElementCollection
-    private List<Long> favoriteJobList; //즐겨찾기 공고 리스트
+    private List<FavoriteJob> favoriteJobList; //즐겨찾기 공고 리스트
 
-    @Enumerated(value = EnumType.STRING)
     private PushDomain domain;
 
     private String title;

@@ -1,5 +1,6 @@
 package com.geulgrim.common.push.application.dto.request;
 
+import com.geulgrim.common.push.domain.FavoriteJob;
 import com.geulgrim.common.push.domain.Push;
 import com.geulgrim.common.push.domain.PushDomain;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -19,7 +21,7 @@ public class PushCreateRequestDto {
 
     private Long senderId;
 
-    private List<Long> favoriteJobs; //관심 공고 리스트
+    private List<FavoriteJob> favoriteJobs; //관심 공고 리스트
 
     private String domain;
 
