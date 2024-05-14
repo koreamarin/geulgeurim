@@ -9,7 +9,7 @@ import { BoardDetailsView } from 'src/sections/board/view';
 export default function BoardDetailPage() {
   const params = useParams();
 
-  const { id } = params;
+  const { boardId } = params;
 
   return (
     <>
@@ -17,7 +17,7 @@ export default function BoardDetailPage() {
         <title>자유게시판 상세보기</title>
       </Helmet>
 
-      <BoardDetailsView id={`${id}`} />
+      <BoardDetailsView boardId={`${boardId}`} />
     </>
   );
 }

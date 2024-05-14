@@ -2,6 +2,7 @@ import { useRef, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import { Button } from '@mui/material';
 import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import TableRow from '@mui/material/TableRow';
@@ -123,6 +124,10 @@ export default function ShareRecentPost() {
     router.push(paths.community.board.detail(pk));
   };
 
+  const writeShare = () => {
+    router.push(paths.community.share.write);
+  }
+
   const pageCount = 12;
 
   const maxColumns = 4;
@@ -157,12 +162,12 @@ export default function ShareRecentPost() {
       <Box
         sx={{ borderBottom: '3px solid black', marginLeft: 15, marginRight: 15, marginBottom: 3 }}
       >
-        <Typography variant="h3" component="div" sx={{ color: 'gray', ml: 3, mb: 1, mt: 3 }}>
+        <Typography variant="h3" component="div" sx={{ color: 'black', ml: 3}}>
           그림 공유 게시판
         </Typography>
       </Box>
       {/* 필터 들어가기 => zustand 이용, 바뀔 때 pagination 초기화 */}
-      <Stack direction="row" spacing={1} paddingLeft={15} paddingRight={15}>
+      <Stack direction="row" spacing={1} paddingLeft={15} paddingRight={15} sx={{height: 40, alignItems: 'center'}}>
         {/* search 조건 */}
         <InformationRecentSearchOption
           searchOption={optionBy}
@@ -172,6 +177,7 @@ export default function ShareRecentPost() {
 
         {/* search */}
         <TextField
+          size='small'
           placeholder="검색"
           onKeyUp={handleKeyUp}
           sx={{ flexGrow: 1, my: 1 }}
@@ -197,6 +203,7 @@ export default function ShareRecentPost() {
           onSort={handleSortBy}
           sortOptions={POST_SORT_OPTIONS}
         />
+        <Button sx={{bgcolor: '#22C55E', color: 'white', fontWeight: 'normal', fontSize: 11, ':hover': {color: 'black', fontWeight: 'bold'}}} onClick={writeShare}>글쓰기</Button>
       </Stack>
       {/* 테이블 구성 */}
       <Box paddingLeft={15} paddingRight={15} marginBottom={0}>
