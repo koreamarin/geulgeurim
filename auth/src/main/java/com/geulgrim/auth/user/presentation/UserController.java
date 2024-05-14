@@ -3,9 +3,7 @@ package com.geulgrim.auth.user.presentation;
 import com.geulgrim.auth.security.jwt.JWTUtil;
 import com.geulgrim.auth.user.application.dto.request.EnterUserLoginRequest;
 import com.geulgrim.auth.user.application.dto.request.EnterUserSignUpRequest;
-import com.geulgrim.auth.user.application.dto.response.EnterUserSignUpResponse;
-import com.geulgrim.auth.user.application.dto.response.GetUsersResponses;
-import com.geulgrim.auth.user.application.dto.response.UserLoginResponse;
+import com.geulgrim.auth.user.application.dto.response.*;
 import com.geulgrim.auth.user.application.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
@@ -75,6 +73,24 @@ public class UserController {
         return new ResponseEntity<>(getUsersResponses, HttpStatus.OK);
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<?> getUser(@RequestHeader HttpHeaders headers) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        GetUserResponse getUserResponse = userService.getUser(userId);
+        return new ResponseEntity<>(getUserResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/enteruser")
+    public ResponseEntity<?> getEnterUser(@RequestHeader HttpHeaders headers) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        GetEnterUserResponse getEnterUserResponse = userService.getEnterUser(userId);
+        return new ResponseEntity<>(getEnterUserResponse, HttpStatus.OK);
+    }
+
 
 
 }
+
+

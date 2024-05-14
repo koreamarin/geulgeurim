@@ -11,9 +11,7 @@ import com.geulgrim.auth.user.application.dto.request.EnterUserLoginRequest;
 import com.geulgrim.auth.user.application.dto.request.EnterUserSignUpRequest;
 import com.geulgrim.auth.user.application.dto.request.OAuthTokenRequest;
 import com.geulgrim.auth.user.application.dto.request.OAuthUserInfoRequest;
-import com.geulgrim.auth.user.application.dto.response.EnterUserSignUpResponse;
-import com.geulgrim.auth.user.application.dto.response.GetUsersResponses;
-import com.geulgrim.auth.user.application.dto.response.UserLoginResponse;
+import com.geulgrim.auth.user.application.dto.response.*;
 import com.geulgrim.auth.user.domain.entity.EnterUser;
 import com.geulgrim.auth.user.domain.entity.Enums.Status;
 import com.geulgrim.auth.user.domain.entity.Enums.UserType;
@@ -143,5 +141,45 @@ public class UserService {
         getUsersResponses.setUserIds(userIds);
 
         return getUsersResponses;
+    }
+
+    public GetUserResponse getUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        GetUserResponse getUserResponse = GetUserResponse.builder()
+                .userId(user.getUser_id())
+                .email(user.getEmail())
+                .birthday(user.getBirthday())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .wallet(user.getWallet())
+                .userType(String.valueOf(user.getUserType()))
+                .fileUrl(user.getFile_url())
+                .phoneNum(user.getPhone_num())
+                .build();
+
+        return getUserResponse;
+    }
+
+    public GetEnterUserResponse getEnterUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        EnterUser enterUser = enterUserRepository.findByUser(user)
+                .orElseThrow(() -> new NotFoundException("기업계정을 찾을 수 없습니다."));
+
+        GetEnterUserResponse getEnterUserResponse = GetEnterUserResponse.builder()
+                .userId(user.getUser_id())
+                .CEO_name(user.getName())
+                .manager(enterUser.getManager())
+                .company(user.getNickname())
+                .thumbnail(user.getFile_url())
+                .birthday(user.getBirthday())
+                .address(enterUser.getAddress())
+                .introduce(enterUser.getIntroduce())
+                .build();
+
+        return getEnterUserResponse;
     }
 }
