@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class IndividualUserResponseDto {
+public class IndividualUsersResponseDto {
 
-    private Long userId;
+    private List<Long> userIds;
 }

@@ -1,6 +1,7 @@
 package com.geulgrim.common.recruitserver.presentation;
 
-import com.geulgrim.common.recruitserver.application.dto.response.FavoriteJobResponseDto;
+import com.geulgrim.common.recruitserver.application.dto.response.FavoriteJobsResponseDto;
+import com.geulgrim.common.recruitserver.application.dto.response.JobResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -11,5 +12,5 @@ import java.util.List;
 public interface RecruitFeignClient {
 
     @GetMapping("/api/v1/recruit/star")
-    public List<FavoriteJobResponseDto> getStars(@RequestHeader(name = "user_id") String userId);
+    public FavoriteJobsResponseDto getStars(@RequestHeader(name = "user_id") String userId);
 }

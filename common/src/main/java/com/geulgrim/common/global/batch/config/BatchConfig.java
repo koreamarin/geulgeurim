@@ -1,11 +1,11 @@
 package com.geulgrim.common.global.batch.config;
 
-import com.geulgrim.common.authserver.application.dto.response.IndividualUserResponseDto;
 import com.geulgrim.common.authserver.presentation.AuthFeignClient;
 import com.geulgrim.common.push.application.PushService;
 import com.geulgrim.common.push.application.dto.request.PushCreateRequestDto;
 import com.geulgrim.common.push.domain.FavoriteJob;
-import com.geulgrim.common.recruitserver.application.dto.response.FavoriteJobResponseDto;
+import com.geulgrim.common.recruitserver.application.dto.response.FavoriteJobsResponseDto;
+import com.geulgrim.common.recruitserver.application.dto.response.JobResponseDto;
 import com.geulgrim.common.recruitserver.presentation.RecruitFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,22 +51,20 @@ public class BatchConfig {
     public Tasklet tasklet() {
         return ((contribution, chunkContext) -> {
             //모든 유저의 관심공고에 대해 내일 마감공고인지 확인
-            for (IndividualUserResponseDto dto : authFeignClient.findAll()) {
+            for (Long id : authFeignClient.findAll().getUserIds()) {
                 List<FavoriteJob> favoriteJobs = new ArrayList<>();
-                Long id = dto.getUserId();
-                List<FavoriteJobResponseDto> jobDto = recruitFeignClient.getStars(String.valueOf(id));
-                for (FavoriteJobResponseDto favoriteJob : jobDto) {
-                    LocalDateTime endDate = favoriteJob.getEndDate();
+                for (JobResponseDto jobs : recruitFeignClient.getStars(String.valueOf(id)).getResponses()) {
+                    LocalDateTime endDate = jobs.getEndDate();
                     LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
 
-                    log.info("관심 공고 ={}", favoriteJob.getTitle());
+                    log.info("관심 공고 ={}", jobs.getTitle());
                     log.info("관심 공고 마감 날 ={}", endDate);
                     if (endDate.isEqual(tomorrow)) {
-                        log.info("!!!담긴 내일 마감 공고 ={}", favoriteJob.getTitle());
+                        log.info("!!!담긴 내일 마감 공고 ={}", jobs.getTitle());
                         log.info("!!!담긴 내일 마감 공고 마감날 ={}", endDate);
                         favoriteJobs.add(FavoriteJob.builder()
-                                .title(favoriteJob.getTitle())
-                                .companyName(favoriteJob.getCompanyName())
+                                .title(jobs.getTitle())
+                                .companyName(jobs.getCompanyName())
                                 .endDate(endDate)
                                 .build());
                     }

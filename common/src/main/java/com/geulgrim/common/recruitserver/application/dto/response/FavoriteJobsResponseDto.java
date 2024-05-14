@@ -5,16 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FavoriteJobResponseDto {
+public class FavoriteJobsResponseDto {
 
-    private String title;
-    private String companyName;
-    private LocalDateTime endDate;
+    List<JobResponseDto> responses;
 }
