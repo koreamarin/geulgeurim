@@ -52,6 +52,8 @@ public class BatchConfig {
             //모든 유저의 관심공고에 대해 내일 마감공고인지 확인
             for (Long id : authFeignClient.findAll().getUserIds()) {
                 List<FavoriteJob> favoriteJobs = new ArrayList<>();
+                    log.info("확인할 유저 ={}", id);
+                    log.info("recruitFeignClient.getStars(String.valueOf(id)).getResponses() ={}", recruitFeignClient.getStars(String.valueOf(id)).getResponses());
                 List<JobResponseDto> responses = recruitFeignClient.getStars(String.valueOf(id)).getResponses();
                 if (!responses.isEmpty()) {
                     log.info("관심공고 가지는 유저 ={}", id);
