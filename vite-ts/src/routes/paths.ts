@@ -52,6 +52,11 @@ export const paths = {
   nft: {
     root: `${ROOTS.NFT}`,
     detail: (id: number) => `${ROOTS.NFT}/${id}`,
+    share: {
+      main: `${ROOTS.COMMUNITY}/share`,
+      detail: (id: number) => `${ROOTS.COMMUNITY}/share/${id}`,
+      write: `${ROOTS.COMMUNITY}/share/write`,
+    },
   },
 
   mypage: {
