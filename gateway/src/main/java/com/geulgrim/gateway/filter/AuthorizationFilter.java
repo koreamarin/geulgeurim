@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,6 +28,8 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
     public GatewayFilter apply(Config config) {
         return ((exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
+            ServerHttpResponse response = exchange.getResponse();
+            response.getHeaders().remove("Vary");
             UserInfoResponseDto dto = authorizationUtil.Authorize(request);
 
             if(dto != null && dto.getUserId() != null){
