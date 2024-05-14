@@ -48,7 +48,7 @@ export function useGetBoardDetail(title: string) {
 
 // ----------------------------------------------------------------------
 
-export function useSearchPosts(query: string) {
+export function useSearchBoard(query: string) {
   const URL = query ? [endpoints.post.search, { params: { query } }] : '';
 
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, {

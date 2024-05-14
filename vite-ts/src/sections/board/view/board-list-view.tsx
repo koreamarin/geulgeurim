@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table'
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell';
@@ -29,7 +30,7 @@ import InformationRecentSearchOption from './board-recent-search-options';
 function createDummyData(pk: number, fullTitle: string, user:String, upload:Date, hit:number, comment_count:number) {
   const date = upload.toLocaleDateString()
   const comment:string = comment_count !== 0 ? ` [${comment_count}]` : ``
-  const title:string = fullTitle.length > 50 ? `${fullTitle.substr(0, 50)}...${comment}` : `${fullTitle}${comment}`
+  const title:string = fullTitle.length > 40 ? `${fullTitle.substr(0, 40)}...${comment}` : `${fullTitle}${comment}`
 
   return { pk, title, user, date, hit, comment_count};
 }
@@ -107,6 +108,10 @@ export default function BoardRecentPost() {
     router.push(paths.community.board.detail(pk));
   }
 
+  const writeBoard = () => {
+    router.push(paths.community.board.write);
+  }
+
   const pageCount = 15
 
   const table = useTable({ defaultRowsPerPage: pageCount })
@@ -126,17 +131,18 @@ export default function BoardRecentPost() {
   return (
       <Card sx={{p:3}}>
         <Box sx={{ borderBottom: '3px solid black', marginLeft: 15, marginRight: 15, marginBottom: 3}}>
-          <Typography variant="h3" component="div" sx={{ color: 'gray', ml: 3, mb: 1, mt: 3 }}>
+          <Typography variant="h3" component="div" sx={{ color: 'black', ml: 3,}}>
             자유 게시판
           </Typography>
         </Box>
         {/* 필터 들어가기 => zustand 이용, 바뀔 때 pagination 초기화 */}
-        <Stack direction="row" spacing={1} paddingLeft={15} paddingRight={15}>
+        <Stack direction="row" spacing={1} paddingLeft={15} paddingRight={15} sx={{height: 40, alignItems: 'center'}}>
           {/* search 조건 */}
           <InformationRecentSearchOption searchOption={optionBy} onOption={handleOptionBy} searchOptionOptions={POST_SEARCH_OPTIONS}/>
 
           {/* search */}
           <TextField
+            size='small'
             placeholder="검색"
             onKeyUp={handleKeyUp}
             sx={{ flexGrow: 1, my: 1 }}
@@ -152,6 +158,7 @@ export default function BoardRecentPost() {
 
           {/* sort */}
           <InformationRecentSort sort={sortBy} onSort={handleSortBy} sortOptions={POST_SORT_OPTIONS} />
+          <Button sx={{bgcolor: '#22C55E', color: 'white', fontWeight: 'normal', fontSize: 11, ':hover': {color: 'black', fontWeight: 'bold'}}} onClick={writeBoard}>글쓰기</Button>
         </Stack>
         {/* 테이블 구성 */}
         <TableConttainer sx={{ position: 'relative', overflow: 'unset', paddingX: 15, paddingY: 3}}>
