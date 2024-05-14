@@ -36,7 +36,7 @@ public class PieceController {
     @Operation(summary = "작품검색", description = "userId, 검색조건, 검색어, 정렬조건을 입력받아 조건에 해당하는 작품들을 반환하는 api입니다.")
     public ResponseEntity<List<PieceSearchResponseDto>> findAllPiece(
             @RequestParam(name = "user_id", required = true) Long userId,
-            @RequestParam(name = "condition", defaultValue = "title") String condition,
+            @RequestParam(name = "condition", defaultValue = "namex") String condition,
             @RequestParam(name = "key_word", defaultValue = "") String keyWord,
             @RequestParam(name = "sort", defaultValue = "created_at") String sortBy
             ){

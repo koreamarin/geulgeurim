@@ -4,11 +4,14 @@ import com.geulgrim.common.piece.domain.entity.Piece;
 import com.geulgrim.common.piece.domain.entity.enums.NftType;
 import com.geulgrim.common.piece.domain.entity.enums.PieceType;
 import com.geulgrim.common.piece.domain.entity.enums.Status;
-import jakarta.persistence.Enumerated;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import static jakarta.persistence.EnumType.STRING;
-
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class PieceSearchResponseDto {
 
