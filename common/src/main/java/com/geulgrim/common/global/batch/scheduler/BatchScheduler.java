@@ -23,7 +23,7 @@ public class BatchScheduler {
     private final Job job;
 
 //    @Scheduled(cron = "0 0 18 * * *", zone = "UTC")
-    @Scheduled(cron = "* 0/1 * * * *", zone = "UTC") //테스트 위한 1분마다 실행
+    @Scheduled(cron = "0 0/10 * * * *", zone = "UTC") //테스트 위한 1분마다 실행
     public void runJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters parameters = new JobParametersBuilder()
                 .addString("jobName", "ClosingSoonJob" + System.currentTimeMillis())
