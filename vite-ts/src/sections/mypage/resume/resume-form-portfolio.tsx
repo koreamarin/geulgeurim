@@ -9,11 +9,11 @@ import Collapse from '@mui/material/Collapse';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
 import { useRowState } from 'src/hooks/useRowState';
+import { usePreviewState } from 'src/hooks/usePreviewState';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -63,6 +63,7 @@ export default function RHFSelectPortfolio({portfolDatas}:Props) {
   const { control, setValue, getValues } = useFormContext()
 
   const { openRows, toggleRow } = useRowState()
+  const { openPreview, togglePreview } = usePreviewState()
 
   const [page, setPage] = useState<number>(1);
   const [tableData, setTableData] = useState<CustomRowDataType[]>([]);
@@ -235,6 +236,104 @@ export default function RHFSelectPortfolio({portfolDatas}:Props) {
 
       {/* 선택 포폴 */}
       {table.selected}
+      <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+        <Scrollbar>
+          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 420 }}>
+            {/* 테이블 */}
+            <TableBody>
+              {table.selected
+                .slice(
+                  (page - 1) * table.rowsPerPage,
+                  (page - 1) * table.rowsPerPage + table.rowsPerPage
+                )
+                .map((rowNum) => {
+                  const data = tableData.find(portfol => portfol.pofolId === rowNum);
+                  return (
+                  <Fragment key={rowNum}>
+                    <TableRow
+                      key={rowNum}
+                      onClick={() => {
+                        // 클릭시 form의 value에 접속해 변경
+                        const newValues = getValues("portfolioIds").includes(rowNum) ?
+                        getValues("portfolioIds").filter((id:number) => id !== rowNum)
+                        : [...getValues("portfolioIds"), rowNum];
+                        setValue("portfolioIds", newValues);
+                        table.onSelectRow(rowNum)
+                      }}
+                    >
+                      <TableCell padding="checkbox">
+
+                        <Controller
+                          name="portfolioIds"
+                          control={control}
+                          render={({ field: { onChange, onBlur, value } }) => (
+                            <Checkbox
+                              onBlur={onBlur}
+                              onChange={(event) => {
+                                let updatedValue;
+                                if (event.target.checked) {
+                                  updatedValue = [...value, rowNum].sort((a, b) => a - b);
+                                } else {
+                                  updatedValue = value.filter((id: number) => id !== rowNum);
+                                }
+                                onChange(updatedValue);
+                                setValue("portfolioIds", updatedValue);
+                              }}
+                              checked={value.includes(rowNum)}
+                      />
+                          )}
+                        />
+                      </TableCell>
+                      <TableCell> {data?.pofolName } </TableCell>
+                      <TableCell>
+                        <IconButton
+                          size="small"
+                          color={openPreview[rowNum] ? 'inherit' : 'default'}
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            togglePreview(rowNum)}}
+                        >
+                          <Iconify
+                            icon={openPreview[rowNum] ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'}
+                          />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={{ py: 0 }} colSpan={6}>
+                        <Collapse in={openPreview[rowNum]} unmountOnExit>
+                          <Paper
+                            variant="outlined"
+                            sx={{
+                              py: 2,
+                              my: 2,
+                              borderRadius: 1.5,
+                              ...(openPreview[rowNum] && {
+                                boxShadow: (theme) => theme.customShadows.z20,
+                              }),
+                            }}
+                          >
+                              {data?.format === 'USER' ?
+                              <ResumeFormPortfolioUserPreview portfolId={rowNum}/>
+                              :
+                              <ResumeFormPortfolioServicePreview portfolId={rowNum}/>
+                              }
+
+                          </Paper>
+                        </Collapse>
+                      </TableCell>
+                    </TableRow>
+                    </Fragment>
+                )})}
+
+              <TableEmptyRows
+                height={denseHeight}
+                emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
+              />
+            </TableBody>
+          </Table>
+        </Scrollbar>
+      </TableContainer>
 
     </div>
   );
