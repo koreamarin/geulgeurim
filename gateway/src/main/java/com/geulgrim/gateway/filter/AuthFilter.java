@@ -31,7 +31,7 @@ public class AuthFilter  extends AbstractGatewayFilterFactory<AuthFilter.Config>
             if (uri.startsWith("/api/v1/auth/users")){
                 exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
                 return exchange.getResponse().setComplete();
-            }else if(uri.startsWith("/api/v1/auth/enteruser") || uri.startsWith("/api/v1/auth/user")){
+            }else if(uri.startsWith("/api/v1/auth/enteruser") || uri.startsWith("/api/v1/auth/user") || uri.startsWith("/api/v1/auth/fcm")){
                 UserInfoResponseDto dto = authorizationUtil.Authorize(request);
 
                 if(dto != null && dto.getUserId() != null){
