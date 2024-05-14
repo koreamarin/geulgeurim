@@ -3,6 +3,7 @@ package com.geulgrim.auth.user.presentation;
 import com.geulgrim.auth.security.jwt.JWTUtil;
 import com.geulgrim.auth.user.application.dto.request.EnterUserLoginRequest;
 import com.geulgrim.auth.user.application.dto.request.EnterUserSignUpRequest;
+import com.geulgrim.auth.user.application.dto.request.FcmUpdateRequestDto;
 import com.geulgrim.auth.user.application.dto.response.*;
 import com.geulgrim.auth.user.application.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -87,6 +88,13 @@ public class UserController {
 
         GetEnterUserResponse getEnterUserResponse = userService.getEnterUser(userId);
         return new ResponseEntity<>(getEnterUserResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/fcm")
+//    @Operation(summary = "fcm 토큰 업데이트", description = "프론트에서 받은 fcm 토큰을 유저정보에 업데이트합니다.")
+    public ResponseEntity<?> updateFcmToken(@RequestBody FcmUpdateRequestDto dto) {
+        userService.updateUserFcm(dto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

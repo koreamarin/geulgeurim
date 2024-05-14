@@ -41,4 +41,11 @@ public class User extends BaseEntity {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch=FetchType.LAZY)
     private EnterUser enterUser;
+
+    private String fcmToken;
+
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
 }

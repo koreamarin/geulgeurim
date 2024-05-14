@@ -7,10 +7,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.geulgrim.auth.S3.AwsS3Service;
 import com.geulgrim.auth.security.jwt.JWTUtil;
-import com.geulgrim.auth.user.application.dto.request.EnterUserLoginRequest;
-import com.geulgrim.auth.user.application.dto.request.EnterUserSignUpRequest;
-import com.geulgrim.auth.user.application.dto.request.OAuthTokenRequest;
-import com.geulgrim.auth.user.application.dto.request.OAuthUserInfoRequest;
+import com.geulgrim.auth.user.Exception.NoUserExistException;
+import com.geulgrim.auth.user.application.dto.request.*;
 import com.geulgrim.auth.user.application.dto.response.*;
 import com.geulgrim.auth.user.domain.entity.EnterUser;
 import com.geulgrim.auth.user.domain.entity.Enums.Status;
@@ -182,4 +180,11 @@ public class UserService {
 
         return getEnterUserResponse;
     }
+
+    public void updateUserFcm(FcmUpdateRequestDto dto) {
+
+        User user = userRepository.findById(dto.getId()).orElseThrow(NoUserExistException::new);
+        user.updateFcmToken(dto.getFcmToken());
+    }
+
 }
