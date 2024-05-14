@@ -72,7 +72,7 @@ export default function PostItem(shareItem: shareProps) {
         </Link>
 
         <Link component={RouterLink} href={linkTo}>
-          <Image alt="123" src={share.thumbnail} ratio="4/3" />
+          <Image alt="123" src={share.imageList[0].fileUrl} ratio="4/3" />
         </Link>
       </Box>
 
