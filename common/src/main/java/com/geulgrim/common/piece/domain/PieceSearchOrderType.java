@@ -5,24 +5,23 @@ import com.geulgrim.common.piece.domain.repository.PieceRepository;
 
 import java.util.List;
 
-public enum PieceSearchType {
-
+public enum PieceSearchOrderType {
     NAME{
         @Override
         public List<Piece> getListByPieceSearchType(PieceRepository pieceRepository, Long userId, String keyword){
-            return pieceRepository.findByOwnerIdAndNameContainingOrderByUpdatedAt(userId, keyword);
+            return pieceRepository.findByOwnerIdAndNameContainingOrderByUpdatedAtDesc(userId, keyword);
         }
     },
     DESCRIPTION{
         @Override
         public List<Piece> getListByPieceSearchType(PieceRepository pieceRepository, Long userId, String keyword){
-            return pieceRepository.findByOwnerIdAndDescriptionContainingOrderByUpdatedAt(userId, keyword);
+            return pieceRepository.findByOwnerIdAndDescriptionContainingOrderByUpdatedAtDesc(userId, keyword);
         }
     },
     BOTH{
         @Override
         public List<Piece> getListByPieceSearchType(PieceRepository pieceRepository, Long userId, String keyword){
-            return pieceRepository.findByOwnerIdAndNameContainingOrDescriptionContainingOrderByUpdatedAt(userId, keyword, keyword);
+            return pieceRepository.findByOwnerIdAndNameContainingOrDescriptionContainingOrderByUpdatedAtDesc(userId, keyword, keyword);
         }
     }
     ;
