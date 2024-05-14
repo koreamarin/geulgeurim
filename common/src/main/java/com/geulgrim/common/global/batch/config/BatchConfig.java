@@ -4,7 +4,6 @@ import com.geulgrim.common.authserver.presentation.AuthFeignClient;
 import com.geulgrim.common.push.application.PushService;
 import com.geulgrim.common.push.application.dto.request.PushCreateRequestDto;
 import com.geulgrim.common.push.domain.FavoriteJob;
-import com.geulgrim.common.recruitserver.application.dto.response.FavoriteJobsResponseDto;
 import com.geulgrim.common.recruitserver.application.dto.response.JobResponseDto;
 import com.geulgrim.common.recruitserver.presentation.RecruitFeignClient;
 import lombok.RequiredArgsConstructor;
@@ -53,34 +52,39 @@ public class BatchConfig {
             //모든 유저의 관심공고에 대해 내일 마감공고인지 확인
             for (Long id : authFeignClient.findAll().getUserIds()) {
                 List<FavoriteJob> favoriteJobs = new ArrayList<>();
-                for (JobResponseDto jobs : recruitFeignClient.getStars(String.valueOf(id)).getResponses()) {
-                    LocalDateTime endDate = jobs.getEndDate();
-                    LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+                List<JobResponseDto> responses = recruitFeignClient.getStars(String.valueOf(id)).getResponses();
+                if (!responses.isEmpty()) {
+                    log.info("관심공고 가지는 유저 ={}", id);
 
-                    log.info("관심 공고 ={}", jobs.getTitle());
-                    log.info("관심 공고 마감 날 ={}", endDate);
-                    if (endDate.isEqual(tomorrow)) {
-                        log.info("!!!담긴 내일 마감 공고 ={}", jobs.getTitle());
-                        log.info("!!!담긴 내일 마감 공고 마감날 ={}", endDate);
-                        favoriteJobs.add(FavoriteJob.builder()
-                                .title(jobs.getTitle())
-                                .companyName(jobs.getCompanyName())
-                                .endDate(endDate)
-                                .build());
+                    for (JobResponseDto jobs : responses) {
+                        LocalDateTime endDate = jobs.getEndDate();
+                        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+
+                        log.info("관심 공고 ={}", jobs.getTitle());
+                        log.info("관심 공고 마감 날 ={}", endDate);
+                        if (endDate.isEqual(tomorrow)) {
+                            log.info("!!!담긴 내일 마감 공고 ={}", jobs.getTitle());
+                            log.info("!!!담긴 내일 마감 공고 마감날 ={}", endDate);
+                            favoriteJobs.add(FavoriteJob.builder()
+                                    .title(jobs.getTitle())
+                                    .companyName(jobs.getCompanyName())
+                                    .endDate(endDate)
+                                    .build());
+                        }
+
                     }
 
-                }
+                    for (FavoriteJob favoriteJob : favoriteJobs) {
+                        log.info("푸시보낼 공고 ={}", favoriteJob.getTitle());
+                    }
 
-                for (FavoriteJob favoriteJob : favoriteJobs) {
-                    log.info("푸시보낼 공고 ={}", favoriteJob.getTitle());
+                    //유저에 대해 마감공고 푸시 보내기
+                    pushService.create(PushCreateRequestDto.builder()
+                            .receiverId(id)
+                            .favoriteJobs(favoriteJobs)
+                            .domain("FAVORITE_JOB_CLOSINGSOON")
+                            .build());
                 }
-
-                //유저에 대해 마감공고 푸시 보내기
-                pushService.create(PushCreateRequestDto.builder()
-                        .receiverId(id)
-                        .favoriteJobs(favoriteJobs)
-                        .domain("FAVORITE_JOB_CLOSINGSOON")
-                        .build());
 
             }
             return RepeatStatus.FINISHED;
