@@ -33,17 +33,16 @@ public class BoardService {
     private final UserRepository userRepository;
 
     // 메인 페이지 신규글 목록
-    public List<BoardListResponse> mainBoardPopularList() {
-        List<BoardListResponse> list = boardRepository.findBoardResponseList();
-        return list.subList(0, 6);
+    public List<BoardListResponse> mainBoardNewList() {
+        return boardRepository.findNewBoardResponseList();
     }
 
     // 메인 페이지 인기글 목록
-    public List<BoardListResponse> mainBoardNewList() {
+    public List<BoardListResponse> mainBoardPopularList() {
         List<BoardListResponse> list = boardRepository.findBoardResponseList();
-        List<BoardListResponse> newList = new ArrayList<BoardListResponse>();
+        List<BoardListResponse> newList = new ArrayList<>();
         for(BoardListResponse boardListResponse : list) {
-            if(newList.size() >= 6) break;
+            if(newList.size() >= 5) break;
             if(boardListResponse.getHit() + boardListResponse.getCommentCnt() >= 50) {
                 newList.add(boardListResponse);
             }
@@ -58,10 +57,11 @@ public class BoardService {
 
     // 자유게시판 상세조회
     public BoardDetailResponse boardDetail(long boardId) {
+        log.info("boardDetail() : {}", boardRepository.findBoardByBoardId(boardId));
         return BoardDetailResponse.builder()
-                .board(boardRepository.findByBoardId(boardId))
+                .board(boardRepository.findBoardByBoardId(boardId))
                 .commentList(boardCommentRepository.findAllByBoardId(boardId))
-                .imageList(boardImageRepository.findByBoardBoardId(boardId))
+                .imageList(boardImageRepository.findAllByBoardBoardId(boardId))
                 .build();
     }
 

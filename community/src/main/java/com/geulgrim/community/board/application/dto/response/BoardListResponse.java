@@ -17,7 +17,7 @@ public class BoardListResponse {
     private String userNickname;
     private String title;
     private long hit;
+    private long commentCnt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private long commentCnt;
 }

@@ -22,7 +22,7 @@ public class BoardCommentService {
 
     // 작성
     public List<BoardComment> writeComment(BoardCommentWriteRequest boardCommentWriteRequest) {
-        Board board = boardRepository.findByBoardId(boardCommentWriteRequest.getBoardId());
+        Board board = boardRepository.findBoardByBoardId(boardCommentWriteRequest.getBoardId());
         // 유저 아이디 수정
         long userId = 1;
         BoardComment boardComment = BoardComment.builder()
@@ -40,7 +40,7 @@ public class BoardCommentService {
 
     // 수정
     public BoardComment modifyComment(long boardCommentId, BoardCommentUpdateRequest boardCommentUpdateRequest) {
-        Board board = boardRepository.findByBoardId(boardCommentUpdateRequest.getBoardId());
+        Board board = boardRepository.findBoardByBoardId(boardCommentUpdateRequest.getBoardId());
 
         BoardComment boardComment = BoardComment.builder()
                 .boardCommentId(boardCommentId)

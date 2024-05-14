@@ -15,6 +15,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class Share extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

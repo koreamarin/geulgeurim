@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -34,10 +36,31 @@ public class ShareService {
     private final ShareCommentRepository shareCommentRepository;
     private final UserRepository userRepository;
 
+    public List<ShareListResponse> getShareListResponses() {
+        // Fetch the share list responses without images
+        List<ShareListResponse> shareListResponses = shareRepository.findShareResponseList();
+
+        // Extract share IDs
+        List<Long> shareIds = shareListResponses.stream()
+                .map(ShareListResponse::getShareId)
+                .collect(Collectors.toList());
+
+        // Fetch share images by share IDs
+        List<ShareImage> shareImages = shareImageRepository.findImagesByShareIds(shareIds);
+
+        // Map images to respective shares
+        Map<Long, List<ShareImage>> imagesByShareId = shareImages.stream()
+                .collect(Collectors.groupingBy(si -> si.getShare().getShareId()));
+
+        // Assign images to share list responses
+        shareListResponses.forEach(response -> response.setImageList(imagesByShareId.get(response.getShareId())));
+
+        return shareListResponses;
+    }
+
     // 메인 페이지 신규 그림평가글 목록
     public List<ShareListResponse> mainShareNewList() {
-        List<ShareListResponse> list = shareRepository.findShareResponseList();
-        return list.subList(0, 6);
+        return getShareListResponses();
     }
     
     // 그림평가 게시판 전체 조회

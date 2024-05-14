@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface BoardCommentRepository extends JpaRepository<BoardComment, Long> {
 
-    @Query("SELECT bc FROM BoardComment bc LEFT JOIN bc.board b GROUP BY bc.board.boardId")
+    @Query("SELECT bc FROM BoardComment bc WHERE bc.board.boardId = :boardId")
     List<BoardComment> findAllByBoardId(long boardId);
 
     void deleteBoardCommentByBoardCommentId(long boardCommentId);

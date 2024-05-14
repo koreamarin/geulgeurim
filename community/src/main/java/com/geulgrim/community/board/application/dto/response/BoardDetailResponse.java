@@ -3,14 +3,12 @@ package com.geulgrim.community.board.application.dto.response;
 import com.geulgrim.community.board.domain.entity.Board;
 import com.geulgrim.community.board.domain.entity.BoardComment;
 import com.geulgrim.community.board.domain.entity.BoardImage;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
