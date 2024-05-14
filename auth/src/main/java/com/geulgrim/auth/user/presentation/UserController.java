@@ -69,7 +69,7 @@ public class UserController {
     }
 
     // 개인 유저 전체 조회
-    @GetMapping("/user")
+    @GetMapping("/users")
     public ResponseEntity<?> getUsers() {
         GetUsersResponses getUsersResponses = userService.getUsers();
         return new ResponseEntity<>(getUsersResponses, HttpStatus.OK);
