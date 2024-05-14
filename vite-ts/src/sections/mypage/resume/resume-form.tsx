@@ -27,11 +27,13 @@ import FormProvider, {
 
 import { Education, Award, Experience } from 'src/types/resume';
 
-import Test from './test';
+// import RHFSelectPortfolio from './test';
 import { positionList } from '../position';
 import ResumeRHFUpload from './resume-form-image';
 import ResumeRHFSwitch from './resume-form-switch';
-import PortfolioRHFMultiSelect from './resume-form-portfolio';
+import RHFSelectPortfolio from './resume-form-portfolio';
+import ResumeFormPortfolioUserPreview from './resume-form-portfolio-user-preview';
+import ResumeFormPortfolioServicePreview from './resume-form-portfolio-service-preview';
 
 // ----------------------------------------------------------------------
 
@@ -244,6 +246,59 @@ const dummy = [
       ]
   }
 ]
+
+
+const dummyPortfolio = [
+  {
+    pofolName : "더미데이터 제목1",
+	  pofolId : 1,
+    createAt: '2022-04-01',
+    updateAt: '2024-04-01',
+    status : 'PUBLIC',
+    format : 'USER'
+  },
+  {
+    pofolName : "더미데이터 제목2",
+	  pofolId : 2,
+    createAt: '2022-04-02',
+    updateAt: '2024-04-01',
+    status : 'PUBLIC',
+    format : 'SERVICE'
+  },
+  {
+    pofolName : "더미데이터 제목3",
+	  pofolId : 3,
+    createAt: '2022-04-03',
+    updateAt: '2024-04-01',
+    status : 'PUBLIC',
+    format : 'USER'
+  },
+  {
+    pofolName : "더미데이터 제목4",
+	  pofolId : 4,
+    createAt: '2022-04-04',
+    updateAt: '2024-04-01',
+    status : 'PUBLIC',
+    format : 'SERVICE'
+  },
+  {
+    pofolName : "더미데이터 제목5",
+	  pofolId : 5,
+    createAt: '2022-04-05',
+    updateAt: '2024-04-01',
+    status : 'PUBLIC',
+    format : 'SERVICE'
+  },
+  {
+    pofolName : "더미데이터 제목6",
+	  pofolId : 6,
+    createAt: '2022-04-06',
+    updateAt: '2024-04-01',
+    status : 'PUBLIC',
+    format : 'SERVICE'
+  }
+]
+
 
 const userDummy = {
   name : "배상훈",
@@ -510,17 +565,13 @@ export default function ResumeForm({ copyId }: Props) {
       {/* 포트폴리오 선택 */}
       <Card sx={{ p: 3, mt:3 }}>
           <CardHeader sx={{ mb: 2, pt: 0 }} title="포트폴리오"/>
-          <PortfolioRHFMultiSelect
-            checkbox
-            name="positionIds"
-            label="포트폴리오를 선택해주세요"
-            options={positionList}
-            sx={{width:'100%'}}
-          />
+          <RHFSelectPortfolio portfolDatas={dummyPortfolio}/>
       </Card>
 
       <Card sx={{marginBottom: 4}}>
         <Stack spacing={3} sx={{ p: 3 }}>
+          <ResumeFormPortfolioUserPreview portfolId={1}/>
+          <ResumeFormPortfolioServicePreview portfolId={2}/>
 
           {/* 제목 - default를 주자!( ex) ~~님의 이력서) */}
           <RHFTextField name="name" label="제목" />
@@ -539,7 +590,6 @@ export default function ResumeForm({ copyId }: Props) {
             ))}
           </RHFSelect>
 
-          <Test />
 
           {/* 학력사항 */}
 

@@ -1,18 +1,17 @@
 import { useState } from 'react';
 
 import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
 import { styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import CardMedia from '@mui/material/CardMedia';
+import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Button, { ButtonProps } from '@mui/material/Button';
-import Grid from '@mui/material/Unstable_Grid2';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
-
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 
 import Iconify from 'src/components/iconify';
 
@@ -65,7 +64,7 @@ type Props = {
 
 export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus, fileUrl, position}:Props) {
   // const blockBubble = useRef<>
-  
+
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
@@ -119,10 +118,10 @@ export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus
       </CardContent>
       <CardContent sx={{ pb: 0 }}>
         <Grid container spacing={3} paddingX={2}>
-          
+
           {/* 내용 */}
           <Grid xs={12} sm={9.5} md={10} xl={10.5} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}} >
-            
+
 
             {/* 포지션 */}
             <Typography variant="h6">
@@ -141,7 +140,7 @@ export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus
               </Typography>
             </Collapse>
           </Grid>
-          
+
           <Grid xsOffset={3} smOffset={0} mdOffset={0} xlOffset={0} xs={6} sm={2.5} md={2} xl={1.5} >
             {/* 증명사진 */}
             <Card sx={{width: 1, aspectRatio: 3/4, backgroundColor:'#8080801c', padding:fileUrl !== '' ? 1.5 : 1}}>
@@ -160,7 +159,7 @@ export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus
 
         </Grid>
       </CardContent>
-      
+
 
       {/* 확장 내용 */}
       <Collapse in={expanded} timeout="auto" unmountOnExit>

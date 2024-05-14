@@ -44,7 +44,7 @@ export default function ResumeFormPortfolioTable(props?: UseTableProps): ReturnT
       const newSelected = selected.includes(inputValue)
         ? selected.filter((value) => value !== inputValue)
         : [...selected, inputValue];
-
+      newSelected.sort()
       setSelected(newSelected);
     },
     [selected]
@@ -61,6 +61,7 @@ export default function ResumeFormPortfolioTable(props?: UseTableProps): ReturnT
 
   const onSelectAllRows = useCallback((checked: boolean, inputValue: number[]) => {
     if (checked) {
+      inputValue.sort()
       setSelected(inputValue);
       return;
     }
