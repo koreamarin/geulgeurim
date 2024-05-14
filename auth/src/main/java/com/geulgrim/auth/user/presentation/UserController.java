@@ -4,6 +4,7 @@ import com.geulgrim.auth.security.jwt.JWTUtil;
 import com.geulgrim.auth.user.application.dto.request.EnterUserLoginRequest;
 import com.geulgrim.auth.user.application.dto.request.EnterUserSignUpRequest;
 import com.geulgrim.auth.user.application.dto.response.EnterUserSignUpResponse;
+import com.geulgrim.auth.user.application.dto.response.GetUsersResponses;
 import com.geulgrim.auth.user.application.dto.response.UserLoginResponse;
 import com.geulgrim.auth.user.application.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +22,6 @@ public class UserController {
     
     private final UserService userService;
     private final JWTUtil jwtUtil;
-
-    @GetMapping
-    public ResponseEntity<String> Test() {
-        return new ResponseEntity<>("gd", HttpStatus.OK);
-    }
-
 
     // 기업 회원가입
     @PostMapping("/signup")
@@ -66,17 +61,20 @@ public class UserController {
         String AccessToken = jwtUtil.createAccessToken(userLoginResponse.getUser_id(), userLoginResponse.getUserType());
         String RefrashToken = jwtUtil.createRefreshToken(userLoginResponse.getUser_id(), userLoginResponse.getUserType());
 
-        headers.add("Authorization", "Bearer " + AccessToken);
-        headers.add("RefrashAuthorization", "Bearer " + RefrashToken);
+        HttpHeaders ResponseHeaders = new HttpHeaders();
+        ResponseHeaders.add("Authorization", "Bearer " + AccessToken);
+        ResponseHeaders.add("RefrashAuthorization", "Bearer " + RefrashToken);
 
-        System.out.println("왜 이러냐고");
-        System.out.println(userLoginResponse);
-
-        return new ResponseEntity<>(userLoginResponse, headers, HttpStatus.OK);
-//        return ResponseEntity.ok()
-//                .headers(headers)
-//                .body(userLoginResponse);
+        return new ResponseEntity<>(userLoginResponse, ResponseHeaders, HttpStatus.OK);
     }
+
+    // 개인 유저 전체 조회
+    @GetMapping("/user")
+    public ResponseEntity<?> getUsers() {
+        GetUsersResponses getUsersResponses = userService.getUsers();
+        return new ResponseEntity<>(getUsersResponses, HttpStatus.OK);
+    }
+
 
 
 }

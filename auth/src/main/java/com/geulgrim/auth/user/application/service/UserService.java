@@ -12,6 +12,7 @@ import com.geulgrim.auth.user.application.dto.request.EnterUserSignUpRequest;
 import com.geulgrim.auth.user.application.dto.request.OAuthTokenRequest;
 import com.geulgrim.auth.user.application.dto.request.OAuthUserInfoRequest;
 import com.geulgrim.auth.user.application.dto.response.EnterUserSignUpResponse;
+import com.geulgrim.auth.user.application.dto.response.GetUsersResponses;
 import com.geulgrim.auth.user.application.dto.response.UserLoginResponse;
 import com.geulgrim.auth.user.domain.entity.EnterUser;
 import com.geulgrim.auth.user.domain.entity.Enums.Status;
@@ -26,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -123,5 +126,22 @@ public class UserService {
         }
 
         return userLoginResponse;
+    }
+
+    // 개인 유저 전체 조회
+    public GetUsersResponses getUsers() {
+
+        List<User> users = userRepository.findAll();
+
+        GetUsersResponses getUsersResponses = new GetUsersResponses();
+        List<Long> userIds = new ArrayList<>();
+
+        for(User user : users) {
+            userIds.add(user.getUser_id());
+        }
+
+        getUsersResponses.setUserIds(userIds);
+
+        return getUsersResponses;
     }
 }
