@@ -20,7 +20,6 @@ import MarketItem from 'src/sections/blog/market-item';
 import InformationRecentSort from '../../share/view/share-recent-sort';
 import InformationRecentSearchOption from '../../share/view/share-recent-search-options';
 // prettier-ignore
-// , content, price
 function createDummyData(
   marketId: number, sellerId: number, sellerProfile: string, sellerNickname: string, sellerThumbnail: string, pieceId: number, marketThumbnail: string, title: string, price: number, created_at: Date, views:number,) {
   const createdAt = created_at.toLocaleDateString();
@@ -32,13 +31,13 @@ function createDummyData(
 const dummy = [
 
   createDummyData(1, 1, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png', '닉넴닉넴', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
-    1, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/Untitled%20%282%29.png', '지금이 제일dmddodmddododfs', 0.0002, new Date('2024-05-14'), 10),
+    1, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/Untitled%20%282%29.png', '지갑열어sdflkdsjflsdfkskjfgsdlfkdjfladjkfldakfjalfjfaljf', 0.0002, new Date('2024-05-14'), 10),
 
   createDummyData(2, 5, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png', '닉넴닉넴2', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     3, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/Untitled%20%282%29.png', '이걸 ', 0.0001, new Date('2024-05-14'), 9),
 
   createDummyData(3, 6, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png', '이세은3', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
-    2, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/Untitled%20%282%29.png', '이걸 외않사요를레이올올', 0.00004, new Date('2024-05-14'), 8),
+    2, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/Untitled%20%282%29.png', '이걸 외않사', 0.00004, new Date('2024-05-14'), 8),
 
   createDummyData(4, 6, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png', '이세은3', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     4, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/Untitled%20%282%29.png', '이걸 외않사', 0.00006, new Date('2024-05-14'), 7),
@@ -101,9 +100,9 @@ export default function ShareRecentPost() {
   const numberOfRows = Math.ceil(Math.min(dummy.length, maxColumns * 3) / maxColumns); // 최대 3열까지만 허용
 
   const renderTable = Array.from({ length: numberOfRows }, (_, rowIndex) => (
-    <tr key={rowIndex} >
+    <tr key={rowIndex}>
       {dummy.slice(rowIndex * maxColumns, rowIndex * maxColumns + maxColumns).map((data) => (
-        <td key={data.marketId}>
+        <td key={data.marketId} style={{ width: '25%' }}>
           <MarketItem market={data} />
         </td>
       ))}

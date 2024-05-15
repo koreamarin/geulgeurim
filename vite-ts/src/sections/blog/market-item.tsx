@@ -36,7 +36,7 @@ export default function PostItem(marketItem: marketProps) {
   // 작성자 프로필로 이동
   // const toProfile = paths.mypage.root;
   const toProfile = () => {
-    console.log(market.sellerId + " 번 유저 프로필로 이동");
+    console.log(market.sellerId);
   };
 
   return (
@@ -114,19 +114,21 @@ export function MarketContent({
                                 hit,
                                 createdAt,
                               }: MarketContentProps) {
+
   const linkTo = paths.nft.detail(marketId);
 
   // 작성자 프로필로 이동
   // const toProfile = paths.mypage.root;
   const toProfile = () => {
     console.log(sellerId);
+
   };
 
   return (
     <CardContent
       sx={{
         textAlign: 'left',
-        pt: 2,
+        pt: 4,
         width: 1,
       }}
     >
