@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -82,13 +83,19 @@ public class SecurityConfig {
             String AccessToken = jwtUtil.createAccessToken(userLoginResponse.getUser_id(), userLoginResponse.getUserType());
             String RefrashToken = jwtUtil.createRefreshToken(userLoginResponse.getUser_id(), userLoginResponse.getUserType());
 
-            // 헤더에 토큰 추가
-            response.addHeader("Authorization", "Bearer " + AccessToken);
-            response.addHeader("RefrashAuthorization", "Bearer " + RefrashToken);
+//            // 헤더에 토큰 추가
+//            response.addHeader("Authorization", "Bearer " + AccessToken);
+//            response.addHeader("RefrashAuthoriz ation", "Bearer " + RefrashToken);
+//
+//            PrintWriter writer = response.getWriter();
+//            writer.println(userLoginResponse);
+//            writer.flush();
+            String encodedNickname = URLEncoder.encode(userLoginResponse.getNickname(), StandardCharsets.UTF_8.name());
 
-            PrintWriter writer = response.getWriter();
-            writer.println(userLoginResponse);
-            writer.flush();
+            // Redirect to Frontend with Token in URL
+            String redirectUrl = "http://localhost:3000/auth/callback?access_token=" + AccessToken + "&refresh_token=" + RefrashToken  + "&user_id=" + userLoginResponse.getUser_id() + "&user_type=" + userLoginResponse.getUserType() + "&nickname=" + encodedNickname + "&profile_url=" + userLoginResponse.getProfile_url();
+            response.sendRedirect(redirectUrl);
         });
     }
+
 }
