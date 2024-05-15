@@ -113,7 +113,7 @@ export default function ResumeList() {
 
   // 새 이력서 form 이동
   const moveWrite = () => {
-    router.push(paths.mypage.worksWrite)
+    router.push(paths.mypage.resumeWrite)
   }
 
   const pageCount = 8

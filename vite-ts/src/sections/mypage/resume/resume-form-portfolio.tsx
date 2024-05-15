@@ -1,6 +1,7 @@
 import { useState, useEffect, Fragment } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Paper from '@mui/material/Paper';
 import TableRow from '@mui/material/TableRow';
@@ -11,9 +12,12 @@ import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
+import Accordion from '@mui/material/Accordion';
+import Typography from '@mui/material/Typography';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
 
 import { useRowState } from 'src/hooks/useRowState';
-import { usePreviewState } from 'src/hooks/usePreviewState';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -63,7 +67,6 @@ export default function RHFSelectPortfolio({portfolDatas}:Props) {
   const { control, setValue, getValues } = useFormContext()
 
   const { openRows, toggleRow } = useRowState()
-  const { openPreview, togglePreview } = usePreviewState()
 
   const [page, setPage] = useState<number>(1);
   const [tableData, setTableData] = useState<CustomRowDataType[]>([]);
@@ -234,107 +237,36 @@ export default function RHFSelectPortfolio({portfolDatas}:Props) {
         }}
       />
 
-      {/* 선택 포폴 */}
-      {table.selected}
-      <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-        <Scrollbar>
-          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 420 }}>
-            {/* 테이블 */}
-            <TableBody>
-              {table.selected
-                .slice(
-                  (page - 1) * table.rowsPerPage,
-                  (page - 1) * table.rowsPerPage + table.rowsPerPage
-                )
-                .map((rowNum) => {
-                  const data = tableData.find(portfol => portfol.pofolId === rowNum);
-                  return (
-                  <Fragment key={rowNum}>
-                    <TableRow
-                      key={rowNum}
-                      onClick={() => {
-                        // 클릭시 form의 value에 접속해 변경
-                        const newValues = getValues("portfolioIds").includes(rowNum) ?
-                        getValues("portfolioIds").filter((id:number) => id !== rowNum)
-                        : [...getValues("portfolioIds"), rowNum];
-                        setValue("portfolioIds", newValues);
-                        table.onSelectRow(rowNum)
-                      }}
-                    >
-                      <TableCell padding="checkbox">
-
-                        <Controller
-                          name="portfolioIds"
-                          control={control}
-                          render={({ field: { onChange, onBlur, value } }) => (
-                            <Checkbox
-                              onBlur={onBlur}
-                              onChange={(event) => {
-                                let updatedValue;
-                                if (event.target.checked) {
-                                  updatedValue = [...value, rowNum].sort((a, b) => a - b);
-                                } else {
-                                  updatedValue = value.filter((id: number) => id !== rowNum);
-                                }
-                                onChange(updatedValue);
-                                setValue("portfolioIds", updatedValue);
-                              }}
-                              checked={value.includes(rowNum)}
-                      />
-                          )}
-                        />
-                      </TableCell>
-                      <TableCell> {data?.pofolName } </TableCell>
-                      <TableCell>
-                        <IconButton
-                          size="small"
-                          color={openPreview[rowNum] ? 'inherit' : 'default'}
-                          onClick={(event) => {
-                            event.stopPropagation()
-                            togglePreview(rowNum)}}
-                        >
-                          <Iconify
-                            icon={openPreview[rowNum] ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'}
-                          />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell sx={{ py: 0 }} colSpan={6}>
-                        <Collapse in={openPreview[rowNum]} unmountOnExit>
-                          <Paper
-                            variant="outlined"
-                            sx={{
-                              py: 2,
-                              my: 2,
-                              borderRadius: 1.5,
-                              ...(openPreview[rowNum] && {
-                                boxShadow: (theme) => theme.customShadows.z20,
-                              }),
-                            }}
-                          >
-                              {data?.format === 'USER' ?
-                              <ResumeFormPortfolioUserPreview portfolId={rowNum}/>
-                              :
-                              <ResumeFormPortfolioServicePreview portfolId={rowNum}/>
-                              }
-
-                          </Paper>
-                        </Collapse>
-                      </TableCell>
-                    </TableRow>
-                    </Fragment>
-                )})}
-
-              <TableEmptyRows
-                height={denseHeight}
-                emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
-              />
-            </TableBody>
-          </Table>
-        </Scrollbar>
-      </TableContainer>
-
+      {/* 선택 포트폴리오 */}
+      <Card>
+        {table.selected.map((item) => {
+          const data = tableData.find(portfol => portfol.pofolId === item);
+          return (
+            <Accordion key={data?.pofolId} sx={{borderBottom: 'solid #00000014 1px'}}>
+              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
+                <IconButton onClick={(event) => {
+                  event.stopPropagation();
+                  const updatedSelected = getValues("portfolioIds").filter((id:number) => id !== item)
+                  // form 삭제
+                  setValue('portfolioIds', updatedSelected);
+                  // 테이블 삭제
+                  table.onSelectRow(item)
+                  }}>
+                  <Iconify color='#ff000073' icon="solar:trash-bin-trash-bold" />
+                </IconButton>
+                <Typography variant="subtitle2" alignContent='center' ml={2}>{data?.pofolName}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {data?.format === 'USER' ?
+                  <ResumeFormPortfolioUserPreview portfolId={item}/>
+                  :
+                  <ResumeFormPortfolioServicePreview portfolId={item}/>
+                  }
+                <Typography>{data?.pofolId}</Typography>
+              </AccordionDetails>
+            </Accordion>
+        )})}
+        </Card>
     </div>
   );
 }

@@ -59,7 +59,10 @@ export const paths = {
     apply: `${ROOTS.MYPAGE}/apply`,
     interest: `${ROOTS.MYPAGE}/interest`,
     portfolio: `${ROOTS.MYPAGE}/portfolio`,
+    
+    // 이력서
     resume: `${ROOTS.MYPAGE}/resume`,
+    resumeWrite: `${ROOTS.MYPAGE}/resume/write`,
 
     // 내 작품
     works: `${ROOTS.MYPAGE}/works`,

@@ -25,7 +25,7 @@ import FormProvider, {
   RHFMultiSelect
 } from 'src/components/hook-form';
 
-import { Education, Award, Experience } from 'src/types/resume';
+// import { Education, Award, Experience } from 'src/types/resume';
 
 // import RHFSelectPortfolio from './test';
 import { positionList } from '../position';
@@ -570,8 +570,6 @@ export default function ResumeForm({ copyId }: Props) {
 
       <Card sx={{marginBottom: 4}}>
         <Stack spacing={3} sx={{ p: 3 }}>
-          <ResumeFormPortfolioUserPreview portfolId={1}/>
-          <ResumeFormPortfolioServicePreview portfolId={2}/>
 
           {/* 제목 - default를 주자!( ex) ~~님의 이력서) */}
           <RHFTextField name="name" label="제목" />
