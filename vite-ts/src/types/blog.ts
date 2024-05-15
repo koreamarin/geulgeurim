@@ -182,3 +182,19 @@ export type communityMainItem = {
   shareRecent: ShareMainItem[];
   crewRecent: ShareMainItem[];
 }
+
+
+export type MarketMainItem = {
+  marketId: number;
+  sellerId: number;
+  pieceId: number;
+  sellerNickname: string;
+  sellerProfile: string;
+  sellerThumbnail: string;
+  marketThumbnail: string;
+  title: string;
+  price: number;
+  hit: string;
+  createdAt: string;
+
+}

@@ -52,6 +52,7 @@ export const paths = {
   nft: {
     root: `${ROOTS.NFT}`,
     detail: (id: number) => `${ROOTS.NFT}/${id}`,
+
   },
 
   mypage: {
