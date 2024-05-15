@@ -7,10 +7,10 @@ import lombok.Getter;
 @Getter
 public class PieceInfoDetail {
 
-    private String pieceUrl; // 작품 url
     private String title;
     private String program;
     private String contribution;
     private String content;
+    private String pieceUrl; // 작품 url
     private String pieceUploaded; // 사용자 업로드 url
 }
