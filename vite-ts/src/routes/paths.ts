@@ -63,6 +63,7 @@ export const paths = {
     // 이력서
     resume: `${ROOTS.MYPAGE}/resume`,
     resumeWrite: `${ROOTS.MYPAGE}/resume/write`,
+    resumeCopy: (id: number) => `${ROOTS.MYPAGE}/resume/write/${id}`,
 
     // 내 작품
     works: `${ROOTS.MYPAGE}/works`,

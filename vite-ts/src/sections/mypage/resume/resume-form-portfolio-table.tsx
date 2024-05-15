@@ -1,4 +1,6 @@
 import { useState, useCallback } from 'react';
+import { useFormContext } from 'react-hook-form';
+
 
 import { TableProps } from './types';
 
@@ -16,6 +18,8 @@ export type UseTableProps = {
 };
 
 export default function ResumeFormPortfolioTable(props?: UseTableProps): ReturnType {
+  const { getValues } = useFormContext()
+  
   const [dense, setDense] = useState(!!props?.defaultDense);
 
   const [page, setPage] = useState(props?.defaultCurrentPage || 0);

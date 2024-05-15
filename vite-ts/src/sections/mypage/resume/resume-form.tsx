@@ -6,8 +6,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
 import CardHeader from '@mui/material/CardHeader';
@@ -19,37 +17,20 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
-  RHFUpload,
-  RHFSelect,
   RHFTextField,
   RHFMultiSelect
 } from 'src/components/hook-form';
 
-// import { Education, Award, Experience } from 'src/types/resume';
-
-// import RHFSelectPortfolio from './test';
+import RHFWork from './resume-form-work';
+import RHFAward from './resume-form-award';
 import { positionList } from '../position';
 import ResumeRHFUpload from './resume-form-image';
 import ResumeRHFSwitch from './resume-form-switch';
+import RHFEducation from './resume-form-education';
+import RHFExperience from './resume-form-experience';
 import RHFSelectPortfolio from './resume-form-portfolio';
-import ResumeFormPortfolioUserPreview from './resume-form-portfolio-user-preview';
-import ResumeFormPortfolioServicePreview from './resume-form-portfolio-service-preview';
 
 // ----------------------------------------------------------------------
-
-type SelectCatgory = {
-  label: string,
-  value: string
-}
-
-const typeList:SelectCatgory[] = [
-  {label:'선화', value:'PEN'},
-  {label:'채색', value:'COLOR'},
-  {label:'배경', value:'BG'},
-  {label:'PD', value:'PD'},
-  {label:'스토리', value:'STORY'},
-  {label:'콘티', value:'CONT'}
-]
 
 
 type Props = {
@@ -88,7 +69,7 @@ const dummy = [
               "educationId": 45,
               "institutionName": "하버드",
               "startDate": new Date("2024-05-09T00:00:00"),
-              "endDate": new Date("2024-05-09T00:00:00"),
+              "endDate": new Date("2024-05-10T00:00:00"),
               "educationStatus": "ONGOING",
               "gpa": 1.00
           },
@@ -96,7 +77,7 @@ const dummy = [
               "educationId": 46,
               "institutionName": "스텐포드",
               "startDate": new Date("2024-05-08T00:00:00"),
-              "endDate": new Date("2024-05-08T00:00:00"),
+              "endDate": new Date("2024-05-10T00:00:00"),
               "educationStatus": "ONGOING",
               "gpa": 2.00
           }
@@ -106,14 +87,14 @@ const dummy = [
               "workId": 43,
               "companyName": "구글",
               "startDate": new Date("2024-05-09T00:00:00"),
-              "endDate": new Date("2024-05-09T00:00:00"),
+              "endDate": new Date("2024-05-10T00:00:00"),
               "content": "집지키는개"
           },
           {
               "workId": 44,
               "companyName": "SpaceX",
               "startDate": new Date("2024-05-10T00:00:00"),
-              "endDate": new Date("2024-05-10T00:00:00"),
+              "endDate": new Date("2024-05-11T00:00:00"),
               "content": "일론의 운전기사"
           }
       ],
@@ -139,14 +120,14 @@ const dummy = [
               "experienceTitle": "경험없다",
               "experienceContent": "경험이 없어요",
               "startDate": new Date("2024-05-09T00:00:00"),
-              "endDate": new Date("2024-05-09T00:00:00")
+              "endDate": new Date("2024-05-10T00:00:00")
           },
           {
               "experienceId": 40,
               "experienceTitle": "경험있다",
               "experienceContent": "경험이 있어요",
               "startDate": new Date("2024-05-10T00:00:00"),
-              "endDate": new Date("2024-05-10T00:00:00")
+              "endDate": new Date("2024-05-11T00:00:00")
           }
       ]
   },
@@ -183,7 +164,7 @@ const dummy = [
               "educationId": 48,
               "institutionName": "하버드",
               "startDate": new Date("2024-05-09T00:00:00"),
-              "endDate": new Date("2024-05-09T00:00:00"),
+              "endDate": new Date("2024-05-10T00:00:00"),
               "educationStatus": "ONGOING",
               "gpa": 1.00
           },
@@ -191,7 +172,7 @@ const dummy = [
               "educationId": 49,
               "institutionName": "스텐포드",
               "startDate": new Date("2024-05-08T00:00:00"),
-              "endDate": new Date("2024-05-08T00:00:00"),
+              "endDate": new Date("2024-05-10T00:00:00"),
               "educationStatus": "ONGOING",
               "gpa": 2.00
           }
@@ -201,14 +182,14 @@ const dummy = [
               "workId": 45,
               "companyName": "구글",
               "startDate": new Date("2024-05-09T00:00:00"),
-              "endDate": new Date("2024-05-09T00:00:00"),
+              "endDate": new Date("2024-05-10T00:00:00"),
               "content": "집지키는개"
           },
           {
               "workId": 46,
               "companyName": "SpaceX",
               "startDate": new Date("2024-05-10T00:00:00"),
-              "endDate": new Date("2024-05-10T00:00:00"),
+              "endDate": new Date("2024-05-11T00:00:00"),
               "content": "일론의 운전기사"
           }
       ],
@@ -234,14 +215,14 @@ const dummy = [
               "experienceTitle": "경험없다",
               "experienceContent": "경험이 없어요",
               "startDate": new Date("2024-05-09T00:00:00"),
-              "endDate": new Date("2024-05-09T00:00:00")
+              "endDate": new Date("2024-05-10T00:00:00")
           },
           {
               "experienceId": 43,
               "experienceTitle": "경험있다",
               "experienceContent": "경험이 있어요",
               "startDate": new Date("2024-05-10T00:00:00"),
-              "endDate": new Date("2024-05-10T00:00:00")
+              "endDate": new Date("2024-05-11T00:00:00")
           }
       ]
   }
@@ -384,13 +365,20 @@ export default function ResumeForm({ copyId }: Props) {
         // 학교명 - 필수
         institutionName: Yup.string().required('학교 이름은 필수입니다.'),
         // 시작날짜 - 필수
-        startDate: Yup.date().required('시작 날짜는 필수입니다.'),
+        startDate: Yup.mixed<any>().required('시작 날짜는 필수입니다.'),
         // 종료날짜 - 선택
-        endDate: Yup.date(),
+        endDate: Yup.mixed<any>().nullable().test(
+          'date-min',
+          '종료날짜는 시작날짜보다 뒤에 있어야합니다',
+          (value, {parent}) => {
+            const { startDate } = parent;
+            return !startDate || !value || new Date(value).getTime() > new Date(startDate).getTime();
+        }
+        ),
         // 교육상태 - 필수
         educationStatus: Yup.string().required('상태는 필수입니다.').oneOf(['COMPLETED', 'ONGOING'], '교육 상태는 졸업 또는 졸업예정 중 하나여야 합니다.'),
         // GPA - 선택
-        gpa: Yup.number().nullable(),
+        gpa: Yup.number().nullable().lessThan(4.5, '4.5 아래로 작성해주세요')
       })
     ),
     // 경력사항
@@ -399,9 +387,16 @@ export default function ResumeForm({ copyId }: Props) {
         // 회사명 - 필수
         companyName: Yup.string().required('회사명은 필수입니다.'),
         // 시작날짜 - 필수
-        startDate: Yup.date().required('시작 날짜는 필수입니다.'),
+        startDate: Yup.mixed<any>().required('시작 날짜는 필수입니다.'),
         // 종료날짜 - 필수
-        endDate: Yup.date().required('종료 날짜는 필수입니다.'),
+        endDate: Yup.mixed<any>().required('종료 날짜는 필수입니다.').test(
+          'date-min',
+          '종료날짜는 시작날짜보다 뒤에 있어야합니다',
+          (value, {parent}) => {
+            const { startDate } = parent;
+            return !startDate || !value || new Date(value).getTime() > new Date(startDate).getTime();
+        }
+        ),
         // 경력설명 - 필수
         content: Yup.string().required('설명은 필수입니다.')
       })
@@ -412,7 +407,7 @@ export default function ResumeForm({ copyId }: Props) {
         // 수상명 - 필수
         awardName: Yup.string().required('이름은 필수입니다.'),
         // 획득날 - 필수
-        acquisitionDate: Yup.date().required('날짜는 필수입니다.'),
+        acquisitionDate: Yup.mixed<any>().required('날짜는 필수입니다.'),
         // 발급기관 - 선택
         institution: Yup.string(),
         // 등급/점수 - 선택
@@ -456,9 +451,8 @@ export default function ResumeForm({ copyId }: Props) {
       // api로 바꿔야함
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
-      enqueueSnackbar('작품 등록 성공!');
-      // nft 등록 화면으로 이동하자!
-      router.push(paths.mypage.works);
+      enqueueSnackbar('이력서 등록 성공!');
+      router.push(paths.mypage.resume);
       console.log('DATA', data);
     } catch (error) {
       console.error(error);
@@ -562,57 +556,40 @@ export default function ResumeForm({ copyId }: Props) {
         </Grid>
       </Card>
 
+      {/* 학력사항 */}
+      <Card sx={{marginY: 4, p:3}}>
+        <RHFEducation />
+      </Card>
+
+      {/* 경력사항 */}
+      <Card sx={{marginY: 4, p:3}}>
+        <RHFWork />
+      </Card>
+
+      {/* 자격/어학/수상 */}
+      <Card sx={{marginY: 4, p:3}}>
+        <RHFAward />
+      </Card>
+
+      {/* 경험/활동/교육 */}
+      <Card sx={{marginY: 4, p:3}}>
+        <RHFExperience />
+      </Card>
+
       {/* 포트폴리오 선택 */}
-      <Card sx={{ p: 3, mt:3 }}>
-          <CardHeader sx={{ mb: 2, pt: 0 }} title="포트폴리오"/>
+      <Card sx={{marginY: 4, p:3}}>
+          <CardHeader sx={{ mb: 2, pt: 0 }} title="포트폴리오" action={
+                <Button  style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="success" size="medium" onClick={() => router.push(paths.mypage.portfolioWrite)}>
+                  작성하기
+                </Button>
+            }/>
           <RHFSelectPortfolio portfolDatas={dummyPortfolio}/>
       </Card>
 
-      <Card sx={{marginBottom: 4}}>
-        <Stack spacing={3} sx={{ p: 3 }}>
 
-          {/* 제목 - default를 주자!( ex) ~~님의 이력서) */}
-          <RHFTextField name="name" label="제목" />
-
-          {/* 기본정보 + default + position => selectbar 형태로  */}
-
-
-          {/* 자소서 */}
-          <RHFSelect name="type" label="카테고리">
-            <MenuItem>선택해주세요</MenuItem>
-            <Divider sx={{ borderStyle: 'dashed' }} />
-            {typeList.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </RHFSelect>
-
-
-          {/* 학력사항 */}
-
-          {/* 경력사항 */}
-
-          {/* 자격/어학/수상 */}
-
-          {/* 경험/활동/교육 */}
-
-          {/* 포트폴리오 => select bar에서 선택 후 확장해서 view 형태로 보이도록 => component 가져오면 될듯? */}
-
-        </Stack>
-      </Card>
-      <Stack spacing={1.5} mb={4}>
-        <Typography variant="h5">작품</Typography>
-        {/* 업로드 */}
-        <RHFUpload
-          name="fileUrl"
-          onDrop={handleDrop}
-          onDelete={handleRemoveFile}
-        />
-      </Stack>
       <Stack mb={4} direction="row" alignItems="center" justifyContent="end">
         <Button
-            style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" onClick={() => router.push(paths.mypage.works)} sx={{marginRight:3}}>
+            style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" onClick={() => router.push(paths.mypage.resume)} sx={{marginRight:3}}>
           취소하기
         </Button>
 

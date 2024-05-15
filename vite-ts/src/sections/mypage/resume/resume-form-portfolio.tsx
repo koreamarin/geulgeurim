@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Card from '@mui/material/Card';
@@ -9,13 +9,13 @@ import Checkbox from '@mui/material/Checkbox';
 import Collapse from '@mui/material/Collapse';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
-import TableContainer from '@mui/material/TableContainer';
-import Pagination, { paginationClasses } from '@mui/material/Pagination';
 import Accordion from '@mui/material/Accordion';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import TableContainer from '@mui/material/TableContainer';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
 import { useRowState } from 'src/hooks/useRowState';
 
@@ -83,20 +83,26 @@ export default function RHFSelectPortfolio({portfolDatas}:Props) {
     }));
     setTableData(dummyDataChangeType);
   }, [portfolDatas]);
-
+  
   const table = ResumeFormPortfolioTable({
     defaultOrderBy: 'createAt',
+    defaultSelected: getValues("portfolioIds")
   });
-
+  
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
   });
-
+  
   const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
     setPage(newPage);
   };
-
+  
+  // useEffect(() => {
+  //   table.setSelected(getValues("portfolioIds"))
+  //   console.log(table)
+  // }, [])
+  
 
   return (
     <div>
@@ -129,9 +135,7 @@ export default function RHFSelectPortfolio({portfolDatas}:Props) {
                   (page - 1) * table.rowsPerPage,
                   (page - 1) * table.rowsPerPage + table.rowsPerPage
                 )
-                .map((row) => {
-                  console.log(row)
-                  return (
+                .map((row) => (
                   <Fragment key={row.pofolId}>
                     <TableRow
                       hover
@@ -143,6 +147,7 @@ export default function RHFSelectPortfolio({portfolDatas}:Props) {
                         : [...getValues("portfolioIds"), row.pofolId];
                         setValue("portfolioIds", newValues);
                         table.onSelectRow(row.pofolId)
+                        console.log(table)
                       }}
                       selected={table.selected.includes(row.pofolId)}
                     >
@@ -211,7 +216,7 @@ export default function RHFSelectPortfolio({portfolDatas}:Props) {
                       </TableCell>
                     </TableRow>
                     </Fragment>
-                )})}
+                ))}
 
               <TableEmptyRows
                 height={denseHeight}
@@ -239,10 +244,10 @@ export default function RHFSelectPortfolio({portfolDatas}:Props) {
 
       {/* 선택 포트폴리오 */}
       <Card>
-        {table.selected.map((item) => {
+        {table.selected.map((item, index) => {
           const data = tableData.find(portfol => portfol.pofolId === item);
           return (
-            <Accordion key={data?.pofolId} sx={{borderBottom: 'solid #00000014 1px'}}>
+            <Accordion key={index} sx={{borderBottom: 'solid #00000014 1px'}}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
                 <IconButton onClick={(event) => {
                   event.stopPropagation();
@@ -262,7 +267,6 @@ export default function RHFSelectPortfolio({portfolDatas}:Props) {
                   :
                   <ResumeFormPortfolioServicePreview portfolId={item}/>
                   }
-                <Typography>{data?.pofolId}</Typography>
               </AccordionDetails>
             </Accordion>
         )})}

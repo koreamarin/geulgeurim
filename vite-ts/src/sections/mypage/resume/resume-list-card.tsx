@@ -17,13 +17,13 @@ import Iconify from 'src/components/iconify';
 
 import { positionList } from '../position';
 
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
-}
-
-const StyledButton = styled((props: ButtonProps) => {
+const StyledButton = styled(({expanded, ...props}: ButtonProps & { expanded: boolean }) => {
   const {...other} = props
-  return <Button {...other} />
+  return <Button endIcon={
+    <Iconify
+      icon="eva:arrow-ios-downward-fill"
+      style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s', margin:'10px' }}
+    />  } {...props} />
 })(({ theme }) => ({
   cursor: 'pointer',
   backgroundColor: 'transparent',
@@ -37,15 +37,6 @@ const StyledButton = styled((props: ButtonProps) => {
     },
   },
   borderTop: '1px solid #E0E0E0'
-}));
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  margin: '0 auto',
-  color: theme.palette.text.secondary,
 }));
 
 
@@ -177,15 +168,7 @@ export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus
 
 
       {/* 확장 로직 */}
-      <StyledButton onClick={handleExpandClick} sx={{mt:2}}>
-        <ExpandMore
-          expand={expanded}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <Iconify icon="eva:arrow-ios-downward-fill" />
-        </ExpandMore>
-      </StyledButton>
+      <StyledButton expanded={expanded} onClick={handleExpandClick} sx={{mt:2}} />
     </Card>
   );
 }
