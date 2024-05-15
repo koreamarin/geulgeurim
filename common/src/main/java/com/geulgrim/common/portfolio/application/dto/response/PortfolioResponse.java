@@ -1,5 +1,6 @@
 package com.geulgrim.common.portfolio.application.dto.response;
 
+import com.geulgrim.common.portfolio.domain.entity.enums.Format;
 import com.geulgrim.common.portfolio.domain.entity.enums.OpenState;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,8 @@ public class PortfolioResponse {
 
     private Long pofolId;
     private String pofolName;
-    private OpenState status;
+    private OpenState openState;
+    private Format format;
     private LocalDate createdAt;
     private LocalDate updatedAt;
 

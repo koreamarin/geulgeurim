@@ -57,7 +57,8 @@ public class PortfolioService {
                     PortfolioResponse response = new PortfolioResponse();
                     response.setPofolId(portfolio.getPofolId());
                     response.setPofolName(portfolio.getPofolName());
-                    response.setStatus(portfolio.getStatus());
+                    response.setOpenState(portfolio.getStatus());
+                    response.setFormat(portfolio.getFormat());
                     response.setCreatedAt(LocalDate.from(portfolio.getCreatedAt()));
                     response.setUpdatedAt(LocalDate.from(portfolio.getUpdatedAt()));
                     return response;
@@ -76,7 +77,10 @@ public class PortfolioService {
                     PortfolioResponse response = new PortfolioResponse();
                     response.setPofolId(portfolio.getPofolId());
                     response.setPofolName(portfolio.getPofolName());
-                    response.setStatus(portfolio.getStatus());
+                    response.setOpenState(portfolio.getStatus());
+                    response.setFormat(portfolio.getFormat());
+                    response.setCreatedAt(LocalDate.from(portfolio.getCreatedAt()));
+                    response.setUpdatedAt(LocalDate.from(portfolio.getUpdatedAt()));
                     return response;
                 })
                 .collect(Collectors.toList());

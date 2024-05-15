@@ -35,12 +35,12 @@ public class PortfolioController {
     }
 
 
-    @GetMapping("/guest")
+    @GetMapping("/guest/{user_id}")
     @Operation(summary = "포트폴리오 전체 조회", description = "다른 사람의 포트폴리오를 조회합니다.")
     public ResponseEntity<List<PortfolioResponse>> getOtherPortfolios(
-            @RequestHeader HttpHeaders headers
+            @PathVariable("user_id") Long userId
+
     ) {
-        Long userId = Long.parseLong(headers.get("user_id").get(0));
         List<PortfolioResponse> responses = portfolioService.getOtherPortfolios(userId);
         return ResponseEntity.ok(responses);
     }
