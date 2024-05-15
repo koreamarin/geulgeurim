@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -70,10 +71,12 @@ public class PortfolioController {
     @PostMapping
     @Operation(summary = "포트폴리오 등록", description = "글그림 포맷의 포트폴리오를 등록합니다.")
     public ResponseEntity<Long> addPortfolio(
-            @RequestBody PortfolioRequest portfolioRequest,
+            @RequestPart PortfolioRequest portfolioRequest,
+            @RequestPart ArrayList<MultipartFile> files,
             @RequestHeader HttpHeaders headers
     ) {
         Long userId = Long.parseLong(headers.get("user_id").get(0));
+        portfolioRequest.setFiles(files);
         Long portfolioId = portfolioService.addPortfolio(userId, portfolioRequest);
         return ResponseEntity.ok(portfolioId);
     }

@@ -14,6 +14,7 @@ public class PortfolioResponse {
     private String pofolName;
     private OpenState openState;
     private Format format;
+    private String fileUrl;
     private LocalDate createdAt;
     private LocalDate updatedAt;
 
