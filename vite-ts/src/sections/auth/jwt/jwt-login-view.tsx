@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -73,30 +72,17 @@ export default function JwtLoginView() {
   );
 
   const handleButtonClick = () => {
-    console.log('로그인확인');
-    // http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/auth/oauth2/authorization/kakao로 axios get요청
-    const xml = new XMLHttpRequest();
-    axios
-      .get(
-        'http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/auth/oauth2/authorization/kakao'
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.log(err));
+    const url = 'http://localhost:8080/api/v1/auth/oauth2/authorization/kakao';
+    const windowFeatures = 'width=500,height=600,left=10,top=10';
+    const newWindow = window.open(url, '_blank', windowFeatures);
 
-    // const url =
-    //   'http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/auth/oauth2/authorization/kakao';
-    // const windowFeatures = 'width=500,height=600,left=10,top=10';
-    // const newWindow = window.open(url, '_blank', windowFeatures);
-
-    // const checkWindowClosed = setInterval(() => {
-    //   if (newWindow.closed) {
-    //     clearInterval(checkWindowClosed);
-    //     // 로그인 창이 닫혔으므로 홈페이지로 이동
-    //     window.location.href = '/'; // 홈페이지 URL로 변경해주세요.
-    //   }
-    // }, 500); // 500ms 마다 창이 닫혔는지 확인
+    const checkWindowClosed = setInterval(() => {
+      if (newWindow.closed) {
+        clearInterval(checkWindowClosed);
+        // 로그인 창이 닫혔으므로 홈페이지로 이동
+        window.location.href = '/'; // 홈페이지 URL로 변경해주세요.
+      }
+    }, 500); // 500ms 마다 창이 닫혔는지 확인
   };
 
   const KakaoLoginBtn = (
@@ -118,10 +104,8 @@ export default function JwtLoginView() {
       }}
       onClick={handleButtonClick}
     >
-      xcbv
-      {/* <a href="http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/auth/oauth2/authorization/kakao">
-        카카오 로그인
-      </a> */}
+      카카오 로그인
+      {/* <a href="http://localhost:8080/api/v1/auth/oauth2/authorization/kakao">카카오 로그인</a> */}
     </button>
   );
 

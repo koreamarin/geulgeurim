@@ -19,6 +19,7 @@ const AmplifyForgotPasswordPage = lazy(() => import('src/pages/auth/amplify/forg
 // JWT
 const JwtLoginPage = lazy(() => import('src/pages/auth/jwt/login'));
 const JwtRegisterPage = lazy(() => import('src/pages/auth/jwt/register'));
+const LoginTestPage = lazy(() => import('src/pages/auth/jwt/login-ing'));
 
 // FIREBASE
 const FirebaseLoginPage = lazy(() => import('src/pages/auth/firebase/login'));
@@ -108,6 +109,28 @@ const authJwt = {
             <JwtRegisterPage />
           </AuthClassicLayout>
         </GuestGuard>
+      ),
+    },
+  ],
+};
+
+// test용 router
+const authJwtTest = {
+  path: 'auth',
+  element: (
+    <Suspense fallback={<SplashScreen />}>
+      <Outlet />
+    </Suspense>
+  ),
+  children: [
+    {
+      path: 'callback',
+      element: (
+        // <GuestGuard>
+        // <AuthClassicLayout>
+        <LoginTestPage />
+        // </AuthClassicLayout>
+        // </GuestGuard>
       ),
     },
   ],
@@ -231,6 +254,7 @@ const authSupabase = {
 };
 
 export const authRoutes = [
+  authJwtTest,
   {
     path: 'auth',
     children: [authAmplify, authJwt, authFirebase, authAuth0, authSupabase],
