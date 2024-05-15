@@ -3,16 +3,17 @@ import { Helmet } from 'react-helmet-async';
 import { SplashScreen } from 'src/components/loading-screen';
 
 export default function LoginPage() {
-  const getQueryStringParams = (query) =>
+  const getQueryStringParams = (query: any) =>
     query
-      ? (/^[?#]/.test(query) ? query.slice(1) : query).split('&').reduce((params, param) => {
-          const [key, value] = param.split('=');
-          params[key] = value ? decodeURIComponent(value.replace(/\+/g, ' ')) : '';
-          return params;
-        }, {})
+      ? (/^[?#]/.test(query) ? query.slice(1) : query)
+          .split('&')
+          .reduce((params: any, param: any) => {
+            const [key, value] = param.split('=');
+            params[key] = value ? decodeURIComponent(value.replace(/\+/g, ' ')) : '';
+            return params;
+          }, {})
       : {};
   const urlParams = getQueryStringParams(window.location.search);
-  console.log('확인', urlParams);
 
   localStorage.setItem('accessToken', urlParams.access_token);
   localStorage.setItem('refreshToken', urlParams.refresh_token);
