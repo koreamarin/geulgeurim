@@ -228,14 +228,13 @@ public class PortfolioService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
 
         List<String> fileUrls = new ArrayList<>();
-        for (MultipartFile fileUrl : portfolioRequest.getFileUrl()) {
+        for (MultipartFile file : portfolioRequest.getFileList()) {
             try {
-                String fileName = s3UploadService.saveFile(fileUrl);
-                fileUrls.add(fileName);
+                String fileUrl = s3UploadService.saveFile(file);
+                fileUrls.add(fileUrl);
             }  catch (IOException e) {
                 e.fillInStackTrace();
             }
-
         }
 
         Portfolio portfolio = Portfolio.builder()
