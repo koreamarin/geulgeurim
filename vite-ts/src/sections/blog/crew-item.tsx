@@ -56,7 +56,7 @@ export default function PostItem(item: Props) {
         <Link component={RouterLink} href="" onClick={toProfile}>
           <Avatar
             alt="123"
-            src={crew.userProfile}
+            src={crew.userFileUrl}
             sx={{
               left: 24,
               zIndex: 9,
@@ -67,7 +67,7 @@ export default function PostItem(item: Props) {
         </Link>
 
         <Link component={RouterLink} href={linkTo}>
-          <Image alt="123" src={crew.thumbnail} ratio="4/3" />
+          <Image alt="123" src={crew.imageList[0].fileUrl} ratio="4/3" />
         </Link>
       </Box>
 
@@ -75,10 +75,8 @@ export default function PostItem(item: Props) {
         crewId={crew.crewId}
         userId={crew.userId}
         userNickname={crew.userNickname}
-        title={crew.title}
-        createdAt={crew.date}
-        hit={crew.hit}
-        commentCnt={crew.commentCnt}
+        title={crew.projectName}
+        createdAt={crew.createdAt}
         pen={crew.pen}
         color={crew.color}
         bg={crew.bg}
@@ -98,8 +96,6 @@ type CrewContentProps = {
   userId: number;
   userNickname: string;
   title: string;
-  hit: string;
-  commentCnt: string;
   createdAt: Date | string | number;
   pen: number;
   color: number;
@@ -116,8 +112,6 @@ export function CrewContent({
   userNickname,
   title,
   createdAt,
-  hit,
-  commentCnt,
   pen,
   color,
   bg,
@@ -263,26 +257,6 @@ export function CrewContent({
         )}
       </Grid>
 
-      <Stack
-        spacing={1.5}
-        direction="row"
-        justifyContent="flex-start"
-        sx={{
-          mt: 1.5,
-          typography: 'caption',
-          color: 'text.disabled',
-        }}
-      >
-        <Stack direction="row" alignItems="center">
-          <Iconify icon="eva:message-circle-fill" width={16} sx={{ mr: 0.5 }} />
-          {fShortenNumber(commentCnt)}
-        </Stack>
-
-        <Stack direction="row" alignItems="center">
-          <Iconify icon="solar:eye-bold" width={16} sx={{ mr: 0.5 }} />
-          {fShortenNumber(hit)}
-        </Stack>
-      </Stack>
       <Stack
         direction="row"
         justifyContent="flex-end"

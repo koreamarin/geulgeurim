@@ -74,7 +74,10 @@ export default function BoardMainView(props: propsType) {
               </Box>
               <Box paddingLeft={3}>
                 <ul style={{ paddingLeft: 0 }}>
-                  {dummyPop.map((popular, idx) => (
+                  {popBoard?.length === 0 ? 
+                   <></>
+                   : 
+                   (popBoard?.map((popular, idx) => (
                     <Link
                       color="inherit"
                       style={{ textDecoration: 'none' }}
@@ -85,7 +88,7 @@ export default function BoardMainView(props: propsType) {
                         <TextMaxLine line={1} variant='subtitle2' persistent>{popular.title}</TextMaxLine>
                       </li>
                     </Link>
-                  ))}
+                  )))}
                 </ul>
               </Box>
               <Box textAlign="right" mr={1} fontSize={10}>
@@ -111,7 +114,10 @@ export default function BoardMainView(props: propsType) {
                 </Box>
                 <Box paddingLeft={3}>
                   <ul style={{ paddingLeft: '0' }}>
-                  {dummyNew.map((popular, idx) => (
+                  {newBoard?.length === 0 ?
+                  <></> 
+                   :
+                  (newBoard?.map((popular, idx) => (
                     <Link
                       color="inherit"
                       style={{ textDecoration: 'none' }}
@@ -122,7 +128,7 @@ export default function BoardMainView(props: propsType) {
                         <TextMaxLine line={1} variant='subtitle2' persistent>{popular.title}</TextMaxLine>
                       </li>
                     </Link>
-                  ))}
+                  )))}
                   </ul>
                 </Box>
                 <Box textAlign="right" mr={1} fontSize={10}>

@@ -17,7 +17,7 @@ export function useGetCommunityMain() {
 
   const memoizedValue = useMemo(
     () => ({
-      community: (data?.map) || [],
+      community: (data) || [],
       communityLoading: isLoading,
       communityError: error,
       communityValidating: isValidating,
@@ -25,7 +25,7 @@ export function useGetCommunityMain() {
       popBoardEmpty: !isLoading && !data?.popBoard.length,
       newShareEmpty: !isLoading && !data?.newShare.length,
     }),
-    [data?.map, data?.newBoard.length, data?.newShare.length, data?.popBoard.length, error, isLoading, isValidating]
+    [data, error, isLoading, isValidating]
   );
 
   return memoizedValue;

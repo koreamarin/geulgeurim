@@ -136,19 +136,17 @@ export type ShareItem = {
   title: string;
   content: string;
   hit: number;
-  commentList: [
+  commentList:
     {
       boardCommentId: number;
       content: string;
-    }
-  ];
-  imageList: [
+    }[];
+  imageList: 
     {
       boardImageId: number;
       imageType: string;
       fileUrl: string;
-    }
-  ];
+    }[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -156,14 +154,14 @@ export type ShareItem = {
 export type CrewMainItem = {
   crewId: number;
   userId: number;
+  userNickname: string;
   userFileUrl: string;
   projectName: string;
-  imageList: [
+  imageList:
     {
       crewImageId: number;
       fileUrl: string;
-    }
-  ];
+    }[];
   pen: number;
   color: number;
   bg: number;
@@ -171,8 +169,8 @@ export type CrewMainItem = {
   story: number;
   conti: number;
   status: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type communityMainItem = {

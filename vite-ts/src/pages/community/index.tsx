@@ -12,15 +12,16 @@ import { ShareMainView } from 'src/sections/share/view';
 
 export default function CommunityHome() {
   const { community } = useGetCommunityMain();
-  console.log('com', community)
+  console.log('community', community)
+  console.log('newBoard', community.newBoard)
   return (
     <Container maxWidth="md" sx={{justifyContent: 'center'}}>
       <Helmet>
         <title>Community 메인페이지</title>
       </Helmet>
-      {/* <BoardMainView newBoard={community.newBoard} popBoard={community.popBoard}/>
+      <BoardMainView newBoard={community.newBoard} popBoard={community.popBoard}/>
       <ShareMainView newShare={community.newShare}/>
-      <CrewMainView newCrew={community.newCrew}/> */}
+      <CrewMainView newCrew={community.newCrew}/>
     </Container>
   );
 }

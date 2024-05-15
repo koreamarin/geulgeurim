@@ -8,6 +8,8 @@ import { paths } from 'src/routes/paths';
 
 import ShareItem from 'src/sections/blog/share-item';
 
+import { ShareMainItem } from 'src/types/blog';
+
 // prettier-ignore
 function createDummyData(
   shareId: number, userId: number, userNickname: string, userProfile: string, fileId: number, thumbnail: string, fileType: string, title: string, created_at: Date, updated_at: Date, views:number, comment_count:number ) {
@@ -78,7 +80,13 @@ const dummy = [
     '5화짜리 프로젝트 ㄱㄱ?', new Date('2024-05-03'), new Date('2024-05-04'), 20, 2),
 ];
 
-export default function ShareMainView() {
+type propType = {
+  newShare: ShareMainItem[];
+}
+
+export default function ShareMainView(props: propType) {
+  const { newShare } = props;
+
   const share = paths.community.share.main;
   const navigate = useNavigate();
 
@@ -93,30 +101,57 @@ export default function ShareMainView() {
           <h2>그림 평가 게시판</h2>
         </Box>
         <Box paddingLeft={3} paddingRight={3} marginBottom={0}>
-          <table style={{ width: '100%', textAlign: 'center', borderSpacing: '10px 10px' }}>
-            <tr>
-              <td style={{ width: '33.33%' }}>
-                <ShareItem share={dummy[0]} />
-              </td>
-              <td style={{ width: '33.33%' }}>
-                <ShareItem share={dummy[1]} />
-              </td>
-              <td style={{ width: '33.33%' }}>
-                <ShareItem share={dummy[2]} />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ShareItem share={dummy[3]} />
-              </td>
-              <td>
-                <ShareItem share={dummy[4]} />
-              </td>
-              <td>
-                <ShareItem share={dummy[5]} />
-              </td>
-            </tr>
-          </table>
+          {newShare?.length === 6 ? 
+          (<table style={{ width: '100%', textAlign: 'center', borderSpacing: '10px 10px' }}>
+          <tr>
+            <td style={{ width: '33.33%' }}>
+              <ShareItem share={newShare[0]} />
+            </td>
+            <td style={{ width: '33.33%' }}>
+              <ShareItem share={newShare[1]} />
+            </td>
+            <td style={{ width: '33.33%' }}>
+              <ShareItem share={newShare[2]} />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ShareItem share={newShare[3]} />
+            </td>
+            <td>
+              <ShareItem share={newShare[4]} />
+            </td>
+            <td>
+              <ShareItem share={newShare[5]} />
+            </td>
+          </tr>
+        </table>) 
+          : 
+          (<table style={{ width: '100%', textAlign: 'center', borderSpacing: '10px 10px' }}>
+          <tr>
+            <td style={{ width: '33.33%' }}>
+              <ShareItem share={dummy[0]} />
+            </td>
+            <td style={{ width: '33.33%' }}>
+              <ShareItem share={dummy[1]} />
+            </td>
+            <td style={{ width: '33.33%' }}>
+              <ShareItem share={dummy[2]} />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ShareItem share={dummy[3]} />
+            </td>
+            <td>
+              <ShareItem share={dummy[4]} />
+            </td>
+            <td>
+              <ShareItem share={dummy[5]} />
+            </td>
+          </tr>
+        </table>)}
+          
         </Box>
         <Box style={{ width: '100%', textAlign: 'center', marginBottom: 10 }}>
           <Button variant="outlined" onClick={moveToShareMain}>
