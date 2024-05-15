@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +57,11 @@ public class PortfolioService {
                     PortfolioResponse response = new PortfolioResponse();
                     response.setPofolId(portfolio.getPofolId());
                     response.setPofolName(portfolio.getPofolName());
-                    response.setStatus(portfolio.getStatus());
+                    response.setOpenState(portfolio.getStatus());
+                    response.setFormat(portfolio.getFormat());
+                    response.setFileUrl(portfolio.getFileUrl());
+                    response.setCreatedAt(LocalDate.from(portfolio.getCreatedAt()));
+                    response.setUpdatedAt(LocalDate.from(portfolio.getUpdatedAt()));
                     return response;
                 })
                 .collect(Collectors.toList());
@@ -73,13 +78,18 @@ public class PortfolioService {
                     PortfolioResponse response = new PortfolioResponse();
                     response.setPofolId(portfolio.getPofolId());
                     response.setPofolName(portfolio.getPofolName());
-                    response.setStatus(portfolio.getStatus());
+                    response.setOpenState(portfolio.getStatus());
+                    response.setFormat(portfolio.getFormat());
+                    response.setFileUrl(portfolio.getFileUrl());
+                    response.setCreatedAt(LocalDate.from(portfolio.getCreatedAt()));
+                    response.setUpdatedAt(LocalDate.from(portfolio.getUpdatedAt()));
                     return response;
                 })
                 .collect(Collectors.toList());
 
     }
 
+    // 수정 필요
     public PortfolioResponseDetail getPortfolioDetail(Long pofolId) {
 
         Portfolio portfolio = portfolioRepository.findById(pofolId)
@@ -109,7 +119,7 @@ public class PortfolioService {
                         .program(portfolioPiece.getProgram())
                         .contribution(portfolioPiece.getContribution())
                         .content(portfolioPiece.getContent())
-                        .pieceUrl(portfolioPiece.getFileUrl())
+                        .pieceUploaded(portfolioPiece.getFileUrl())
                         .build());
             }
 
@@ -147,11 +157,11 @@ public class PortfolioService {
     }
 
 
+    // 글그림 포맷 등록 api 수정 필요
     public Long addPortfolio(Long userId, PortfolioRequest portfolioRequest) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
-        // 추후 user exception 만들어서 수정해야 함
 
         // Portfolio 저장
         Portfolio portfolio = Portfolio.builder()
@@ -163,22 +173,29 @@ public class PortfolioService {
 
         portfolioRepository.save(portfolio);
 
+        ArrayList<MultipartFile> files = portfolioRequest.getFiles();
+
         ArrayList<String> fileUrls = new ArrayList<>();
         // PortfolioPiece에 저장
         for (PieceInfo pieceInfo: portfolioRequest.getPieces()) {
 
-            PortfolioPiece portfolioPiece = new PortfolioPiece();
             if (pieceInfo.getPieceId() == null) {
                 // 사용자가 작품 선택을 하지 않고 파일을 업로드했다면, S3에 저장하고 그 url을 저장
                 String fileUrl = "";
-//                try {
-//                    fileUrl = s3UploadService.saveFile(pieceInfo.getPieceUploaded());
-//                    fileUrls.add(fileUrl);
-//                }  catch (IOException e) {
-//                    e.fillInStackTrace();
-//                }
+                try {
+                    for (MultipartFile file: files) {
+                        String filename = file.getOriginalFilename(); // 'city.jpg'
+                        // identifier와 이미지 파일의 이름이 같다면 저장
+                        if (filename != null && filename.equals(pieceInfo.getIdentifier())) {
+                            fileUrl = s3UploadService.saveFile(file);
+                            fileUrls.add(fileUrl);
+                        }
+                    }
+                }  catch (IOException e) {
+                    e.fillInStackTrace();
+                }
 
-                portfolioPiece = PortfolioPiece.builder()
+                PortfolioPiece portfolioPiece = PortfolioPiece.builder()
                         .portfolio(portfolio)
                         .title(pieceInfo.getTitle())
                         .program(pieceInfo.getProgram())
@@ -186,6 +203,9 @@ public class PortfolioService {
                         .content(pieceInfo.getContent())
                         .fileUrl(fileUrl)
                         .build();
+
+                portfolioPieceRepository.save(portfolioPiece);
+
             } else {
                 // 작품을 선택했다면
                 Piece piece = pieceRepository.findById(pieceInfo.getPieceId())
@@ -193,17 +213,19 @@ public class PortfolioService {
 
                 fileUrls.add(piece.getFileUrl());
 
-                portfolioPiece = PortfolioPiece.builder()
+                PortfolioPiece portfolioPiece = PortfolioPiece.builder()
                         .portfolio(portfolio)
                         .piece(piece)
                         .title(pieceInfo.getTitle())
                         .program(pieceInfo.getProgram())
                         .contribution(pieceInfo.getContribution())
                         .content(pieceInfo.getContent())
+                        .fileUrl(piece.getFileUrl())
                         .build();
+
+                portfolioPieceRepository.save(portfolioPiece);
             }
 
-            portfolioPieceRepository.save(portfolioPiece);
         }
 
         // 위의 로직에 따르면, fileUrl이 null 임.
@@ -221,14 +243,13 @@ public class PortfolioService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
 
         List<String> fileUrls = new ArrayList<>();
-        for (MultipartFile fileUrl : portfolioRequest.getFileUrl()) {
+        for (MultipartFile file : portfolioRequest.getFileList()) {
             try {
-                String fileName = s3UploadService.saveFile(fileUrl);
-                fileUrls.add(fileName);
+                String fileUrl = s3UploadService.saveFile(file);
+                fileUrls.add(fileUrl);
             }  catch (IOException e) {
                 e.fillInStackTrace();
             }
-
         }
 
         Portfolio portfolio = Portfolio.builder()

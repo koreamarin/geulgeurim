@@ -19,7 +19,6 @@ public class PortfolioRequestMyFormat {
     private OpenState status;
 
     // 파일
-    @JsonProperty("file_url")
-    private List<MultipartFile> fileUrl;
+    private List<MultipartFile> fileList;
 
 }
