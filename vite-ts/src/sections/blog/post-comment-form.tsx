@@ -55,21 +55,7 @@ export default function PostCommentForm() {
           rows={4}
         />
 
-        <Stack direction="row" alignItems="center">
-          <Stack direction="row" alignItems="center" flexGrow={1}>
-            <IconButton>
-              <Iconify icon="solar:gallery-add-bold" />
-            </IconButton>
-
-            <IconButton>
-              <Iconify icon="eva:attach-2-fill" />
-            </IconButton>
-
-            <IconButton>
-              <Iconify icon="eva:smiling-face-fill" />
-            </IconButton>
-          </Stack>
-
+        <Stack direction="row" justifyContent="right">
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
             Post comment
           </LoadingButton>

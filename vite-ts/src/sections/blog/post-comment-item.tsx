@@ -15,21 +15,19 @@ import Iconify from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 type Props = {
-  name: string;
-  avatarUrl: string;
-  message: string;
-  tagUser?: string;
-  postedAt: Date;
-  hasReply?: boolean;
+  userNickname: string;
+  userFileUrl: string;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export default function PostCommentItem({
-  name,
-  avatarUrl,
-  message,
-  tagUser,
-  postedAt,
-  hasReply,
+  userNickname,
+  userFileUrl,
+  content,
+  createdAt,
+  updatedAt,
 }: Props) {
   const reply = useBoolean();
 
@@ -39,12 +37,9 @@ export default function PostCommentItem({
         p: 0,
         pt: 3,
         alignItems: 'flex-start',
-        ...(hasReply && {
-          pl: 8,
-        }),
       }}
     >
-      <Avatar alt={name} src={avatarUrl} sx={{ mr: 2, width: 48, height: 48 }} />
+      <Avatar alt={userNickname} src={userFileUrl} sx={{ mr: 2, width: 48, height: 48 }} />
 
       <Stack
         flexGrow={1}
@@ -54,20 +49,15 @@ export default function PostCommentItem({
         }}
       >
         <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-          {name}
+          {userNickname}
         </Typography>
 
         <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-          {fDate(postedAt)}
+          {fDate(createdAt)}
         </Typography>
 
         <Typography variant="body2" sx={{ mt: 1 }}>
-          {tagUser && (
-            <Box component="strong" sx={{ mr: 0.5 }}>
-              @{tagUser}
-            </Box>
-          )}
-          {message}
+          {content}
         </Typography>
 
         {reply.value && (
@@ -76,18 +66,6 @@ export default function PostCommentItem({
           </Box>
         )}
       </Stack>
-
-      {!hasReply && (
-        <Button
-          size="small"
-          color={reply.value ? 'primary' : 'inherit'}
-          startIcon={<Iconify icon="solar:pen-bold" width={16} />}
-          onClick={reply.onToggle}
-          sx={{ right: 0, position: 'absolute' }}
-        >
-          Reply
-        </Button>
-      )}
     </ListItem>
   );
 }

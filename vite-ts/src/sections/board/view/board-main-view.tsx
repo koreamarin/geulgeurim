@@ -52,8 +52,8 @@ export default function BoardMainView(props: propsType) {
 
   const {newBoard, popBoard} = props;
   
-  console.log("api test: ", newBoard);
-  console.log("api test: ", popBoard);
+  // console.log("api test: ", newBoard);
+  // console.log("api test: ", popBoard);
 
   const board = paths.community.board.main;
   const boardDetail = paths.community.board.detail;

@@ -179,3 +179,14 @@ export type communityMainItem = {
   newShare: ShareMainItem[];
   newCrew: CrewMainItem[];
 }
+
+export type commentItem = {
+  boardCommentId: number;
+  userId: number;
+  userNickname: string;
+  userFileUrl: string;
+  content: string;
+  boardId: number;
+  createdAt: Date;
+  updatedAt: Date;
+}

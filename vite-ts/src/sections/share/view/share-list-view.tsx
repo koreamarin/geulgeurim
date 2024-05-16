@@ -11,12 +11,14 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import TableConttainer from '@mui/material/TableContainer';
 import InputAdornment from '@mui/material/InputAdornment';
+import TableConttainer from '@mui/material/TableContainer';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import { useGetShareList } from 'src/api/community';
 
 import Iconify from 'src/components/iconify';
 import { useTable } from 'src/components/table';
@@ -89,11 +91,11 @@ const dummy = [
   1, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png', 'URL',
     '포폴용 웹툰 만드실 분', new Date('2024-05-03'), new Date('2024-05-04'), 20, 2),
   
-  createDummyData(109, 12, '윤싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+  createDummyData(110, 12, '윤싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
   1, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png', 'URL',
     '10~12화 완결 프로젝트 같이 하실 분', new Date('2024-05-03'), new Date('2024-05-04'), 20, 2),
   
-  createDummyData(109, 13, '지싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
+  createDummyData(111, 13, '지싸피', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
   1, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png', 'URL',
     '5화짜리 프로젝트 ㄱㄱ?', new Date('2024-05-03'), new Date('2024-05-04'), 20, 2),
 ];
@@ -111,6 +113,8 @@ const POST_SEARCH_OPTIONS = [
 ];
 
 export default function ShareRecentPost() {
+  const { share, shareError, shareLoading} = useGetShareList();
+
   const router = useRouter();
 
   const changeSearchRef = useRef<string>('');
@@ -126,7 +130,7 @@ export default function ShareRecentPost() {
   };
 
   const handleCardClick = (pk: number) => {
-    router.push(paths.community.board.detail(pk));
+    router.push(paths.community.share.detail(pk));
   };
 
   const writeShare = () => {
@@ -136,12 +140,12 @@ export default function ShareRecentPost() {
   const pageCount = 12;
 
   const maxColumns = 4;
-  const numberOfRows = Math.ceil(Math.min(dummy.length, maxColumns * 3) / maxColumns); // 최대 3열까지만 허용
+  const numberOfRows = Math.ceil(Math.min(share.length, maxColumns * 3) / maxColumns); // 최대 3열까지만 허용
 
   const renderTable = Array.from({ length: numberOfRows }, (_, rowIndex) => (
     <tr key={rowIndex} >
-      {dummy.slice(rowIndex * maxColumns, rowIndex * maxColumns + maxColumns).map((data) => (
-        <td key={data.shareId}>
+      {share.slice(rowIndex * maxColumns, rowIndex * maxColumns + maxColumns).map((data) => (
+        <td key={data.shareId} style={{width: '25%'}}>
           <ShareItem share={data} />
         </td>
       ))}
@@ -220,7 +224,7 @@ export default function ShareRecentPost() {
       {/* 페이지 네이션, 위치 상태함수로 저장 */}
 
       <Pagination
-        count={Math.floor((dummy.length - 1) / pageCount) + 1}
+        count={Math.floor((share.length - 1) / pageCount) + 1}
         defaultPage={1}
         siblingCount={1}
         sx={{
