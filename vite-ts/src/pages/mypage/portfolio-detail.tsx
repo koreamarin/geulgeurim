@@ -2,22 +2,24 @@ import { Helmet } from 'react-helmet-async';
 
 import { useParams } from 'src/routes/hooks';
 
-import { BoardDetailsView } from 'src/sections/board/view';
+import { PortfolioDetailView } from 'src/sections/mypage/view';
+
+// PortfolioDetailView
 
 // ----------------------------------------------------------------------
 
-export default function BoardDetailPage() {
+export default function PortfolioDetailPage() {
   const params = useParams();
 
-  const { boardId } = params;
+  const { id } = params;
 
   return (
     <>
       <Helmet>
-        <title>자유게시판 상세보기</title>
+        <title>포트폴리오 상세</title>
       </Helmet>
 
-      <BoardDetailsView boardId={`${boardId}`} />
+      <PortfolioDetailView id={`${id}`} />
     </>
   );
 }

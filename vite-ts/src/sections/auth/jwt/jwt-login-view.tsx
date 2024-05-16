@@ -23,7 +23,6 @@ import { PATH_AFTER_LOGIN } from 'src/config-global';
 
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
-
 // ----------------------------------------------------------------------
 
 export default function JwtLoginView() {
@@ -72,27 +71,20 @@ export default function JwtLoginView() {
     </Stack>
   );
 
-  const NaverLoginBtn = (
-    <button
-      type="button"
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        border: 'none',
-        alignItems: 'center',
-        width: '360px',
-        height: '56px',
-        backgroundColor: '#0edd6c',
-        borderRadius: '13px',
-        color: 'white',
-        fontSize: '23px',
-        fontWeight: '900',
-        cursor: 'pointer',
-      }}
-    >
-      네이버 로그인
-    </button>
-  );
+  const handleButtonClick = () => {
+    const url =
+      'http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/auth/oauth2/authorization/kakao';
+    const windowFeatures = 'width=500,height=600,left=10,top=10';
+    const newWindow = window.open(url, '_blank', windowFeatures);
+
+    const checkWindowClosed = setInterval(() => {
+      if (newWindow?.closed) {
+        clearInterval(checkWindowClosed);
+        // 로그인 창이 닫혔으므로 홈페이지로 이동
+        window.location.href = '/'; // 홈페이지 URL로 변경해주세요.
+      }
+    }, 500); // 500ms 마다 창이 닫혔는지 확인
+  };
 
   const KakaoLoginBtn = (
     <button
@@ -111,16 +103,15 @@ export default function JwtLoginView() {
         fontWeight: '900',
         cursor: 'pointer',
       }}
+      onClick={handleButtonClick}
     >
-      <a href="http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8085/api/v1/auth/oauth2/authorization/kakao">
-        카카오 로그인
-      </a>
+      카카오 로그인
+      {/* <a href="http://localhost:8080/api/v1/auth/oauth2/authorization/kakao">카카오 로그인</a> */}
     </button>
   );
 
   const indiRenderForm = (
     <Stack spacing={2.5}>
-      {NaverLoginBtn}
       {KakaoLoginBtn}
       <Link component={RouterLink} href={paths.auth.jwt.register} variant="subtitle2">
         회원가입

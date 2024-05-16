@@ -35,7 +35,7 @@ export default function Header() {
 
   const offsetTop = useOffSetTop(-1);
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
 
   return (
     <AppBar>

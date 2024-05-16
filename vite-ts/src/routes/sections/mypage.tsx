@@ -12,8 +12,11 @@ import { LoadingScreen } from 'src/components/loading-screen';
 const Inforamtion = lazy(() => import('src/pages/mypage'));
 const Apply = lazy(() => import('src/pages/mypage/apply'));
 const Interest = lazy(() => import('src/pages/mypage/interest'));
+// 포트폴리오
 const Portfolio = lazy(() => import('src/pages/mypage/portfolio'));
-
+const PortfolioDetail = lazy(() => import('src/pages/mypage/portfolio-detail'));
+const PortfolioWriteView = lazy(() => import('src/pages/mypage/portfolio-write'));
+const PortfolioWriteUserFormatView = lazy(() => import('src/pages/mypage/portfolio-write-user-format'));
 // 작품
 const Works = lazy(() => import('src/pages/mypage/works'));
 const WorksDetail = lazy(() => import('src/pages/mypage/works/detail'));
@@ -44,7 +47,29 @@ export const mypageRoutes = [
       { path: '', element: <Inforamtion /> },
       { path: 'apply', element: <Apply /> },
       { path: 'interest', element: <Interest /> },
-      { path: 'portfolio', element: <Portfolio /> },
+      {
+        path: 'portfolio',
+        children: [
+          {
+            path: '',
+            element: <Portfolio />
+          },
+          {
+            path: 'detail/:id',
+            element: <PortfolioDetail />
+          },
+          {
+            path: 'write',
+            element: <PortfolioWriteView />
+          },
+          {
+            path: 'write/user',
+            element: <PortfolioWriteUserFormatView />
+          },
+
+        ]
+
+       },
       {
         path: 'works',
         children: [
@@ -92,5 +117,6 @@ export const mypageRoutes = [
         ],
       },
     ],
+
   },
 ];

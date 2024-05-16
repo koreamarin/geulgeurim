@@ -4,7 +4,7 @@ import { PortfolioView } from 'src/sections/mypage/view';
 
 // ----------------------------------------------------------------------
 
-export default function RecruitHome() {
+export default function PortfolioHome() {
   return (
     <>
       <Helmet>

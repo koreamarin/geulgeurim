@@ -17,10 +17,11 @@ import { Upload } from 'src/components/upload';
 import { useNavigate } from 'react-router-dom';
 
 type Props = {
-  id?: string;
+  id?: number;
 };
 
 export default function CrewApplyView({ id }: Props) {
+  const preview = useBoolean();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [positions, setPositions] = useState({
@@ -31,6 +32,7 @@ export default function CrewApplyView({ id }: Props) {
     스토리: 0, // 스토리
     콘티: 0, // 콘티
   });
+  const [files, setFiles] = useState<(File | string)[]>([]);
 
   const handleChange =
     (prop: keyof typeof positions) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,12 +42,12 @@ export default function CrewApplyView({ id }: Props) {
     };
 
   const navigate = useNavigate();
+
   const handleSubmit = () => {
     console.log('Title:', title);
     console.log('Description:', description);
     console.log('Files:', files);
     console.log('Positions:', positions);
-
     navigate('/community/crew');
   };
 
@@ -53,9 +55,6 @@ export default function CrewApplyView({ id }: Props) {
     console.log('Cancelled');
   };
 
-  const preview = useBoolean();
-
-  const [files, setFiles] = useState<(File | string)[]>([]);
 
   const handleDropMultiFile = useCallback(
     (acceptedFiles: File[]) => {
@@ -159,6 +158,7 @@ export default function CrewApplyView({ id }: Props) {
           </Button>
         </Box>
       </Box>
+
     </Container>
   );
 }

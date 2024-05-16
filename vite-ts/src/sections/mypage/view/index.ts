@@ -5,5 +5,4 @@ export { default as InterestView } from './interest-view';
 export { default as PortfolioView } from './portfolio-view';
 export { default as InformationView } from './information-view';
 export { default as WorksDetailView } from './works-detail-view';
-
-
+export { default as PortfolioDetailView } from './portfolio-detail-view';
