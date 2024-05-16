@@ -114,8 +114,8 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("기업계정을 찾을 수 없습니다."));
 
         // 토큰발급
-        String AccessToken = jwtUtil.createAccessToken(userLoginResponse.getUser_id(), userLoginResponse.getUserType());
-        String RefrashToken = jwtUtil.createRefreshToken(userLoginResponse.getUser_id(), userLoginResponse.getUserType());
+        String AccessToken = jwtUtil.createAccessToken(user.getUser_id(), user.getUserType());
+        String RefrashToken = jwtUtil.createRefreshToken(user.getUser_id(), user.getUserType());
 
         if(bCryptPasswordEncoder.matches(enterUserLoginRequest.getPassword(), enterUser.getPassword())) {
             userLoginResponse = UserLoginResponse.builder()
