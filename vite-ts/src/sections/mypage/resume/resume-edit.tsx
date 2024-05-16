@@ -34,7 +34,7 @@ import RHFSelectPortfolio from './resume-form-portfolio';
 
 
 type Props = {
-  copyId?: string
+  id: string
 };
 
 const dummy = [
@@ -290,9 +290,9 @@ const userDummy = {
 }
 
 
-export default function ResumeForm({ copyId }: Props) {
+export default function ResumeEdit({ id }: Props) {
   // 만약 workId가 있으면(복사하기) api get 요청 후 default에 삽입
-  if (copyId) {
+  if (id) {
     console.log('api 요청')
 
   }
@@ -302,7 +302,7 @@ export default function ResumeForm({ copyId }: Props) {
   // defaults
   const defaultValues = useMemo(
     () => {
-      const findResume = dummy.find(resume => resume.resumeId.toString() === copyId);
+      const findResume = dummy.find(resume => resume.resumeId.toString() === id);
       return {
         resumeTitle: findResume?.resumeTitle || `${userDummy.name}님의 이력서`,
         essay: findResume?.essay || '',
@@ -339,7 +339,7 @@ export default function ResumeForm({ copyId }: Props) {
           endDate: exp.endDate
         })) || []
       };
-    }, [copyId]
+    }, [id]
   );
 
   const { enqueueSnackbar } = useSnackbar();
@@ -484,7 +484,7 @@ export default function ResumeForm({ copyId }: Props) {
     <Grid xsOffset={1} mdOffset={2} xs={10} md={8}>
 
       <Typography variant="h3" sx={{display:'flex',  justifyContent: 'space-between', mb: 3}}>
-          이력서 등록
+          이력서 수정
           <ResumeRHFSwitch name="openStatus" label="공개여부" labelPlacement='start'/>
       </Typography>
 

@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box"
 
-import WorksEdit from "../works/works-edit";
+import ResumeEdit from "../resume/resume-edit";
 
 type Props = {
   id: string;
@@ -10,7 +10,7 @@ type Props = {
 export default function ResumeEditView({ id }: Props) {
   return (
     <Box>
-      <WorksEdit workId={id}/>
+      <ResumeEdit id={id}/>
     </Box>
   )
 }
