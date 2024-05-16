@@ -74,11 +74,12 @@ function CollapsibleTableRow({ row }: CollapsibleTableRowProps) {
             <Iconify
               icon={collapsible.value ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'}
             />
+            dd
           </IconButton>
         </TableCell>
 
         <TableCell component="th" scope="row">
-          {row.name}
+          {row.name}asdf
         </TableCell>
 
         <TableCell align="right">{row.calories}</TableCell>

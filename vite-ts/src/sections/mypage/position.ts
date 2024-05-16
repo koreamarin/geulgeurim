@@ -1,0 +1,16 @@
+export const positionList = [
+  {value:'1', label:'선화'},
+  {value:'2', label:'밑색'},
+  {value:'3', label:'명암'},
+  {value:'4', label:'후보정'},
+  {value:'5', label:'작화'},
+  {value:'6', label:'어시'},
+  {value:'7', label:'각색'},
+  {value:'8', label:'콘티'},
+  {value:'9', label:'표지'},
+  {value:'10', label:'삽화'},
+  {value:'11', label:'배경'},
+  {value:'12', label:'채색'},
+  {value:'13', label:'편집'},
+  {value:'14', label:'작가'},
+];
