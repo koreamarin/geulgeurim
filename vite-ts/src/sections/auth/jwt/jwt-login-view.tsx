@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -74,6 +75,7 @@ export default function JwtLoginView() {
   const handleButtonClick = () => {
     const url =
       'http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/auth/oauth2/authorization/kakao';
+    // 'http://localhost:8080/api/v1/auth/oauth2/authorization/kakao';
     const windowFeatures = 'width=500,height=600,left=10,top=10';
     const newWindow = window.open(url, '_blank', windowFeatures);
 
@@ -105,8 +107,11 @@ export default function JwtLoginView() {
       }}
       onClick={handleButtonClick}
     >
-      카카오 로그인
-      {/* <a href="http://localhost:8080/api/v1/auth/oauth2/authorization/kakao">카카오 로그인</a> */}
+      <img
+        src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg"
+        width="222"
+        alt="카카오 로그인 버튼"
+      />
     </button>
   );
 
@@ -118,6 +123,24 @@ export default function JwtLoginView() {
       </Link>
     </Stack>
   );
+
+  // 로그인 버튼 클릭 시 실행할 함수
+  const enterLogin = () => {
+    const response = axios
+      .post('http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/auth/login', {
+        email: methods.getValues('email'),
+        password: methods.getValues('password'),
+      })
+      .then((res) => {
+        localStorage.setItem('accessToken', res.data.accessToken);
+        localStorage.setItem('refreshToken', res.data.refrashToken);
+        localStorage.setItem('userId', res.data.user_id);
+        localStorage.setItem('userType', res.data.userType);
+        localStorage.setItem('nickname', res.data.nickname);
+        localStorage.setItem('profile', res.data.profile_url);
+        router.push('/recruit'); // 홈페이지 URL로 변경해주세요.
+      });
+  };
 
   const enterRenderForm = (
     <Stack spacing={2.5}>
@@ -146,9 +169,10 @@ export default function JwtLoginView() {
         fullWidth
         color="success"
         size="large"
-        type="submit"
+        // type="submit"
         variant="contained"
-        loading={isSubmitting}
+        // loading={isSubmitting}
+        onClick={enterLogin}
       >
         Login
       </LoadingButton>
@@ -181,7 +205,7 @@ export default function JwtLoginView() {
           개인 회원
         </ToggleButton>
         <ToggleButton value="enter" sx={{ width: 1 }}>
-          기업회원
+          기업 회원
         </ToggleButton>
       </ToggleButtonGroup>
     </Stack>
