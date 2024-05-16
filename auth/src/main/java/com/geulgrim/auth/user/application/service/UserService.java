@@ -36,6 +36,7 @@ public class UserService {
     private final EnterUserRepository enterUserRepository;
     private final AwsS3Service awsS3Service;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final JWTUtil jwtUtil;
 
     // 기업 회원가입
     public EnterUserSignUpResponse enterUserSignup(
@@ -112,12 +113,18 @@ public class UserService {
         EnterUser enterUser = enterUserRepository.findByUser(user)
                 .orElseThrow(() -> new NotFoundException("기업계정을 찾을 수 없습니다."));
 
+        // 토큰발급
+        String AccessToken = jwtUtil.createAccessToken(userLoginResponse.getUser_id(), userLoginResponse.getUserType());
+        String RefrashToken = jwtUtil.createRefreshToken(userLoginResponse.getUser_id(), userLoginResponse.getUserType());
+
         if(bCryptPasswordEncoder.matches(enterUserLoginRequest.getPassword(), enterUser.getPassword())) {
             userLoginResponse = UserLoginResponse.builder()
                     .user_id(user.getUser_id())
                     .profile_url(user.getFile_url())
                     .nickname(user.getNickname())
                     .userType(user.getUserType())
+                    .AccessToken(AccessToken)
+                    .RefrashToken(RefrashToken)
                     .build();
         }
 

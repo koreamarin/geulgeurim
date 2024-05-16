@@ -14,6 +14,8 @@ public class UserLoginResponse {
     private String nickname;
     private UserType userType;
     private String profile_url;
+    private String AccessToken;
+    private String RefrashToken;
 
     @Override
     public String toString() {
@@ -22,8 +24,10 @@ public class UserLoginResponse {
                         "user_id":"%s",
                         "thumbnail_image_url":"%s",
                         "nickname":"%s",
-                        "user_type":"%s"
+                        "user_type":"%s",
+                        "AccessToken":"%s,
+                        "RefrashToken":"%s"
                     }
-                    """.formatted(user_id, profile_url, nickname, userType);
+                    """.formatted(user_id, profile_url, nickname, userType, AccessToken, RefrashToken);
     }
 }
