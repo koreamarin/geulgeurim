@@ -73,7 +73,8 @@ export default function JwtLoginView() {
   );
 
   const handleButtonClick = () => {
-    const url = 'https://글그림.com/api/v1/auth/oauth2/authorization/kakao';
+    const url =
+      'http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/auth/oauth2/authorization/kakao';
     // 'http://localhost:8080/api/v1/auth/oauth2/authorization/kakao';
     const windowFeatures = 'width=500,height=600,left=10,top=10';
     const newWindow = window.open(url, '_blank', windowFeatures);
@@ -126,7 +127,7 @@ export default function JwtLoginView() {
   // 로그인 버튼 클릭 시 실행할 함수
   const enterLogin = () => {
     const response = axios
-      .post('http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/auth/login', {
+      .post('https://글그림.com/api/v1/auth/login', {
         email: methods.getValues('email'),
         password: methods.getValues('password'),
       })
