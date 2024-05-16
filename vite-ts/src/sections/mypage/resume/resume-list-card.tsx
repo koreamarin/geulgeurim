@@ -11,20 +11,21 @@ import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import Button, { ButtonProps } from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 import Iconify from 'src/components/iconify';
 
 import { positionList } from '../position';
 
-const StyledButton = styled(({expanded, ...props}: ButtonProps & { expanded: boolean }) => {
-  const {...other} = props
-  return <Button endIcon={
+const StyledButton = styled(({expanded, ...props}: ButtonProps & { expanded: boolean }) =>
+<Button endIcon={
     <Iconify
       icon="eva:arrow-ios-downward-fill"
       style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s', margin:'10px' }}
     />  } {...props} />
-})(({ theme }) => ({
+)(({ theme }) => ({
   cursor: 'pointer',
   backgroundColor: 'transparent',
   textAlign: 'center',
@@ -44,7 +45,7 @@ const StyledButton = styled(({expanded, ...props}: ButtonProps & { expanded: boo
 
 
 type Props = {
-  resumeId?: number
+  resumeId: number
   resumeTitle?: string
   essay?: string
   openStatus: string
@@ -54,7 +55,7 @@ type Props = {
 
 
 export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus, fileUrl, position}:Props) {
-  // const blockBubble = useRef<>
+  const router = useRouter()
 
   const [expanded, setExpanded] = useState(false);
 
@@ -81,7 +82,8 @@ export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus
   const moveCopy = (event:React.MouseEvent) => {
     // moveDetail에 대한 버블링 방지
     event.stopPropagation();
-    console.log('이동경로', resumeId)
+    // console.log('이동경로', resumeId)
+    router.push(paths.mypage.resumeCopy(resumeId))
   }
 
 
