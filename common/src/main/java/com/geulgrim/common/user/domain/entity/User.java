@@ -2,11 +2,10 @@ package com.geulgrim.common.user.domain.entity;
 
 
 import com.geulgrim.common.user.domain.entity.enums.UserType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
+
+import java.util.List;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -28,6 +27,8 @@ public class User {
     private String phoneNum;
     private String fcmToken;
 
+    @ElementCollection
+    private List<Long> favoriteJobList;
     public void updateFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
     }

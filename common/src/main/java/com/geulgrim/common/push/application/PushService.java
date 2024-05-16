@@ -4,6 +4,7 @@ import com.geulgrim.common.push.application.dto.request.FCMDto;
 import com.geulgrim.common.push.application.dto.request.PushCreateRequestDto;
 import com.geulgrim.common.push.application.dto.response.PushCreateResponseDto;
 import com.geulgrim.common.push.application.dto.response.PushResponseDto;
+import com.geulgrim.common.push.domain.FavoriteJob;
 import com.geulgrim.common.push.domain.Push;
 import com.geulgrim.common.push.domain.PushDomain;
 import com.geulgrim.common.push.domain.repository.PushRepository;
@@ -17,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +53,11 @@ public class PushService {
         } else if (domain.isNeedJobTitle()) {
             //구인에서 공고제목 얻어서 content 수정, 이후 페이지 링크로 수정
             log.info("공고제목이 필요한 푸시메일 ={}", domain);
-            push.updateContent("싸피 공고");
+            String jobContent = "";
+            for (FavoriteJob jobs : dto.getFavoriteJobs()) {
+                jobContent += jobs.getTitle() + "\n" + jobs.getCompanyName() + "\n" + jobs.getEndDate() + "에 마감되는 공고에요!";
+            }
+            push.updateContent(jobContent);
         }
 
         //exception 처리
@@ -65,6 +69,7 @@ public class PushService {
         //이후 푸시메일을 동의한 경우만 수신가능하도록 변경 필요
         log.info("rcvNickname = {} ", rcvNickname);
         log.info("rcvEmail = {} ", rcvEmail);
+        log.info("메일푸시 시작");
         mailSender.sendMailPush(push, rcvEmail, rcvNickname);
 
         //fcm
