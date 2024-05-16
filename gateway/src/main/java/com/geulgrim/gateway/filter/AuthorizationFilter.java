@@ -29,7 +29,7 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
         return ((exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             ServerHttpResponse response = exchange.getResponse();
-            request.getHeaders().remove("Vary");
+            request.getHeaders().getVary().clear();
             response.getHeaders().remove("Vary");
             UserInfoResponseDto dto = authorizationUtil.Authorize(request);
 
