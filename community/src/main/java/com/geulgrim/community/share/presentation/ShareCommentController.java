@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/community/comment/share")
+@CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
 public class ShareCommentController {
     private final ShareCommentService shareCommentService;

@@ -2,6 +2,7 @@ package com.geulgrim.community.share.domain.repository;
 
 import com.geulgrim.community.board.domain.entity.Board;
 import com.geulgrim.community.share.application.dto.response.ShareListResponse;
+import com.geulgrim.community.share.application.dto.response.ShareResponse;
 import com.geulgrim.community.share.domain.entity.Share;
 import com.geulgrim.community.share.domain.entity.ShareImage;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,7 +21,17 @@ public interface ShareRepository extends JpaRepository<Share, Long> {
             "LEFT JOIN s.user u " +
             "LEFT JOIN s.commentList c " +
             "GROUP BY s.shareId, u.userId, u.nickname, u.fileUrl, s.title, s.hit, s.createdAt, s.updatedAt " +
-            "ORDER BY s.createdAt DESC LIMIT 5")
+            "ORDER BY s.createdAt DESC LIMIT 6")
+    List<ShareListResponse> findShareMainList();
+
+    @Query("SELECT new com.geulgrim.community.share.application.dto.response.ShareListResponse(" +
+            "s.shareId, u.userId, u.nickname, u.fileUrl, " +
+            "s.title, s.hit, COUNT(c), s.createdAt, s.updatedAt) " +
+            "FROM Share s " +
+            "LEFT JOIN s.user u " +
+            "LEFT JOIN s.commentList c " +
+            "GROUP BY s.shareId, u.userId, u.nickname, u.fileUrl, s.title, s.hit, s.createdAt, s.updatedAt " +
+            "ORDER BY s.createdAt DESC")
     List<ShareListResponse> findShareResponseList();
 
     @Query("SELECT si FROM ShareImage si WHERE si.share.shareId IN :shareIds")
@@ -36,7 +47,15 @@ public interface ShareRepository extends JpaRepository<Share, Long> {
     // 제목+내용으로 게시글 검색
 
     // 게시글 조회
-    Share findByShareId(Long shareId);
+    @Query("SELECT new com.geulgrim.community.share.application.dto.response.ShareResponse(" +
+            "s.shareId, s.user.userId, s.user.nickname, s.user.fileUrl, s.title, s.content, s.hit, s.createdAt, s.updatedAt) " +
+            "FROM Share s " +
+            "WHERE s.shareId=:shareId " +
+            "GROUP BY s.shareId")
+    ShareResponse findByShareId(Long shareId);
+
+    @Query("SELECT s FROM Share s where s.shareId=:shareId")
+    Share findWithShareId(Long shareId);
 
     void deleteByShareId(Long shareId);
 }

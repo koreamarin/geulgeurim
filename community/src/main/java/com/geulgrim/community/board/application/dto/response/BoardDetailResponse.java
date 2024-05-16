@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardDetailResponse {
-    private Board board;
+    private BoardResponse board;
     private List<BoardComment> commentList;
     private List<BoardImage> imageList;
 }

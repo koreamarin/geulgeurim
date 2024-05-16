@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShareDetailResponse {
-    private Share share;
+    private ShareResponse share;
     private List<ShareComment> commentList;
     private List<ShareImage> imageList;
 }

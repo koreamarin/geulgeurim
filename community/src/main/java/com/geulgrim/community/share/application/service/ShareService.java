@@ -38,7 +38,7 @@ public class ShareService {
 
     public List<ShareListResponse> getShareListResponses() {
         // Fetch the share list responses without images
-        List<ShareListResponse> shareListResponses = shareRepository.findShareResponseList();
+        List<ShareListResponse> shareListResponses = shareRepository.findShareMainList();
 
         // Extract share IDs
         List<Long> shareIds = shareListResponses.stream()

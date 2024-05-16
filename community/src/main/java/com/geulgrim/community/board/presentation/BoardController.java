@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/community/board")
+@CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
 public class BoardController {
     private final BoardService boardService;

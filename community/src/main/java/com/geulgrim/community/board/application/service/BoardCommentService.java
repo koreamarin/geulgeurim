@@ -2,6 +2,7 @@ package com.geulgrim.community.board.application.service;
 
 import com.geulgrim.community.board.application.dto.request.BoardCommentUpdateRequest;
 import com.geulgrim.community.board.application.dto.request.BoardCommentWriteRequest;
+import com.geulgrim.community.board.application.dto.response.BoardResponse;
 import com.geulgrim.community.board.domain.entity.Board;
 import com.geulgrim.community.board.domain.entity.BoardComment;
 import com.geulgrim.community.board.domain.repository.BoardCommentRepository;
@@ -22,11 +23,12 @@ public class BoardCommentService {
 
     // 작성
     public List<BoardComment> writeComment(BoardCommentWriteRequest boardCommentWriteRequest) {
-        Board board = boardRepository.findBoardByBoardId(boardCommentWriteRequest.getBoardId());
+        Board board = boardRepository.findBoardWithBoardId(boardCommentWriteRequest.getBoardId());
         // 유저 아이디 수정
         long userId = 1;
         BoardComment boardComment = BoardComment.builder()
                 .content(boardCommentWriteRequest.getContent())
+                .userId(userId)
                 .board(board)
                 .build();
         boardCommentRepository.save(boardComment);
@@ -40,7 +42,7 @@ public class BoardCommentService {
 
     // 수정
     public BoardComment modifyComment(long boardCommentId, BoardCommentUpdateRequest boardCommentUpdateRequest) {
-        Board board = boardRepository.findBoardByBoardId(boardCommentUpdateRequest.getBoardId());
+        Board board = boardRepository.findBoardWithBoardId(boardCommentUpdateRequest.getBoardId());
 
         BoardComment boardComment = BoardComment.builder()
                 .boardCommentId(boardCommentId)

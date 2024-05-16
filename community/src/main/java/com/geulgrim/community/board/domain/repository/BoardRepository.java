@@ -1,7 +1,9 @@
 package com.geulgrim.community.board.domain.repository;
 
 import com.geulgrim.community.board.application.dto.response.BoardListResponse;
+import com.geulgrim.community.board.application.dto.response.BoardResponse;
 import com.geulgrim.community.board.domain.entity.Board;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,7 +17,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "b.boardId, b.user.userId, b.user.nickname, b.title, b.hit, COUNT(c), b.createdAt, b.updatedAt) " +
             "FROM Board b " +
             "LEFT JOIN b.commentList c " +
-            "GROUP BY b.boardId, b.user.userId, b.user.nickname, b.title, b.hit, b.createdAt, b.updatedAt")
+            "GROUP BY b.boardId, b.user.userId, b.user.nickname, b.title, b.hit, b.createdAt, b.updatedAt " +
+            "ORDER BY b.createdAt DESC")
     List<BoardListResponse> findBoardResponseList();
 
     @Query("SELECT new com.geulgrim.community.board.application.dto.response.BoardListResponse(" +
@@ -41,8 +44,15 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     // 제목+내용으로 게시글 검색
 
     // 게시글 조회
-    @Query("SELECT b FROM Board b WHERE b.boardId = :boardId")
-    Board findBoardByBoardId(Long boardId);
+    @Query("SELECT new com.geulgrim.community.board.application.dto.response.BoardResponse(" +
+            "b.boardId, b.user.userId, b.user.nickname, b.user.fileUrl, b.title, b.content, b.hit, b.createdAt, b.updatedAt) " +
+            "FROM Board b " +
+            "WHERE b.boardId=:boardId " +
+            "GROUP BY b.boardId")
+    BoardResponse findBoardByBoardId(Long boardId);
+
+    @Query("SELECT b FROM Board b where b.boardId=:boardId")
+    Board findBoardWithBoardId(Long boardId);
 
     void deleteByBoardId(Long boardId);
 }

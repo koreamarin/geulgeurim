@@ -22,7 +22,7 @@ public class ShareCommentService {
 
     // 작성
     public List<ShareComment> writeComment(ShareCommentWriteRequest shareCommentWriteRequest) {
-        Share share = shareRepository.findByShareId(shareCommentWriteRequest.getShareId());
+        Share share = shareRepository.findWithShareId(shareCommentWriteRequest.getShareId());
         // 유저 아이디 수정
         long userId = 1;
         ShareComment shareComment = ShareComment.builder()
@@ -40,7 +40,7 @@ public class ShareCommentService {
 
     // 수정
     public ShareComment modifyComment(long shareCommentId, ShareCommentUpdateRequest shareCommentUpdateRequest) {
-        Share share = shareRepository.findByShareId(shareCommentUpdateRequest.getShareId());
+        Share share = shareRepository.findWithShareId(shareCommentUpdateRequest.getShareId());
 
         ShareComment shareComment = ShareComment.builder()
                 .shareCommentId(shareCommentId)
