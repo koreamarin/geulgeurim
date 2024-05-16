@@ -268,7 +268,6 @@ export default function PortfolioWriteView() {
       <>
         <Grid item xs={12} md={6}>
           <Upload
-            name="file"
             accept={{ 'image/*': [] }}
             file={entry.file}
             onDrop={(acceptedFiles) => handleDropSingleFile(index, acceptedFiles)} onDelete={() => setFile(null, index)}

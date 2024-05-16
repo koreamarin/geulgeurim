@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef} from 'react';
 
 import {
   Box,
@@ -22,10 +22,13 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { Upload } from 'src/components/upload';
 
+import { createUserFormat } from 'src/api/portfolio';
+
 
 export default function PortfolioWriteUserFormatView() {
   const preview = useBoolean();
   const router = useRouter()
+  const filesToUpload = useRef<any[]>([])
   const [title, setTitle] = useState('');
   const [files, setFiles] = useState<(File | string)[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
@@ -54,11 +57,38 @@ export default function PortfolioWriteUserFormatView() {
   };
 
   const handleSubmit = () => {
-    console.log('Title:', title);
-    console.log('Files:', files);
+
     const formData = new FormData();
-    formData.append('pofol_name', title);
-    formData.append('status', "PUBLIC");
+
+    const portfolioRequest = {
+      "pofol_name": "주현의 채색 포트폴리오",
+      "status": "PUBLIC",
+      "pieces": [
+        {
+          "title": "작품1",
+          "program": "string",
+          "contribution": "채색 20",
+          "content": "작업 내용을 입력하세요.",
+          "identifier": "city"
+        },
+        {
+          "title": "작품2",
+          "program": "string",
+          "contribution": "채색 60",
+          "content": "작업 내용을 입력하세요.",
+          "identifier": "sunset.jpg"
+        }
+      ]
+    }
+
+    formData.append("portfolioRequest", new Blob([JSON.stringify(portfolioRequest)], {
+        type: "application/json"
+    }));
+
+    formData.append("files", filesToUpload.current[0]);
+    console.log('데이터', formData)
+
+    createUserFormat(formData)
 
     files.forEach(file => {
       if (file instanceof File) {
@@ -126,7 +156,10 @@ export default function PortfolioWriteUserFormatView() {
             onDrop={handleDropMultiFile}
             onRemove={handleRemoveFile}
             onRemoveAll={handleRemoveAllFiles}
-            onUpload={() => console.info('ON UPLOAD')}
+            onUpload={() => {
+              filesToUpload.current = files
+              console.log('확인', filesToUpload.current)
+            }}
           />
         </CardContent>
       </Card>
