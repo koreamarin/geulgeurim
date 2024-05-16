@@ -100,6 +100,8 @@ public class SecurityConfig {
 
             // Redirect to Frontend with Token in URL
             String redirectUrl = referer+"auth/callback?access_token=" + AccessToken + "&refresh_token=" + RefrashToken  + "&user_id=" + userLoginResponse.getUser_id() + "&user_type=" + userLoginResponse.getUserType() + "&nickname=" + encodedNickname + "&profile_url=" + userLoginResponse.getProfile_url();
+
+            System.out.println(redirectUrl);
             response.sendRedirect(redirectUrl);
         });
     }
