@@ -92,8 +92,14 @@ public class SecurityConfig {
 //            writer.flush();
             String encodedNickname = URLEncoder.encode(userLoginResponse.getNickname(), StandardCharsets.UTF_8.name());
 
+            // 요청을 보낸 클라이언트의 url을 가져옴
+            String referer = request.getHeader("referer");
+            System.out.println(referer);
+
+
+
             // Redirect to Frontend with Token in URL
-            String redirectUrl = "http://localhost:3000/auth/callback?access_token=" + AccessToken + "&refresh_token=" + RefrashToken  + "&user_id=" + userLoginResponse.getUser_id() + "&user_type=" + userLoginResponse.getUserType() + "&nickname=" + encodedNickname + "&profile_url=" + userLoginResponse.getProfile_url();
+            String redirectUrl = referer+"auth/callback?access_token=" + AccessToken + "&refresh_token=" + RefrashToken  + "&user_id=" + userLoginResponse.getUser_id() + "&user_type=" + userLoginResponse.getUserType() + "&nickname=" + encodedNickname + "&profile_url=" + userLoginResponse.getProfile_url();
             response.sendRedirect(redirectUrl);
         });
     }
