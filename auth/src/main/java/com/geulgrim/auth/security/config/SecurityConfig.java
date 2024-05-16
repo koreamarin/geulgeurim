@@ -97,9 +97,8 @@ public class SecurityConfig {
             System.out.println(referer);
 
             if(referer == null) {
-                referer = "https://글그림.com/";
+                referer = URLEncoder.encode("https://글그림.com/", StandardCharsets.UTF_8.name());
             }
-
 
             // Redirect to Frontend with Token in URL
             String redirectUrl = referer+"auth/callback?access_token=" + AccessToken + "&refresh_token=" + RefrashToken  + "&user_id=" + userLoginResponse.getUser_id() + "&user_type=" + userLoginResponse.getUserType() + "&nickname=" + encodedNickname + "&profile_url=" + userLoginResponse.getProfile_url();
