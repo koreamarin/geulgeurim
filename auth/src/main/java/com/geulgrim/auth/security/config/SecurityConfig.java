@@ -96,6 +96,9 @@ public class SecurityConfig {
             String referer = request.getHeader("referer");
             System.out.println(referer);
 
+            if(referer == null) {
+                referer = "https://글그림.com/";
+            }
 
 
             // Redirect to Frontend with Token in URL
