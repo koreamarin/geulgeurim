@@ -170,8 +170,8 @@ export default function ShareRecentPost() {
         />
       </Stack>
       {/* 테이블 구성 */}
-      <Box paddingLeft={15} paddingRight={15} marginBottom={0}>
-        <table style={{ width: '100%', textAlign: 'center', borderSpacing: '10px 10px' }}>
+      <Box paddingLeft={15} paddingRight={15} marginBottom={0} sx={{wordBreak: 'break-all',}}>
+        <table style={{ width: '100%', textAlign: 'center', borderSpacing: '10px 10px' }} >
           {renderTable}
         </table>
       </Box>
