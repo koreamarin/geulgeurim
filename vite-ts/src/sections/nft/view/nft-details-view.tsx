@@ -57,7 +57,7 @@ const dummy = [
     'https://geulgrim.s3.ap-northeast-2.amazonaws.com/Untitled%20%282%29.png', '작품 제목입니다', '작품 내용입니다', '지갑열어sdflkdsjflsdfkskjfgsdlfkdjfladjkfldakfjalfjfaljf', '응애응애', 0.0002, new Date('2024-05-14'), 10),
 
   createDummyData(4, 1, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png', '닉넴닉넴', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
-    'https://geulgrim.s3.ap-northeast-2.amazonaws.com/Untitled%20%282%29.png', '작품 제목입니다', '작품 내용입니다', '지갑열어sdflkdsjflsdfkskjfgsdlfkdjfladjkfldakfjalfjfaljf', '응애응애', 0.0002, new Date('2024-05-14'), 10),
+    'https://geulgrim.s3.ap-northeast-2.amazonaws.com/Untitled%20%282%29.png', '작품 제목입니다작품 제목입니다작품 제목입니다작품 제목입니다작품 제목입니다작품 제목입니다작품 제목입니다작품 제목입니다작품 제목입니다작품 제목입니다작품 제목입니다작품 제목입니다작품 제목입니다작품 제목입니다작품 제목입니다작품 제목입니다', '작품 내용입니다', '지갑열어sdflkdsjflsdfkskjfgsdlfkdjfladjkfldakfjalfjfaljf', '응애응애', 0.0002, new Date('2024-05-14'), 10),
 
   createDummyData(5, 1, 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png', '닉넴닉넴', 'https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
     'https://geulgrim.s3.ap-northeast-2.amazonaws.com/Untitled%20%282%29.png', '작품 제목입니다', '작품 내용입니다', '지갑열어sdflkdsjflsdfkskjfgsdlfkdjfladjkfldakfjalfjfaljf', '응애응애', 0.0002, new Date('2024-05-14'), 10),
@@ -134,62 +134,67 @@ export default function PostDetailsView({ id }: Props) {
     <Container>
 
       <Grid item xs={12} sx={{ mt: 5 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 2 }}>
+        <Box marginBottom={2} sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 2 }}>
           <Card sx={{
             width: '50%', // Make the Card take full width of the Grid item
-            height: 400, // Set a fixed height, or use min/max height as needed
+            minHeight: 500, // Set a fixed height, or use min/max height as needed
             boxShadow: 3, // Optional: add shadow for better visibility
           }}>
-            <Box sx={{ position: 'fixed' }}>
-              <AvatarShape
-                sx={{
-                  left: 0,
-                  zIndex: 9,
-                  width: 88,
-                  height: 36,
-                  bottom: -16,
-                  position: 'absolute',
-                }}
-              />
 
-              <Link
-                component={RouterLink}
-                href=""
-                // href={toProfile}
-                onClick={toProfile}
-              >
-                <Avatar
-                  alt="유저이미지"
-                  src={marketDetails.sellerProfile}
-                  sx={{
-                    left: 24,
-                    zIndex: 9,
-                    bottom: -24,
-                    position: 'absolute',
-                  }}
-                />
-              </Link>
-            </Box>
+            <Stack spacing={2} paddingLeft={2} sx={{ textAlign: 'left', display: 'flex' }}>
               <ProductImage src={marketDetails.pieceImg} alt={marketDetails.pieceTitle} />
-          </Card>
-
-          <Card sx={{
-            width: '25%', // Make the Card take full width of the Grid item
-            height: 400, // Set a fixed height, or use min/max height as needed
-            boxShadow: 3, // Optional: add shadow for better visibility
-            alignItems: 'center',  // Centers content horizontally
-            justifyContent: 'center', // Centers content vertically
-            display: 'flex'
-          }}>
-
-            <Stack spacing={2} sx={{ p: 2 }}>
               <Typography variant="h6" component="div">
                 {marketDetails.pieceTitle}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 {marketDetails.pieceContent}
               </Typography>
-              <Button variant="contained" fullWidth>
+
+            </Stack>
+          </Card>
+
+          <Card sx={{
+            width: '100%', // Adjust to make the Card take full width of the parent container
+            maxWidth: 300,
+            boxShadow: 3, // Optional: add shadow for better visibility
+            alignItems: 'center',  // Centers content horizontally
+            display: 'flex',
+            flexDirection: 'column', // Ensure content is arranged vertically
+            wordBreak: 'break-all',
+
+          }}>
+
+            <Stack spacing={2} sx={{ p: 2, flexGrow: 1 }}>
+              <Typography variant="h6" component="div">
+                {marketDetails.title}
+              </Typography>
+              <Typography variant="body2">
+                {marketDetails.content}
+              </Typography>
+
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+
+                <Link
+                  component={RouterLink}
+                  href=""
+                  onClick={toProfile}
+                  sx={{ display: 'flex', alignItems: 'center', mr: 1 }}
+                >
+                  <Avatar
+                    alt="유저이미지"
+                    src={marketDetails.sellerProfile}
+                    sx={{
+                      zIndex: 9,
+                    }}
+                  />
+                </Link>
+                <Typography variant="subtitle2" color="text.secondary">
+                  {marketDetails.sellerNickname}
+                </Typography>
+
+              </Box>
+
+              <Button variant="contained" fullWidth sx={{ mt: 'auto' }}>
                 구매하기
               </Button>
             </Stack>
