@@ -75,8 +75,10 @@ export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus
     // 로딩 시 좌측 로딩원 작게 띄우기
   };
 
-  const moveDetail = () => {
-    console.log('이동경로', resumeId)
+  const moveDetail = (event:React.MouseEvent) => {
+    event.stopPropagation();
+    // console.log('이동경로', resumeId)
+    router.push(paths.mypage.resumeDetail(resumeId))
   }
 
   const moveCopy = (event:React.MouseEvent) => {
@@ -170,7 +172,10 @@ export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus
 
 
       {/* 확장 로직 */}
-      <StyledButton expanded={expanded} onClick={handleExpandClick} sx={{mt:2}} />
+      <StyledButton expanded={expanded} onClick={(event:React.MouseEvent) => {
+        event.stopPropagation();
+        handleExpandClick()
+        }} sx={{mt:2}} />
     </Card>
   );
 }
