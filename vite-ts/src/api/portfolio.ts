@@ -9,26 +9,42 @@ import { endpoints, customFetcher } from 'src/utils/custom-axios';
 
 // ----------------------------------------------------------------------
 
-export function useGetPortfolios() {
-  const URL = endpoints.portfolio.list;
+export async function useGetPortfolios() {
+  // const URL = endpoints.portfolio.list;
 
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjMzLCJ1c2VyVHlwZSI6IklORElWSURVQUwiLCJpYXQiOjE3MTU1Njk1OTEsImV4cCI6MTcxNTYwNTU5MX0.Nt9nKvEV8TyY7uU1xrCeWtEbmjEeHk2gdaWj_czPRas'
+  // const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjMzLCJ1c2VyVHlwZSI6IklORElWSURVQUwiLCJpYXQiOjE3MTU1Njk1OTEsImV4cCI6MTcxNTYwNTU5MX0.Nt9nKvEV8TyY7uU1xrCeWtEbmjEeHk2gdaWj_czPRas'
 
-  // const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher);
-  const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { user_id: 33 } }], customFetcher);
+  // // const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher);
+  // const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { user_id: 33 } }], customFetcher);
 
-  const memoizedValue = useMemo(
-    () => ({
-      portfolios: (data) || [],
-      portfoliosLoading: isLoading,
-      portfoliosError: error,
-      portfoliosValidating: isValidating,
-      portfoliosEmpty: !isLoading && !data?.length,
-    }),
-    [data, error, isLoading, isValidating]
-  );
+  // const memoizedValue = useMemo(
+  //   () => ({
+  //     portfolios: (data) || [],
+  //     portfoliosLoading: isLoading,
+  //     portfoliosError: error,
+  //     portfoliosValidating: isValidating,
+  //     portfoliosEmpty: !isLoading && !data?.length,
+  //   }),
+  //   [data, error, isLoading, isValidating]
+  // );
 
-  return memoizedValue;
+  // return memoizedValue;
+
+  const url = `http://localhost:8080/api/v1/common/portfolio`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        user_id: 33
+      }
+    });
+    console.log('성공', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('에러!', error);
+    throw error;
+  }
+
 }
 
 // ----------------------------------------------------------------------
@@ -65,4 +81,24 @@ export async function createUserFormat(data: any) {
   //   },
   //   false
   // );
+}
+
+// ----------------------------------------------------------------------
+
+export async function deletePortfolio (pofolId: number) {
+  const url = `http://localhost:8080/api/v1/common/portfolio/${pofolId}`;
+
+  try {
+    const response = await axios.delete(url, {
+      headers: {
+        user_id: 33
+      }
+    });
+    console.log('Delete successful', response);
+    return response.data;
+  } catch (err) {
+    console.error('Delete error:', err);
+    throw err;
+  }
+
 }

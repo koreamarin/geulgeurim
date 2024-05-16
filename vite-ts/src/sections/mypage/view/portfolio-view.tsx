@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,7 +15,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 // import { useGetPortfolios } from "src/api/test";
-import { useGetPortfolios } from 'src/api/portfolio';
+import { useGetPortfolios, deletePortfolio } from 'src/api/portfolio';
 import { SplashScreen } from 'src/components/loading-screen';
 
 interface Portfolio {
@@ -29,64 +29,8 @@ interface Portfolio {
 }
 
 
-// const portfolios = [
-//   {
-//     id: 1,
-//     pofol_name: "Digital Art Portfolio",
-//     status: "PUBLIC",
-//     description: "A collection of my digital artworks.",
-//     artworks: [
-//       {
-//         imageUrl: "https://source.unsplash.com/random/1",
-//         name: "Digital Landscape",
-//         software: "Photoshop"
-//       },
-//       {
-//         imageUrl: "https://source.unsplash.com/random/2",
-//         name: "Digital Abstract",
-//         software: "Clip Studio"
-//       }
-//     ]
-//   },
-//   {
-//     id: 2,
-//     pofol_name: "Sketch Art Portfolio",
-//     status: "PUBLIC",
-//     description: "Various sketches and doodles .",
-//     artworks: [
-//       {
-//         imageUrl: "https://source.unsplash.com/random/3",
-//         name: "Coffee Sketch",
-//         software: "Pencil & Paper"
-//       }
-//     ]
-//   },
-//   {
-//     id: 3,
-//     pofol_name: "3D Models Portfolio",
-//     status: "PUBLIC",
-//     description: "My 3D modeling projects.",
-//     artworks: [
-//       {
-//         imageUrl: "https://source.unsplash.com/random/4",
-//         name: "3D Robot",
-//         software: "Blender"
-//       },
-//       {
-//         imageUrl: "https://source.unsplash.com/random/5",
-//         name: "3D Car Model",
-//         software: "AutoCAD"
-//       }
-//     ]
-//   }
-// ];
-
-
-
 export default function PortfolioView() {
   const router = useRouter()
-  const { portfolios, portfoliosLoading, portfoliosEmpty, portfoliosError} = useGetPortfolios()
-  const [portfolioState, setPortfolioState] = useState(portfolios);
   const [open, setOpen] = useState(false);
 
 
@@ -109,29 +53,63 @@ export default function PortfolioView() {
     router.push(paths.mypage.portfolioEdit(portfolioId))
   };
 
-  if (portfoliosLoading) {
-    return (
-      <Box>
-        <SplashScreen />
-      </Box>
-    )
-  }
+  // const { portfolios, portfoliosLoading, portfoliosEmpty, portfoliosError} = useGetPortfolios()
+  // const [portfolioState, setPortfolioState] = useState(portfolios);
 
-  if (portfoliosError) {
-    return (
-      <Box>
-        에러 발생!
-      </Box>
-    )
-  }
+  // if (portfoliosLoading) {
+  //   return (
+  //     <Box>
+  //       <SplashScreen />
+  //     </Box>
+  //   )
+  // }
 
-  if (portfoliosEmpty) {
-    return (
-      <Box>
-        포트폴리오가 없습니다
-      </Box>
-    )
-  }
+  // if (portfoliosError) {
+  //   return (
+  //     <Box>
+  //       에러 발생!
+  //     </Box>
+  //   )
+  // }
+
+  // if (portfoliosEmpty) {
+  //   return (
+  //     <Box>
+  //       포트폴리오가 없습니다
+  //     </Box>
+  //   )
+  // }
+
+  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useGetPortfolios().then(data => {
+      setPortfolios(data);
+      setLoading(false);
+    }).catch((err: Error) => {
+      console.error('Fetch error:', err);
+      setError(err);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) return <Box>Loading...</Box>;
+  if (error) return <Box>Error loading portfolios: {error.message}</Box>;
+  if (portfolios.length === 0) return <Box>포트폴리오가 없습니다.</Box>;
+
+  const handleDelete = async (portfolioId: number) => {
+    try {
+      await deletePortfolio(portfolioId);
+      const updatedPortfolios = portfolios.filter(portfolio => portfolio.pofolId !== portfolioId);
+      setPortfolios(updatedPortfolios);
+    } catch (err) {
+      console.error('Error deleting portfolio:', err);
+    }
+  };
+
 
   return (
     <Container>
@@ -156,10 +134,7 @@ export default function PortfolioView() {
                 </IconButton>
               </Tooltip>
               <Tooltip title="Delete">
-                <IconButton color="secondary" onClick={(e) => {
-
-                  console.log('Delete action triggered');
-                }}>
+              <IconButton color="secondary" onClick={() => handleDelete(portfolio.pofolId)}>
                   <DeleteIcon sx={{ color: 'grey' }} />
                 </IconButton>
               </Tooltip>
