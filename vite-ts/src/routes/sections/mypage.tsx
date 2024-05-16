@@ -15,6 +15,7 @@ const Interest = lazy(() => import('src/pages/mypage/interest'));
 // 포트폴리오
 const Portfolio = lazy(() => import('src/pages/mypage/portfolio'));
 const PortfolioDetail = lazy(() => import('src/pages/mypage/portfolio-detail'));
+const PortfolioDetailUserFormat = lazy(() => import('src/pages/mypage/portfolio-detail-user-format'));
 const PortfolioWriteView = lazy(() => import('src/pages/mypage/portfolio-write'));
 const PortfolioWriteUserFormatView = lazy(() => import('src/pages/mypage/portfolio-write-user-format'));
 const PortfolioEdit = lazy(() => import('src/pages/mypage/portfolio-edit'));
@@ -53,6 +54,10 @@ export const mypageRoutes = [
           {
             path: 'detail/:id',
             element: <PortfolioDetail />
+          },
+          {
+            path: 'detail/user/:id',
+            element: <PortfolioDetailUserFormat />
           },
           {
             path: 'write',

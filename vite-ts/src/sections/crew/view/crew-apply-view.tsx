@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+
 import {
   Container, Typography, FormControl, FormControlLabel, Box,
   Radio, RadioGroup, TextField, Button,
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
 } from '@mui/material';
-import ComponentBlock from 'src/sections/_examples/component-block';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import ComponentBlock from 'src/sections/_examples/component-block';
 
 type CrewDetail = {
   crew_id: number;

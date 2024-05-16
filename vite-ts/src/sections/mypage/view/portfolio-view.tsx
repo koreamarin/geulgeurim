@@ -33,11 +33,6 @@ export default function PortfolioView() {
   const router = useRouter()
   const [open, setOpen] = useState(false);
 
-
-  const handlePortfolioClick = (portfolioId: number) => {
-    router.push(paths.mypage.portfolioDetail(portfolioId));
-  };
-
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -108,6 +103,23 @@ export default function PortfolioView() {
     } catch (err) {
       console.error('Error deleting portfolio:', err);
     }
+  };
+
+
+  const handlePortfolioClick = (pofolId: number) => {
+    const portfolio = portfolios.find(p => p.pofolId === pofolId);
+
+    if (!portfolio) {
+      console.error('Portfolio not found');
+      return;
+    }
+
+    if (portfolio.format === "SERVICE") { // 글그램 포맷
+      router.push(paths.mypage.portfolioDetail(pofolId));
+    } else if (portfolio.format === "USER") {  // 사용자 포맷
+      router.push(paths.mypage.portfolioDetailUserFormat(pofolId));
+    }
+
   };
 
 

@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
-  Box, Grid, Paper, Switch, Tooltip, Container,
+  Box, Grid, Paper, Switch, Tooltip, Container, Button,
   FormGroup, Typography, IconButton, FormControlLabel
 } from '@mui/material';
+
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
+import { getPortfolioDetail } from 'src/api/portfolio';
 
 type Props = {
   id: string;
 };
 
 type ServicePortfolio = {
-  id: number;
-  pofol_name: string;
+  pofolId: number;
+  pofolName: string;
   status: string;
   format: string;
   pieces: {
@@ -27,70 +30,48 @@ type ServicePortfolio = {
   }[];
 };
 
-type UserPortfolio = {
-  id: number;
-  pofol_name: string;
-  status: string;
-  format: string;
-  file_url: string[];
-};
-
-type Portfolio = ServicePortfolio | UserPortfolio;
-
-const portfolio = {
-  id: 1,
-  pofol_name: "Digital Art Portfolio",
-  status: "PUBLIC",
-  format: "SERVICE",
-  pieces: [
-    {
-      title: "Digital Landscape",
-      program: "Photoshop",
-      contribution: "100%",
-      content: "제 첫번째 작품입니다!",
-      pieceUrl: "https://source.unsplash.com/random/1"
-    },
-    {
-      title: "Digital Abstract",
-      program: "Clip Studio",
-      contribution: "기여도 80% 입니다.",
-      content: "추상화풍의 웹툰을 그려봤어요. ",
-      pieceUrl: "https://source.unsplash.com/random/2"
-    }
-  ]
-}
-
-const portfolio_user_format = {
-  id: 8,
-  pofol_name: "테스트 유저의 채색 포트폴리오",
-  status: "PUBLIC",
-  format: "USER",
-  file_url: [
-    "https://source.unsplash.com/random/1",
-    "https://source.unsplash.com/random/2"
-  ]
-}
-
 
 export default function PortfolioDetailView({ id }: Props) {
   const router = useRouter()
-  const [portfolioState, setPortfolioState] = useState<Portfolio>(portfolio);
+  const [portfolioState, setPortfolioState] = useState<ServicePortfolio | null>(null);
+
+  useEffect(() => {
+    const fetchPortfolio = async () => {
+      try {
+        const data: ServicePortfolio = await getPortfolioDetail(parseInt(id, 10));
+        setPortfolioState(data);
+      } catch (error) {
+        console.error("Failed to fetch portfolio details:", error);
+      }
+    };
+    fetchPortfolio();
+  }, [id]);
+
 
   const handleTogglePublic = () => {
-    setPortfolioState(currentState => ({
-      ...currentState,
-      status: (currentState.status === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC')
-    }));
+    setPortfolioState(currentState => {
+      if (!currentState) return null;
+      return {
+        ...currentState,
+        status: currentState.status === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC'
+      };
+    });
+  };
+
+  const handleHome = () => {
+    router.push(paths.mypage.portfolio);
   };
 
   const handleEditClick = (portfolioId: number) => {
     router.push(paths.mypage.portfolioEdit(portfolioId))
   };
 
+  if (!portfolioState) return <Box>Loading...</Box>;
+
   return (
     <Container>
     <Paper elevation={3} sx={{ p: 2, mt: 2, mb: 4 }}>
-      <Typography variant="h4" sx={{ mb: 2 }}>{portfolioState.pofol_name}</Typography>
+      <Typography variant="h4" sx={{ mb: 2 }}>{portfolioState.pofolName}</Typography>
 
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <FormGroup sx={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -102,7 +83,7 @@ export default function PortfolioDetailView({ id }: Props) {
         </FormGroup>
 
         <Tooltip title="Edit">
-          <IconButton color="primary" onClick={() => handleEditClick(portfolio.id)}>
+          <IconButton color="primary" onClick={() => handleEditClick(portfolioState.pofolId)}>
               <EditIcon />
           </IconButton>
         </Tooltip>
@@ -117,7 +98,7 @@ export default function PortfolioDetailView({ id }: Props) {
       </Box>
 
       {/* 글그림 포맷 */}
-      {portfolioState.format === "SERVICE" && 'pieces' in portfolioState && (
+      {'pieces' in portfolioState && (
         portfolioState.pieces.map((piece, index) => (
           <Grid container spacing={2} key={index} sx={{ mt: 2, alignItems: 'center' }}>
             <Grid item xs={12} md={6}>
@@ -133,22 +114,23 @@ export default function PortfolioDetailView({ id }: Props) {
         ))
       )}
 
-      {/* 사용자 포맷 */}
-      {portfolioState.format === "USER" && 'file_url' in portfolioState && (
-          portfolioState.file_url.map((url, index) => (
-            <Grid item xs={12} key={index} sx={{ mt: 2 }}>
-              <img
-                src={url}
-                alt={`Artwork ${index + 1}`}
-                style={{
-                  width: '90%',
-                  height: '90%',
-                  objectFit: 'contain'
-                }}
-              />
-            </Grid>
-          ))
-        )}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: 1,
+          marginTop: 8,
+          marginBottom: 4,
+        }}
+      >
+        <Button variant="contained" onClick={handleHome}>
+          홈으로
+        </Button>
+        {/* <Button variant="outlined" onClick={handleCancel}>
+          취소
+        </Button> */}
+      </Box>
+
     </Paper>
   </Container>
   )

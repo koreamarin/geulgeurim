@@ -94,11 +94,52 @@ export async function deletePortfolio (pofolId: number) {
         user_id: 33
       }
     });
-    console.log('Delete successful', response);
     return response.data;
   } catch (err) {
     console.error('Delete error:', err);
-    throw err;
+    return err;
+  }
+
+}
+
+// ----------------------------------------------------------------------
+
+export async function getPortfolioDetail(pofolId: number) {
+
+  const url = `http://localhost:8080/api/v1/common/portfolio/detail/${pofolId}`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        user_id: 33
+      }
+    });
+    console.log('상세보기 성공', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('상세보기 에러!', error);
+    throw error;
+  }
+
+}
+
+// ----------------------------------------------------------------------
+
+export async function getPortfolioDetailUserFormat(pofolId: number) {
+
+  const url = `http://localhost:8080/api/v1/common/portfolio/detail/user/${pofolId}`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        user_id: 33
+      }
+    });
+    console.log('사용자 포맷 상세보기 성공', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('사용자 포맷 상세보기 에러!', error);
+    throw error;
   }
 
 }

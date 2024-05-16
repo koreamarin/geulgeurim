@@ -60,6 +60,7 @@ export const paths = {
     interest: `${ROOTS.MYPAGE}/interest`,
     portfolio: `${ROOTS.MYPAGE}/portfolio`,
     portfolioDetail: (id:number) => `${ROOTS.MYPAGE}/portfolio/detail/${id}`,
+    portfolioDetailUserFormat: (id:number) => `${ROOTS.MYPAGE}/portfolio/detail/user/${id}`,
     portfolioWrite: `${ROOTS.MYPAGE}/portfolio/write`,
     portfolioWriteUserFormat: `${ROOTS.MYPAGE}/portfolio/write/user`,
     portfolioEdit: (id:number) => `${ROOTS.MYPAGE}/portfolio/edit/${id}`,
