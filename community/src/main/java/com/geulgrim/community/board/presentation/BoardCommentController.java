@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/community/comment/board")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @Slf4j
 public class BoardCommentController {
 
@@ -26,8 +26,8 @@ public class BoardCommentController {
     @PostMapping("/")
     @Operation(summary = "자유게시판 댓글 작성", description = "선택된 자유게시판의 게시글에 댓글을 작성합니다.")
     public ResponseEntity<List<BoardComment>> createBoardComment(@RequestBody BoardCommentWriteRequest boardCommentWriteRequest) {
-
-        return new ResponseEntity<>(boardCommentService.writeComment(boardCommentWriteRequest), HttpStatus.CREATED);
+        long userId = 5;
+        return new ResponseEntity<>(boardCommentService.writeComment(userId, boardCommentWriteRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/{boardCommentId}")

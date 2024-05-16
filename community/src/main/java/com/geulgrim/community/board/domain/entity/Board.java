@@ -1,5 +1,6 @@
 package com.geulgrim.community.board.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.geulgrim.community.global.entity.BaseEntity;
 import com.geulgrim.community.global.user.domain.entity.User;
 import jakarta.persistence.*;
@@ -16,6 +17,7 @@ import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,9 +34,12 @@ public class Board extends BaseEntity {
     private String content;
     private long hit;
 
+
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<BoardComment> commentList;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<BoardImage> imageList;
 }

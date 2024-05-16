@@ -70,6 +70,7 @@ public class ShareService {
     
     // 그림평가 게시판 상세조회
     public ShareDetailResponse shareDetail(long shareId) {
+        log.info("조회수 증가 : {}", shareRepository.updateView(shareId));
         return ShareDetailResponse.builder()
                 .share(shareRepository.findByShareId(shareId))
                 .commentList(shareCommentRepository.findAllByShareId(shareId))

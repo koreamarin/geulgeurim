@@ -36,12 +36,11 @@ public class BoardController {
 
     @PostMapping()
     @Operation(summary = "자유게시판 게시글 작성", description = "자유게시판에 게시글을 1개 작성합니다.")
-    public ResponseEntity<Board> createBoard(@RequestPart BoardWriteRequest boardWriteRequest,
+    public ResponseEntity<BoardDetailResponse> createBoard(@RequestPart BoardWriteRequest boardWriteRequest,
                                              @RequestPart(required = false) List<MultipartFile> files) {
         // 유저 아이디 수정
-        long userId = 1;
-        boardWriteRequest.setImageList(files);
-        return new ResponseEntity<>(boardService.writeBoard(userId, boardWriteRequest), HttpStatus.CREATED);
+        long userId = 5;
+        return new ResponseEntity<>(boardService.writeBoard(userId, boardWriteRequest, files), HttpStatus.CREATED);
     }
 
     @GetMapping("/{boardId}")
@@ -59,10 +58,11 @@ public class BoardController {
 
     @PutMapping("/{boardId}")
     @Operation(summary = "자유게시판 게시글 수정", description = "선택된 자유게시판의 게시글을 1개 수정합니다.")
-    public ResponseEntity<Board> updateBoard(@PathVariable long boardId, @RequestBody BoardUpdateRequest boardUpdateRequest) {
+    public ResponseEntity<BoardDetailResponse> updateBoard(@RequestPart BoardUpdateRequest boardUpdateRequest,
+                                             @RequestPart List<MultipartFile> files) {
         // 유저 아이디 수정
         long userId = 1;
-        return new ResponseEntity<>(boardService.modifyBoard(userId, boardUpdateRequest), HttpStatus.OK);
+        return new ResponseEntity<>(boardService.modifyBoard(userId, boardUpdateRequest, files), HttpStatus.OK);
     }
     // 검색
 }

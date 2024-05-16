@@ -3,8 +3,9 @@ package com.geulgrim.community.board.domain.repository;
 import com.geulgrim.community.board.application.dto.response.BoardListResponse;
 import com.geulgrim.community.board.application.dto.response.BoardResponse;
 import com.geulgrim.community.board.domain.entity.Board;
-import org.springframework.data.jpa.repository.EntityGraph;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -53,6 +54,11 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query("SELECT b FROM Board b where b.boardId=:boardId")
     Board findBoardWithBoardId(Long boardId);
+
+    @Modifying
+    @Transactional
+    @Query("update Board b set b.hit = b.hit + 1 where b.boardId = :boardId")
+    int updateView(Long boardId);
 
     void deleteByBoardId(Long boardId);
 }

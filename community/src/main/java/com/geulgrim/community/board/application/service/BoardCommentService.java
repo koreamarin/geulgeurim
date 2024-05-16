@@ -22,10 +22,9 @@ public class BoardCommentService {
     private final BoardCommentRepository boardCommentRepository;
 
     // 작성
-    public List<BoardComment> writeComment(BoardCommentWriteRequest boardCommentWriteRequest) {
+    public List<BoardComment> writeComment(long userId, BoardCommentWriteRequest boardCommentWriteRequest) {
         Board board = boardRepository.findBoardWithBoardId(boardCommentWriteRequest.getBoardId());
         // 유저 아이디 수정
-        long userId = 1;
         BoardComment boardComment = BoardComment.builder()
                 .content(boardCommentWriteRequest.getContent())
                 .userId(userId)
