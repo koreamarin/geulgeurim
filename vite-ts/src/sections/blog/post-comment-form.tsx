@@ -1,27 +1,26 @@
+import axios from 'axios';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
+type props = {
+  id: string;
+  type: string;
+};
 
-export default function PostCommentForm() {
+export default function PostCommentForm({ id, type }: props) {
   const CommentSchema = Yup.object().shape({
     comment: Yup.string().required('Comment is required'),
-    name: Yup.string().required('Name is required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
   });
 
   const defaultValues = {
     comment: '',
-    name: '',
-    email: '',
   };
 
   const methods = useForm({
@@ -36,12 +35,60 @@ export default function PostCommentForm() {
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      console.info('DATA', data);
-    } catch (error) {
-      console.error(error);
+    if (type === 'board') {
+      const boardCommentWriteRequest = {
+        boardId: id,
+        content: data.comment,
+      };
+      try {
+        await axios
+          .post(`/api/v1/community/comment/${type}`, boardCommentWriteRequest, {
+            headers: {
+              // "Authorization": '토큰',
+            },
+            // baseURL: 'https://글그림.com',
+            baseURL: 'http://localhost:8080',
+          })
+          .then((response) => {
+            const { commentList } = response.data;
+            console.log(response.data);
+          })
+          .catch((error) => {
+            alert('댓글 작성 중 오류가 발생했습니다.');
+            console.log(error);
+          });
+        reset();
+        console.info('DATA', data);
+      } catch (error) {
+        console.error(error);
+      }
+    } else if (type === 'share') {
+      const shareCommentWriteRequest = {
+        shareId: id,
+        content: data.comment,
+      };
+      try {
+        await axios
+          .post(`/api/v1/community/comment/${type}`, shareCommentWriteRequest, {
+            headers: {
+              // "Authorization": '토큰',
+            },
+            // baseURL: 'https://글그림.com',
+            baseURL: 'http://localhost:8080',
+          })
+          .then((response) => {
+            const { commentList } = response.data;
+            console.log(response.data);
+          })
+          .catch((error) => {
+            alert('댓글 작성 중 오류가 발생했습니다.');
+            console.log(error);
+          });
+        reset();
+        console.info('DATA', data);
+      } catch (error) {
+        console.error(error);
+      }
     }
   });
 

@@ -21,23 +21,49 @@ import { useRouter } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { Upload } from 'src/components/upload';
+import axios from 'axios';
 
-type Props = {
-  id?: number;
-};
-
-export default function BoardWriteView({ id }: Props) {
+export default function BoardWriteView() {
   const router = useRouter();
   const preview = useBoolean();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [files, setFiles] = useState<(File | string)[]>([]);
 
+  const formData = new FormData();
+
   const handleSubmit = () => {
     console.log('Title:', title);
     console.log('Content:', content);
     console.log('Files:', files);
-    router.push("");
+    const boardWriteRequest = {
+      title,
+      content,
+    };
+    Object.values(files).forEach((file) => formData.append('files', file));
+    formData.append(
+      'boardWriteRequest',
+      new Blob([JSON.stringify(boardWriteRequest)], {
+        type: 'application/json',
+      })
+    );
+    axios
+      .post('/api/v1/community/board', formData, {
+        headers: {
+          'Content-Type': `multipart/form-data; `,
+          // "Authorization": '토큰',
+        },
+        // baseURL: 'https://글그림.com',
+        baseURL: 'http://localhost:8080',
+      })
+      .then((response) => {
+        const { board } = response.data;
+        console.log(board);
+        router.push(paths.community.board.detail(board.boardId));
+      })
+      .catch((error) => {
+        alert('글 작성 중 오류가 발생했습니다.');
+      });
   };
 
   const handleCancel = () => {

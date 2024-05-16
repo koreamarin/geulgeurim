@@ -16,7 +16,15 @@ export default function PostCommentList({ comments }: Props) {
     <>
       <>
         {comments.map((comment) => {
-          const { boardCommentId, userId, userNickname, userFileUrl, content, createdAt, updatedAt } = comment;
+          const {
+            boardCommentId,
+            userId,
+            userNickname,
+            userFileUrl,
+            content,
+            createdAt,
+            updatedAt,
+          } = comment;
 
           return (
             <Box key={boardCommentId}>
@@ -32,7 +40,7 @@ export default function PostCommentList({ comments }: Props) {
         })}
       </>
 
-      <Pagination count={8} sx={{ my: 5, mx: 'auto' }} />
+      <Pagination count={1} sx={{ my: 5, mx: 'auto' }} />
     </>
   );
 }

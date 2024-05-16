@@ -21,9 +21,9 @@ export function useGetCommunityMain() {
       communityLoading: isLoading,
       communityError: error,
       communityValidating: isValidating,
-      newBoardEmpty: !isLoading && !data?.newBoard.length,
-      popBoardEmpty: !isLoading && !data?.popBoard.length,
-      newShareEmpty: !isLoading && !data?.newShare.length,
+      newBoardEmpty: !isLoading && !data?.newBoard?.length,
+      popBoardEmpty: !isLoading && !data?.popBoard?.length,
+      newShareEmpty: !isLoading && !data?.newShare?.length,
     }),
     [data, error, isLoading, isValidating]
   );
@@ -38,7 +38,10 @@ export function useGetBoardList() {
 
   const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjMzLCJ1c2VyVHlwZSI6IklORElWSURVQUwiLCJpYXQiOjE3MTU1Njk1OTEsImV4cCI6MTcxNTYwNTU5MX0.Nt9nKvEV8TyY7uU1xrCeWtEbmjEeHk2gdaWj_czPRas'
 
-  const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher);
+  const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
+    refreshInterval: 0,  // disable automatic re-fetching
+    revalidateOnFocus: false, // disable re-fetching when the window is focused
+  });
   console.log('Board List' ,data)
 
   const memoizedValue = useMemo(
@@ -63,7 +66,10 @@ export function useGetBoardDetail(boardId: string) {
 
   const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjMzLCJ1c2VyVHlwZSI6IklORElWSURVQUwiLCJpYXQiOjE3MTU1Njk1OTEsImV4cCI6MTcxNTYwNTU5MX0.Nt9nKvEV8TyY7uU1xrCeWtEbmjEeHk2gdaWj_czPRas'
 
-  const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher);
+  const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
+    refreshInterval: 0,  // disable automatic re-fetching
+    revalidateOnFocus: false, // disable re-fetching when the window is focused
+  });
   console.log('Board Detail' ,data)
 
   const memoizedValue = useMemo(
@@ -90,7 +96,10 @@ export function useGetShareList() {
 
   const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjMzLCJ1c2VyVHlwZSI6IklORElWSURVQUwiLCJpYXQiOjE3MTU1Njk1OTEsImV4cCI6MTcxNTYwNTU5MX0.Nt9nKvEV8TyY7uU1xrCeWtEbmjEeHk2gdaWj_czPRas'
 
-  const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher);
+  const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
+    refreshInterval: 0,  // disable automatic re-fetching
+    revalidateOnFocus: false, // disable re-fetching when the window is focused
+  });
   console.log('Share List' ,data)
 
   const memoizedValue = useMemo(
@@ -115,7 +124,10 @@ export function useGetShareDetail(shareId: string) {
 
   const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjMzLCJ1c2VyVHlwZSI6IklORElWSURVQUwiLCJpYXQiOjE3MTU1Njk1OTEsImV4cCI6MTcxNTYwNTU5MX0.Nt9nKvEV8TyY7uU1xrCeWtEbmjEeHk2gdaWj_czPRas'
 
-  const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher);
+  const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
+    refreshInterval: 0,  // disable automatic re-fetching
+    revalidateOnFocus: false, // disable re-fetching when the window is focused
+  }); 
   console.log('Share List' ,data)
 
   const memoizedValue = useMemo(

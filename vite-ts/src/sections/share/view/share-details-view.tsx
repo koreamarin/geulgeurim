@@ -45,10 +45,10 @@ const dummy = [
 ]
 // ----------------------------------------------------------------------
 type propType = {
-  id: string
-}
+  id: string;
+};
 
-export default function ShareDetailsView( {id} : propType) {
+export default function ShareDetailsView({ id }: propType) {
   // 작성자 프로필로 이동
   // const toProfile = paths.mypage.root;
   const toProfile = () => {
@@ -108,9 +108,7 @@ export default function ShareDetailsView( {id} : propType) {
         <Typography variant="subtitle2">조회수 : {share.hit}</Typography>
       </Stack>
 
-      {imageList?.map((img: { fileUrl: string | undefined; }) => (
-        <img src={img.fileUrl} alt="" />
-      ))}
+      {imageList?.map((img: { fileUrl: string | undefined }) => <img src={img.fileUrl} alt="" />)}
       <Markdown children={share.content} />
 
       <Stack direction="row" sx={{ mb: 3, mt: 5 }}>
@@ -121,7 +119,7 @@ export default function ShareDetailsView( {id} : propType) {
         </Typography>
       </Stack>
 
-      <PostCommentForm />
+      <PostCommentForm id={id} type="share" />
 
       <Divider sx={{ mt: 5, mb: 2 }} />
 

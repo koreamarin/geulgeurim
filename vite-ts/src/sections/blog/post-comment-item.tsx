@@ -10,8 +10,6 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { fDate } from 'src/utils/format-time';
 
-import Iconify from 'src/components/iconify';
-
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -29,8 +27,6 @@ export default function PostCommentItem({
   createdAt,
   updatedAt,
 }: Props) {
-  const reply = useBoolean();
-
   return (
     <ListItem
       sx={{
@@ -59,12 +55,6 @@ export default function PostCommentItem({
         <Typography variant="body2" sx={{ mt: 1 }}>
           {content}
         </Typography>
-
-        {reply.value && (
-          <Box sx={{ mt: 2 }}>
-            <TextField fullWidth autoFocus placeholder="Write comment..." />
-          </Box>
-        )}
       </Stack>
     </ListItem>
   );
