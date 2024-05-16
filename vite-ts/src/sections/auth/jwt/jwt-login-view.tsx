@@ -127,7 +127,7 @@ export default function JwtLoginView() {
   // 로그인 버튼 클릭 시 실행할 함수
   const enterLogin = () => {
     const response = axios
-      .post('https://글그림.com/api/v1/auth/login', {
+      .post(`https://${encodeURIComponent('글그림')}.com/api/v1/auth/login`, {
         email: methods.getValues('email'),
         password: methods.getValues('password'),
       })
@@ -140,6 +140,7 @@ export default function JwtLoginView() {
         localStorage.setItem('profile', res.data.profile_url);
         router.push('/recruit'); // 홈페이지 URL로 변경해주세요.
       });
+    console.log(encodeURIComponent('글그림'));
   };
 
   const enterRenderForm = (
