@@ -1,7 +1,9 @@
 package com.geulgrim.community.share.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.geulgrim.community.board.domain.entity.Board;
 import com.geulgrim.community.global.entity.BaseEntity;
+import com.geulgrim.community.global.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +22,10 @@ public class ShareComment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long shareCommentId;
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User user;
     private String content;
 
     @ManyToOne
