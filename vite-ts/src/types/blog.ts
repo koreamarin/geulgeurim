@@ -180,6 +180,22 @@ export type communityMainItem = {
   newCrew: CrewMainItem[];
 }
 
+export type MarketMainItem = {
+  marketId: number;
+  sellerId: number;
+  pieceId: number;
+  sellerNickname: string;
+  sellerProfile: string;
+  sellerThumbnail: string;
+  marketThumbnail: string;
+  title: string;
+  price: number;
+  hit: string;
+  createdAt: string;
+
+}
+
+
 export type commentItem = {
   boardCommentId: number;
   userId: number;
