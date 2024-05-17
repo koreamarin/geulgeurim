@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import Box from '@mui/material/Box';
 import Pagination from '@mui/material/Pagination';
 
@@ -12,10 +14,14 @@ type Props = {
 };
 
 export default function PostCommentList({ comments }: Props) {
+
+  useEffect(() => {
+    console.log("재렌더링", comments);
+  }, [comments])
   return (
     <>
       <>
-        {comments.map((comment) => {
+        {comments?.map((comment: { boardCommentId: any; userId: any; userNickname: any; userFileUrl: any; content: any; createdAt: any; updatedAt: any; }) => {
           const {
             boardCommentId,
             userId,

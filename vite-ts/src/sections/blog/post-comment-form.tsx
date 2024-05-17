@@ -50,16 +50,19 @@ export default function PostCommentForm({ id, type, addComment }: props) {
             baseURL: 'https://글그림.com',
           })
           .then((response) => {
-            const { commentList } = response.data;
-            console.log(response.data);
-            addComment(commentList);
+            const commentList = response.data;
+            console.log("댓글 작성 후 리턴받음", response.data);
+            if(commentList) {
+              addComment(commentList);
+            } else {
+              console.log("왜안돼?")
+            }
           })
           .catch((error) => {
             alert('댓글 작성 중 오류가 발생했습니다.');
             console.log(error);
           });
         reset();
-        console.info('DATA', data);
       } catch (error) {
         console.error(error);
       }
@@ -77,7 +80,7 @@ export default function PostCommentForm({ id, type, addComment }: props) {
             baseURL: 'https://글그림.com',
           })
           .then((response) => {
-            const { commentList } = response.data;
+            const commentList = response.data;
             console.log(response.data);
             addComment(commentList);
           })
@@ -86,7 +89,6 @@ export default function PostCommentForm({ id, type, addComment }: props) {
             console.log(error);
           });
         reset();
-        console.info('DATA', data);
       } catch (error) {
         console.error(error);
       }

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import { Avatar } from '@mui/material';
 import Stack from '@mui/material/Stack';
@@ -59,11 +59,20 @@ export default function PostDetailsView({ id }: propType) {
 
   const { board, commentList, imageList, boardLoading, boardError } = useGetBoardDetail(id);
 
-  const [comments, setComments] = useState(commentList);
+  const [comments, setComments] = useState(commentList || []);
 
-  const addComment: (newCommentList: commentItem[]) => void = useCallback((newCommentList: commentItem[]) => {
-    setComments(newCommentList);
-  }, [setComments]);
+  useEffect(()=>{
+    if (commentList) {
+      setComments(commentList);
+    }
+  }, [commentList])
+
+  const addComment = useCallback((newCommentList: commentItem[]) => {
+    if(newCommentList){
+      setComments(newCommentList);
+      // console.log("Success?", comments);
+    }
+  }, []);
 
   const renderError = (
     <EmptyContent
@@ -121,7 +130,7 @@ export default function PostDetailsView({ id }: propType) {
         <Typography variant="h4">Comments</Typography>
 
         <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
-          ({commentList?.length})
+          ({comments?.length})
         </Typography>
       </Stack>
 
@@ -129,7 +138,7 @@ export default function PostDetailsView({ id }: propType) {
 
       <Divider sx={{ mt: 5, mb: 2 }} />
 
-      <PostCommentList comments={commentList} />
+      <PostCommentList comments={comments} />
     </Stack>
   );
 
