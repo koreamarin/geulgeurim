@@ -1,23 +1,22 @@
 package com.geulgrim.community.board.application.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardListResponse {
+public class BoardResponse {
     private long boardId;
     private long userId;
     private String userNickname;
+    private String userFileUrl;
     private String title;
+    private String content;
     private long hit;
-    private long commentCnt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -1,5 +1,6 @@
 package com.geulgrim.community.board.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.geulgrim.community.board.domain.entity.enums.ImageType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,5 +22,6 @@ public class BoardImage {
 
     @ManyToOne
     @JoinColumn(name = "board_id")
+    @JsonBackReference
     private Board board;
 }

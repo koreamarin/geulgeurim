@@ -11,5 +11,4 @@ import java.util.List;
 public class BoardWriteRequest {
     private String title;
     private String content;
-    private List<MultipartFile> imageList;
 }

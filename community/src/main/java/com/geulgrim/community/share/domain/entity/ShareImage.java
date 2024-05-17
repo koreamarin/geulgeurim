@@ -12,7 +12,7 @@ public class ShareImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardImageId;
+    private Long shareImageId;
 
     private String fileUrl;
 

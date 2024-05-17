@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface ShareCommentRepository extends JpaRepository<ShareComment, Long> {
 
-    @Query("SELECT sc FROM ShareComment sc LEFT JOIN sc.share GROUP BY sc.share.shareId")
+    @Query("SELECT sc FROM ShareComment sc WHERE sc.share.shareId = :shareId")
     List<ShareComment> findAllByShareId(Long shareId);
 
     void deleteShareCommentByShareCommentId(Long shareCommentId);

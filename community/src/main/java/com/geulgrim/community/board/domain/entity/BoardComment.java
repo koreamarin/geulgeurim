@@ -1,5 +1,6 @@
 package com.geulgrim.community.board.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.geulgrim.community.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class BoardComment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "board_id")
+    @JsonBackReference
     private Board board;
 
 }

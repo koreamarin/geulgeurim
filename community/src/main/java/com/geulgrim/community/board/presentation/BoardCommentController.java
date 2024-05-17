@@ -8,6 +8,7 @@ import com.geulgrim.community.board.domain.entity.BoardComment;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/community/comment/board")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class BoardCommentController {
 
@@ -24,9 +26,10 @@ public class BoardCommentController {
 
     @PostMapping("/")
     @Operation(summary = "자유게시판 댓글 작성", description = "선택된 자유게시판의 게시글에 댓글을 작성합니다.")
-    public ResponseEntity<List<BoardComment>> createBoardComment(@RequestBody BoardCommentWriteRequest boardCommentWriteRequest) {
-
-        return new ResponseEntity<>(boardCommentService.writeComment(boardCommentWriteRequest), HttpStatus.CREATED);
+    public ResponseEntity<List<BoardComment>> createBoardComment(@RequestHeader HttpHeaders headers,
+                                                                 @RequestBody BoardCommentWriteRequest boardCommentWriteRequest) {
+        long userId = Long.parseLong(headers.get("user_id").get(0));
+        return new ResponseEntity<>(boardCommentService.writeComment(userId, boardCommentWriteRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/{boardCommentId}")
