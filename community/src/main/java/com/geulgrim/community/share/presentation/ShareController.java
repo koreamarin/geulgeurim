@@ -11,6 +11,7 @@ import com.geulgrim.community.share.domain.entity.Share;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,10 +37,11 @@ public class ShareController {
 
     @PostMapping()
     @Operation(summary = "자유게시판 게시글 작성", description = "그림공유게시판에 게시글을 1개 작성합니다.")
-    public ResponseEntity<Share> createShare(@RequestPart ShareWriteRequest shareWriteRequest,
+    public ResponseEntity<Share> createShare(@RequestHeader HttpHeaders headers,
+                                             @RequestPart ShareWriteRequest shareWriteRequest,
                                              @RequestPart(required = false) List<MultipartFile> files) {
         // 유저 아이디 수정
-        long userId = 1;
+        long userId = Long.parseLong(headers.get("user_id").get(0));
         shareWriteRequest.setImageList(files);
         return new ResponseEntity<>(shareService.writeShare(userId, shareWriteRequest), HttpStatus.CREATED);
     }
@@ -59,9 +61,11 @@ public class ShareController {
 
     @PutMapping("/{shareId}")
     @Operation(summary = "그림공유게시판 게시글 수정", description = "선택된 그림공유게시판의 게시글을 1개 수정합니다.")
-    public ResponseEntity<Share> updateShare(@PathVariable long shareId, @RequestBody ShareUpdateRequest shareUpdateRequest) {
+    public ResponseEntity<Share> updateShare(@RequestHeader HttpHeaders headers,
+                                             @PathVariable long shareId,
+                                             @RequestBody ShareUpdateRequest shareUpdateRequest) {
         // 유저 아이디 수정
-        long userId = 1;
+        long userId = Long.parseLong(headers.get("user_id").get(0));
         return new ResponseEntity<>(shareService.modifyShare(userId, shareUpdateRequest), HttpStatus.OK);
     }
     // 검색
