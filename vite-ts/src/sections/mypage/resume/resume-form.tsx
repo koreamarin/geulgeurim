@@ -15,6 +15,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { postResumeList } from 'src/api/mypageResume';
+
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFTextField,
@@ -448,14 +450,41 @@ export default function ResumeForm({ copyId }: Props) {
 
   // submit 로직
   const onSubmit = handleSubmit(async (data) => {
-    console.log('등록')
+    const formData = new FormData();
+
+  // JSON 데이터 추가
+    formData.append('createResumeRequest',  new Blob([JSON.stringify({
+      resumeTitle: data.resumeTitle,
+      essay: data.essay,
+      openStatus: data.openStatus,
+      positionIds: data.positionIds,
+      pofolIds: data.portfolioIds,
+      createEducationRequests: data.createEducationRequests,
+      createWorkRequests: data.createWorkRequests,
+      createAwardRequests: data.createAwardRequests,
+      createExperienceRequests: data.createExperienceRequests,
+    })], {
+      type: "application/json"
+  })
+    );
+    if (data.fileUrl) {
+      formData.append('image_file', data.fileUrl);
+    } else {
+      formData.append('image_file', new Blob([]), '');
+    }
+
+    formData.append('image_file', data.fileUrl ? data.fileUrl : new Blob([]));
     try {
-      // api로 바꿔야함
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar('이력서 등록 성공!');
-      router.push(paths.mypage.resume);
-      console.log('DATA', data);
+      console.log(data)
+      const result = await postResumeList(formData)
+      if (result) {
+        reset();
+        enqueueSnackbar('이력서 등록 성공!');
+        router.push(paths.mypage.resume);
+      }
+      else {
+        enqueueSnackbar('이력서 등록 실패!', { variant: 'error' });
+      }
     } catch (error) {
       console.error(error);
     }

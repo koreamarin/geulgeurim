@@ -12,11 +12,17 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useMockedUser } from 'src/hooks/use-mocked-user';
 
+import { useGetResumeList } from 'src/api/mypageResume';
+
 import Iconify from 'src/components/iconify';
+import { useSnackbar } from 'src/components/snackbar';
+import { SplashScreen } from 'src/components/loading-screen';
 
 import ResumeListCard from './resume-list-card';
 import ResumeListSort from './resume-list-sort';
 import ResumeListSearchOption from './resume-list-search-option';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -75,7 +81,16 @@ const WORKS_SEARCH_OPTIONS = [
 
 
 export default function ResumeList() {
+  const { resumes, resumesLoading, resumesError, resumesEmpty} = useGetResumeList()
+
   const router = useRouter()
+  const { enqueueSnackbar } = useSnackbar();
+
+  if (resumesError) {
+    enqueueSnackbar('에러 발생! 다시 로그인해주세요');
+    localStorage.clear();
+    router.push(paths.recruit.main)
+  }
 
   // 유저 더미
   const { user } = useMockedUser();
@@ -116,6 +131,32 @@ export default function ResumeList() {
     router.push(paths.mypage.resumeWrite)
   }
 
+  // 조건 랜더
+  const renderResumeList = () => {
+    if (resumesLoading) {
+      return <SplashScreen />;
+    }
+
+    if (resumesEmpty) {
+      return <Typography sx={{ textAlign: 'center', mt: 4 }}>이력서가 없습니다.</Typography>;
+    }
+
+    return resumes.map((item, index) => {
+      const positionList = item.getResumePositionResponses.map(positionItem => positionItem.positionId);
+      return (
+        <ResumeListCard
+          key={index}
+          resumeId={item.resumeId}
+          resumeTitle={item.resumeTitle}
+          essay={item.essay}
+          openStatus={item.openStatus}
+          fileUrl={item.fileUrl}
+          position={positionList}
+        />
+      );
+    });
+  }
+
   const pageCount = 8
 
     return (
@@ -149,11 +190,8 @@ export default function ResumeList() {
           </Button>
         </Stack>
 
-        {dummy.getResumesResponse.map((item, index) => {
-          const positionList: number[] = item.getResumePositionResponses.map((positionItem) => positionItem.positionId)
-          return <ResumeListCard key={index} resumeId={item.resumeId} resumeTitle={item.resumeTitle} essay={item.essay}
-          openStatus={item.openStatus} fileUrl={item.fileUrl} position={positionList} />
-        })}
+        {renderResumeList()}
+
         <Pagination
             count={Math.floor((dummy.getResumesResponse.length - 1) / pageCount) + 1}
             defaultPage={1}

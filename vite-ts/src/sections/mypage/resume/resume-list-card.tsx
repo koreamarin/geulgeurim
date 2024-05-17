@@ -142,7 +142,7 @@ export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus
               <CardMedia
                 component="img"
                 image={fileUrl !== '' ? fileUrl : '/default_person.png'}
-                alt="증명사진"
+                alt={fileUrl}
                 sx={{
                   display: 'block',
                   height: '100%',
