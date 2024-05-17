@@ -4,7 +4,6 @@ import { paths } from 'src/routes/paths';
 // ----------------------------------------------------------------------
 export const CUSTOM_API = import.meta.env.VITE_CUSTOM_API;
 export const HOST_API = import.meta.env.VITE_HOST_API;
-export const CUSTOM_API = import.meta.env.VITE_CUSTOM_API;
 export const ASSETS_API = import.meta.env.VITE_ASSETS_API;
 
 export const FIREBASE_API = {
