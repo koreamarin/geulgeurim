@@ -12,7 +12,6 @@ public class CreateResumeRequest {
     private String resumeTitle;
     private String essay;
     private String openStatus;
-    private String fileUrl;
     private List<Long> positionIds;
     private List<Long> pofolIds;
     private List<CreateEducationRequest> createEducationRequests;

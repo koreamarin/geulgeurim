@@ -1,5 +1,6 @@
 package com.geulgrim.recruit.job.application.service;
 
+import com.geulgrim.recruit.global.S3.AwsS3Service;
 import com.geulgrim.recruit.job.application.dto.request.*;
 import com.geulgrim.recruit.job.application.dto.response.*;
 import com.geulgrim.recruit.job.domain.entity.*;
@@ -8,7 +9,9 @@ import com.geulgrim.recruit.job.domain.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,7 @@ public class ResumeService {
     private final JobPositionRepository jobPositionRepository;
     private final SubmittedResumeRepository submittedResumeRepository;
     private final StarRepository starRepository;
+    private final AwsS3Service awsS3Service;
 
     // 구인구직 등록
     public Map<String, Long> createJob(
@@ -425,15 +429,21 @@ public class ResumeService {
     // 내 이력서 등록
     public Map<String, Long> createResume(
             HttpHeaders headers,
+            MultipartFile image_file,
             CreateResumeRequest createResumeRequest) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+
+        String file_url = awsS3Service.uploadFile(userId, image_file, time, "resume");
 
         // 이력서 저장 파트
         Resume resume = Resume.builder()
-                .userId(Long.parseLong(headers.get("user_id").get(0)))
+                .userId(userId)
                 .resumeTitle(createResumeRequest.getResumeTitle())
                 .essay(createResumeRequest.getEssay())
                 .openStatus(OpenStatus.valueOf(createResumeRequest.getOpenStatus()))
-                .fileUrl(createResumeRequest.getFileUrl())
+                .fileUrl(file_url)
                 .build();
         resumeRepository.save(resume);
 

@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -143,8 +144,9 @@ public class RecruitController {
     @PostMapping("/resume")
     public ResponseEntity<?> createResume(
             @RequestHeader HttpHeaders headers,
-            @RequestBody CreateResumeRequest createResumeRequest) {
-        Map<String, Long> map = resumeService.createResume(headers, createResumeRequest);
+            @RequestPart MultipartFile image_file,
+            @RequestPart CreateResumeRequest createResumeRequest) {
+        Map<String, Long> map = resumeService.createResume(headers, image_file, createResumeRequest);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
