@@ -2,6 +2,7 @@ package com.geulgrim.community.share.presentation;
 
 import com.geulgrim.community.share.application.dto.request.ShareCommentUpdateRequest;
 import com.geulgrim.community.share.application.dto.request.ShareCommentWriteRequest;
+import com.geulgrim.community.share.application.dto.response.ShareCommentResponse;
 import com.geulgrim.community.share.application.service.ShareCommentService;
 import com.geulgrim.community.share.domain.entity.ShareComment;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,8 +25,8 @@ public class ShareCommentController {
 
     @PostMapping("/")
     @Operation(summary = "자유게시판 댓글 작성", description = "선택된 자유게시판의 게시글에 댓글을 작성합니다.")
-    public ResponseEntity<List<ShareComment>> createShareComment(@RequestHeader HttpHeaders headers,
-                                                                 @RequestBody ShareCommentWriteRequest shareCommentWriteRequest) {
+    public ResponseEntity<List<ShareCommentResponse>> createShareComment(@RequestHeader HttpHeaders headers,
+                                                                         @RequestBody ShareCommentWriteRequest shareCommentWriteRequest) {
 
         long userId = Long.parseLong(headers.get("user_id").get(0));
         return new ResponseEntity<>(shareCommentService.writeComment(userId, shareCommentWriteRequest), HttpStatus.CREATED);
