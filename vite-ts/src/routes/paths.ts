@@ -52,6 +52,7 @@ export const paths = {
   nft: {
     root: `${ROOTS.NFT}`,
     detail: (id: number) => `${ROOTS.NFT}/${id}`,
+
   },
 
   mypage: {
@@ -62,7 +63,13 @@ export const paths = {
     portfolioDetail: (id:number) => `${ROOTS.MYPAGE}/portfolio/detail/${id}`,
     portfolioWrite: `${ROOTS.MYPAGE}/portfolio/write`,
     portfolioWriteUserFormat: `${ROOTS.MYPAGE}/portfolio/write/user`,
+
+    // 이력서
     resume: `${ROOTS.MYPAGE}/resume`,
+    resumeWrite: `${ROOTS.MYPAGE}/resume/write`,
+    resumeCopy: (id: number) => `${ROOTS.MYPAGE}/resume/write/${id}`,
+    resumeDetail: (id: number) => `${ROOTS.MYPAGE}/resume/${id}`,
+    resumeEdit: (id: number) => `${ROOTS.MYPAGE}/resume/${id}/edit`,
 
     // 내 작품
     works: `${ROOTS.MYPAGE}/works`,

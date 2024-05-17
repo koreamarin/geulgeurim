@@ -167,13 +167,13 @@ export default function WorksForm() {
       </Stack>
       <Stack mb={4} direction="row" alignItems="center" justifyContent="end">
         <Button
-            style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" onClick={() => router.push(paths.mypage.works)}>
+            style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="error" size="medium" onClick={() => router.push(paths.mypage.works)} sx={{marginRight:3}}>
           취소하기
         </Button>
 
         <LoadingButton
             type="submit"
-            style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="success" size="medium" sx={{marginRight:3}}
+            style={{height:'2.8rem', fontSize:'1rem'}} variant="outlined" color="success" size="medium"
             loading={isSubmitting}
         >
           등록하기

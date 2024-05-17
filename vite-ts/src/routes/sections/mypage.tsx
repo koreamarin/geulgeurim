@@ -16,27 +16,34 @@ const Interest = lazy(() => import('src/pages/mypage/interest'));
 const Portfolio = lazy(() => import('src/pages/mypage/portfolio'));
 const PortfolioDetail = lazy(() => import('src/pages/mypage/portfolio-detail'));
 const PortfolioWriteView = lazy(() => import('src/pages/mypage/portfolio-write'));
-const PortfolioWriteUserFormatView = lazy(() => import('src/pages/mypage/portfolio-write-user-format'));
+const PortfolioWriteUserFormatView = lazy(
+  () => import('src/pages/mypage/portfolio-write-user-format')
+);
 // 작품
 const Works = lazy(() => import('src/pages/mypage/works'));
 const WorksDetail = lazy(() => import('src/pages/mypage/works/detail'));
 const WorksEdit = lazy(() => import('src/pages/mypage/works/edit'));
 const WorksWrite = lazy(() => import('src/pages/mypage/works/write'));
-const Resume = lazy(() => import('src/pages/mypage/resume'));
 
+// 이력서
+const Resume = lazy(() => import('src/pages/mypage/resume'));
+const ResumeDetail = lazy(() => import('src/pages/mypage/resume/detail'));
+const ResumeEdit = lazy(() => import('src/pages/mypage/resume/edit'));
+const ResumeWrite = lazy(() => import('src/pages/mypage/resume/write'));
+const ResumeCopy = lazy(() => import('src/pages/mypage/resume/copy'));
 // ----------------------------------------------------------------------
 
 export const mypageRoutes = [
   {
     path: 'mypage',
     element: (
-      <AuthGuard>
+      // <AuthGuard>
         <DashboardLayout>
           <Suspense fallback={<LoadingScreen />}>
             <Outlet />
           </Suspense>
         </DashboardLayout>
-      </AuthGuard>
+      // </AuthGuard>
     ),
     children: [
       { path: '', element: <Inforamtion /> },
@@ -47,24 +54,22 @@ export const mypageRoutes = [
         children: [
           {
             path: '',
-            element: <Portfolio />
+            element: <Portfolio />,
           },
           {
             path: 'detail/:id',
-            element: <PortfolioDetail />
+            element: <PortfolioDetail />,
           },
           {
             path: 'write',
-            element: <PortfolioWriteView />
+            element: <PortfolioWriteView />,
           },
           {
             path: 'write/user',
-            element: <PortfolioWriteUserFormatView />
+            element: <PortfolioWriteUserFormatView />,
           },
-
-        ]
-
-       },
+        ],
+      },
       {
         path: 'works',
         children: [
@@ -86,8 +91,31 @@ export const mypageRoutes = [
           },
         ],
       },
-      { path: 'resume', element: <Resume /> },
+      { 
+        path: 'resume', 
+        children: [
+          {
+            path: '',
+            element: <Resume />,
+          },
+          {
+            path: 'write',
+            element: <ResumeWrite />,
+          },
+          {
+            path: 'write/:id',
+            element: <ResumeCopy />
+          },
+          {
+            path: ':id',
+            element: <ResumeDetail />,
+          },
+          {
+            path: ':id/edit',
+            element: <ResumeEdit />,
+          },
+        ],
+      },
     ],
-
   },
 ];

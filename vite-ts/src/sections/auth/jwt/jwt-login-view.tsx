@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -23,7 +24,6 @@ import { PATH_AFTER_LOGIN } from 'src/config-global';
 
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
-
 // ----------------------------------------------------------------------
 
 export default function JwtLoginView() {
@@ -72,27 +72,21 @@ export default function JwtLoginView() {
     </Stack>
   );
 
-  const NaverLoginBtn = (
-    <button
-      type="button"
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        border: 'none',
-        alignItems: 'center',
-        width: '360px',
-        height: '56px',
-        backgroundColor: '#0edd6c',
-        borderRadius: '13px',
-        color: 'white',
-        fontSize: '23px',
-        fontWeight: '900',
-        cursor: 'pointer',
-      }}
-    >
-      네이버 로그인
-    </button>
-  );
+  const handleButtonClick = () => {
+    const url =
+      'http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/auth/oauth2/authorization/kakao';
+    // 'http://localhost:8080/api/v1/auth/oauth2/authorization/kakao';
+    const windowFeatures = 'width=500,height=600,left=10,top=10';
+    const newWindow = window.open(url, '_blank', windowFeatures);
+
+    const checkWindowClosed = setInterval(() => {
+      if (newWindow?.closed) {
+        clearInterval(checkWindowClosed);
+        // 로그인 창이 닫혔으므로 홈페이지로 이동
+        window.location.href = '/'; // 홈페이지 URL로 변경해주세요.
+      }
+    }, 500); // 500ms 마다 창이 닫혔는지 확인
+  };
 
   const KakaoLoginBtn = (
     <button
@@ -111,22 +105,36 @@ export default function JwtLoginView() {
         fontWeight: '900',
         cursor: 'pointer',
       }}
+      onClick={handleButtonClick}
     >
-      <a href="http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8085/api/v1/auth/oauth2/authorization/kakao">
-        카카오 로그인
-      </a>
+      <img
+        src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg"
+        width="222"
+        alt="카카오 로그인 버튼"
+      />
     </button>
   );
 
-  const indiRenderForm = (
-    <Stack spacing={2.5}>
-      {NaverLoginBtn}
-      {KakaoLoginBtn}
-      <Link component={RouterLink} href={paths.auth.jwt.register} variant="subtitle2">
-        회원가입
-      </Link>
-    </Stack>
-  );
+  const indiRenderForm = <Stack spacing={2.5}>{KakaoLoginBtn}</Stack>;
+
+  // 로그인 버튼 클릭 시 실행할 함수
+  const enterLogin = () => {
+    const response = axios
+      .post(`https://${encodeURIComponent('글그림')}.com/api/v1/auth/login`, {
+        email: methods.getValues('email'),
+        password: methods.getValues('password'),
+      })
+      .then((res) => {
+        localStorage.setItem('accessToken', res.data.accessToken);
+        localStorage.setItem('refreshToken', res.data.refrashToken);
+        localStorage.setItem('userId', res.data.user_id);
+        localStorage.setItem('userType', res.data.userType);
+        localStorage.setItem('nickname', res.data.nickname);
+        localStorage.setItem('profile', res.data.profile_url);
+        router.push('/recruit'); // 홈페이지 URL로 변경해주세요.
+      });
+    console.log(encodeURIComponent('글그림'));
+  };
 
   const enterRenderForm = (
     <Stack spacing={2.5}>
@@ -155,9 +163,10 @@ export default function JwtLoginView() {
         fullWidth
         color="success"
         size="large"
-        type="submit"
+        // type="submit"
         variant="contained"
-        loading={isSubmitting}
+        // loading={isSubmitting}
+        onClick={enterLogin}
       >
         Login
       </LoadingButton>
@@ -190,7 +199,7 @@ export default function JwtLoginView() {
           개인 회원
         </ToggleButton>
         <ToggleButton value="enter" sx={{ width: 1 }}>
-          기업회원
+          기업 회원
         </ToggleButton>
       </ToggleButtonGroup>
     </Stack>
