@@ -153,9 +153,13 @@ public class RecruitController {
     // 내 이력서 전체 조회
     @GetMapping("/resume")
     public ResponseEntity<?> getResumes(
-            @RequestHeader HttpHeaders headers) {
-        GetResumesResponses GetResumesResponses = resumeService.getResumes(headers);
-        return new ResponseEntity<>(GetResumesResponses, HttpStatus.OK);
+            @RequestHeader HttpHeaders headers,
+            @RequestParam String searchType,
+            @RequestParam String searchWord,
+            @RequestParam String sortType,
+            @RequestParam String sort) {
+        GetResumesResponses getResumesResponses = resumeService.getResumes(headers, searchType, searchWord, sortType, sort);
+        return new ResponseEntity<>(getResumesResponses, HttpStatus.OK);
     }
 
     // 내 이력서 상세 조회
@@ -170,7 +174,15 @@ public class RecruitController {
 
     // 내 이력서 수정 (3순위)
 
-    // 내 이력서 삭제 (2순위)
+    // 내 이력서 삭제
+    @DeleteMapping("/resume/{resumeId}")
+    public ResponseEntity<?> deleteResume(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable Long resumeId) {
+        String result = resumeService.deleteResume(headers, resumeId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
     // 이력서 포지션 생성
     @PostMapping("/resume/{resumeId}/position/{positionId}")

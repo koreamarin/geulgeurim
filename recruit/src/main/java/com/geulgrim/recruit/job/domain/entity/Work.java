@@ -19,7 +19,7 @@ public class Work {
     @Column(name="work_id")
     private Long workId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="resume_id", referencedColumnName = "resume_id", nullable = false)
     private Resume resume;
 

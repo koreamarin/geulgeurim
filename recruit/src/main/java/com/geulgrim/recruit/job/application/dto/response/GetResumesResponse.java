@@ -16,4 +16,6 @@ public class GetResumesResponse {
     private String openStatus;
     private String fileUrl;
     private List<GetResumePositionResponse> getResumePositionResponses;
+    private String createdAt;
+    private String updatedAt;
 }

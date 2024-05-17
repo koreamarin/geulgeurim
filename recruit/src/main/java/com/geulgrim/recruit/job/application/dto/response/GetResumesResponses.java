@@ -11,4 +11,5 @@ import java.util.List;
 @Data
 public class GetResumesResponses {
     private List<GetResumesResponse> getResumesResponse;
+    private int totalPage;
 }

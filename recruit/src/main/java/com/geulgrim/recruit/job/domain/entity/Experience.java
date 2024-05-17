@@ -19,7 +19,7 @@ public class Experience {
     @Column(name="experience_id")
     private Long experienceId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="resume_id", referencedColumnName = "resume_id", nullable = false)
     private Resume resume;
 

@@ -18,7 +18,7 @@ public class Education {
     @Column(name="education_id")
     private Long educationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="resume_id", referencedColumnName = "resume_id", nullable = false)
     private Resume resume;
 

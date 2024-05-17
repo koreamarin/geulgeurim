@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Builder
@@ -17,7 +18,7 @@ public class ResumePosition {
     @Column(name="position_resume_id")
     private Long positionResumeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="resume_id", referencedColumnName = "resume_id", nullable = false)
     private Resume resume;
 

@@ -7,6 +7,7 @@ import com.geulgrim.recruit.job.domain.entity.*;
 import com.geulgrim.recruit.job.domain.entity.Enums.*;
 import com.geulgrim.recruit.job.domain.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -420,12 +421,6 @@ public class ResumeService {
 
 
 
-
-
-
-
-
-
     // 내 이력서 등록
     public Map<String, Long> createResume(
             HttpHeaders headers,
@@ -435,7 +430,10 @@ public class ResumeService {
 
         Timestamp time = new Timestamp(System.currentTimeMillis());
 
-        String file_url = awsS3Service.uploadFile(userId, image_file, time, "resume");
+        String file_url = null;
+        if(image_file.getSize()>0) {
+            file_url = awsS3Service.uploadFile(userId, image_file, time, "resume");
+        }
 
         // 이력서 저장 파트
         Resume resume = Resume.builder()
@@ -527,9 +525,24 @@ public class ResumeService {
 
     // 내 이력서 전체 조회
     public GetResumesResponses getResumes(
-            HttpHeaders headers) {
+            HttpHeaders headers,
+            String searchType,
+            String searchWord,
+            String sortType,
+            String sort) {
         Long userId = Long.parseLong(headers.get("user_id").get(0));
-        List<Resume> resumes = resumeRepository.findByUserId(userId);
+        Sort.Direction direction = sort.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sqlSort = sortType.equals("update") ? Sort.by(direction, "updatedAt") : Sort.by(direction, "createdAt");
+        List<Resume> resumes = null;
+
+        if(searchType.equals("essay")) {
+            resumes = resumeRepository.findByUserIdAndEssayContaining(userId, searchWord, sqlSort);
+        } else if(searchType.equals("title")) {
+            resumes = resumeRepository.findByUserIdAndResumeTitleContaining(userId, searchWord, sqlSort);
+        } else {
+            resumes = resumeRepository.findByUserId(userId, sqlSort);
+        }
+
         List<GetResumesResponse> getResumeResponses = new ArrayList<>();
         for(Resume resume : resumes) {
             Optional<List<ResumePosition>> resumePositions = resumePositionRepository.findByResume(resume);
@@ -553,11 +566,14 @@ public class ResumeService {
                 .openStatus(resume.getOpenStatus().name())
                 .fileUrl(resume.getFileUrl())
                 .getResumePositionResponses(getResumePositionResponses)
+                .createdAt(String.valueOf(resume.getCreatedAt()))
+                .updatedAt(String.valueOf(resume.getUpdatedAt()))
                 .build();
             getResumeResponses.add(getResumeResponse);
         }
         return GetResumesResponses.builder()
             .getResumesResponse(getResumeResponses)
+            .totalPage(getResumeResponses.size())
             .build();
     }
 
@@ -683,7 +699,20 @@ public class ResumeService {
 
     // 내 이력서 수정 (3순위)
 
-    // 내 이력서 삭제 (2순위)
+    // 내 이력서 삭제
+    public String deleteResume(
+            HttpHeaders headers, Long resumeId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Resume resume = resumeRepository.findByResumeId(resumeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이력서 입니다."));
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        resumeRepository.delete(resume);
+
+        return "삭제완료";
+    }
 
     // 이력서 포지션 생성
     public String createResumePosition(
