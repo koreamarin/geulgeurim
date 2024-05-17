@@ -33,17 +33,16 @@ public class BoardService {
     private final UserRepository userRepository;
 
     // 메인 페이지 신규글 목록
-    public List<BoardListResponse> mainBoardPopularList() {
-        List<BoardListResponse> list = boardRepository.findBoardResponseList();
-        return list.subList(0, 6);
+    public List<BoardListResponse> mainBoardNewList() {
+        return boardRepository.findNewBoardResponseList();
     }
 
     // 메인 페이지 인기글 목록
-    public List<BoardListResponse> mainBoardNewList() {
+    public List<BoardListResponse> mainBoardPopularList() {
         List<BoardListResponse> list = boardRepository.findBoardResponseList();
-        List<BoardListResponse> newList = new ArrayList<BoardListResponse>();
+        List<BoardListResponse> newList = new ArrayList<>();
         for(BoardListResponse boardListResponse : list) {
-            if(newList.size() >= 6) break;
+            if(newList.size() >= 5) break;
             if(boardListResponse.getHit() + boardListResponse.getCommentCnt() >= 50) {
                 newList.add(boardListResponse);
             }
@@ -58,18 +57,19 @@ public class BoardService {
 
     // 자유게시판 상세조회
     public BoardDetailResponse boardDetail(long boardId) {
+        log.info("조회수 증가 : {}", boardRepository.updateView(boardId));
         return BoardDetailResponse.builder()
-                .board(boardRepository.findByBoardId(boardId))
+                .board(boardRepository.findBoardByBoardId(boardId))
                 .commentList(boardCommentRepository.findAllByBoardId(boardId))
-                .imageList(boardImageRepository.findByBoardBoardId(boardId))
+                .imageList(boardImageRepository.findAllByBoardBoardId(boardId))
                 .build();
     }
 
     // 게시판 작성
-    public Board writeBoard(long userId, BoardWriteRequest boardWriteRequest) {
+    public BoardDetailResponse writeBoard(long userId, BoardWriteRequest boardWriteRequest, List<MultipartFile> files) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         List<BoardImage> boardImageList = new ArrayList<>();
-        for(MultipartFile image : boardWriteRequest.getImageList()) {
+        for(MultipartFile image : files) {
             String url = awsS3Service.uploadFile(userId, image, timestamp, "board");
             BoardImage boardImage = new BoardImage();
             boardImage.setFileUrl(url);
@@ -92,7 +92,7 @@ public class BoardService {
             boardImageRepository.save(boardImage);
         }
 
-        return board;
+        return boardDetail(board.getBoardId());
     }
 
     // 게시글 삭제
@@ -102,10 +102,10 @@ public class BoardService {
 
 
     // 게시글 수정
-    public Board modifyBoard(long userId, BoardUpdateRequest boardUpdateRequest) {
+    public BoardDetailResponse modifyBoard(long userId, BoardUpdateRequest boardUpdateRequest, List<MultipartFile> files) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         List<BoardImage> boardImageList = new ArrayList<>();
-        for(MultipartFile image : boardUpdateRequest.getImageList()) {
+        for(MultipartFile image : files) {
             String url = awsS3Service.uploadFile(userId, image, timestamp, "board");
             BoardImage boardImage = new BoardImage();
             boardImage.setFileUrl(url);
@@ -129,6 +129,6 @@ public class BoardService {
             boardImage.setBoard(board);
             boardImageRepository.save(boardImage);
         }
-        return board;
+        return boardDetail(board.getBoardId());
     }
 }

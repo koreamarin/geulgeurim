@@ -12,5 +12,4 @@ public class BoardUpdateRequest {
     private long boardId;
     private String title;
     private String content;
-    private List<MultipartFile> imageList;
 }

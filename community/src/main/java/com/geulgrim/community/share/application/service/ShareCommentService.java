@@ -21,12 +21,11 @@ public class ShareCommentService {
     private final ShareCommentRepository shareCommentRepository;
 
     // 작성
-    public List<ShareComment> writeComment(ShareCommentWriteRequest shareCommentWriteRequest) {
-        Share share = shareRepository.findByShareId(shareCommentWriteRequest.getShareId());
-        // 유저 아이디 수정
-        long userId = 1;
+    public List<ShareComment> writeComment(long userId, ShareCommentWriteRequest shareCommentWriteRequest) {
+        Share share = shareRepository.findWithShareId(shareCommentWriteRequest.getShareId());
         ShareComment shareComment = ShareComment.builder()
                 .content(shareCommentWriteRequest.getContent())
+                .userId(userId)
                 .share(share)
                 .build();
         shareCommentRepository.save(shareComment);
@@ -40,7 +39,7 @@ public class ShareCommentService {
 
     // 수정
     public ShareComment modifyComment(long shareCommentId, ShareCommentUpdateRequest shareCommentUpdateRequest) {
-        Share share = shareRepository.findByShareId(shareCommentUpdateRequest.getShareId());
+        Share share = shareRepository.findWithShareId(shareCommentUpdateRequest.getShareId());
 
         ShareComment shareComment = ShareComment.builder()
                 .shareCommentId(shareCommentId)
