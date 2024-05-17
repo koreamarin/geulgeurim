@@ -148,7 +148,7 @@ export default function PostDetailsHomeView({ title }: Props) {
             </Typography>
           </Stack>
 
-          <PostCommentForm />
+          {/* <PostCommentForm /> */}
 
           <Divider sx={{ mt: 5, mb: 2 }} />
 

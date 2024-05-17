@@ -1,9 +1,7 @@
 import useSWR from 'swr';
 import { useMemo } from 'react';
 
-import { customFetcher, endpoints } from 'src/utils/custom-axios';
-
-import { communityMainItem } from 'src/types/blog';
+import { customFetcher } from 'src/utils/custom-axios';
 
 // ----------------------------------------------------------------------
 
