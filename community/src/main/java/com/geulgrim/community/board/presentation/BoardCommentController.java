@@ -3,6 +3,7 @@ package com.geulgrim.community.board.presentation;
 import com.geulgrim.community.board.application.dto.request.BoardCommentUpdateRequest;
 import com.geulgrim.community.board.application.dto.request.BoardCommentWriteRequest;
 import com.geulgrim.community.board.application.dto.request.BoardUpdateRequest;
+import com.geulgrim.community.board.application.dto.response.BoardCommentResponse;
 import com.geulgrim.community.board.application.service.BoardCommentService;
 import com.geulgrim.community.board.domain.entity.BoardComment;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,11 +25,12 @@ public class BoardCommentController {
 
     private final BoardCommentService boardCommentService;
 
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(summary = "자유게시판 댓글 작성", description = "선택된 자유게시판의 게시글에 댓글을 작성합니다.")
-    public ResponseEntity<List<BoardComment>> createBoardComment(@RequestHeader HttpHeaders headers,
-                                                                 @RequestBody BoardCommentWriteRequest boardCommentWriteRequest) {
+    public ResponseEntity<List<BoardCommentResponse>> createBoardComment(@RequestHeader HttpHeaders headers,
+                                                                         @RequestBody BoardCommentWriteRequest boardCommentWriteRequest) {
         long userId = Long.parseLong(headers.get("user_id").get(0));
+//        long userId = 5;
         return new ResponseEntity<>(boardCommentService.writeComment(userId, boardCommentWriteRequest), HttpStatus.CREATED);
     }
 
