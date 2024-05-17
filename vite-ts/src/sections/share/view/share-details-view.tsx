@@ -1,3 +1,5 @@
+import { useState, useCallback } from 'react';
+
 import { Avatar } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -10,7 +12,6 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { useGetShareDetail } from 'src/api/community';
-import { AvatarShape } from 'src/assets/illustrations';
 
 import Iconify from 'src/components/iconify';
 import Markdown from 'src/components/markdown';
@@ -18,8 +19,9 @@ import EmptyContent from 'src/components/empty-content';
 
 import PostCommentList from 'src/sections/blog/post-comment-list';
 
+import { commentItem } from 'src/types/blog';
+
 import PostCommentForm from '../../blog/post-comment-form';
-import { PostDetailsSkeleton } from '../../blog/post-skeleton';
 
 // prettier-ignore
 function createDummyData(
@@ -51,13 +53,19 @@ type propType = {
 export default function ShareDetailsView({ id }: propType) {
   // 작성자 프로필로 이동
   // const toProfile = paths.mypage.root;
+  const { share, commentList, imageList, shareLoading, shareError } = useGetShareDetail(id);
+
+  const [comments, setComments] = useState(commentList);
+  
   const toProfile = () => {
     console.log(share.userId);
   };
 
-  const { share, commentList, imageList, shareLoading, shareError } = useGetShareDetail(id);
+  const addComment: (newCommentList: commentItem[]) => void = useCallback((newCommentList: commentItem[]) => {
+    setComments(newCommentList);
+  }, [setComments]);
 
-  const renderSkeleton = <PostDetailsSkeleton />;
+
 
   const renderError = (
     <EmptyContent
@@ -115,15 +123,15 @@ export default function ShareDetailsView({ id }: propType) {
         <Typography variant="h4">Comments</Typography>
 
         <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
-          ({commentList?.length})
+          ({comments?.length})
         </Typography>
       </Stack>
 
-      <PostCommentForm id={id} type="share" />
+      <PostCommentForm id={id} type="share" addComment={addComment}/>
 
       <Divider sx={{ mt: 5, mb: 2 }} />
 
-      <PostCommentList comments={commentList} />
+      <PostCommentList comments={comments} />
     </Stack>
   );
 

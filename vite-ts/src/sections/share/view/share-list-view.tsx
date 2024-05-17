@@ -156,7 +156,6 @@ export default function ShareRecentPost() {
     </tr>
   ));
 
-  const table = useTable({ defaultRowsPerPage: numberOfRows });
 
   const [optionBy, setOptionBy] = useState('title');
 

@@ -12,9 +12,10 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 type props = {
   id: string;
   type: string;
+  addComment: any;
 };
 
-export default function PostCommentForm({ id, type }: props) {
+export default function PostCommentForm({ id, type, addComment }: props) {
   const CommentSchema = Yup.object().shape({
     comment: Yup.string().required('Comment is required'),
   });
@@ -44,14 +45,14 @@ export default function PostCommentForm({ id, type }: props) {
         await axios
           .post(`/api/v1/community/comment/${type}`, boardCommentWriteRequest, {
             headers: {
-              "Authorization": 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjUsInVzZXJUeXBlIjoiSU5ESVZJRFVBTCIsImlhdCI6MTcxNTkwNzEwNiwiZXhwIjoxNzE1OTQzMTA2fQ.cCSc4cy37cws_0WqIYPI65XKBFXSaBPgnIRhZsVCQlc',
+              "Authorization": localStorage.getItem("accessToken"),
             },
-            // baseURL: 'https://글그림.com',
             baseURL: 'https://글그림.com',
           })
           .then((response) => {
             const { commentList } = response.data;
             console.log(response.data);
+            addComment(commentList);
           })
           .catch((error) => {
             alert('댓글 작성 중 오류가 발생했습니다.');
@@ -71,14 +72,14 @@ export default function PostCommentForm({ id, type }: props) {
         await axios
           .post(`/api/v1/community/comment/${type}`, shareCommentWriteRequest, {
             headers: {
-              Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjUsInVzZXJUeXBlIjoiSU5ESVZJRFVBTCIsImlhdCI6MTcxNTkwNzEwNiwiZXhwIjoxNzE1OTQzMTA2fQ.cCSc4cy37cws_0WqIYPI65XKBFXSaBPgnIRhZsVCQlc',
+              "Authorization": localStorage.getItem("accessToken"),
             },
             baseURL: 'https://글그림.com',
-            // baseURL: 'http://localhost:8080',
           })
           .then((response) => {
             const { commentList } = response.data;
             console.log(response.data);
+            addComment(commentList);
           })
           .catch((error) => {
             alert('댓글 작성 중 오류가 발생했습니다.');

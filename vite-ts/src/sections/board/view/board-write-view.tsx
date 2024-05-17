@@ -51,10 +51,10 @@ export default function BoardWriteView() {
       .post('/api/v1/community/board', formData, {
         headers: {
           'Content-Type': `multipart/form-data; `,
-          // "Authorization": '토큰',
+          "Authorization": localStorage.getItem("accessToken"),
         },
-        // baseURL: 'https://글그림.com',
-        baseURL: 'http://localhost:8080',
+        baseURL: 'https://글그림.com',
+        // baseURL: 'http://localhost:8080',
       })
       .then((response) => {
         const { board } = response.data;
