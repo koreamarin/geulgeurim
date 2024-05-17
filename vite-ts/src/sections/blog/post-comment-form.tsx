@@ -45,7 +45,7 @@ export default function PostCommentForm({ id, type, addComment }: props) {
         await axios
           .post(`/api/v1/community/comment/${type}`, boardCommentWriteRequest, {
             headers: {
-              "Authorization": localStorage.getItem("accessToken"),
+              "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
             baseURL: 'https://글그림.com',
           })
@@ -72,7 +72,7 @@ export default function PostCommentForm({ id, type, addComment }: props) {
         await axios
           .post(`/api/v1/community/comment/${type}`, shareCommentWriteRequest, {
             headers: {
-              "Authorization": localStorage.getItem("accessToken"),
+              "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
             baseURL: 'https://글그림.com',
           })

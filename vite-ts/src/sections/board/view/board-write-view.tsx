@@ -51,7 +51,7 @@ export default function BoardWriteView() {
       .post('/api/v1/community/board', formData, {
         headers: {
           'Content-Type': `multipart/form-data; `,
-          "Authorization": localStorage.getItem("accessToken"),
+          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
         },
         baseURL: 'https://글그림.com',
         // baseURL: 'http://localhost:8080',
