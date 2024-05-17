@@ -24,8 +24,6 @@ import Markdown from 'src/components/markdown';
 import EmptyContent from 'src/components/empty-content';
 
 import PostDetailsHero from '../post-details-hero';
-import PostCommentList from '../post-comment-list';
-import PostCommentForm from '../post-comment-form';
 import { PostDetailsSkeleton } from '../post-skeleton';
 import PostDetailsToolbar from '../post-details-toolbar';
 

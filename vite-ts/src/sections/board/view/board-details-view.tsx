@@ -1,3 +1,5 @@
+import { useState, useCallback } from 'react';
+
 import { Avatar } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -10,7 +12,6 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { useGetBoardDetail } from 'src/api/community';
-import { AvatarShape } from 'src/assets/illustrations';
 
 import Iconify from 'src/components/iconify';
 import Markdown from 'src/components/markdown';
@@ -18,8 +19,9 @@ import EmptyContent from 'src/components/empty-content';
 
 import PostCommentList from 'src/sections/blog/post-comment-list';
 
+import { commentItem } from 'src/types/blog';
+
 import PostCommentForm from '../../blog/post-comment-form';
-import { PostDetailsSkeleton } from '../../blog/post-skeleton';
 
 // prettier-ignore
 function createDummyData(
@@ -57,7 +59,11 @@ export default function PostDetailsView({ id }: propType) {
 
   const { board, commentList, imageList, boardLoading, boardError } = useGetBoardDetail(id);
 
-  const renderSkeleton = <PostDetailsSkeleton />;
+  const [comments, setComments] = useState(commentList);
+
+  const addComment: (newCommentList: commentItem[]) => void = useCallback((newCommentList: commentItem[]) => {
+    setComments(newCommentList);
+  }, [setComments]);
 
   const renderError = (
     <EmptyContent
@@ -119,7 +125,7 @@ export default function PostDetailsView({ id }: propType) {
         </Typography>
       </Stack>
 
-      <PostCommentForm id={id} type="board" />
+      <PostCommentForm id={id} type="board" addComment={addComment} />
 
       <Divider sx={{ mt: 5, mb: 2 }} />
 
