@@ -7,6 +7,17 @@ import { CUSTOM_API } from 'src/config-global';
 
 const customAxiosInstance = axios.create({ baseURL: CUSTOM_API });
 
+customAxiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('accessToken'); // Retrieve the token from localStorage
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`; // Add the token to the headers
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 customAxiosInstance.interceptors.response.use(
   (res) => res,
   (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong')

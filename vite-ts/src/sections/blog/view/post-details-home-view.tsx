@@ -22,8 +22,6 @@ import EmptyContent from 'src/components/empty-content';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
 import PostList from '../post-list';
-import PostCommentList from '../post-comment-list';
-import PostCommentForm from '../post-comment-form';
 import PostDetailsHero from '../post-details-hero';
 import { PostDetailsSkeleton } from '../post-skeleton';
 
