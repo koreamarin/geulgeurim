@@ -25,7 +25,7 @@ public class User extends BaseEntity {
     private String email;
     @Column(nullable = true, length = 15)
     private String birthday;
-    @Column(nullable = false, length = 15)
+    @Column(nullable = true, length = 15)
     private String name;
     @Column(nullable = false, length = 31)
     private String nickname;
@@ -36,7 +36,7 @@ public class User extends BaseEntity {
     private UserType userType;
     @Column(nullable = true, length = 255)
     private String file_url;
-    @Column(nullable = false, length = 20)
+    @Column(nullable = true, length = 20)
     private String phone_num;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch=FetchType.LAZY)

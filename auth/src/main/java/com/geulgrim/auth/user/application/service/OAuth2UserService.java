@@ -46,10 +46,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         String email = (String) kakao_account.get("email");
         String thumbnail_image_url = (String) ((Map<String, Object>) kakao_account.get("profile")).get("thumbnail_image_url");
         String nickname = (String) ((Map<String, Object>) kakao_account.get("profile")).get("nickname");
-        String name = (String) kakao_account.get("name");
-        String phone_number = (String) kakao_account.get("phone_number");
-        String birthyear = (String) kakao_account.get("birthyear");
-        String birthday = (String) kakao_account.get("birthday");
 
         // 이메일로 DB에서 회원정보가 있는지 확인
         User user = userRepository.findByEmail(email).orElse(null);
@@ -57,19 +53,13 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         if (user == null) { // 만약 없다면 user 정보로 회원가입 시킴
             user = User.builder()
                     .email(email)
-                    .name(name)
                     .nickname(nickname)
                     .userType(UserType.INDIVIDUAL)
-                    .phone_num(phone_number)
                     .build();
 
             // 프로필 있으면 프로필도 넣음
             if (thumbnail_image_url!=null) {
                 user.setFile_url(thumbnail_image_url);
-            }
-            // 생년월일 있으면 생년월일도 넣음
-            if (birthyear != null && birthday != null) {
-                user.setBirthday(birthyear + birthday);
             }
             userRepository.save(user);
         }
