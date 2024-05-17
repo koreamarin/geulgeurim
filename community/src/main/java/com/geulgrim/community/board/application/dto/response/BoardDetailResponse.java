@@ -14,6 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class BoardDetailResponse {
     private BoardResponse board;
-    private List<BoardComment> commentList;
+    private List<BoardCommentResponse> commentList;
     private List<BoardImage> imageList;
 }
