@@ -23,7 +23,7 @@ import java.util.List;
 public class ShareCommentController {
     private final ShareCommentService shareCommentService;
 
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(summary = "자유게시판 댓글 작성", description = "선택된 자유게시판의 게시글에 댓글을 작성합니다.")
     public ResponseEntity<List<ShareCommentResponse>> createShareComment(@RequestHeader HttpHeaders headers,
                                                                          @RequestBody ShareCommentWriteRequest shareCommentWriteRequest) {
