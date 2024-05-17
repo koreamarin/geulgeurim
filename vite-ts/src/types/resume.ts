@@ -40,11 +40,13 @@ export type Position = {
 // 응답 type
 export type IResumeResponse = {
   resumeId: number;
-  fileUrl: string;
+  fileUrl: string | null;
   resumeTitle: string;
   getResumePositionResponses: Position[];
   openStatus: string;
   essay: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type InputResume = {

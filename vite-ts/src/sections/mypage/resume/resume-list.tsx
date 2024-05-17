@@ -10,8 +10,6 @@ import Pagination, { paginationClasses } from '@mui/material/Pagination';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useMockedUser } from 'src/hooks/use-mocked-user';
-
 import { useGetResumeList } from 'src/api/mypageResume';
 
 import Iconify from 'src/components/iconify';
@@ -26,46 +24,6 @@ import ResumeListSearchOption from './resume-list-search-option';
 
 // ----------------------------------------------------------------------
 
-const dummy = {
-  "getResumesResponse": [
-      {
-        "resumeId": 41,
-        "resumeTitle": "이력서",
-        "essay": "저는 월급 루팡입니다.",
-        "openStatus": "PRIVATE",
-        "fileUrl": "https://k.kakaocdn.net/dn/cD4BaL/btsAaYmkBz8/2YJ6o7gqIk52caVsddDW10/img_110x110.jpg",
-        "getResumePositionResponses": [
-          {
-              "resumePositionId": 65,
-              "positionId": 1
-          },
-          {
-              "resumePositionId": 66,
-              "positionId": 2
-          },
-        ]
-      },
-      {
-        "resumeId": 42,
-        "resumeTitle": "이력서",
-        "essay": `"잠재력이 있는 산업군에서의 덕업일치"
-
-        잠재력이 큰 시장에서 변화를 주도하는 회사, 즐기며 좋아하는 분야의 회사에서 일하고 싶습니다. 웹툰은 학창시절부터 빠지지 않는 존재였는데, 특히 이말년시리즈같은 개그물을 주로 봤습니다. 야후에서 연재되던 이말년시리즈가 네이버에서 연재되어 좋아하는 만화를 보기 위해 네이버 웹툰을 보기 시작한 뒤부터 지금까지 매일 웹툰을 보고 있습니다. 좋아하기도 하지만, 새로운 컨텐츠가 끊임없이 생기고 여러 기술을 적용할 수 있는 웹툰 시장의 장래성 또한 끌렸습니다. 웹툰은 게임, 영화, 드라마 등 다른 컨텐츠로 파생되기도 하고, VR을 비롯한 다양한 신기술을 적용할 수 있습니다. 그리고 한국뿐만 아니라 해외 시장을 개척할 잠재력 또한 큽니다. 네이버 웹툰은 독자의 편의성을 고려해 오전 12시에 제공되던 웹툰을 오후 11시에 제공하는 등 필요한 서비스를 제공하며, 새로운 컨텐츠를 바탕으로 해외 웹툰 시장을 개척하고 있습니다. 1위의 자리를 유지하고 있지만 끊임없이 개선점을 찾는 네이버 웹툰에 이끌렸으며, 웹툰 시장의 파이를 키우고 싶습니다.`,
-        "openStatus": "PUBLIC",
-        "fileUrl": "",
-        "getResumePositionResponses": [
-          {
-              "resumePositionId": 75,
-              "positionId": 1
-          },
-          {
-              "resumePositionId": 76,
-              "positionId": 2
-          }
-        ]
-      }
-  ]
-}
 
 const WORKS_SORT_OPTIONS = [
   { value: 'latest', label: '최신 순' },
@@ -84,12 +42,6 @@ export default function ResumeList() {
   // 검색 창 입력 값
   const changeSearchRef = useRef<string>('')
 
-  // 검색 창 입력 값 출력(추후 api에 추가)
-  const handleClick = () => {
-    console.log(changeSearchRef.current)
-    querySearch.current = changeSearchRef.current
-  };
-
   // 검색 조건
   const [optionBy, setOptionBy] = useState('title');
 
@@ -104,7 +56,6 @@ export default function ResumeList() {
       handleClick();
     }
   };
-  console.log('확인', optionBy)
 
   // 정렬 조건
   const [sortBy, setSortBy] = useState('latest');
@@ -134,8 +85,14 @@ export default function ResumeList() {
   const querySort = useRef<string>('create')
   const querySortBy = useRef<string>('desc')
 
+  // 페이지네이션
+  const [page, setPage] = useState<number>(1)
+  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
+  const pageCount = 5
 
-  const { resumes, resumesLoading, resumesError, resumesEmpty} = useGetResumeList({
+  const { resumesData, resumesLoading, resumesError, resumesMutate } = useGetResumeList({
     searchType:optionBy,
     searchWord: querySearch.current,
     sortType:querySort.current,
@@ -150,26 +107,30 @@ export default function ResumeList() {
     router.push(paths.recruit.main)
   }
 
-  // 유저 더미
-  const { user } = useMockedUser();
-
+  const userName = localStorage.getItem('nickname')
+  const userId = localStorage.getItem('userId')
 
   // 새 이력서 form 이동
   const moveWrite = () => {
     router.push(paths.mypage.resumeWrite)
   }
 
+  // 검색 창 입력 값 출력(추후 api에 추가)
+  const handleClick = async  () => {
+    console.log(changeSearchRef.current)
+    querySearch.current = changeSearchRef.current
+    await resumesMutate()
+  };
+
   // 조건 랜더
   const renderResumeList = () => {
     if (resumesLoading) {
       return <SplashScreen />;
     }
-
-    if (resumesEmpty) {
+    if (!resumesData.totalPage) {
       return <Typography sx={{ textAlign: 'center', mt: 4 }}>이력서가 없습니다.</Typography>;
     }
-
-    return resumes.map((item, index) => {
+    return resumesData.getResumesResponse.slice((page - 1) * pageCount, page * pageCount).map((item, index) => {
       const positionList = item.getResumePositionResponses.map(positionItem => positionItem.positionId);
       return (
         <ResumeListCard
@@ -179,18 +140,20 @@ export default function ResumeList() {
           essay={item.essay}
           openStatus={item.openStatus}
           fileUrl={item.fileUrl}
+          updateAt={item.updatedAt}
+          createAt={item.createdAt}
           position={positionList}
         />
       );
     });
   }
 
-  const pageCount = 8
+
 
     return (
       <>
         <Typography variant="h3" sx={{ mb: 5 }}>
-          {user?.displayName} 님의 이력서
+          {userName || `사용자${userId}` } 님의 이력서
         </Typography>
         <Stack direction="row" alignItems="center" spacing={1}>
           {/* search 조건 */}
@@ -217,21 +180,21 @@ export default function ResumeList() {
             새 이력서
           </Button>
         </Stack>
-
         {renderResumeList()}
-
         <Pagination
-            count={Math.floor((dummy.getResumesResponse.length - 1) / pageCount) + 1}
-            defaultPage={1}
-            siblingCount={1}
-            sx={{
-              mt: 3,
-              mb: 3,
-              [`& .${paginationClasses.ul}`]: {
-                justifyContent: 'center',
-              },
-            }}
-          />
+          page={page}
+          onChange={handleChange}
+          count={Math.floor((resumesData.totalPage - 1) / pageCount) + 1}
+          defaultPage={1}
+          siblingCount={1}
+          sx={{
+            mt: 3,
+            mb: 3,
+            [`& .${paginationClasses.ul}`]: {
+              justifyContent: 'center',
+            },
+          }}
+        />
       </>
     );
   }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
@@ -49,12 +50,14 @@ type Props = {
   resumeTitle?: string
   essay?: string
   openStatus: string
-  fileUrl?: string
+  fileUrl?: string | null
   position?: number[]
+  updateAt?: string
+  createAt?: string
 }
 
 
-export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus, fileUrl, position}:Props) {
+export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus, fileUrl, position, updateAt, createAt}:Props) {
   const router = useRouter()
 
   const [expanded, setExpanded] = useState(false);
@@ -119,12 +122,20 @@ export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus
 
 
             {/* 포지션 */}
+            <Box sx={{display: 'flex', justifyContent:'space-between'}}>
             <Typography variant="h6">
               직군
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="te[xt.secondary">
                 {position?.map(item => positionList.find(positionItem => positionItem.value === item.toString())?.label).join(', ')}
               </Typography>
             </Typography>
+            <Typography variant="caption" color="text.secondary">
+              <span>등록일: {createAt?.slice(0, 10)}</span>
+              <br/>
+              <span>최근 수정일: {updateAt?.slice(0, 10)}</span>
+            </Typography>
+
+            </Box>
           {/* 컨텐츠 */}
             <Collapse in={!expanded} timeout="auto" unmountOnExit>
               <Typography variant="h6">
@@ -138,7 +149,7 @@ export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus
 
           <Grid xsOffset={3} smOffset={0} mdOffset={0} xlOffset={0} xs={6} sm={2.5} md={2} xl={1.5} >
             {/* 증명사진 */}
-            <Card sx={{width: 1, aspectRatio: 3/4, backgroundColor:'#8080801c', padding:fileUrl !== '' ? 1.5 : 1}}>
+            <Card sx={{width: 1, aspectRatio: 3/4, backgroundColor:'#8080801c', padding:fileUrl ? 1.5 : 1}}>
               <CardMedia
                 component="img"
                 image={fileUrl !== null ? fileUrl : '/default_person.png'}
@@ -151,7 +162,6 @@ export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus
               />
             </Card>
           </Grid>
-
         </Grid>
       </CardContent>
 
