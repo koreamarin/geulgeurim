@@ -127,19 +127,18 @@ export default function PortfolioView() {
     <Container>
 
       <Typography variant="h2" sx={{ mb: 4 }}>
-        포트폴리오
+        {/* 포트폴리오 */}
       </Typography>
 
     {portfolios.map((portfolio: Portfolio) => (
       <Paper key={portfolio.pofolId} elevation={3} sx={{ p: 2, mt: 2, mb: 4, cursor: 'pointer' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="h4" onClick={() => handlePortfolioClick(portfolio.pofolId)}>
+        <Typography variant="h3" onClick={() => handlePortfolioClick(portfolio.pofolId)}>
             {portfolio.pofolName}
           </Typography>
           {/* Toggle Switch and Edit Button grouped together */}
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <FormGroup sx={{ flexDirection: 'row', alignItems: 'center' }}>
-
               <Tooltip title="Edit">
               <IconButton color="primary" onClick={() => handleEditClick(portfolio.pofolId)}>
                   <EditIcon />
@@ -157,7 +156,8 @@ export default function PortfolioView() {
 
           {/* <Typography variant="body1" sx={{ mb: 2 }}>{portfolio.description}</Typography> */}
 
-          <Grid container spacing={2}>
+
+          <Grid container spacing={2} sx={{ mt: 2, mb: 2 }}>
             <Grid item xs={12} sm={6} md={4} key={portfolio.pofolId}>
           {portfolio.fileUrl ? (
             <img

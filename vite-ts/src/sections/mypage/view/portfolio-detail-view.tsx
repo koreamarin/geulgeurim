@@ -71,7 +71,7 @@ export default function PortfolioDetailView({ id }: Props) {
   return (
     <Container>
     <Paper elevation={3} sx={{ p: 2, mt: 2, mb: 4 }}>
-      <Typography variant="h4" sx={{ mb: 2 }}>{portfolioState.pofolName}</Typography>
+      <Typography variant="h2" sx={{ mb: 2 }}>{portfolioState.pofolName}</Typography>
 
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <FormGroup sx={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -100,10 +100,15 @@ export default function PortfolioDetailView({ id }: Props) {
       {/* 글그림 포맷 */}
       {'pieces' in portfolioState && (
         portfolioState.pieces.map((piece, index) => (
-          <Grid container spacing={2} key={index} sx={{ mt: 2, alignItems: 'center' }}>
-            <Grid item xs={12} md={6}>
-              <img src={piece.pieceUrl} alt={piece.title} style={{ width: '100%', height: '100%', maxWidth: '400px', maxHeight: '800px' }} />
+          <Grid container spacing={2} key={index} sx={{ mt: 3, alignItems: 'center'}}>
+           <Grid item xs={12} md={6}>
+              <img
+                src={piece.pieceUrl ? piece.pieceUrl : "https://geulgrim.s3.ap-northeast-2.amazonaws.com/no_image.png"}
+                alt={piece.title}
+                style={{ width: '100%', height: '100%', maxWidth: '400px', maxHeight: '800px' }}
+              />
             </Grid>
+
             <Grid item xs={12} md={6}>
               <Typography variant="h5" gutterBottom>{piece.title}</Typography>
               <Typography variant="body1" gutterBottom>사용 프로그램: {piece.program}</Typography>
@@ -119,8 +124,8 @@ export default function PortfolioDetailView({ id }: Props) {
           display: 'flex',
           justifyContent: 'center',
           gap: 1,
-          marginTop: 8,
-          marginBottom: 4,
+          marginTop: 6,
+          marginBottom: 2,
         }}
       >
         <Button variant="contained" onClick={handleHome}>
