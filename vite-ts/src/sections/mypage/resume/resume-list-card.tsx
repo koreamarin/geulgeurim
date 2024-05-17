@@ -141,8 +141,8 @@ export default function ResumeListCard({resumeId, resumeTitle, essay, openStatus
             <Card sx={{width: 1, aspectRatio: 3/4, backgroundColor:'#8080801c', padding:fileUrl !== '' ? 1.5 : 1}}>
               <CardMedia
                 component="img"
-                image={fileUrl !== '' ? fileUrl : '/default_person.png'}
-                alt={fileUrl}
+                image={fileUrl !== null ? fileUrl : '/default_person.png'}
+                alt='ddd'
                 sx={{
                   display: 'block',
                   height: '100%',

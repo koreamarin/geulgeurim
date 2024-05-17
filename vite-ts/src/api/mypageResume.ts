@@ -9,10 +9,23 @@ import { CUSTOM_API } from 'src/config-global';
 import { IResumeResponse } from 'src/types/resume';
 // ----------------------------------------------------------------------
 
+type GetResumeProps = {
+  searchType: string,
+  searchWord: string,
+  sortType: string,
+  sort: string
+}
+
 const URL = endpoints.resume.list;
 
-export function useGetResumeList() {
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+export function useGetResumeList({ searchType, searchWord, sortType, sort }:GetResumeProps) {
+  const searchParams = new URLSearchParams();
+  searchParams.append('searchType', searchType);
+  searchParams.append('searchWord', searchWord);
+  searchParams.append('sortType', sortType);
+  searchParams.append('sort', sort);
+  const queryUrl = `${URL}?${new URLSearchParams(searchParams).toString()}`
+  const { data, isLoading, error, isValidating } = useSWR(queryUrl, fetcher);
 
   const memoizedValue = useMemo(
     () => ({

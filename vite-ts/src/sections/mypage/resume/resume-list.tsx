@@ -69,38 +69,25 @@ const dummy = {
 
 const WORKS_SORT_OPTIONS = [
   { value: 'latest', label: '최신 순' },
-  { value: 'popular', label: '조회수 순' },
-  { value: 'oldest', label: '과거 순' },
+  { value: 'past', label: '과거 순' },
+  { value: 'update', label: '최근 수정' },
+  { value: 'pastUpdate', label: '과거 수정' },
 ];
 
 const WORKS_SEARCH_OPTIONS = [
-  { value: 'essay&title', label: '제목+자소서' },
   { value: 'essay', label: '자소서' },
   { value: 'title', label: '제목' },
 ];
 
 
 export default function ResumeList() {
-  const { resumes, resumesLoading, resumesError, resumesEmpty} = useGetResumeList()
-
-  const router = useRouter()
-  const { enqueueSnackbar } = useSnackbar();
-
-  if (resumesError) {
-    enqueueSnackbar('에러 발생! 다시 로그인해주세요');
-    localStorage.clear();
-    router.push(paths.recruit.main)
-  }
-
-  // 유저 더미
-  const { user } = useMockedUser();
-
   // 검색 창 입력 값
   const changeSearchRef = useRef<string>('')
 
   // 검색 창 입력 값 출력(추후 api에 추가)
   const handleClick = () => {
     console.log(changeSearchRef.current)
+    querySearch.current = changeSearchRef.current
   };
 
   // 검색 조건
@@ -117,6 +104,7 @@ export default function ResumeList() {
       handleClick();
     }
   };
+  console.log('확인', optionBy)
 
   // 정렬 조건
   const [sortBy, setSortBy] = useState('latest');
@@ -124,7 +112,47 @@ export default function ResumeList() {
   // 정렬 조건 변경
   const handleSortBy = useCallback((newValue: string) => {
     setSortBy(newValue);
+    if (newValue === 'latest') {
+      querySort.current = 'create'
+      querySortBy.current = 'desc'
+    }
+    if (newValue === 'past') {
+      querySort.current = 'create'
+      querySortBy.current = 'asc'
+    }
+    if (newValue === 'update') {
+      querySort.current = 'update'
+      querySortBy.current = 'desc'
+    }
+    if (newValue === 'pastUpdate') {
+      querySort.current = 'update'
+      querySortBy.current = 'asc'
+    }
   }, []);
+
+  const querySearch = useRef<string>('')
+  const querySort = useRef<string>('create')
+  const querySortBy = useRef<string>('desc')
+
+
+  const { resumes, resumesLoading, resumesError, resumesEmpty} = useGetResumeList({
+    searchType:optionBy,
+    searchWord: querySearch.current,
+    sortType:querySort.current,
+    sort:querySortBy.current})
+
+  const router = useRouter()
+  const { enqueueSnackbar } = useSnackbar();
+
+  if (resumesError) {
+    enqueueSnackbar('에러 발생! 다시 로그인해주세요');
+    localStorage.clear();
+    router.push(paths.recruit.main)
+  }
+
+  // 유저 더미
+  const { user } = useMockedUser();
+
 
   // 새 이력서 form 이동
   const moveWrite = () => {
