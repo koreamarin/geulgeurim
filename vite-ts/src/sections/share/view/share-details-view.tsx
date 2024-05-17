@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import { Avatar } from '@mui/material';
 import Stack from '@mui/material/Stack';
@@ -55,15 +55,24 @@ export default function ShareDetailsView({ id }: propType) {
   // const toProfile = paths.mypage.root;
   const { share, commentList, imageList, shareLoading, shareError } = useGetShareDetail(id);
 
-  const [comments, setComments] = useState(commentList);
+  const [comments, setComments] = useState(commentList || []);
   
   const toProfile = () => {
     console.log(share.userId);
   };
 
-  const addComment: (newCommentList: commentItem[]) => void = useCallback((newCommentList: commentItem[]) => {
-    setComments(newCommentList);
-  }, [setComments]);
+  useEffect(()=>{
+    if (commentList) {
+      setComments(commentList);
+    }
+  }, [commentList])
+
+  const addComment = useCallback((newCommentList: commentItem[]) => {
+    if(newCommentList){
+      setComments(newCommentList);
+      // console.log("Success?", comments);
+    }
+  }, []);
 
 
 
