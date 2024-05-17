@@ -6,6 +6,7 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import TextMaxLine from 'src/components/text-max-line';
+import { BoardMainItem } from 'src/types/blog';
 
 // prettier-ignore
 function createDummyData(
@@ -42,9 +43,21 @@ const dummyNew = [
   createDummyData(101, 10, '배싸피', '제 동생 그림입니다.', 503, 15, new Date('2024-05-03'), new Date('2024-05-04')),
 ];
 
-export default function BoardMainView() {
+type propsType = {
+  newBoard: BoardMainItem[],
+  popBoard: BoardMainItem[],
+}
+
+export default function BoardMainView(props: propsType) {
+
+  const {newBoard, popBoard} = props;
+  
+  // console.log("api test: ", newBoard);
+  // console.log("api test: ", popBoard);
+
   const board = paths.community.board.main;
   const boardDetail = paths.community.board.detail;
+  
   return (
     <Container sx={{ marginBottom: 5 }}>
       <Box width={800} alignItems="center" sx={{ border: '2px solid lightgrey' }}>
@@ -61,7 +74,10 @@ export default function BoardMainView() {
               </Box>
               <Box paddingLeft={3}>
                 <ul style={{ paddingLeft: 0 }}>
-                  {dummyPop.map((popular, idx) => (
+                  {popBoard?.length === 0 ? 
+                   <></>
+                   : 
+                   (popBoard?.map((popular, idx) => (
                     <Link
                       color="inherit"
                       style={{ textDecoration: 'none' }}
@@ -72,7 +88,7 @@ export default function BoardMainView() {
                         <TextMaxLine line={1} variant='subtitle2' persistent>{popular.title}</TextMaxLine>
                       </li>
                     </Link>
-                  ))}
+                  )))}
                 </ul>
               </Box>
               <Box textAlign="right" mr={1} fontSize={10}>
@@ -98,7 +114,10 @@ export default function BoardMainView() {
                 </Box>
                 <Box paddingLeft={3}>
                   <ul style={{ paddingLeft: '0' }}>
-                  {dummyNew.map((popular, idx) => (
+                  {newBoard?.length === 0 ?
+                  <></> 
+                   :
+                  (newBoard?.map((popular, idx) => (
                     <Link
                       color="inherit"
                       style={{ textDecoration: 'none' }}
@@ -109,7 +128,7 @@ export default function BoardMainView() {
                         <TextMaxLine line={1} variant='subtitle2' persistent>{popular.title}</TextMaxLine>
                       </li>
                     </Link>
-                  ))}
+                  )))}
                   </ul>
                 </Box>
                 <Box textAlign="right" mr={1} fontSize={10}>

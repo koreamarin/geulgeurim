@@ -29,7 +29,7 @@ type shareProps = {
   share: ShareMainItem;
 };
 
-export default function PostItem(shareItem: shareProps) {
+export default function ShareItem(shareItem: shareProps) {
   const { share } = shareItem;
   const linkTo = paths.community.share.detail(share.shareId);
 
@@ -72,12 +72,12 @@ export default function PostItem(shareItem: shareProps) {
         </Link>
 
         <Link component={RouterLink} href={linkTo}>
-          <Image alt="123" src={share.thumbnail} ratio="4/3" />
+          <Image alt="123" src={share.imageList ? share.imageList[0].fileUrl : "../../../public/no_image.png"} ratio="4/3" />
         </Link>
       </Box>
 
       <ShareContent
-        shareId={share.shareId}
+        shareId={share.shareId.toString()}
         userId={share.userId}
         userNickname={share.userNickname}
         title={share.title}
@@ -93,7 +93,7 @@ export default function PostItem(shareItem: shareProps) {
 // ----------------------------------------------------------------------
 
 type ShareContentProps = {
-  shareId: number;
+  shareId: string;
   userId: number;
   userNickname: string;
   title: string;
@@ -113,7 +113,7 @@ export function ShareContent({
   commentCnt,
   updatedAt,
 }: ShareContentProps) {
-  const linkTo = paths.community.share.detail(shareId);
+  const linkTo = paths.community.share.detail(Number(shareId));
 
   // 작성자 프로필로 이동
   // const toProfile = paths.mypage.root;

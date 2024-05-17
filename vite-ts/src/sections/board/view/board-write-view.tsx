@@ -1,3 +1,6 @@
+import { Route } from 'react-router-dom';
+import { useState, useCallback } from 'react';
+
 import {
   Box,
   Card,
@@ -11,32 +14,61 @@ import {
   CardContent,
   FormControlLabel,
 } from '@mui/material';
-import { useState, useCallback } from 'react';
+
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { useBoolean } from 'src/hooks/use-boolean';
+
 import { Upload } from 'src/components/upload';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-type Props = {
-  id?: number;
-};
-
-export default function BoardWriteView({ id }: Props) {
+export default function BoardWriteView() {
+  const router = useRouter();
   const preview = useBoolean();
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [content, setContent] = useState('');
   const [files, setFiles] = useState<(File | string)[]>([]);
 
-  const navigate = useNavigate();
+  const formData = new FormData();
 
   const handleSubmit = () => {
     console.log('Title:', title);
-    console.log('Description:', description);
+    console.log('Content:', content);
     console.log('Files:', files);
-    navigate('/community/crew');
+    const boardWriteRequest = {
+      title,
+      content,
+    };
+    Object.values(files).forEach((file) => formData.append('files', file));
+    formData.append(
+      'boardWriteRequest',
+      new Blob([JSON.stringify(boardWriteRequest)], {
+        type: 'application/json',
+      })
+    );
+    axios
+      .post('/api/v1/community/board', formData, {
+        headers: {
+          'Content-Type': `multipart/form-data; `,
+          // "Authorization": '토큰',
+        },
+        // baseURL: 'https://글그림.com',
+        baseURL: 'http://localhost:8080',
+      })
+      .then((response) => {
+        const { board } = response.data;
+        console.log(board);
+        router.push(paths.community.board.detail(board.boardId));
+      })
+      .catch((error) => {
+        alert('글 작성 중 오류가 발생했습니다.');
+      });
   };
 
   const handleCancel = () => {
     console.log('Cancelled');
+    router.back();
   };
 
   const handleDropMultiFile = useCallback(
@@ -90,8 +122,8 @@ export default function BoardWriteView({ id }: Props) {
             fullWidth
             multiline
             rows={8}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
           />
           <Stack spacing={5}>
             <Card>
