@@ -152,7 +152,7 @@ export default function PostDetailsHomeView({ title }: Props) {
 
           <Divider sx={{ mt: 5, mb: 2 }} />
 
-          <PostCommentList comments={post.comments} />
+          {/* <PostCommentList comments={post.comments} /> */}
         </Stack>
       </Container>
     </>

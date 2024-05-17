@@ -18,6 +18,8 @@ import Pagination, { paginationClasses } from '@mui/material/Pagination';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useGetBoardList } from 'src/api/community';
+
 import Iconify from 'src/components/iconify';
 import { useTable } from 'src/components/table';
 import Scrollbar from 'src/components/scrollbar';
@@ -27,12 +29,12 @@ import InformationRecentSearchOption from './board-recent-search-options';
 
 // ----------------------------------------------------------------------
 
-function createDummyData(pk: number, fullTitle: string, user:String, upload:Date, hit:number, comment_count:number) {
-  const date = upload.toLocaleDateString()
+function createDummyData(pk: number, fullTitle: string, userNickname:String, upload:Date, hit:number, comment_count:number) {
+  const date = upload.toLocaleDateString();
   const comment:string = comment_count !== 0 ? ` [${comment_count}]` : ``
   const title:string = fullTitle.length > 40 ? `${fullTitle.substr(0, 40)}...${comment}` : `${fullTitle}${comment}`
 
-  return { pk, title, user, date, hit, comment_count};
+  return { pk, title, userNickname, date, hit, comment_count};
 }
 
 const dummy = [
@@ -50,7 +52,7 @@ const dummy = [
 ];
 
 interface Column {
-  id: 'pk' | 'title' | 'user' | 'date' | 'hit' | 'comment_count';
+  id: 'boardId' | 'title' | 'userNickname' | 'createdAt' | 'hit' | 'commentCnt';
   label: string;
   minWidth?: number;
   align?: 'right' | 'center';
@@ -58,11 +60,11 @@ interface Column {
 }
 
 const COLUMNS: Column[] = [
-  { id: 'pk', label: '#', minWidth: 16 },
+  { id: 'boardId', label: '#', minWidth: 16 },
   { id: 'title', label: '제목', minWidth: 300},
-  { id: 'user', label: '작성자', minWidth: 100},
+  { id: 'userNickname', label: '작성자', minWidth: 100},
   {
-    id: 'date',
+    id: 'createdAt',
     label: '날짜',
     minWidth: 100,
     align: 'right',
@@ -87,8 +89,22 @@ const POST_SEARCH_OPTIONS = [
   { value: 'title', label: '제목' },
 ];
 
+function createBoardData(pk: number, fullTitle: string, userNickname:String, upload:Date, hit:number, commentCnt:number) {
+  const createdAt = new Date(upload).toLocaleDateString()
+  const comment:string = commentCnt !== 0 ? ` [${commentCnt}]` : ``
+  const title:string = fullTitle.length > 40 ? `${fullTitle.substr(0, 40)}...${comment}` : `${fullTitle}${comment}`
+  const boardId = pk;
+  return { boardId, title, userNickname, createdAt, hit, commentCnt};
+}
+
 
 export default function BoardRecentPost() {
+  const data: { boardId: number; title: string; userNickname: String; createdAt: string; hit: number; commentCnt: number; }[] = [];
+
+  const { board } = useGetBoardList();
+  board.map((b: { boardId: number; title: string; userNickname: String; createdAt: Date; hit: number; commentCnt: number; }) => (
+    data.push(createBoardData(b.boardId, b.title, b.userNickname, b.createdAt, b.hit, b.commentCnt))
+  ));
 
   const router = useRouter();
 
@@ -104,8 +120,9 @@ export default function BoardRecentPost() {
     }
   };
 
-  const handleRowClick = (pk:number) => {
-    router.push(paths.community.board.detail(pk));
+  const handleRowClick = (boardId:number) => {
+    console.log("boardId", boardId);
+    router.push(paths.community.board.detail(boardId));
   }
 
   const writeBoard = () => {
@@ -181,7 +198,7 @@ export default function BoardRecentPost() {
 
               <TableBody>
                 {/* 데이터가 없을 때 */}
-                {!dummy.length ?
+                {!board.length ?
                 (
                   <TableRow hover role="checkbox" tabIndex={-1}>
                         <TableCell align='center' colSpan={COLUMNS.length}>
@@ -190,11 +207,11 @@ export default function BoardRecentPost() {
                   </TableRow>
                 )
                 :
-                  (dummy.slice(
+                  (data.slice(
                     table.page * table.rowsPerPage,
                     table.page * table.rowsPerPage + table.rowsPerPage
                   ).map((row) => (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.pk} onClick={() => handleRowClick(row.pk)} sx={{ cursor: 'pointer'}}>
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.boardId} onClick={() => handleRowClick(row.boardId)} sx={{ cursor: 'pointer'}}>
                         {COLUMNS.map((column) => {
                           const value = row[column.id];
                           return (
