@@ -44,10 +44,10 @@ export default function PostCommentForm({ id, type }: props) {
         await axios
           .post(`/api/v1/community/comment/${type}`, boardCommentWriteRequest, {
             headers: {
-              // "Authorization": '토큰',
+              "Authorization": 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjUsInVzZXJUeXBlIjoiSU5ESVZJRFVBTCIsImlhdCI6MTcxNTkwNzEwNiwiZXhwIjoxNzE1OTQzMTA2fQ.cCSc4cy37cws_0WqIYPI65XKBFXSaBPgnIRhZsVCQlc',
             },
             // baseURL: 'https://글그림.com',
-            baseURL: 'http://localhost:8080',
+            baseURL: 'https://글그림.com',
           })
           .then((response) => {
             const { commentList } = response.data;
@@ -71,10 +71,10 @@ export default function PostCommentForm({ id, type }: props) {
         await axios
           .post(`/api/v1/community/comment/${type}`, shareCommentWriteRequest, {
             headers: {
-              // "Authorization": '토큰',
+              Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjUsInVzZXJUeXBlIjoiSU5ESVZJRFVBTCIsImlhdCI6MTcxNTkwNzEwNiwiZXhwIjoxNzE1OTQzMTA2fQ.cCSc4cy37cws_0WqIYPI65XKBFXSaBPgnIRhZsVCQlc',
             },
-            // baseURL: 'https://글그림.com',
-            baseURL: 'http://localhost:8080',
+            baseURL: 'https://글그림.com',
+            // baseURL: 'http://localhost:8080',
           })
           .then((response) => {
             const { commentList } = response.data;
