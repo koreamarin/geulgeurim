@@ -31,7 +31,7 @@ public class Crew extends BaseEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long crewId;
 
-    @ManyToOne(fetch = EAGER)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
