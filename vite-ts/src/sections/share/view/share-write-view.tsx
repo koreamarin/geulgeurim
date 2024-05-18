@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import {
   Box,
@@ -36,8 +35,6 @@ export default function BoardWriteView({ id }: Props) {
   const [content, setContent] = useState('');
   const [files, setFiles] = useState<(File | string)[]>([]);
   
-  const navigate = useNavigate();
-
   const handleSubmit = () => {
     console.log('Title:', title);
     console.log('Content:', content);
@@ -74,6 +71,8 @@ export default function BoardWriteView({ id }: Props) {
 
   const handleCancel = () => {
     console.log('Cancelled');
+    router.back();
+
   };
 
   const handleDropMultiFile = useCallback(
