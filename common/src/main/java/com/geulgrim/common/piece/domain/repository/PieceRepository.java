@@ -21,15 +21,31 @@ public interface PieceRepository extends JpaRepository<Piece, Long> {
 
     List<Piece> findByOwnerIdAndNameContainingOrDescriptionContaining(Long ownerId, String name, String description);
 
+    // without type order by update
     List<Piece> findByOwnerIdAndNameContainingOrderByUpdatedAt(Long ownerId, String keyword);
 
     List<Piece> findByOwnerIdAndDescriptionContainingOrderByUpdatedAt(Long ownerId, String keyword);
 
     List<Piece> findByOwnerIdAndNameContainingOrDescriptionContainingOrderByUpdatedAt(Long ownerId, String name, String description);
 
+    // without type order by update desc
     List<Piece> findByOwnerIdAndNameContainingOrderByUpdatedAtDesc(Long ownerId, String keyword);
 
     List<Piece> findByOwnerIdAndDescriptionContainingOrderByUpdatedAtDesc(Long ownerId, String keyword);
 
     List<Piece> findByOwnerIdAndNameContainingOrDescriptionContainingOrderByUpdatedAtDesc(Long ownerId, String name, String description);
+
+    // with type order by update
+    List<Piece> findByOwnerIdAndTypeAndNameContainingOrderByUpdatedAt(Long ownerId, String keyword, String type);
+
+    List<Piece> findByOwnerIdAndTypeAndDescriptionContainingOrderByUpdatedAt(Long ownerId, String keyword, String type);
+
+    List<Piece> findByOwnerIdAndTypeAndNameContainingOrDescriptionContainingOrderByUpdatedAt(Long ownerId, String name, String description, String type);
+
+    // with type order by update desc
+    List<Piece> findByOwnerIdAndTypeAndNameContainingOrderByUpdatedAtDesc(Long ownerId, String keyword, String type);
+
+    List<Piece> findByOwnerIdAndTypeAndDescriptionContainingOrderByUpdatedAtDesc(Long ownerId, String keyword, String type);
+
+    List<Piece> findByOwnerIdAndTypeAndNameContainingOrDescriptionContainingOrderByUpdatedAtDesc(Long ownerId, String name, String description, String type);
 }

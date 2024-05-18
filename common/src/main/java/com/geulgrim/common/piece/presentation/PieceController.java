@@ -38,9 +38,10 @@ public class PieceController {
             @RequestParam(name = "user_id", required = true) Long userId,
             @RequestParam(name = "condition", defaultValue = "name") String condition,
             @RequestParam(name = "key_word", defaultValue = "") String keyWord,
+            @RequestParam(name = "type", defaultValue = "") String type,
             @RequestParam(name = "sort", defaultValue = "updated_at") String sortBy
             ){
-        return new ResponseEntity<>(pieceService.findAllPiece(userId, condition, keyWord, sortBy), HttpStatus.OK);
+        return new ResponseEntity<>(pieceService.findAllPiece(userId, condition, keyWord, type, sortBy), HttpStatus.OK);
     }
 
     @DeleteMapping("/del/{piece_id}")

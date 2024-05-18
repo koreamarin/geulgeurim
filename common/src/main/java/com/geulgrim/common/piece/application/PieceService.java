@@ -42,23 +42,23 @@ public class PieceService {
         pieceRepository.save(dto.toEntity());
     }
 
-    public List<PieceSearchResponseDto> findAllPiece(Long userId, String condition, String keyWord, String sortBy){
+    public List<PieceSearchResponseDto> findAllPiece(Long userId, String condition, String keyWord, String type, String sortBy){
 
         List<Piece> pieces = null;
 
-        log.info("userId:{}, condition: {}, keyWord:{}, sortBy:{}", userId, condition, keyWord, sortBy);
+        log.info("userId:{}, condition: {}, keyWord:{}, type:{}, sortBy:{}", userId, condition, keyWord, type, sortBy);
 
         if(sortBy.equals("updated_at")){
             try{
                 PieceSearchOrderType pieceSearchOrderType = PieceSearchOrderType.valueOf(condition.toUpperCase());
-                pieces = pieceSearchOrderType.getListByPieceSearchType(pieceRepository, userId, keyWord);
+                pieces = pieceSearchOrderType.getListByPieceSearchType(pieceRepository, userId, keyWord, type);
             } catch (Exception e){
             throw new NoPieceExistException();
             }
         } else{
             try{
                 PieceSearchType pieceSearchType = PieceSearchType.valueOf(condition.toUpperCase());
-                pieces = pieceSearchType.getListByPieceSearchType(pieceRepository, userId, keyWord);
+                pieces = pieceSearchType.getListByPieceSearchType(pieceRepository, userId, keyWord, type);
             } catch (Exception e){
                 throw new NoPieceExistException();
             }
