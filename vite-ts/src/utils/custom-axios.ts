@@ -36,9 +36,6 @@ export const customFetcher = async (args: string | [string, AxiosRequestConfig])
 
     return res.data;
 
-  // console.log('axios', res)
-
-  return res.data;
 };
 
 // ----------------------------------------------------------------------
@@ -47,9 +44,16 @@ export const endpoints = {
   resume:{
     list:'/api/v1/recruit/resume',
   },
-  portfolio: {
-    list:'/api/v1/common/portfolio',
+  portfolio : {
+    list: '/api/v1/common/portfolio',
+    create: '/api/v1/common/portfolio',
+    createUser: '/api/v1/common/portfolio/user',
     detail: '/api/v1/common/portfolio/detail',
-    detailUserFormat: '/api/v1/common/portfolio/detail/user'
+    detailUserFormat: '/api/v1/common/portfolio/detail/user',
+    delete: '/api/v1/common/portfolio'
+  },
+  pieces : {
+    mine: '/api/v1/common/piece/search?'
   }
+
 };

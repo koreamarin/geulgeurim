@@ -59,10 +59,14 @@ export const paths = {
     root: `${ROOTS.MYPAGE}`,
     apply: `${ROOTS.MYPAGE}/apply`,
     interest: `${ROOTS.MYPAGE}/interest`,
+
+    // 포트폴리오
     portfolio: `${ROOTS.MYPAGE}/portfolio`,
     portfolioDetail: (id:number) => `${ROOTS.MYPAGE}/portfolio/detail/${id}`,
+    portfolioDetailUserFormat: (id:number) => `${ROOTS.MYPAGE}/portfolio/detail/user/${id}`,
     portfolioWrite: `${ROOTS.MYPAGE}/portfolio/write`,
     portfolioWriteUserFormat: `${ROOTS.MYPAGE}/portfolio/write/user`,
+    portfolioEdit: (id:number) => `${ROOTS.MYPAGE}/portfolio/edit/${id}`,
 
     // 이력서
     resume: `${ROOTS.MYPAGE}/resume`,

@@ -1,17 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef} from 'react';
 
 import {
-  Box,
-  Card,
-  Stack,
-  Button,
-  Switch,
-  Dialog,
-  Container,
-  TextField,
-  Typography,
-  CardHeader,
-  CardContent,
+  Box, Card, Stack, Button, Switch,
+  Dialog, Container, TextField, Typography, CardHeader, CardContent,
   DialogTitle, DialogActions, DialogContent, FormControlLabel
 } from '@mui/material';
 
@@ -20,15 +11,19 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
+import { createUserFormat, useGetPortfolios } from 'src/api/portfolio';
+
 import { Upload } from 'src/components/upload';
 
 
 export default function PortfolioWriteUserFormatView() {
   const preview = useBoolean();
   const router = useRouter()
+  const filesToUpload = useRef<any[]>([])
   const [title, setTitle] = useState('');
   const [files, setFiles] = useState<(File | string)[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
+  const { portfoliosMutate } = useGetPortfolios();
 
   const handleDropMultiFile = useCallback(
     (acceptedFiles: File[]) => {
@@ -49,33 +44,33 @@ export default function PortfolioWriteUserFormatView() {
     setFiles(filesFiltered);
   };
 
-  const handleRemoveAllFiles = () => {
+  const handleRemoveAllFiles = async () => {
     setFiles([]);
   };
 
-  const handleSubmit = () => {
-    console.log('Title:', title);
-    console.log('Files:', files);
+  const handleSubmit = async () => {
+
     const formData = new FormData();
-    formData.append('pofol_name', title);
-    formData.append('status', "PUBLIC");
+
+    const portfolioRequest = {
+      "pofol_name": title,
+      "status": "PUBLIC"
+    }
+
+    formData.append("portfolioRequest", new Blob([JSON.stringify(portfolioRequest)], {
+        type: "application/json"
+    }));
+
     files.forEach(file => {
       if (file instanceof File) {
-        formData.append('file_url', file, file.name);
+        formData.append('files', file, file.name);
       }
     });
 
-    // try {
-    //   const response = await fetch('http://localhost:8080/api/v1/portfolio/user/2', {
-    //     method: 'POST',
-    //     body: formData,  // No headers related to content-type. Let the browser set it
-    //   });
+    await createUserFormat(formData)
+    await portfoliosMutate()
 
-    //   const responseData = await response.json();
-    //   console.log('Server Response:', responseData);
-    // } catch (error) {
-    //   console.error('Error posting data:', error);
-    // }
+    router.push(paths.mypage.portfolio)
   };
 
 
@@ -85,9 +80,10 @@ export default function PortfolioWriteUserFormatView() {
 
   const handleClose = (confirm: boolean) => {
     setOpenDialog(false);
-    router.push(paths.mypage.portfolio);
+    if (confirm) {
+      router.push(paths.mypage.portfolio);
+    }
   };
-
 
 
   return (
@@ -122,7 +118,10 @@ export default function PortfolioWriteUserFormatView() {
             onDrop={handleDropMultiFile}
             onRemove={handleRemoveFile}
             onRemoveAll={handleRemoveAllFiles}
-            onUpload={() => console.info('ON UPLOAD')}
+            onUpload={() => {
+              filesToUpload.current = files
+              console.log('확인', filesToUpload.current)
+            }}
           />
         </CardContent>
       </Card>

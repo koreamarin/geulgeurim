@@ -51,6 +51,7 @@ export default function CrewApplyView({ id }: Props) {
     console.log('Description:', description);
     console.log('Files:', files);
     console.log('Positions:', positions);
+    
     navigate('/community/crew');
   };
 
