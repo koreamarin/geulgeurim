@@ -22,6 +22,7 @@ import com.geulgrim.community.share.application.dto.response.ShareListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,24 +46,12 @@ public class CrewService {
     private final UserRepository userRepository;
     private final CrewImageRepository crewImageRepository;
     private final CrewRequestRepository crewRequestRepository;
-    private final CrewDslRepository crewDslRepository;
     private final AwsS3Service awsS3Service;
 
     public List<CrewListResponse> findRecentCrewList() {
-        List<CrewListResponse> crewList = crewRepository.findCrewMainList();
-
-        List<Long> crewIds = crewList.stream()
-                .map(CrewListResponse::getCrewId)
-                .toList();
-
-        List<CrewImage> crewImages = crewImageRepository.findImagesByCrewIds(crewIds);
-
-        Map<Long, List<CrewImage>> imagesByCrewId = crewImages.stream()
-                .collect(Collectors.groupingBy(ci -> ci.getCrew().getCrewId()));
-
-        crewList.forEach(response -> response.setImageList(imagesByCrewId.get(response.getCrewId())));
-
-        return crewList;
+        PageRequest pageRequest = PageRequest.of(0, 6);
+        Page<CrewListResponse> crewListPage = crewRepository.findCrewResponseList(pageRequest);
+        return crewListPage.getContent();
     }
 
     public Page<CrewListResponse> search(String keyword, String searchType, String sort, Pageable pageable) {
@@ -145,7 +134,7 @@ public class CrewService {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         ArrayList<CrewImage> images = new ArrayList<>();
         for(MultipartFile image : crewBoardRequest.getImageList()) {
-            String url = awsS3Service.uploadFile(userId, image, timestamp, "board");
+            String url = awsS3Service.uploadFile(userId, image, timestamp, "crew");
             log.info("URL : {}", url);
             CrewImage crewImage = CrewImage.builder()
                     .crew(crew)

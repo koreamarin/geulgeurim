@@ -1,6 +1,7 @@
 package com.geulgrim.community.crew.domain.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.geulgrim.community.crew.domain.entity.enums.BoardStatus;
 import com.geulgrim.community.global.entity.BaseEntity;
 import com.geulgrim.community.global.user.domain.entity.User;
@@ -12,7 +13,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.List;
+
 import static jakarta.persistence.EnumType.STRING;
+import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -27,7 +31,7 @@ public class Crew extends BaseEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long crewId;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
@@ -43,5 +47,9 @@ public class Crew extends BaseEntity {
 
     @Enumerated(STRING)
     private BoardStatus status;
+
+    @OneToMany(mappedBy = "crew", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<CrewImage> imageList;
 
 }

@@ -19,7 +19,7 @@ public class CrewListResponse {
     private String userNickname;
     private String userFileUrl;
     private String projectName;
-    private List<CrewImage> imageList;
+    private List<CrewImageResponse > imageList;
     private int pen;
     private int color;
     private int bg;
@@ -29,6 +29,7 @@ public class CrewListResponse {
     private BoardStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
 
     public CrewListResponse (long crewId, long userId, String userNickname, String userFileUrl, String projectName,
                              int pen, int color, int bg, int pd, int story, int conti, BoardStatus status,
@@ -51,7 +52,7 @@ public class CrewListResponse {
 
     public CrewListResponse(Long crewId, Long userId, String userNickname, String userFileUrl, String projectName,
                             int pen, int color, int bg, int pd, int story, int conti, BoardStatus status,
-                            LocalDateTime createdAt, LocalDateTime updatedAt, List<CrewImage> imageList) {
+                            LocalDateTime createdAt, LocalDateTime updatedAt, List<CrewImageResponse > imageList) {
         this.crewId = crewId;
         this.userId = userId;
         this.userNickname = userNickname;
@@ -69,3 +70,4 @@ public class CrewListResponse {
         this.imageList = imageList; // 이 부분을 추가
     }
 }
+
