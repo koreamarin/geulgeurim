@@ -12,5 +12,4 @@ public class PieceInfoDetail {
     private String contribution;
     private String content;
     private String pieceUrl; // 작품 url
-    private String pieceUploaded; // 사용자 업로드 url
 }
