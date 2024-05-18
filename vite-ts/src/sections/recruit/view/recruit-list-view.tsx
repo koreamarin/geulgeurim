@@ -5,6 +5,7 @@ import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, Messaging } from 'firebase/messaging';
 import axios from '../../../utils/axios';
 import { useEffect } from 'react';
+import axiosOrigin from 'axios';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -65,15 +66,30 @@ const registerServiceWorker = () => {
         const url = import.meta.env.VITE_BACK_SERVER_URL + '/api/v1/auth/fcm';
 
         console.log('token = ', generatedFcmtoken);
-        console.log('user = ', localStorage.getItem('userId'));
-        const postData = {
-          id: localStorage.getItem('userId'), // 로그인 유저 아이디로 변경 필요
+        const accessToken = localStorage.getItem('accessToken');
+
+
+        const api = axiosOrigin.create({
+          baseURL: import.meta.env.VITE_BACK_SERVER_URL,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+
+        const requestData = {
           fcmToken: generatedFcmtoken,
         };
 
-        // Axios를 사용한 POST 요청
-        const response = axios.post(url, postData);
-        console.log(response);
+        // 데이터를 POST 방식으로 전송합니다.
+        api.post('/api/v1/auth/fcm', { dto : requestData})
+          .then(response => {
+            console.log('Response:', response.data);
+          })
+          .catch(error => {
+            console.error('Error:', error.response);
+          });
+
       }
       // 반환하는 함수는 컴포넌트가 언마운트될 때 실행됩니다 (클린업 함수)
       return () => {
