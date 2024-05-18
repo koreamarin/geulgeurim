@@ -1,5 +1,6 @@
 package com.geulgrim.community.crew.domain.repository;
 
+import com.geulgrim.community.crew.application.dto.response.CrewImageResponse;
 import com.geulgrim.community.crew.application.dto.response.CrewListResponse;
 import com.geulgrim.community.crew.domain.entity.Crew;
 import com.geulgrim.community.crew.domain.entity.CrewImage;
@@ -44,9 +45,12 @@ public class CrewCustomRepositoryImpl implements CrewCustomRepository {
                 .fetch();
 
         List<CrewListResponse> crewListResponses = crews.stream().map(c -> {
-            List<CrewImage> imageList = queryFactory.selectFrom(crewImage)
+            List<CrewImageResponse> imageList = queryFactory.selectFrom(crewImage)
                     .where(crewImage.crew.eq(c))
-                    .fetch();
+                    .fetch()
+                    .stream()
+                    .map(ci -> new CrewImageResponse(ci.getCrewImageId(), ci.getFileUrl()))
+                    .collect(Collectors.toList());
 
             return new CrewListResponse(
                     c.getCrewId(),
@@ -54,6 +58,7 @@ public class CrewCustomRepositoryImpl implements CrewCustomRepository {
                     c.getUser().getNickname(),
                     c.getUser().getFileUrl(),
                     c.getProjectName(),
+                    imageList,
                     c.getPen(),
                     c.getColor(),
                     c.getBg(),
@@ -62,8 +67,7 @@ public class CrewCustomRepositoryImpl implements CrewCustomRepository {
                     c.getConti(),
                     c.getStatus(),
                     c.getCreatedAt(),
-                    c.getUpdatedAt(),
-                    imageList // CrewImage 리스트를 추가
+                    c.getUpdatedAt()
             );
         }).collect(Collectors.toList());
 
@@ -84,14 +88,18 @@ public class CrewCustomRepositoryImpl implements CrewCustomRepository {
         List<CrewListResponse> results = queryFactory
                 .selectFrom(crew)
                 .leftJoin(crew.user, user).fetchJoin()
+                .orderBy(crew.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch()
                 .stream()
                 .map(c -> {
-                    List<CrewImage> imageList = queryFactory.selectFrom(crewImage)
+                    List<CrewImageResponse> imageList = queryFactory.selectFrom(crewImage)
                             .where(crewImage.crew.eq(c))
-                            .fetch();
+                            .fetch()
+                            .stream()
+                            .map(ci -> new CrewImageResponse(ci.getCrewImageId(), ci.getFileUrl()))
+                            .collect(Collectors.toList());
 
                     return new CrewListResponse(
                             c.getCrewId(),
@@ -99,6 +107,7 @@ public class CrewCustomRepositoryImpl implements CrewCustomRepository {
                             c.getUser().getNickname(),
                             c.getUser().getFileUrl(),
                             c.getProjectName(),
+                            imageList,
                             c.getPen(),
                             c.getColor(),
                             c.getBg(),
@@ -107,8 +116,7 @@ public class CrewCustomRepositoryImpl implements CrewCustomRepository {
                             c.getConti(),
                             c.getStatus(),
                             c.getCreatedAt(),
-                            c.getUpdatedAt(),
-                            imageList // CrewImage 리스트를 추가
+                            c.getUpdatedAt()
                     );
                 })
                 .collect(Collectors.toList());
@@ -145,8 +153,6 @@ public class CrewCustomRepositoryImpl implements CrewCustomRepository {
                 return crew.createdAt.desc();
             case "oldest":
                 return crew.createdAt.asc();
-            case "popular":
-                return crew.pen.desc(); // Example sorting by pen count
             default:
                 return crew.createdAt.desc(); // Default sorting
         }
