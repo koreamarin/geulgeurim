@@ -7,11 +7,13 @@ import com.geulgrim.common.piece.application.dto.response.PieceSearchResponseDto
 import com.geulgrim.common.piece.domain.entity.enums.PieceType;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/common/piece")
@@ -37,13 +39,14 @@ public class PieceController {
     @GetMapping("/search")
     @Operation(summary = "작품검색", description = "userId, 검색조건, 검색어, 정렬조건을 입력받아 조건에 해당하는 작품들을 반환하는 api입니다.")
     public ResponseEntity<List<PieceSearchResponseDto>> findAllPiece(
-            @RequestHeader(name = "user_id") String userId,
+            @RequestHeader HttpHeaders headers,
             @RequestParam(name = "condition", defaultValue = "name") String condition,
             @RequestParam(name = "key_word", defaultValue = "") String keyWord,
             @RequestParam(name = "type", defaultValue = "NONE") String type,
             @RequestParam(name = "sort", defaultValue = "updated_at") String sortBy
             ){
-        return new ResponseEntity<>(pieceService.findAllPiece(Long.parseLong(userId), PieceType.valueOf(type.toUpperCase()), condition, keyWord, sortBy), HttpStatus.OK);
+        Long userId = Long.parseLong(Objects.requireNonNull(headers.get("user_id")).get(0));
+        return new ResponseEntity<>(pieceService.findAllPiece(userId, PieceType.valueOf(type.toUpperCase()), condition, keyWord, sortBy), HttpStatus.OK);
     }
 
     @DeleteMapping("/del/{piece_id}")
