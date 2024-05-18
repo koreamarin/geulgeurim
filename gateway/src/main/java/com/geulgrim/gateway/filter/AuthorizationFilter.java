@@ -27,18 +27,19 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
     @Override
     public GatewayFilter apply(Config config) {
         return ((exchange, chain) -> {
+            String uri = exchange.getRequest().getURI().getPath();
             ServerHttpRequest request = exchange.getRequest();
             ServerHttpResponse response = exchange.getResponse();
             log.info("headers : {}", request.getHeaders());
-            request.getHeaders().getVary().clear();
             response.getHeaders().remove("Vary");
-            UserInfoResponseDto dto = authorizationUtil.Authorize(request);
 
-            if(dto != null && dto.getUserId() != null){
-                request.mutate().header("user_id", String.valueOf(dto.getUserId()));
-                request.mutate().header("user_type", dto.getUserType());
-            }else{throw new UnAuthorizedException();}
-
+            if (!uri.startsWith("/api/v1/recruit/job")){
+                UserInfoResponseDto dto = authorizationUtil.Authorize(request);
+                if(dto != null && dto.getUserId() != null){
+                    request.mutate().header("user_id", String.valueOf(dto.getUserId()));
+                    request.mutate().header("user_type", dto.getUserType());
+                }else{throw new UnAuthorizedException();}
+            }
             return chain.filter(exchange);
         });
     }
