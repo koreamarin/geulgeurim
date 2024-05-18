@@ -39,13 +39,13 @@ export default function ResumeDetailDelete({
     console.log(deleteResume, '번 이력서 삭제!')
     const result = await deleteResumeId(parseInt(deleteResume, 10))
     if (result) {
-      enqueueSnackbar('이력서 등록 성공!');
+      enqueueSnackbar('이력서 삭제 성공!');
       onClose()
       // 성공하면 list로 이동!
       router.push(paths.mypage.resume)
-    } 
+    }
     else {
-      enqueueSnackbar('이력서 등록 실패!', { variant: 'error' });
+      enqueueSnackbar('이력서 삭제 실패!', { variant: 'error' });
     }
   }
   return (

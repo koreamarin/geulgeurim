@@ -44,5 +44,9 @@ export const endpoints = {
   resume:{
     list:'/api/v1/recruit/resume',
   },
-
+  portfolio: {
+    list:'/api/v1/common/portfolio',
+    detail: '/api/v1/common/portfolio/detail',
+    detailUserFormat: '/api/v1/common/portfolio/detail/user'
+  }
 };

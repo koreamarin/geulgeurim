@@ -92,6 +92,8 @@ export default function ResumeList() {
   };
   const pageCount = 5
 
+
+  // useSWR 관리
   const { resumesData, resumesLoading, resumesError, resumesMutate } = useGetResumeList({
     searchType:optionBy,
     searchWord: querySearch.current,

@@ -6,7 +6,7 @@ import { fetcher, endpoints } from 'src/utils/custom-axios';
 
 import { CUSTOM_API } from 'src/config-global';
 
-import { IResumeResponse } from 'src/types/resume';
+import { ResumeDetail, IResumeResponse } from 'src/types/resume';
 // ----------------------------------------------------------------------
 
 type GetResumeProps = {
@@ -41,6 +41,23 @@ export function useGetResumeList({ searchType, searchWord, sortType, sort }:GetR
       resumesMutate
     }),
     [data, error, isLoading, isValidating, resumesMutate]);
+
+  return memoizedValue;
+}
+
+// ----------------------------------------------------------------------
+
+export function useGetResumeDetail(resumeId:number | undefined) {
+  const { data, isLoading, error, isValidating } = useSWR(resumeId ? `${URL}/${resumeId}` : null, fetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      resumesDetailData: (data as ResumeDetail),
+      resumesDetailLoading: isLoading,
+      resumesDetailError: error,
+      resumesDetailValidating: isValidating,
+    }),
+    [data, error, isLoading, isValidating]);
 
   return memoizedValue;
 }
