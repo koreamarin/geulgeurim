@@ -3,7 +3,6 @@ import Container from '@mui/material/Container';
 
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, Messaging } from 'firebase/messaging';
-import axios from '../../../utils/axios';
 import { useEffect } from 'react';
 import axiosOrigin from 'axios';
 
@@ -55,10 +54,15 @@ const registerServiceWorker = () => {
   }
 };
 
-  export default function RecruitListView() {
+export default function RecruitListView() {
 
-    useEffect(() => {
+  useEffect(() => {
 
+    const accessToken = localStorage.getItem('accessToken');
+    const tokenUpdated = localStorage.getItem('tokenUpdated');
+
+    // accessToken이 부여되었고 유저에게 fcmToken 업데이트 여부 체크
+    if (accessToken && !tokenUpdated){
       // 알림 권한 요청 및 FCM 토큰 획득
       const generatedFcmtoken = requestNotificationPermissionAndGetToken(messaging, import.meta.env.VITE_FIREBASE_VAPID_ID);
 
@@ -66,15 +70,14 @@ const registerServiceWorker = () => {
         const url = import.meta.env.VITE_BACK_SERVER_URL + '/api/v1/auth/fcm';
 
         console.log('token = ', generatedFcmtoken);
-        const accessToken = localStorage.getItem('accessToken');
 
 
         const api = axiosOrigin.create({
           baseURL: import.meta.env.VITE_BACK_SERVER_URL,
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`
-          }
+            Authorization: `Bearer ${accessToken}`,
+          },
         });
 
         const requestData = {
@@ -82,7 +85,7 @@ const registerServiceWorker = () => {
         };
 
         // 데이터를 POST 방식으로 전송합니다.
-        api.post('/api/v1/auth/fcm', { dto : requestData})
+        api.post('/api/v1/auth/fcm', { dto: requestData })
           .then(response => {
             console.log('Response:', response.data);
           })
@@ -90,18 +93,21 @@ const registerServiceWorker = () => {
             console.error('Error:', error.response);
           });
 
+        localStorage.setItem('tokenUpdated', 'true'); // 토큰 업데이트 후 플래그 설정
       }
-      // 반환하는 함수는 컴포넌트가 언마운트될 때 실행됩니다 (클린업 함수)
-      return () => {
-        console.log('컴포넌트가 언마운트됩니다');
-      };
-    }, []);
+    }
 
-    return (
-      <Container>
-        <Box>
-          구인구직 리스트
-        </Box>
-      </Container>
-    );
-  }
+    // 반환하는 함수는 컴포넌트가 언마운트될 때 실행됩니다 (클린업 함수)
+    return () => {
+      console.log('컴포넌트가 언마운트됩니다');
+    };
+  }, []);
+
+  return (
+    <Container>
+      <Box>
+        구인구직 리스트
+      </Box>
+    </Container>
+  );
+}
