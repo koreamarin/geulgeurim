@@ -37,13 +37,13 @@ public class PieceController {
     @GetMapping("/search")
     @Operation(summary = "작품검색", description = "userId, 검색조건, 검색어, 정렬조건을 입력받아 조건에 해당하는 작품들을 반환하는 api입니다.")
     public ResponseEntity<List<PieceSearchResponseDto>> findAllPiece(
-            @RequestParam(name = "user_id", required = true) Long userId,
+            @RequestHeader(name = "user_id") String userId,
             @RequestParam(name = "condition", defaultValue = "name") String condition,
             @RequestParam(name = "key_word", defaultValue = "") String keyWord,
             @RequestParam(name = "type", defaultValue = "NONE") String type,
             @RequestParam(name = "sort", defaultValue = "updated_at") String sortBy
             ){
-        return new ResponseEntity<>(pieceService.findAllPiece(userId, PieceType.valueOf(type.toUpperCase()), condition, keyWord, sortBy), HttpStatus.OK);
+        return new ResponseEntity<>(pieceService.findAllPiece(Long.parseLong(userId), PieceType.valueOf(type.toUpperCase()), condition, keyWord, sortBy), HttpStatus.OK);
     }
 
     @DeleteMapping("/del/{piece_id}")
