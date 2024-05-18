@@ -15,7 +15,6 @@ export default function AuthGuard({ children }: Props) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
     setLoading(false)
   }, []);
 
