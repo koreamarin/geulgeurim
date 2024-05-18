@@ -200,7 +200,6 @@ export default function ResumeForm({ copyId }: Props) {
       reset(defaultValues);
     }
   }, [resumesDetailData, portfoliosData, reset, defaultValues, copyId]);
-
   // submit 로직
   const onSubmit = handleSubmit(async (data) => {
     const formData = new FormData();
@@ -212,8 +211,14 @@ export default function ResumeForm({ copyId }: Props) {
       openStatus: data.openStatus,
       positionIds: data.positionIds,
       pofolIds: data.portfolioIds,
-      createEducationRequests: data.createEducationRequests,
-      createWorkRequests: data.createWorkRequests,
+      createEducationRequests: data.createEducationRequests?.map(({ institutionName, ...rest }) => ({
+        ...rest,
+        insitutionName: institutionName,
+      })),
+      createWorkRequests: data.createWorkRequests?.map(({ companyName, ...rest }) => ({
+        ...rest,
+        company: companyName,
+      })),
       createAwardRequests: data.createAwardRequests,
       createExperienceRequests: data.createExperienceRequests,
     })], {
