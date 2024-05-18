@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Builder
@@ -24,5 +25,6 @@ public class CrewBoardDetail {
     private BoardStatus status;
     private ArrayList<String> images;
     private ArrayList<CrewInfo> crewInfo;
+    private LocalDateTime createdAt;
 
 }

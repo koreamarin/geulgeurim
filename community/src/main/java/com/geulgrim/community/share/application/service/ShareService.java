@@ -43,7 +43,7 @@ public class ShareService {
         // Extract share IDs
         List<Long> shareIds = shareListResponses.stream()
                 .map(ShareListResponse::getShareId)
-                .collect(Collectors.toList());
+                .toList();
 
         // Fetch share images by share IDs
         List<ShareImage> shareImages = shareImageRepository.findImagesByShareIds(shareIds);

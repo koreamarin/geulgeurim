@@ -2,7 +2,6 @@ package com.geulgrim.community.board.presentation;
 
 import com.geulgrim.community.board.application.service.BoardService;
 import com.geulgrim.community.crew.application.service.CrewService;
-import com.geulgrim.community.crew.domain.repository.CrewRepository;
 import com.geulgrim.community.share.application.service.ShareService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ import java.util.Map;
 @Slf4j
 public class CommunityController {
 
-    private final CrewRepository crewRepository;
+    private final CrewService crewService;
     private final BoardService boardService;
     private final ShareService shareService;
 
@@ -41,9 +40,7 @@ public class CommunityController {
         // 그림평가 최신
         map.put("newShare", shareService.mainShareNewList());
         // 크루모집 최신
-//        map.put("newCrew", crewRepository.findRecentCrewList());
-
-        System.out.println(map);
+        map.put("newCrew", crewService.findRecentCrewList());
 
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
