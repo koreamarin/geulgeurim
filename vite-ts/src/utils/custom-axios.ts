@@ -36,6 +36,9 @@ export const customFetcher = async (args: string | [string, AxiosRequestConfig])
 
     return res.data;
 
+  // console.log('axios', res)
+
+  return res.data;
 };
 
 // ----------------------------------------------------------------------

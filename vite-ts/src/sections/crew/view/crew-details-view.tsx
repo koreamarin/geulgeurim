@@ -1,52 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Button, Card, Container, Grid, Paper, Typography } from '@mui/material';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Assuming createDummyData is defined elsewhere or you have actual API calls to fetch data
-function createDummyData(
-  crew_id: number, user_id: number, project_name: string, content: string, created_at: string, updated_at: string,
-  pen: number, color: number, bg: number, pd: number, story: number, conti: number, status: string,
-  images: string[]
-) {
-  return {
-    crew_id, user_id, project_name, content, created_at, updated_at,
-    pen, color, bg, pd, story, conti, status, images
-  };
-}
+import { Box, Card, Grid, Paper, Button, Container, Typography } from '@mui/material';
 
-const dummyDataArray = [
-  createDummyData(
-    1, 1, '나의 동료가 되줘!', '네이버 웹툰 등재를 꿈꾸고 있습니다. 많이 지원해주세요.',
-    '2024-04-29 16:07:38.886008', '', 0, 1, 2, 1, 0, 3, 'INPROGRESS',
-    ['https://geulgrim.s3.ap-northeast-2.amazonaws.com/profile/notion-avatar-1708927389233.png',
-    'https://geulgrim.s3.ap-northeast-2.amazonaws.com/user/28_20240507043106.jpg']
-  ),
-  createDummyData(
-    2, 1, '주현이와 친구들', '판타지 웹툰, 생활 웹툰 고민 중입니다.',
-    '2024-04-29 16:40:35.559943', '', 1, 1, 2, 0, 0, 1, 'INPROGRESS', []
-  ),
-  createDummyData(
-    3, 2, '코리아 마린???', '해병대 이야기. 병장이 사람을 살린 썰', '', '',
-    1, 0, 1, 0, 0, 1, 'CLOSED', []
-  )
-];
+import {fDate} from 'src/utils/format-time';
 
-type CrewDetail = {
-  crew_id: number;
-  user_id: number;
-  project_name: string;
-  content: string;
-  created_at: string;
-  updated_at: string;
-  pen: number;
-  color: number;
-  bg: number;
-  pd: number;
-  story: number;
-  conti: number;
-  status: string;
-  images: string[];
-};
+import { useGetCrewDetail } from 'src/api/community';
 
 type Props = {
   id: string;
@@ -54,13 +13,9 @@ type Props = {
 
 export default function CrewDetailView({ id }: Props) {
   const navigate = useNavigate();
-  const [crewDetails, setCrewDetails] = useState<CrewDetail | undefined>();
-
-  useEffect(() => {
-    // Simulate fetching data
-    const foundData = dummyDataArray.find(item => item.crew_id === parseInt(id, 10));
-    setCrewDetails(foundData);
-  }, [id]);
+  const { crew } = useGetCrewDetail(id);
+  const crewDetails = crew;
+  console.log(crewDetails);
 
   const handleApplyClick = () => {
     navigate(`/community/crew/apply/${id}`, { state: { crewDetails } });
@@ -86,7 +41,7 @@ export default function CrewDetailView({ id }: Props) {
       <Grid container spacing={3} sx={{ pt: 3 }}>
         <Grid xs={10} md={8} sx={{ mx: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Typography variant="h3" sx={{ display: 'flex', alignItems: 'center' }}>
-            {crewDetails.project_name}
+            {crewDetails.projectName}
           </Typography>
           <Typography variant="h5" sx={{ display: 'flex', justifyContent: 'flex-end', color: statusProps.color }}>
             {statusProps.text}
@@ -95,7 +50,7 @@ export default function CrewDetailView({ id }: Props) {
 
         <Grid xs={10} md={8} sx={{ mx: 'auto' }}>
           <Typography variant="body2" textAlign='right'>
-            등록일: {crewDetails.created_at}
+            등록일: {fDate(crewDetails.createdAt)}
           </Typography>
           <Card sx={{ mt: 8, p: 5 }}>
             <Typography variant="h4">
@@ -109,7 +64,7 @@ export default function CrewDetailView({ id }: Props) {
 
         <Grid item xs={12} sx={{ mt: 5 }}>
           <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 2 }}>
-            {crewDetails.images.map((url, index) => (
+            {crewDetails?.images?.map((url: string | undefined, index: React.Key | null | undefined) => (
               <Paper key={index} elevation={4} sx={{ p: 1 }}>
                 <img src={url} alt={`Gallery ${index}`} style={{ width: '15rem', height: '15rem' }} />
               </Paper>

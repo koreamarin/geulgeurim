@@ -168,7 +168,7 @@ export type CrewMainItem = {
   pd: number;
   story: number;
   conti: number;
-  status: number;
+  status: string;
   createdAt: string;
   updatedAt: string;
 };
