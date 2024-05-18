@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 
-import { fetcher, endpoints } from 'src/utils/custom-axios';
+import { customFetcher, endpoints } from 'src/utils/custom-axios';
 
 import { CUSTOM_API } from 'src/config-global';
 // ----------------------------------------------------------------------
@@ -41,7 +41,7 @@ type PortfolioUserDetail = {
 
 export function useGetPortfolios() {
   const URL = endpoints.portfolio.list;
-  const { data, isLoading, error, isValidating, mutate: portfoliosMutate } = useSWR(URL, fetcher);
+  const { data, isLoading, error, isValidating, mutate: portfoliosMutate } = useSWR(URL, customFetcher);
 
   const memoizedValue = useMemo(
     () => ({
@@ -60,7 +60,7 @@ export function useGetPortfolios() {
 
 export function usePortfolioDetail(pofolId: number) {
   const URL = endpoints.portfolio.detail
-  const { data, isLoading, error, isValidating } = useSWR(`${URL}/${pofolId}`, fetcher);
+  const { data, isLoading, error, isValidating } = useSWR(`${URL}/${pofolId}`, customFetcher);
 
   const memoizedValue = useMemo(
     () => ({
@@ -78,7 +78,7 @@ export function usePortfolioDetail(pofolId: number) {
 
 export function usePortfolioDetailUserFormat(pofolId: number) {
   const URL = endpoints.portfolio.detailUserFormat
-  const { data, isLoading, error, isValidating } = useSWR(`${URL}/${pofolId}`, fetcher);
+  const { data, isLoading, error, isValidating } = useSWR(`${URL}/${pofolId}`, customFetcher);
 
   const memoizedValue = useMemo(
     () => ({

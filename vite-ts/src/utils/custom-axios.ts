@@ -28,7 +28,7 @@ export default customAxiosInstance;
 
 // ----------------------------------------------------------------------
 
-export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
+export const customFetcher = async (args: string | [string, AxiosRequestConfig]) => {
 
     const [url, config] = Array.isArray(args) ? args : [args];
 

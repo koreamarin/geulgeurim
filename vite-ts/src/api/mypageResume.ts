@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 
-import { fetcher, endpoints } from 'src/utils/custom-axios';
+import { customFetcher, endpoints } from 'src/utils/custom-axios';
 
 import { CUSTOM_API } from 'src/config-global';
 
@@ -30,7 +30,7 @@ export function useGetResumeList({ searchType, searchWord, sortType, sort }:GetR
   searchParams.append('sortType', sortType);
   searchParams.append('sort', sort);
   const queryUrl = `${URL}?${new URLSearchParams(searchParams).toString()}`
-  const { data, isLoading, error, isValidating, mutate: resumesMutate } = useSWR(queryUrl, fetcher);
+  const { data, isLoading, error, isValidating, mutate: resumesMutate } = useSWR(queryUrl, customFetcher);
 
   const memoizedValue = useMemo(
     () => ({
@@ -48,7 +48,7 @@ export function useGetResumeList({ searchType, searchWord, sortType, sort }:GetR
 // ----------------------------------------------------------------------
 
 export function useGetResumeDetail(resumeId:number | undefined) {
-  const { data, isLoading, error, isValidating } = useSWR(resumeId ? `${URL}/${resumeId}` : null, fetcher);
+  const { data, isLoading, error, isValidating } = useSWR(resumeId ? `${URL}/${resumeId}` : null, customFetcher);
 
   const memoizedValue = useMemo(
     () => ({
