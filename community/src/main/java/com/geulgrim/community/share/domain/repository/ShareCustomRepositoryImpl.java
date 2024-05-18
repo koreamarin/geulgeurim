@@ -110,9 +110,11 @@ public class ShareCustomRepositoryImpl implements ShareCustomRepository {
         switch (searchType) {
             case "title":
                 return share.title.containsIgnoreCase(keyword);
+            case "content":
+                return share.content.containsIgnoreCase(keyword);
             case "title+content":
                 return share.title.containsIgnoreCase(keyword).or(share.content.containsIgnoreCase(keyword));
-            case "writer":
+            case "author":
                 return user.nickname.containsIgnoreCase(keyword);
             default:
                 return null;
