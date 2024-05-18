@@ -103,9 +103,11 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
         switch (searchType) {
             case "title":
                 return board.title.containsIgnoreCase(keyword);
+            case "content":
+                return board.content.containsIgnoreCase(keyword);
             case "title+content":
                 return board.title.containsIgnoreCase(keyword).or(board.content.containsIgnoreCase(keyword));
-            case "writer":
+            case "author":
                 return user.nickname.containsIgnoreCase(keyword);
             default:
                 return null;
