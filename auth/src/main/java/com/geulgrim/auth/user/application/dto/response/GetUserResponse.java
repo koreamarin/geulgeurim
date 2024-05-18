@@ -21,4 +21,5 @@ public class GetUserResponse {
     private String userType;
     private String fileUrl;
     private String phoneNum;
+    private String fcmToken;
 }

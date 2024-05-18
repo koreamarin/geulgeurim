@@ -91,6 +91,13 @@ public class UserController {
         return new ResponseEntity<>(getEnterUserResponse, HttpStatus.OK);
     }
 
+    // 알람 수신자 정보 조회
+    @GetMapping("/rcvuser/{id}")
+    public ResponseEntity<?> getRcvUser(@RequestHeader HttpHeaders headers, @PathVariable("id") Long rcvUserId) {
+        GetUserResponse getUserResponse = userService.getUser(rcvUserId);
+        return new ResponseEntity<>(getUserResponse, HttpStatus.OK);
+    }
+
     @PostMapping("/fcm")
 //    @Operation(summary = "fcm 토큰 업데이트", description = "프론트에서 받은 fcm 토큰을 유저정보에 업데이트합니다.")
     public ResponseEntity<?> updateFcmToken(@RequestBody FcmUpdateRequestDto dto,
