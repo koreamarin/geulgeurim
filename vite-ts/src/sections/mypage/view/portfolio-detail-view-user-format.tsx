@@ -80,7 +80,8 @@ export default function PortfolioDetailUserView({ id }: Props) {
           </FormGroup>
 
           <Tooltip title="Edit">
-            <IconButton color="primary" onClick={handleEditClick}>
+            <IconButton color="primary" >
+            {/* onClick={handleEditClick} */}
                 <EditIcon />
             </IconButton>
           </Tooltip>

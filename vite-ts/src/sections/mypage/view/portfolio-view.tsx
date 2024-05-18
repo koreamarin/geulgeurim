@@ -153,7 +153,8 @@ export default function PortfolioView() {
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <FormGroup sx={{ flexDirection: 'row', alignItems: 'center' }}>
               <Tooltip title="Edit">
-              <IconButton color="primary" onClick={() => handleEditClick(portfolio.pofolId)}>
+              <IconButton color="primary" >
+              {/* onClick={() => handleEditClick(portfolio.pofolId)} */}
                   <EditIcon />
                 </IconButton>
               </Tooltip>

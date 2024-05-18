@@ -83,7 +83,8 @@ export default function PortfolioDetailView({ id }: Props) {
         </FormGroup>
 
         <Tooltip title="Edit">
-          <IconButton color="primary" onClick={() => handleEditClick(portfolioState.pofolId)}>
+          <IconButton color="primary" >
+          {/* onClick={() => handleEditClick(portfolioState.pofolId)} */}
               <EditIcon />
           </IconButton>
         </Tooltip>
@@ -111,8 +112,12 @@ export default function PortfolioDetailView({ id }: Props) {
 
             <Grid item xs={12} md={6}>
               <Typography variant="h5" gutterBottom>{piece.title}</Typography>
-              <Typography variant="body1" gutterBottom>사용 프로그램: {piece.program}</Typography>
-              <Typography variant="body1" gutterBottom>기여도: {piece.contribution}</Typography>
+              <br />
+              <Typography variant="h6" gutterBottom>사용 프로그램:</Typography>
+              <Typography variant="body1" gutterBottom>{piece.program}</Typography>
+              <Typography variant="h6" gutterBottom>기여도:</Typography>
+              <Typography variant="body1" gutterBottom>{piece.contribution}</Typography>
+              <Typography variant="h6" gutterBottom>내용:</Typography>
               <Typography variant="body1" gutterBottom>{piece.content}</Typography>
             </Grid>
           </Grid>
