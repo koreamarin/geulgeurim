@@ -11,6 +11,8 @@ import com.geulgrim.community.board.domain.entity.Board;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,10 +64,18 @@ public class BoardController {
     @Operation(summary = "자유게시판 게시글 수정", description = "선택된 자유게시판의 게시글을 1개 수정합니다.")
     public ResponseEntity<BoardDetailResponse> updateBoard(@RequestHeader HttpHeaders headers,
                                                            @RequestPart BoardUpdateRequest boardUpdateRequest,
-                                             @RequestPart List<MultipartFile> files) {
+                                             @RequestPart(required = false) List<MultipartFile> files) {
         // 유저 아이디 수정
         long userId = Long.parseLong(headers.get("user_id").get(0));
         return new ResponseEntity<>(boardService.modifyBoard(userId, boardUpdateRequest, files), HttpStatus.OK);
     }
     // 검색
+    @GetMapping("/search")
+    public Page<BoardListResponse> searchBoards(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String sort,
+            Pageable pageable) {
+        return boardService.searchBoards(keyword, searchType, sort, pageable);
+    }
 }

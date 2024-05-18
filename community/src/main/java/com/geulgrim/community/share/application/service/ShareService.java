@@ -14,6 +14,8 @@ import com.geulgrim.community.share.domain.repository.ShareImageRepository;
 import com.geulgrim.community.share.domain.repository.ShareRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -140,5 +142,12 @@ public class ShareService {
             shareImageRepository.save(shareImage);
         }
         return share;
+    }
+
+    public Page<ShareListResponse> searchShares(String keyword, String searchType, String sort, Pageable pageable) {
+        if (keyword == null || searchType == null) {
+            return shareRepository.findShareResponseList(pageable);
+        }
+        return shareRepository.searchShares(keyword, searchType, sort, pageable);
     }
 }

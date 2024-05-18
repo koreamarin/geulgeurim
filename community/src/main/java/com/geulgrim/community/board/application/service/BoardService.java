@@ -14,6 +14,8 @@ import com.geulgrim.community.global.s3.AwsS3Service;
 import com.geulgrim.community.global.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -131,5 +133,12 @@ public class BoardService {
             boardImageRepository.save(boardImage);
         }
         return boardDetail(board.getBoardId());
+    }
+
+    public Page<BoardListResponse> searchBoards(String keyword, String searchType, String sort, Pageable pageable) {
+        if (keyword == null || searchType == null) {
+            return boardRepository.findBoardResponseList(pageable);
+        }
+        return boardRepository.searchBoards(keyword, searchType, sort, pageable);
     }
 }
