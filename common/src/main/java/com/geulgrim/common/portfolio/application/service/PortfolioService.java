@@ -105,12 +105,11 @@ public class PortfolioService {
 
                 // 작품을 선택했다면
                 pieces.add(PieceInfoDetail.builder()
-                        .pieceUrl(piece.getFileUrl())
                         .title(portfolioPiece.getTitle())
                         .program(portfolioPiece.getProgram())
                         .contribution(portfolioPiece.getContribution())
                         .content(portfolioPiece.getContent())
-                        .pieceUploaded(portfolioPiece.getFileUrl())
+                        .pieceUrl(piece.getFileUrl())
                         .build());
             } else {
                 // 파일을 업로드했다면
@@ -119,7 +118,7 @@ public class PortfolioService {
                         .program(portfolioPiece.getProgram())
                         .contribution(portfolioPiece.getContribution())
                         .content(portfolioPiece.getContent())
-                        .pieceUploaded(portfolioPiece.getFileUrl())
+                        .pieceUrl(portfolioPiece.getFileUrl())
                         .build());
             }
 
