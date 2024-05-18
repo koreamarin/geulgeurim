@@ -8,7 +8,7 @@ import { customFetcher } from 'src/utils/custom-axios';
 export function useGetCommunityMain() {
   const URL = "/api/v1/community"
 
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjMzLCJ1c2VyVHlwZSI6IklORElWSURVQUwiLCJpYXQiOjE3MTU1Njk1OTEsImV4cCI6MTcxNTYwNTU5MX0.Nt9nKvEV8TyY7uU1xrCeWtEbmjEeHk2gdaWj_czPRas'
+  const token = `Bearer ${localStorage.getItem('accessToken')}`
 
   const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher);
   console.log('Community Main' ,data)
@@ -34,7 +34,7 @@ export function useGetCommunityMain() {
 export function useGetBoardList() {
   const URL = "/api/v1/community/board"
 
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjMzLCJ1c2VyVHlwZSI6IklORElWSURVQUwiLCJpYXQiOjE3MTU1Njk1OTEsImV4cCI6MTcxNTYwNTU5MX0.Nt9nKvEV8TyY7uU1xrCeWtEbmjEeHk2gdaWj_czPRas'
+  const token = `Bearer ${localStorage.getItem('accessToken')}`
 
   const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
     refreshInterval: 0,  // disable automatic re-fetching
@@ -44,7 +44,7 @@ export function useGetBoardList() {
 
   const memoizedValue = useMemo(
     () => ({
-      board: (data) || [],
+      boardList: (data) || [],
       boardLoading: isLoading,
       boardError: error,
       boardValidating: isValidating,
@@ -62,7 +62,7 @@ export function useGetBoardList() {
 export function useGetBoardDetail(boardId: string) {
   const URL = `/api/v1/community/board/${boardId}`
 
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjMzLCJ1c2VyVHlwZSI6IklORElWSURVQUwiLCJpYXQiOjE3MTU1Njk1OTEsImV4cCI6MTcxNTYwNTU5MX0.Nt9nKvEV8TyY7uU1xrCeWtEbmjEeHk2gdaWj_czPRas'
+  const token = `Bearer ${localStorage.getItem('accessToken')}`
 
   const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
     refreshInterval: 0,  // disable automatic re-fetching
@@ -92,7 +92,7 @@ export function useGetBoardDetail(boardId: string) {
 export function useGetShareList() {
   const URL = `/api/v1/community/share`
 
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjMzLCJ1c2VyVHlwZSI6IklORElWSURVQUwiLCJpYXQiOjE3MTU1Njk1OTEsImV4cCI6MTcxNTYwNTU5MX0.Nt9nKvEV8TyY7uU1xrCeWtEbmjEeHk2gdaWj_czPRas'
+  const token = `Bearer ${localStorage.getItem('accessToken')}`
 
   const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
     refreshInterval: 0,  // disable automatic re-fetching
@@ -120,7 +120,7 @@ export function useGetShareList() {
 export function useGetShareDetail(shareId: string) {
   const URL = `/api/v1/community/share/${shareId}`
 
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJ1c2VySWQiOjMzLCJ1c2VyVHlwZSI6IklORElWSURVQUwiLCJpYXQiOjE3MTU1Njk1OTEsImV4cCI6MTcxNTYwNTU5MX0.Nt9nKvEV8TyY7uU1xrCeWtEbmjEeHk2gdaWj_czPRas'
+  const token = `Bearer ${localStorage.getItem('accessToken')}`
 
   const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
     refreshInterval: 0,  // disable automatic re-fetching
@@ -146,6 +146,32 @@ export function useGetShareDetail(shareId: string) {
 }
 
 // ----------------------------------------------------------------------
+
+export function useGetBoardSearch(searchRef: string, optionBy: string, sortBy: string | null | undefined, page: number) {
+  const URL = `/api/v1/community/board/search/keyword=${searchRef}&searchType=${optionBy}&sortBy=${sortBy}&page=?${page}`
+
+  const token = `Bearer ${localStorage.getItem('accessToken')}`
+
+  const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
+    refreshInterval: 0,  // disable automatic re-fetching
+    revalidateOnFocus: false, // disable re-fetching when the window is focused
+  }); 
+  console.log('Share List' ,data)
+
+  const memoizedValue = useMemo(
+    () => ({
+      searchBoard: (data) || [],
+      boardLoading: isLoading,
+      boardError: error,
+      boardValidating: isValidating,
+      boardEmpty: !isLoading && !data,
+    }),
+    [data, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+
+}
 
 // ----------------------------------------------------------------------
 

@@ -71,7 +71,7 @@ export type BoardMainItem = {
   userNickname: string;
   title: string;
   hit: number;
-  comment_cnt: number;
+  commentCnt: number;
   createdAt: Date;
   updateAt: Date;
 };
