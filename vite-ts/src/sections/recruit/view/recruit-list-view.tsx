@@ -90,6 +90,7 @@ export default function RecruitListView() {
       axiosOrigin
         .post('/api/v1/auth/fcm', requestData, {
           headers: {
+            'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
           },
           baseURL: 'https://글그림.com',
