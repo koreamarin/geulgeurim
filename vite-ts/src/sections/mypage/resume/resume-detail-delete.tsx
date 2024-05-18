@@ -10,6 +10,10 @@ import DialogActions from '@mui/material/DialogActions';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { deleteResumeId } from 'src/api/mypageResume';
+
+import { useSnackbar } from 'src/components/snackbar';
+
 import getVariant from '../get-variant';
 
 // ----------------------------------------------------------------------
@@ -30,11 +34,19 @@ export default function ResumeDetailDelete({
   deleteResume
 }: ResumeDetailDeleteProps) {
   const router = useRouter()
-  const deleteResumeFunction = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  const deleteResumeFunction = async () => {
     console.log(deleteResume, '번 이력서 삭제!')
-    onClose()
-    // 성공하면 list로 이동!
-    router.push(paths.mypage.resume)
+    const result = await deleteResumeId(parseInt(deleteResume, 10))
+    if (result) {
+      enqueueSnackbar('이력서 삭제 성공!');
+      onClose()
+      // 성공하면 list로 이동!
+      router.push(paths.mypage.resume)
+    }
+    else {
+      enqueueSnackbar('이력서 삭제 실패!', { variant: 'error' });
+    }
   }
   return (
     <>
