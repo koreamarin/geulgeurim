@@ -16,6 +16,7 @@ import com.geulgrim.auth.user.domain.entity.Enums.UserType;
 import com.geulgrim.auth.user.domain.entity.User;
 import com.geulgrim.auth.user.domain.repository.EnterUserRepository;
 import com.geulgrim.auth.user.domain.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -188,9 +190,12 @@ public class UserService {
         return getEnterUserResponse;
     }
 
-    public void updateUserFcm(FcmUpdateRequestDto dto) {
+    public void updateUserFcm(FcmUpdateRequestDto dto, Long userId) {
 
-        User user = userRepository.findById(dto.getId()).orElseThrow(NoUserExistException::new);
+        log.info("update token userId: " + userId);
+        log.info("token: " + dto.getFcmToken());
+
+        User user = userRepository.findById(userId).orElseThrow(NoUserExistException::new);
         user.updateFcmToken(dto.getFcmToken());
     }
 

@@ -93,8 +93,10 @@ public class UserController {
 
     @PostMapping("/fcm")
 //    @Operation(summary = "fcm 토큰 업데이트", description = "프론트에서 받은 fcm 토큰을 유저정보에 업데이트합니다.")
-    public ResponseEntity<?> updateFcmToken(@RequestBody FcmUpdateRequestDto dto) {
-        userService.updateUserFcm(dto);
+    public ResponseEntity<?> updateFcmToken(@RequestBody FcmUpdateRequestDto dto,
+                                            @RequestHeader HttpHeaders headers) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+        userService.updateUserFcm(dto, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

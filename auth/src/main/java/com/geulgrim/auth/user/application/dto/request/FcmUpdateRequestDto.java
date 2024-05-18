@@ -11,7 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FcmUpdateRequestDto {
 
-    private Long id;
-
     private String fcmToken;
 }
