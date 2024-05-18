@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ShareRepository extends JpaRepository<Share, Long> {
+public interface ShareRepository extends JpaRepository<Share, Long>, ShareCustomRepository {
     @Query("SELECT new com.geulgrim.community.share.application.dto.response.ShareListResponse(" +
             "s.shareId, u.userId, u.nickname, u.fileUrl, " +
             "s.title, s.hit, COUNT(c), s.createdAt, s.updatedAt) " +

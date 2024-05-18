@@ -36,4 +36,17 @@ public class ShareListResponse {
         this.updatedAt = updatedAt;
     }
 
+    public ShareListResponse(long shareId, long userId, String userNickname, String userFileUrl, String title, long hit, long commentCnt, LocalDateTime createdAt, LocalDateTime updatedAt, List<ShareImage> imageList) {
+        this.shareId = shareId;
+        this.userId = userId;
+        this.userNickname = userNickname;
+        this.userFileUrl = userFileUrl;
+        this.title = title;
+        this.hit = hit;
+        this.commentCnt = commentCnt;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.imageList = imageList;
+    }
+
 }
