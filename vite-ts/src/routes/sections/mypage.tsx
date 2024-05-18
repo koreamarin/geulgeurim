@@ -15,10 +15,10 @@ const Interest = lazy(() => import('src/pages/mypage/interest'));
 // 포트폴리오
 const Portfolio = lazy(() => import('src/pages/mypage/portfolio'));
 const PortfolioDetail = lazy(() => import('src/pages/mypage/portfolio-detail'));
+const PortfolioDetailUserFormat = lazy(() => import('src/pages/mypage/portfolio-detail-user-format'));
 const PortfolioWriteView = lazy(() => import('src/pages/mypage/portfolio-write'));
-const PortfolioWriteUserFormatView = lazy(
-  () => import('src/pages/mypage/portfolio-write-user-format')
-);
+const PortfolioWriteUserFormatView = lazy(() => import('src/pages/mypage/portfolio-write-user-format'));
+const PortfolioEdit = lazy(() => import('src/pages/mypage/portfolio-edit'));
 // 작품
 const Works = lazy(() => import('src/pages/mypage/works'));
 const WorksDetail = lazy(() => import('src/pages/mypage/works/detail'));
@@ -54,22 +54,31 @@ export const mypageRoutes = [
         children: [
           {
             path: '',
-            element: <Portfolio />,
+            element: <Portfolio />
           },
           {
             path: 'detail/:id',
-            element: <PortfolioDetail />,
+            element: <PortfolioDetail />
+          },
+          {
+            path: 'detail/user/:id',
+            element: <PortfolioDetailUserFormat />
           },
           {
             path: 'write',
-            element: <PortfolioWriteView />,
+            element: <PortfolioWriteView />
           },
           {
             path: 'write/user',
-            element: <PortfolioWriteUserFormatView />,
+            element: <PortfolioWriteUserFormatView />
           },
-        ],
-      },
+          {
+            path: 'edit/:id',
+            element: <PortfolioEdit />
+          },
+        ]
+
+       },
       {
         path: 'works',
         children: [

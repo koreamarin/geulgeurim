@@ -34,7 +34,7 @@ export default function CrewApplyView({ id }: Props) {
   const location = useLocation();
   const navigate = useNavigate();
   const crewDetails = location.state?.crewDetails as CrewDetail;
-  const crewId = crewDetails?.crew_id; 
+  const crewId = crewDetails?.crew_id;
 
   const [position, setPosition] = useState('');
   const [message, setMessage] = useState('');

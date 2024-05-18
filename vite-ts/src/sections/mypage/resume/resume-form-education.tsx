@@ -40,7 +40,7 @@ export default function RHFEducation() {
 
     return (
         <>
-            <CardHeader sx={{ mb: 2, pt: 0 }} title="학력정보" 
+            <CardHeader sx={{ mb: 2, pt: 0 }} title="학력정보"
             action={
                 <IconButton onClick={() => append({
                     institutionName: '',

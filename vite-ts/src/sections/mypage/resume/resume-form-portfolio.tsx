@@ -36,18 +36,18 @@ import ResumeFormPortfolioServicePreview from './resume-form-portfolio-service-p
 
 
 type CustomRowDataType = {
-  pofolName : string,
-  pofolId : number,
-  createAt : Date,
-  updateAt : Date,
+  pofolName : string
+  pofolId : number
+  createdAt : Date
+  updatedAt : Date
   format : string
 }
 
 type CustomInputType = {
-  pofolName : string,
-  pofolId : number,
-  createAt : string,
-  updateAt : string,
+  pofolName : string
+  pofolId : number
+  createdAt : string
+  updatedAt : string
   format : string
 }
 
@@ -57,8 +57,8 @@ type Props = {
 
 const custom_TABLE_HEAD = [
   { id: 'pofolName', label: '포트폴리오 제목', align: 'left', minWidth:'150px' },
-  { id: 'createAt', label: '생성일', align: 'center',minWidth:'150px' },
-  { id: 'updateAt', label: '최근 수정일', align: 'center', minWidth:'120px' },
+  { id: 'createdAt', label: '생성일', align: 'center',minWidth:'150px' },
+  { id: 'updatedAt', label: '최근 수정일', align: 'center', minWidth:'120px' },
   { id: 'detail', label: '', align: 'center', width:'8px'}
 ]
 // ----------------------------------------------------------------------
@@ -74,35 +74,31 @@ export default function RHFSelectPortfolio({portfolDatas}:Props) {
   const denseHeight = 34;
 
   useEffect(() => {
-    const dummyDataChangeType = portfolDatas.map(item => ({
+    const dataChangeType = portfolDatas.map(item => ({
       pofolName: item.pofolName,
       pofolId: item.pofolId,
-      createAt: new Date(item.createAt),
-      updateAt: new Date(item.updateAt),
+      createdAt: new Date(item.createdAt),
+      updatedAt: new Date(item.updatedAt),
       format: item.format
     }));
-    setTableData(dummyDataChangeType);
+    setTableData(dataChangeType);
   }, [portfolDatas]);
-  
+
   const table = ResumeFormPortfolioTable({
-    defaultOrderBy: 'createAt',
+    defaultOrderBy: 'createdAt',
     defaultSelected: getValues("portfolioIds")
   });
-  
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
   });
-  
+
   const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
     setPage(newPage);
   };
-  
-  // useEffect(() => {
-  //   table.setSelected(getValues("portfolioIds"))
-  //   console.log(table)
-  // }, [])
-  
+
+
 
   return (
     <div>
@@ -175,8 +171,8 @@ export default function RHFSelectPortfolio({portfolDatas}:Props) {
                         />
                       </TableCell>
                       <TableCell> {row.pofolName } </TableCell>
-                      <TableCell align="center">{row.createAt.toLocaleDateString() }</TableCell>
-                      <TableCell align="center">{row.updateAt.toLocaleDateString()}</TableCell>
+                      <TableCell align="center">{row.createdAt.toLocaleDateString() }</TableCell>
+                      <TableCell align="center">{row.updatedAt.toLocaleDateString()}</TableCell>
                       <TableCell>
                         <IconButton
                           size="small"

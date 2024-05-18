@@ -11,7 +11,7 @@ export function useGetCommunityMain() {
   const token = `Bearer ${localStorage.getItem('accessToken')}`
 
   const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher);
-  console.log('Community Main' ,data)
+  // console.log('Community Main' ,data)
 
   const memoizedValue = useMemo(
     () => ({
@@ -40,7 +40,7 @@ export function useGetBoardList() {
     refreshInterval: 0,  // disable automatic re-fetching
     revalidateOnFocus: false, // disable re-fetching when the window is focused
   });
-  console.log('Board List' ,data)
+  // console.log('Board List' ,data)
 
   const memoizedValue = useMemo(
     () => ({
@@ -68,7 +68,7 @@ export function useGetBoardDetail(boardId: string) {
     refreshInterval: 0,  // disable automatic re-fetching
     revalidateOnFocus: false, // disable re-fetching when the window is focused
   });
-  console.log('Board Detail' ,data)
+  // console.log('Board Detail' ,data)
 
   const memoizedValue = useMemo(
     () => ({
@@ -84,7 +84,7 @@ export function useGetBoardDetail(boardId: string) {
   );
 
   return memoizedValue;
-  
+
 }
 
 // ----------------------------------------------------------------------
@@ -98,7 +98,7 @@ export function useGetShareList() {
     refreshInterval: 0,  // disable automatic re-fetching
     revalidateOnFocus: false, // disable re-fetching when the window is focused
   });
-  console.log('Share List' ,data)
+  // console.log('Share List' ,data)
 
   const memoizedValue = useMemo(
     () => ({
@@ -126,7 +126,7 @@ export function useGetShareDetail(shareId: string) {
     refreshInterval: 0,  // disable automatic re-fetching
     revalidateOnFocus: false, // disable re-fetching when the window is focused
   }); 
-  console.log('Share List' ,data)
+  // console.log('Share List' ,data)
 
   const memoizedValue = useMemo(
     () => ({
@@ -155,7 +155,7 @@ export function useGetBoardSearch(searchRef: string, optionBy: string, sortBy: s
   const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
     refreshInterval: 0,  // disable automatic re-fetching
     revalidateOnFocus: false, // disable re-fetching when the window is focused
-  }); 
+  });
   console.log('Share List' ,data)
 
   const memoizedValue = useMemo(
@@ -174,6 +174,32 @@ export function useGetBoardSearch(searchRef: string, optionBy: string, sortBy: s
 }
 
 // ----------------------------------------------------------------------
+
+export function useGetCrewDetail(crewId: string) {
+  const URL = `/api/v1/community/crew/detail/${crewId}`
+
+  const token = `Bearer ${localStorage.getItem('accessToken')}`
+
+  const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
+    refreshInterval: 0,  // disable automatic re-fetching
+    revalidateOnFocus: false, // disable re-fetching when the window is focused
+  }); 
+  console.log('Crew Detail' ,data)
+
+  const memoizedValue = useMemo(
+    () => ({
+      crew: (data) || [],
+      shareLoading: isLoading,
+      shareError: error,
+      shareValidating: isValidating,
+      shareEmpty: !isLoading && !data,
+    }),
+    [data, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+
+}
 
 // ----------------------------------------------------------------------
 

@@ -1,29 +1,38 @@
+import axios from 'axios';
+import { useState, useCallback } from 'react';
+
 import {
   Box,
   Card,
-  Button,
-  Container,
   Stack,
+  Button,
+  Switch,
+  Container,
   TextField,
   Typography,
-  Switch,
   CardHeader,
   CardContent,
   FormControlLabel,
 } from '@mui/material';
-import { useState, useCallback } from 'react';
+
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { useBoolean } from 'src/hooks/use-boolean';
+
 import { Upload } from 'src/components/upload';
-import { useNavigate } from 'react-router-dom';
 
 type Props = {
   id?: number;
 };
 
 export default function CrewApplyView({ id }: Props) {
+  const router = useRouter();
+  const formData = new FormData();
   const preview = useBoolean();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+
+  const [projectName, setProjectName] = useState('');
+  const [content, setContent] = useState('');
   const [positions, setPositions] = useState({
     선화: 0, // 선화
     채색: 0, // 채색
@@ -36,23 +45,57 @@ export default function CrewApplyView({ id }: Props) {
 
   const handleChange =
     (prop: keyof typeof positions) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
+      const {value} = event.target;
       const numValue = value === '' ? 0 : parseInt(value, 10);
       setPositions({ ...positions, [prop]: numValue });
     };
 
-  const navigate = useNavigate();
-
   const handleSubmit = () => {
-    console.log('Title:', title);
-    console.log('Description:', description);
+    console.log('Title:', projectName);
+    console.log('Description:', content);
     console.log('Files:', files);
     console.log('Positions:', positions);
-    navigate('/community/crew');
+    const crewBoardRequest = {
+      projectName,
+      content,
+      "pen": positions.선화,
+      "color":positions.채색,
+      "bg":positions.배경,
+      "pd":positions.PD,
+      "story":positions.스토리,
+      "conti":positions.콘티,
+      "status": "INPROGRESS",
+    };
+    Object.values(files).forEach((file) => formData.append('files', file));
+    formData.append(
+      'shareWriteRequest',
+      new Blob([JSON.stringify(crewBoardRequest)], {
+        type: 'application/json',
+      })
+    );
+    axios
+      .post('/api/v1/community/crew', formData, {
+        headers: {
+          'Content-Type': `multipart/form-data; `,
+          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        baseURL: 'https://글그림.com',
+        // baseURL: 'http://localhost:8080',
+      })
+      .then((response) => {
+        const crewId = response.data;
+        console.log(response.data);
+        router.push(paths.community.share.detail(crewId));
+      })
+      .catch((error) => {
+        alert('글 작성 중 오류가 발생했습니다.');
+        console.log("error", error);
+      });
   };
 
   const handleCancel = () => {
     console.log('Cancelled');
+    router.back();
   };
 
 
@@ -87,8 +130,8 @@ export default function CrewApplyView({ id }: Props) {
         label="제목"
         variant="outlined"
         fullWidth
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        value={projectName}
+        onChange={(e) => setProjectName(e.target.value)}
       />
       <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', gap: 2 }}>
         {/* Position Fields in a single row */}
@@ -113,8 +156,8 @@ export default function CrewApplyView({ id }: Props) {
           fullWidth
           multiline
           rows={4}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
         />
         <Stack spacing={5}>
           <Card>

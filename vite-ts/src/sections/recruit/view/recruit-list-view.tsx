@@ -77,7 +77,7 @@ export default function RecruitListView() {
       // });
 
       const requestData = {
-        fcmToken: generatedFcmToken,
+        'fcmToken' : generatedFcmToken,
       };
 
       // // 데이터를 POST 방식으로 전송합니다.
@@ -89,14 +89,14 @@ export default function RecruitListView() {
       //     console.error('Error:', error.response);
       //   });
 
+      console.log('request json 값: ', requestData.fcmToken);
       axiosOrigin
         .post('/api/v1/auth/fcm', requestData, {
           headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
           },
-          baseURL: 'https://글그림.com',
-          // baseURL: 'http://localhost:8080',
+          // baseURL: 'https://글그림.com',
+          baseURL: 'http://localhost:8080',
         })
         .then((response) => {
           console.log(response.data);

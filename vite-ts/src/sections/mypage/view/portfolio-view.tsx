@@ -1,92 +1,52 @@
 import React, { useState } from 'react';
-import EditIcon from '@mui/icons-material/Edit';
+
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import PersonIcon from '@mui/icons-material/Person';
+import DeleteIcon from '@mui/icons-material/Delete';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import {
-  Box, Grid, Paper, Button, Switch, Tooltip, Container,
-  FormGroup, Typography, IconButton, FormControlLabel,
-  Dialog, DialogTitle, DialogContent, DialogActions
+  Box, Grid, Paper, Button, Dialog, Tooltip,
+  Container, FormGroup, Typography,
+  IconButton, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import PersonIcon from '@mui/icons-material/Person';
-import DeleteIcon from '@mui/icons-material/Delete';
 
+// import { useGetPortfolios } from "src/api/test";
+import { deletePortfolio, useGetPortfolios } from 'src/api/portfolio';
 
-const portfolios = [
-  {
-    id: 1,
-    pofol_name: "Digital Art Portfolio",
-    status: "PUBLIC",
-    description: "A collection of my digital artworks.",
-    artworks: [
-      {
-        imageUrl: "https://source.unsplash.com/random/1",
-        name: "Digital Landscape",
-        software: "Photoshop"
-      },
-      {
-        imageUrl: "https://source.unsplash.com/random/2",
-        name: "Digital Abstract",
-        software: "Clip Studio"
-      }
-    ]
-  },
-  {
-    id: 2,
-    pofol_name: "Sketch Art Portfolio",
-    status: "PUBLIC",
-    description: "Various sketches and doodles .",
-    artworks: [
-      {
-        imageUrl: "https://source.unsplash.com/random/3",
-        name: "Coffee Sketch",
-        software: "Pencil & Paper"
-      }
-    ]
-  },
-  {
-    id: 3,
-    pofol_name: "3D Models Portfolio",
-    status: "PUBLIC",
-    description: "My 3D modeling projects.",
-    artworks: [
-      {
-        imageUrl: "https://source.unsplash.com/random/4",
-        name: "3D Robot",
-        software: "Blender"
-      },
-      {
-        imageUrl: "https://source.unsplash.com/random/5",
-        name: "3D Car Model",
-        software: "AutoCAD"
-      }
-    ]
-  }
-];
+import { SplashScreen } from 'src/components/loading-screen';
+
+interface Portfolio {
+  pofolId: number;
+  pofolName: string;
+  openState: string;
+  format: string;
+  fileUrl: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 
 export default function PortfolioView() {
   const router = useRouter()
-  const [portfolioState, setPortfolioState] = useState(portfolios);
   const [open, setOpen] = useState(false);
-
-  const handlePortfolioClick = (portfolioId: number) => {
-    router.push(paths.mypage.portfolioDetail(portfolioId));
-  };
-
-  const handleTogglePublic = (portfolioId: number) => {
-    const updatedPortfolios = portfolioState.map(portfolio => {
-      if (portfolio.id === portfolioId) {
-        return { ...portfolio, status: (portfolio.status === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC') };
-      }
-      return portfolio;
-    });
-    setPortfolioState(updatedPortfolios);
-  };
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedPortfolioId, setSelectedPortfolioId] = useState<number | null>(null);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleDeleteOpen = (pofolId: number) => {
+    setSelectedPortfolioId(pofolId);
+    setDeleteOpen(true);
+  };
+  const handleDeleteClose = () => {
+    setSelectedPortfolioId(null);
+    setDeleteOpen(false);
+  };
 
   const handlePortfolioWrite = () => {
     router.push(paths.mypage.portfolioWrite)
@@ -96,39 +56,100 @@ export default function PortfolioView() {
     router.push(paths.mypage.portfolioWriteUserFormat)
   };
 
+  const handleEditClick = (portfolioId: number) => {
+    router.push(paths.mypage.portfolioEdit(portfolioId))
+  };
+
+  // const { portfolios, portfoliosLoading, portfoliosEmpty, portfoliosError} = useGetPortfolios()
+  // const [portfolioState, setPortfolioState] = useState(portfolios);
+
+  // if (portfoliosLoading) {
+  //   return (
+  //     <Box>
+  //       <SplashScreen />
+  //     </Box>
+  //   )
+  // }
+
+  // if (portfoliosError) {
+  //   return (
+  //     <Box>
+  //       에러 발생!
+  //     </Box>
+  //   )
+  // }
+
+  // if (portfoliosEmpty) {
+  //   return (
+  //     <Box>
+  //       포트폴리오가 없습니다
+  //     </Box>
+  //   )
+  // }
+
+
+  const  { portfoliosData, portfoliosError, portfoliosLoading, portfoliosMutate } = useGetPortfolios()
+
+  if (portfoliosLoading) return <Box>Loading...</Box>;
+  if (portfoliosError) return <Box>Error loading portfolios:</Box>;
+  if (portfoliosData.length === 0) return <Box>포트폴리오가 없습니다.</Box>;
+
+  const handleDelete = async () => {
+    if (selectedPortfolioId === null) return;
+
+    try {
+      await deletePortfolio(selectedPortfolioId);
+      await portfoliosMutate();
+      // const updatedPortfolios = portfoliosData.filter(portfolio => portfolio.pofolId !== selectedPortfolioId );
+      // setPortfolios(updatedPortfolios);
+      handleDeleteClose();
+    } catch (err) {
+      console.error('Error deleting portfolio:', err);
+    }
+  };
+
+  const handlePortfolioClick = (pofolId: number) => {
+    const portfolio = portfoliosData.find(p => p.pofolId === pofolId);
+
+    if (!portfolio) {
+      console.error('Portfolio not found');
+      return;
+    }
+
+    if (portfolio.format === "SERVICE") { // 글그램 포맷
+      router.push(paths.mypage.portfolioDetail(pofolId));
+    } else if (portfolio.format === "USER") {  // 사용자 포맷
+      router.push(paths.mypage.portfolioDetailUserFormat(pofolId));
+    }
+
+  };
+
+
   return (
     <Container>
-      {portfolioState.map((portfolio) => (
-        <Paper key={portfolio.id} elevation={3} sx={{ p: 2, mt: 2, mb: 4, cursor: 'pointer' }}>
-         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-         <Typography variant="h4" onClick={() => handlePortfolioClick(portfolio.id)}>{portfolio.pofol_name}</Typography>
 
+      <Typography variant="h2" sx={{ mb: 4 }}>
+        {/* 포트폴리오 */}
+      </Typography>
+
+    {portfoliosData.map((portfolio: Portfolio) => (
+      <Paper key={portfolio.pofolId} elevation={3} sx={{ p: 2, mt: 2, mb: 4, cursor: 'pointer' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Typography variant="h3" onClick={() => handlePortfolioClick(portfolio.pofolId)}>
+            {portfolio.pofolName}
+          </Typography>
           {/* Toggle Switch and Edit Button grouped together */}
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <FormGroup sx={{ flexDirection: 'row', alignItems: 'center' }}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={portfolio.status === "PUBLIC"}
-                  onChange={() => handleTogglePublic(portfolio.id)}
-                />
-              }
-              label={portfolio.status === 'PUBLIC' ? "Public" : "Private"}
-              labelPlacement="start"
-            />
               <Tooltip title="Edit">
-                <IconButton color="primary" onClick={(e) => {
-                  e.stopPropagation();
-                }}>
+              <IconButton color="primary" >
+              {/* onClick={() => handleEditClick(portfolio.pofolId)} */}
                   <EditIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title="Delete">
-                <IconButton color="secondary" onClick={(e) => {
-                  e.stopPropagation(); // Prevent triggering any higher level click events
-                  console.log('Delete action triggered'); // Replace with actual delete function call
-                }}>
-                  <DeleteIcon />
+              <IconButton color="secondary" onClick={() => handleDeleteOpen(portfolio.pofolId)}>
+                  <DeleteIcon sx={{ color: 'grey' }} />
                 </IconButton>
               </Tooltip>
             </FormGroup>
@@ -136,17 +157,27 @@ export default function PortfolioView() {
 
         </Box>
 
-          <Typography variant="body1" sx={{ mb: 2 }}>{portfolio.description}</Typography>
+          {/* <Typography variant="body1" sx={{ mb: 2 }}>{portfolio.description}</Typography> */}
 
-          <Grid container spacing={2}>
-            {portfolio.artworks.map((artwork, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <img src={artwork.imageUrl} alt={artwork.name} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
-                <Typography variant="h6">{artwork.name}</Typography>
-                <Typography variant="body2">사용 프로그램: {artwork.software}</Typography>
-              </Grid>
-            ))}
+
+          <Grid container spacing={2} sx={{ mt: 2, mb: 2 }}>
+            <Grid item xs={12} sm={6} md={4} key={portfolio.pofolId}>
+          {portfolio.fileUrl ? (
+            <img
+              src={portfolio.fileUrl}
+              alt={portfolio.fileUrl}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          ) : (
+            <img
+              src="https://geulgrim.s3.ap-northeast-2.amazonaws.com/no_image.png"
+              alt=""
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          )}
+            </Grid>
           </Grid>
+
         </Paper>
       ))}
 
@@ -185,10 +216,22 @@ export default function PortfolioView() {
           <Button onClick={handleClose} color="primary">
             취소
           </Button>
-
         </DialogActions>
       </Dialog>
 
+
+  {/* Modal for confirming delete */}
+  <Dialog open={deleteOpen} onClose={handleDeleteClose} aria-labelledby="delete-portfolio-title">
+        <DialogTitle id="delete-portfolio-title">정말로 삭제하시겠습니까?</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleDeleteClose} color="primary">
+            아니오
+          </Button>
+          <Button onClick={handleDelete} color="secondary">
+            네
+          </Button>
+        </DialogActions>
+      </Dialog>
 
     </Container>
   );
