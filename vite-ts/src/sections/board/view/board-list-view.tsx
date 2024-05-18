@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useRef, useState, useCallback, useEffect, ChangeEvent } from 'react';
+import { useRef, useState, useEffect, useCallback, ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -16,13 +16,9 @@ import TableContainer from '@mui/material/TableContainer';
 import InputAdornment from '@mui/material/InputAdornment';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
-import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useGetBoardList, useGetBoardSearch } from 'src/api/community';
-
 import Iconify from 'src/components/iconify';
-import { useTable } from 'src/components/table';
 import Scrollbar from 'src/components/scrollbar';
 
 import { BoardMainItem } from 'src/types/blog';
@@ -31,30 +27,6 @@ import InformationRecentSort from './board-recent-sort';
 import InformationRecentSearchOption from './board-recent-search-options';
 
 // ----------------------------------------------------------------------
-// prettier-ignore
-function createDummyData(pk: number, fullTitle: string, userNickname:String, upload:Date, hit:number, comment_count:number) {
-  const date = upload.toLocaleDateString();
-  const comment:string = comment_count !== 0 ? ` [${comment_count}]` : ``
-  const title:string = fullTitle.length > 40 ? `${fullTitle.substr(0, 40)}...${comment}` : `${fullTitle}${comment}`
-
-  return { pk, title, userNickname, date, hit, comment_count};
-}
-
-// prettier-ignore
-const dummy = [
-  createDummyData(1, 'PD작가가 되려고 하는데 어떻게 할까요?', '김무준', new Date('2024-05-03'), 10, 5),
-  createDummyData(3, '여러분 비질란테 어떻게 보셨나요?', '이주현', new Date('2024-05-03'), 3, 1),
-  createDummyData(4, '집에 가고싶당 집에서 누워서 자고 싶어', '배상훈', new Date('2024-05-03'), 1, 0),
-  createDummyData(6, '기안84님 만남! (어그로X 인증사진)', '류지원', new Date('2024-05-03'), 200, 10),
-  createDummyData(21, '글그림에 처음 가입합니다 잘부탁드려요', '윤지현', new Date('2024-05-03'), 13, 2),
-  createDummyData(30, '기둥 뒤에 차 있어요', '이세은', new Date('2024-05-03'), 5, 0),
-  createDummyData(41, '싸탈하고 취업하고 싶어요!!!ㅠㅠ', '무준소리', new Date('2024-05-03'), 0, 0),
-  createDummyData(50, '사람살려 여기 사람있어요', '상훈소리', new Date('2024-05-03'), 1, 0),
-  createDummyData(76, '차 뒤에 기둥있어요', '주현소리', new Date('2024-05-03'), 1, 0),
-  createDummyData(101, '이 글은 영국에서 최초로 시작되어 일년에 한바퀴를 돌면서 받는 사람에게 행운을 주었고 지금은 당신에게로 옮겨진 이 편지는 4일 안에 당신 곁을 떠나야 합니다.', '지원소리', new Date('2024-05-03'), 503, 15),
-  createDummyData(109, '취업하고싶당', '지현소리', new Date('2024-05-03'), 20, 2),
-];
-
 interface Column {
   id: 'boardId' | 'title' | 'userNickname' | 'createdAt' | 'hit' | 'commentCnt';
   label: string;
@@ -122,7 +94,7 @@ export default function BoardRecentPost() {
   const router = useRouter();
   const changeSearchRef = useRef<string>('');
 
-  const fetchBoards = async () => {
+  const fetchBoards = useCallback(async () => {
     try {
       const response = await axios.get('/api/v1/community/board/search', {
         params: {
@@ -133,6 +105,7 @@ export default function BoardRecentPost() {
           size,
         },
         baseURL: 'https://글그림.com',
+        // baseURL: 'http://localhost:8080',
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
@@ -162,11 +135,11 @@ export default function BoardRecentPost() {
     } catch (error) {
       console.error('Error fetching boards:', error);
     }
-  };
-
+  }, [keyword, searchType, sort, page, size]);
+  
   useEffect(() => {
     fetchBoards();
-  }, [keyword, searchType, page, size, sort]);
+  }, [fetchBoards]);
 
   const handleClick = () => {
     setKeyword(changeSearchRef.current);
