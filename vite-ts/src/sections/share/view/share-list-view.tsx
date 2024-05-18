@@ -127,7 +127,10 @@ export default function ShareRecentPost() {
           page,
           size,
         },
-        baseURL: 'http://localhost:8080',
+        baseURL: 'https://글그림.com',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
       });
       setData(response.data.content);
       setTotalPages(response.data.totalPages);
