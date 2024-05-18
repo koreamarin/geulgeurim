@@ -1,4 +1,4 @@
-package com.geulgrim.common.user.Exception;
+package com.geulgrim.common.authserver.exception;
 
 public class NoUserExistException extends RuntimeException{
 

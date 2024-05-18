@@ -81,7 +81,7 @@ public class BatchConfig {
                     }
 
                     //유저에 대해 마감공고 푸시 보내기
-                    pushService.create(PushCreateRequestDto.builder()
+                    pushService.createBatch(PushCreateRequestDto.builder()
                             .receiverId(id)
                             .favoriteJobs(favoriteJobs)
                             .domain("FAVORITE_JOB_CLOSINGSOON")

@@ -25,11 +25,24 @@ public class PushCreateRequestDto {
 
     private String domain;
 
-    public Push toEntity(PushCreateRequestDto dto) {
+    public Push toEntity(PushCreateRequestDto dto, Long userId) {
 
         return Push.builder()
                 .receiverId(dto.getReceiverId())
-                .senderId(dto.getSenderId())
+                .senderId(userId)
+                .favoriteJobList(dto.getFavoriteJobs())
+                .domain(PushDomain.valueOf(domain))
+                .title(PushDomain.valueOf(domain).generateTitle())
+                .content(PushDomain.valueOf(domain).generateContent())
+                .build();
+
+    }
+
+    public Push toEntityByBatch(PushCreateRequestDto dto) {
+
+        return Push.builder()
+                .receiverId(dto.getReceiverId())
+                .senderId(000L)
                 .favoriteJobList(dto.getFavoriteJobs())
                 .domain(PushDomain.valueOf(domain))
                 .title(PushDomain.valueOf(domain).generateTitle())
