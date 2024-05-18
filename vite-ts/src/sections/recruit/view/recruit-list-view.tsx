@@ -63,14 +63,15 @@ export default function RecruitListView() {
 
     // accessToken이 부여되었고 유저에게 fcmToken 업데이트 여부 체크
     if (accessToken && !tokenUpdated){
+
+      // fcmService worker 등록
+      registerServiceWorker();
+
       // 알림 권한 요청 및 FCM 토큰 획득
       const generatedFcmtoken = requestNotificationPermissionAndGetToken(messaging, import.meta.env.VITE_FIREBASE_VAPID_ID);
 
       if (generatedFcmtoken) {
-        const url = import.meta.env.VITE_BACK_SERVER_URL + '/api/v1/auth/fcm';
-
         console.log('token = ', generatedFcmtoken);
-
 
         const api = axiosOrigin.create({
           baseURL: import.meta.env.VITE_BACK_SERVER_URL,
