@@ -1,4 +1,4 @@
-import React, { useState, useCallback, ChangeEvent } from 'react';
+import React, { useState, useCallback, ChangeEvent, useRef } from 'react';
 
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -29,8 +29,6 @@ type Entry = {
 
 export default function PortfolioWriteView() {
   const { piecesData, piecesLoading, piecesError , piecesEmpty} = useGetPiecesList()
-  console.log('작품 데이터', piecesData)
-
   const router = useRouter()
 
   // useState
@@ -48,14 +46,8 @@ export default function PortfolioWriteView() {
     image: -1
   }]);
 
-  const dummyPieces = {
-    pieceId: 1,
-    pieceUrl: [
-      'https://source.unsplash.com/random/6',
-      'https://source.unsplash.com/random/7',
-      'https://source.unsplash.com/random/8'
-    ]
-  };
+
+  const files = useRef<File[]>([])
 
   // const [pieces, setPieces] = useState<any[]>([]);
   const userId = 33; // Your user ID
@@ -157,7 +149,12 @@ export default function PortfolioWriteView() {
     const inputData = {
       pofol_name : title,
       status : 'PUBLIC',
-      pieces: entries.map((inputItem) => (
+      pieces: entries.map((inputItem) => {
+        console.log('초기데이터', inputItem)
+        if (inputItem.file) {
+          files.current = [...files.current, inputItem.file]
+        }
+        return (
         {
           "pieceId": inputItem.firstDropdownValue === '작품에서 가져오기' ? piecesData[inputItem.image].id : null,
           "title": inputItem.title,
@@ -166,23 +163,24 @@ export default function PortfolioWriteView() {
           "content": inputItem.content,
           "identifier": inputItem.file ? inputItem.file.name : null
         }
-      )
+
+      )}
       )
     }
-    // console.log(inputData)
 
     formData.append("portfolioRequest", new Blob([JSON.stringify(inputData)], {
       type: "application/json"
   }));
-
-  files.forEach(file => {
+  console.log('파일들 : ', files.current)
+  files.current.forEach(file => {
     if (file instanceof File) {
       formData.append('files', file, file.name);
     }
   });
 
-  createPortfolio(formData)
 
+  createPortfolio(formData)
+  console.log('등록 성공!')
   router.push(paths.mypage.portfolio)
 
   };
@@ -282,66 +280,66 @@ export default function PortfolioWriteView() {
       </Box>
 
 
-      <Dialog
-        open={openDialog}
-        onClose={() => handleClose(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+  <Dialog
+    open={openDialog}
+    onClose={() => handleClose(false)}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+  >
+    <DialogTitle id="alert-dialog-title">포트폴리오 생성을 중단할까요?</DialogTitle>
+    <DialogContent>
+      포트폴리오 생성 과정을 취소하시면 지금까지의 변경사항이 저장되지 않습니다.
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={() => handleClose(true)} color="primary">
+        네
+      </Button>
+      <Button onClick={() => handleClose(false)} color="primary" autoFocus>
+        아니요, 계속 만들래요
+      </Button>
+    </DialogActions>
+  </Dialog>
+
+
+  {entries.map((entry, index) => (
+    <Paper key={index} sx={{ mb: 4, position: 'relative', padding: 2 }}>
+      <IconButton
+        sx={{ position: 'absolute', right: 8, top: -20 }}
+        onClick={() => handleRemoveEntry(index)}
       >
-        <DialogTitle id="alert-dialog-title">포트폴리오 생성을 중단할까요?</DialogTitle>
-        <DialogContent>
-          포트폴리오 생성 과정을 취소하시면 지금까지의 변경사항이 저장되지 않습니다.
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => handleClose(true)} color="primary">
-            네
-          </Button>
-          <Button onClick={() => handleClose(false)} color="primary" autoFocus>
-            아니요, 계속 만들래요
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <CloseIcon />
+      </IconButton>
+      <Grid container spacing={3}>
 
-
-      {entries.map((entry, index) => (
-        <Paper key={index} sx={{ mb: 4, position: 'relative', padding: 2 }}>
-          <IconButton
-            sx={{ position: 'absolute', right: 8, top: -20 }}
-            onClick={() => handleRemoveEntry(index)}
+      {/* 드롭다운 */}
+      <Grid item xs={12}>
+        <Box sx={{ display: 'flex', width: '100%' }}>
+          <Select
+            value={entry.firstDropdownValue}
+            onChange={handleChange(index, 'firstDropdownValue')}
+            fullWidth
+            sx={{ width: '50%' }}
+        >
+          <MenuItem value="파일 업로드">파일 업로드</MenuItem>
+          <MenuItem value="작품에서 가져오기">작품에서 가져오기</MenuItem>
+        </Select>
+        {entry.firstDropdownValue === '작품에서 가져오기' && (
+          <Select
+            value={entry.secondDropdownValue}
+            onChange={handleChange(index, 'secondDropdownValue')}
+            fullWidth
+            sx={{ width: '50%', ml: 2 }}
           >
-            <CloseIcon />
-          </IconButton>
-          <Grid container spacing={3}>
-
-            {/* 드롭다운 */}
-            <Grid item xs={12}>
-              <Box sx={{ display: 'flex', width: '100%' }}>
-                <Select
-                  value={entry.firstDropdownValue}
-                  onChange={handleChange(index, 'firstDropdownValue')}
-                  fullWidth
-                  sx={{ width: '50%' }}
-                >
-                  <MenuItem value="파일 업로드">파일 업로드</MenuItem>
-                  <MenuItem value="작품에서 가져오기">작품에서 가져오기</MenuItem>
-                </Select>
-                {entry.firstDropdownValue === '작품에서 가져오기' && (
-                  <Select
-                    value={entry.secondDropdownValue}
-                    onChange={handleChange(index, 'secondDropdownValue')}
-                    fullWidth
-                    sx={{ width: '50%', ml: 2 }}
-                  >
-                    <MenuItem value="선화">선화</MenuItem>
-                    <MenuItem value="채색">채색</MenuItem>
-                    <MenuItem value="배경">배경</MenuItem>
-                    <MenuItem value="PD">PD</MenuItem>
-                    <MenuItem value="스토리">스토리</MenuItem>
-                    <MenuItem value="콘티">콘티</MenuItem>
-                  </Select>
-                )}
-              </Box>
-            </Grid>
+            <MenuItem value="선화">선화</MenuItem>
+            <MenuItem value="채색">채색</MenuItem>
+            <MenuItem value="배경">배경</MenuItem>
+            <MenuItem value="PD">PD</MenuItem>
+            <MenuItem value="스토리">스토리</MenuItem>
+            <MenuItem value="콘티">콘티</MenuItem>
+          </Select>
+        )}
+      </Box>
+    </Grid>
 
 
       {/* 파일 업로드 클릭하면, 파일 업로드 항목과 폼 추가 */}
