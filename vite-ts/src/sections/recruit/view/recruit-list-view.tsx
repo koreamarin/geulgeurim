@@ -22,6 +22,7 @@ const messaging = getMessaging(app);
 export default function RecruitListView() {
 
   async function requestNotificationPermissionAndGetToken(messagingVal: Messaging, vapidKey: string | undefined) {
+    console.log('권한 받기 시작');
     try {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
@@ -40,6 +41,7 @@ export default function RecruitListView() {
 
 // 서비스워커 등록
   const registerServiceWorker = () => {
+    console.log('서비스 워커 등록 시작');
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker
@@ -57,11 +59,12 @@ export default function RecruitListView() {
 
   function updateFcmToken() {
 
+    console.log('fcmToken 업데이트 로직 실행');
     // 알림 권한 요청 및 FCM 토큰 획득
-    const generatedFcmtoken = requestNotificationPermissionAndGetToken(messaging, import.meta.env.VITE_FIREBASE_VAPID_ID);
+    const generatedFcmToken = requestNotificationPermissionAndGetToken(messaging, import.meta.env.VITE_FIREBASE_VAPID_ID);
 
-    if (generatedFcmtoken) {
-      console.log('token = ', generatedFcmtoken);
+    if (generatedFcmToken) {
+      console.log('token = ', generatedFcmToken);
 
       // const api = axiosOrigin.create({
       //   baseURL: 'https://글그림.com',
@@ -72,7 +75,7 @@ export default function RecruitListView() {
       // });
 
       const requestData = {
-        fcmToken: generatedFcmtoken,
+        fcmToken: generatedFcmToken,
       };
 
       // // 데이터를 POST 방식으로 전송합니다.
@@ -96,7 +99,7 @@ export default function RecruitListView() {
           console.log( response.data);
         })
         .catch((error) => {
-          alert('fcm토큰 업데이트 중 오류가 발생했습니다.');
+          alert('fcm 토큰 업데이트 중 오류가 발생했습니다.');
         });
 
       localStorage.setItem('tokenUpdated', 'true'); // 토큰 업데이트 후 플래그 설정
@@ -105,16 +108,16 @@ export default function RecruitListView() {
   }
 
   useEffect(() => {
-    // 로컬 스토리지에서 accessToken과 updatedFcmToken 값을 가져옵니다.
+    // 로컬 스토리지에서 accessToken 과 updatedFcmToken 값을 가져옵니다.
     const accessToken = localStorage.getItem('accessToken');
     const updatedFcmToken = localStorage.getItem('updatedFcmToken');
 
-    // accessToken이 부여되었고 유저에게 fcmToken 업데이트 안된 경우에만 실행
-    if (accessToken && updatedFcmToken === 'false') {
+    // accessToken 부여되었고 유저에게 fcmToken 업데이트 안된 경우에만 실행
+    console.log('fcm 관련 로직 실행');
+    if (accessToken != null && updatedFcmToken === 'false' || updatedFcmToken == null) {
       registerServiceWorker();
       updateFcmToken();
 
-      // FCM 토큰 업데이트를 완료했으므로, updatedFcmToken을 "true"로 설정합니다.
       localStorage.setItem('updatedFcmToken', 'true');
     }
   });
