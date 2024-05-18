@@ -33,7 +33,7 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
             log.info("headers : {}", request.getHeaders());
             response.getHeaders().remove("Vary");
 
-            if (!uri.startsWith("/api/v1/recruit/job")){
+            if (!uri.startsWith("/api/v1/recruit/joblist")){
                 UserInfoResponseDto dto = authorizationUtil.Authorize(request);
                 if(dto != null && dto.getUserId() != null){
                     request.mutate().header("user_id", String.valueOf(dto.getUserId()));
