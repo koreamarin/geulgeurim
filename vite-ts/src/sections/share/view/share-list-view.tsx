@@ -117,7 +117,7 @@ export default function ShareRecentPost() {
   const [sort, setSort] = useState<string>('latest');
   const [totalPages, setTotalPages] = useState<number>(0);
 
-  const fetchBoards = async () => {
+  const fetchShares = useCallback(async () => {
     try {
       const response = await axios.get('/api/v1/community/share/search', {
         params: {
@@ -128,6 +128,7 @@ export default function ShareRecentPost() {
           size,
         },
         baseURL: 'https://글그림.com',
+        // baseURL: 'http://localhost:8080',
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
@@ -138,11 +139,11 @@ export default function ShareRecentPost() {
     } catch (error) {
       console.error('Error fetching boards:', error);
     }
-  };
+  }, [keyword, searchType, sort, page, size]);
 
   useEffect(() => {
-    fetchBoards();
-  }, [keyword, searchType, page, size, sort]);
+    fetchShares();
+  }, [fetchShares]);
 
   const router = useRouter();
 
