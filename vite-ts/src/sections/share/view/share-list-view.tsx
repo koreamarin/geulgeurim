@@ -1,18 +1,13 @@
-import { useRef, useState, useCallback } from 'react';
+import axios from 'axios';
+import { useRef, useState, useCallback, useEffect, ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import { Button } from '@mui/material';
-import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
-import TableRow from '@mui/material/TableRow';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
-import TableConttainer from '@mui/material/TableContainer';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
 import { paths } from 'src/routes/paths';
@@ -21,8 +16,6 @@ import { useRouter } from 'src/routes/hooks';
 import { useGetShareList } from 'src/api/community';
 
 import Iconify from 'src/components/iconify';
-import { useTable } from 'src/components/table';
-import Scrollbar from 'src/components/scrollbar';
 
 import ShareItem from 'src/sections/blog/share-item';
 
@@ -112,17 +105,52 @@ const POST_SEARCH_OPTIONS = [
   { value: 'content&title', label: '제목+내용' },
   { value: 'content', label: '내용' },
   { value: 'title', label: '제목' },
+  { value: 'author', label: '작성자' },
 ];
 
 export default function ShareRecentPost() {
-  const { share, shareError, shareLoading } = useGetShareList();
+  const [data, setData] = useState<ShareMainItem[]>([]);
+  const [keyword, setKeyword] = useState<string>('');
+  const [searchType, setSearchType] = useState<string>('title');
+  const [page, setPage] = useState<number>(0);
+  const [size, setSize] = useState<number>(15);
+  const [sort, setSort] = useState<string>('latest');
+  const [totalPages, setTotalPages] = useState<number>(0);
+
+  const fetchBoards = async () => {
+    try {
+      const response = await axios.get('/api/v1/community/share/search', {
+        params: {
+          keyword,
+          searchType,
+          sort,
+          page,
+          size,
+        },
+        baseURL: 'https://글그림.com',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
+      });
+      setData(response.data.content);
+      setTotalPages(response.data.totalPages);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error fetching boards:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBoards();
+  }, [keyword, searchType, page, size, sort]);
 
   const router = useRouter();
 
   const changeSearchRef = useRef<string>('');
 
   const handleClick = () => {
-    console.log(changeSearchRef.current);
+    setKeyword(changeSearchRef.current);
+    setPage(0);
   };
 
   const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -135,6 +163,18 @@ export default function ShareRecentPost() {
     router.push(paths.community.share.detail(pk));
   };
 
+  const handlePageChange = (event: ChangeEvent<unknown>, value: number) => {
+    setPage(value - 1);
+  };
+
+  const handleOptionBy = useCallback((newValue: string) => {
+    setSearchType(newValue);
+  }, []);
+
+  const handleSortBy = useCallback((newValue: string) => {
+    setSort(newValue);
+  }, []);
+
   const writeShare = () => {
     router.push(paths.community.share.write);
   };
@@ -142,15 +182,15 @@ export default function ShareRecentPost() {
   const pageCount = 12;
 
   const maxColumns = 4;
-  const numberOfRows = Math.ceil(Math.min(share.length, maxColumns * 3) / maxColumns); // 최대 3열까지만 허용
+  const numberOfRows = Math.ceil(Math.min(data.length, maxColumns * 3) / maxColumns); // 최대 3열까지만 허용
 
   const renderTable = Array.from({ length: numberOfRows }, (_, rowIndex) => (
     <tr key={rowIndex}>
-      {share
+      {data
         .slice(rowIndex * maxColumns, rowIndex * maxColumns + maxColumns)
-        .map((data: ShareMainItem) => (
-          <td key={data.shareId} style={{ width: '25%' }}>
-            <ShareItem share={data} />
+        .map((item: ShareMainItem) => (
+          <td key={item.shareId} style={{ width: '25%' }}>
+            <ShareItem share={item} />
           </td>
         ))}
     </tr>
@@ -158,16 +198,6 @@ export default function ShareRecentPost() {
 
 
   const [optionBy, setOptionBy] = useState('title');
-
-  const handleOptionBy = useCallback((newValue: string) => {
-    setOptionBy(newValue);
-  }, []);
-
-  const [sortBy, setSortBy] = useState('latest');
-
-  const handleSortBy = useCallback((newValue: string) => {
-    setSortBy(newValue);
-  }, []);
 
   return (
     <Card sx={{ p: 3 }}>
@@ -217,7 +247,7 @@ export default function ShareRecentPost() {
 
         {/* sort */}
         <InformationRecentSort
-          sort={sortBy}
+          sort={sort}
           onSort={handleSortBy}
           sortOptions={POST_SORT_OPTIONS}
         />
@@ -244,9 +274,10 @@ export default function ShareRecentPost() {
       {/* 페이지 네이션, 위치 상태함수로 저장 */}
 
       <Pagination
-        count={Math.floor((share.length - 1) / pageCount) + 1}
-        defaultPage={1}
-        siblingCount={1}
+        count={totalPages}
+        page={page + 1}
+        onChange={handlePageChange}
+        siblingCount={3}
         sx={{
           mt: 3,
           mb: 3,
