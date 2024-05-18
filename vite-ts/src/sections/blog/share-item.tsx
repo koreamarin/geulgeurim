@@ -72,7 +72,11 @@ export default function ShareItem(shareItem: shareProps) {
         </Link>
 
         <Link component={RouterLink} href={linkTo}>
-          <Image alt="123" src={share.imageList.length !== 0 ? share.imageList[0].fileUrl : "../../../public/no_image.png"} ratio="4/3" />
+          <Image
+            alt="123"
+            src={share.imageList && share.imageList.length !== 0 ? share.imageList[0].fileUrl : "../../../public/no_image.png"}
+            ratio="4/3"
+          />
         </Link>
       </Box>
 
