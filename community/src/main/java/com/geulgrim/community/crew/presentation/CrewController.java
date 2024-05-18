@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,6 @@ public class CrewController {
             @RequestParam(required = false) String searchType,
             @RequestParam(required = false) String sort,
             Pageable pageable) {
-        System.out.println("@@@@@@@@@@@@@");
         return crewService.search(keyword, searchType, sort, pageable);
     }
 
@@ -58,13 +58,15 @@ public class CrewController {
     }
 
 
-    @PostMapping("/{userId}")
+    @PostMapping("")
     @Operation(summary = "크루모집 게시글 등록", description = "크루모집 게시판에 게시글을 등록합니다.")
     public ResponseEntity<Long> addCrewBoard(
-            @PathVariable("userId") Long userId,
+            @RequestHeader HttpHeaders headers,
             @RequestPart CrewBoardRequest crewBoardRequest,
             @RequestPart(required = false) List<MultipartFile> files
     ) {
+//        long userId = Long.parseLong(headers.get("user_id").get(0));
+        long userId = 32;
         crewBoardRequest.setImageList(files);
         Long crewId = crewService.addCrewBoard(userId, crewBoardRequest);
         return ResponseEntity.ok(crewId);
