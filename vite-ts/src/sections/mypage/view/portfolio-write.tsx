@@ -150,15 +150,13 @@ export default function PortfolioWriteView() {
     }
   }, []);
 
+  // post api 연결
   const handleSubmit = () => {
-    // console.log('입력')
-    // console.log('predata', entries)
-    // console.log('제목?', title)
+
     const formData = new FormData();
     const inputData = {
       pofol_name : title,
       status : 'PUBLIC',
-
       pieces: entries.map((inputItem) => (
         {
           "pieceId": inputItem.firstDropdownValue === '작품에서 가져오기' ? piecesData[inputItem.image].id : null,
@@ -171,26 +169,22 @@ export default function PortfolioWriteView() {
       )
       )
     }
-    console.log(inputData)
+    // console.log(inputData)
 
     formData.append("portfolioRequest", new Blob([JSON.stringify(inputData)], {
       type: "application/json"
   }));
 
-  formData.append("files", filesToUpload.current[0]);
-  console.log('데이터', formData)
-
-  createPortfolio(formData)
-
   files.forEach(file => {
     if (file instanceof File) {
-      formData.append('file_url', file, file.name);
+      formData.append('files', file, file.name);
     }
   });
 
-    // router.push(paths.mypage.portfolio)
+  createPortfolio(formData)
 
-    // api 연결
+  router.push(paths.mypage.portfolio)
+
   };
 
   const handleCancel = () => {
@@ -397,7 +391,8 @@ export default function PortfolioWriteView() {
         </Grid>
       </>
       ) : (
-
+// 작품에서 가져오기
+// 두 번째 드롭박스 클릭하면 그 종류만 가져와야 함.
         <>
 
           <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column' }}>

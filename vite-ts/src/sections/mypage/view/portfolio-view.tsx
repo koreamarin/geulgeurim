@@ -32,9 +32,20 @@ interface Portfolio {
 export default function PortfolioView() {
   const router = useRouter()
   const [open, setOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedPortfolioId, setSelectedPortfolioId] = useState<number | null>(null);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleDeleteOpen = (pofolId: number) => {
+    setSelectedPortfolioId(pofolId);
+    setDeleteOpen(true);
+  };
+  const handleDeleteClose = () => {
+    setSelectedPortfolioId(null);
+    setDeleteOpen(false);
+  };
 
   const handlePortfolioWrite = () => {
     router.push(paths.mypage.portfolioWrite)
@@ -95,16 +106,18 @@ export default function PortfolioView() {
   if (error) return <Box>Error loading portfolios: {error.message}</Box>;
   if (portfolios.length === 0) return <Box>포트폴리오가 없습니다.</Box>;
 
-  const handleDelete = async (portfolioId: number) => {
+  const handleDelete = async () => {
+    if (selectedPortfolioId === null) return;
+
     try {
-      await deletePortfolio(portfolioId);
-      const updatedPortfolios = portfolios.filter(portfolio => portfolio.pofolId !== portfolioId);
+      await deletePortfolio(selectedPortfolioId );
+      const updatedPortfolios = portfolios.filter(portfolio => portfolio.pofolId !== selectedPortfolioId );
       setPortfolios(updatedPortfolios);
+      handleDeleteClose();
     } catch (err) {
       console.error('Error deleting portfolio:', err);
     }
   };
-
 
   const handlePortfolioClick = (pofolId: number) => {
     const portfolio = portfolios.find(p => p.pofolId === pofolId);
@@ -145,7 +158,7 @@ export default function PortfolioView() {
                 </IconButton>
               </Tooltip>
               <Tooltip title="Delete">
-              <IconButton color="secondary" onClick={() => handleDelete(portfolio.pofolId)}>
+              <IconButton color="secondary" onClick={() => handleDeleteOpen(portfolio.pofolId)}>
                   <DeleteIcon sx={{ color: 'grey' }} />
                 </IconButton>
               </Tooltip>
@@ -213,10 +226,22 @@ export default function PortfolioView() {
           <Button onClick={handleClose} color="primary">
             취소
           </Button>
-
         </DialogActions>
       </Dialog>
 
+
+  {/* Modal for confirming delete */}
+  <Dialog open={deleteOpen} onClose={handleDeleteClose} aria-labelledby="delete-portfolio-title">
+        <DialogTitle id="delete-portfolio-title">정말로 삭제하시겠습니까?</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleDeleteClose} color="primary">
+            아니오
+          </Button>
+          <Button onClick={handleDelete} color="secondary">
+            네
+          </Button>
+        </DialogActions>
+      </Dialog>
 
     </Container>
   );
