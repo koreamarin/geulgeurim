@@ -6,42 +6,8 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import TextMaxLine from 'src/components/text-max-line';
+
 import { BoardMainItem } from 'src/types/blog';
-
-// prettier-ignore
-function createDummyData(
-  boardId: number, userId: number, userNickname: string, title: string, views:number, comment_count:number, created_at: Date, updated_at: Date ) {
-  const createdAt = created_at.toLocaleDateString();
-  const updatedAt = updated_at.toLocaleDateString();
-  const hit = views.toString();
-  const commentCnt = comment_count.toString();
-
-  return { boardId, userId, userNickname, title, hit, commentCnt, createdAt, updatedAt};
-}
-// prettier-ignore
-const dummyPop = [
-  createDummyData(1, 1, '김싸피', '제 그림 어때요? 이런 그림 어때요? 저런 그림 어때요? 안녕하세요', 10, 5, new Date('2024-05-03'), new Date('2024-05-04')),
-  
-  createDummyData(3, 2, '이싸피', '펜터치 조절이 어렵네요', 5, 2, new Date('2024-05-03'), new Date('2024-05-04')),
-  
-  createDummyData(4, 3, '박싸피', '쁘띠 그림체입니다.', 1, 0, new Date('2024-05-03'), new Date('2024-05-04')),
-  
-  createDummyData(6, 4, '최싸피', '나보다 잘 그리는 사람?', 200, 10, new Date('2024-05-03'), new Date('2024-05-04')),
-  
-  createDummyData(21, 5, '정싸피', '침착맨 그림체 따라하기' , 13, 2, new Date('2024-05-03'), new Date('2024-05-04')),
-]
-// prettier-ignore
-const dummyNew = [
-  createDummyData(30, 6, '조싸피', '이런 독창적인 그림체 어떤가요?', 5, 0, new Date('2024-05-03'), new Date('2024-05-04')),
-  
-  createDummyData(41, 7, '유싸피', '안녕하세요? 그림 평가 해주세요', 0, 0, new Date('2024-05-03'), new Date('2024-05-04')),
-  
-  createDummyData(50, 8, '선우싸피', '데뷔할 수 있을까요?', 1, 0, new Date('2024-05-03'), new Date('2024-05-04')),
-  
-  createDummyData(76, 9, '남궁싸피', '간만에 수채화 그렸는데 어떤가요?', 1, 0, new Date('2024-05-03'), new Date('2024-05-04')),
-  
-  createDummyData(101, 10, '배싸피', '제 동생 그림입니다.', 503, 15, new Date('2024-05-03'), new Date('2024-05-04')),
-];
 
 type propsType = {
   newBoard: BoardMainItem[],
