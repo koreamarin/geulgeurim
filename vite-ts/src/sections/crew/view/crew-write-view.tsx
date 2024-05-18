@@ -1,20 +1,23 @@
+import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import {
   Box,
   Card,
-  Button,
-  Container,
   Stack,
+  Button,
+  Switch,
+  Container,
   TextField,
   Typography,
-  Switch,
   CardHeader,
   CardContent,
   FormControlLabel,
 } from '@mui/material';
-import { useState, useCallback } from 'react';
+
 import { useBoolean } from 'src/hooks/use-boolean';
+
 import { Upload } from 'src/components/upload';
-import { useNavigate } from 'react-router-dom';
 
 type Props = {
   id?: number;
@@ -36,7 +39,7 @@ export default function CrewApplyView({ id }: Props) {
 
   const handleChange =
     (prop: keyof typeof positions) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
+      const {value} = event.target;
       const numValue = value === '' ? 0 : parseInt(value, 10);
       setPositions({ ...positions, [prop]: numValue });
     };

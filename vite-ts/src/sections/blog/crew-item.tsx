@@ -1,28 +1,23 @@
 import Box from '@mui/material/Box';
+import { Grid } from '@mui/material';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
-import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { useResponsive } from 'src/hooks/use-responsive';
-
 import { fDate } from 'src/utils/format-time';
-import { fShortenNumber } from 'src/utils/format-number';
 
 import { AvatarShape } from 'src/assets/illustrations';
 
 import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
 import TextMaxLine from 'src/components/text-max-line';
 
 import { CrewMainItem } from 'src/types/blog';
-import { Grid } from '@mui/material';
 
 // ----------------------------------------------------------------------
 type Props = {
@@ -67,7 +62,7 @@ export default function PostItem(item: Props) {
         </Link>
 
         <Link component={RouterLink} href={linkTo}>
-          <Image alt="123" src={crew.imageList[0].fileUrl} ratio="4/3" />
+          <Image alt="123" src={crew.imageList && crew.imageList.length !== 0 ? crew.imageList[0].fileUrl : "../../../no_image.png"} ratio="4/3" />
         </Link>
       </Box>
 
@@ -103,7 +98,7 @@ type CrewContentProps = {
   pd: number;
   story: number;
   conti: number;
-  status: number;
+  status: string;
 };
 
 export function CrewContent({
@@ -161,7 +156,7 @@ export function CrewContent({
         </Stack>
       </Stack>
 
-      {status === 1 ? (
+      {status === "INPROGRESS" ? (
         <Link color="inherit" component={RouterLink} href={linkTo}>
           <TextMaxLine mt={1} variant="subtitle1" line={2} persistent>
             {title}
@@ -201,7 +196,7 @@ export function CrewContent({
             </Stack>
           </Grid>
         ) : (
-          <></>
+          <div />
         )}
 
         {color ? (
@@ -212,7 +207,7 @@ export function CrewContent({
             </Stack>
           </Grid>
         ) : (
-          <></>
+          <div />
         )}
 
         {bg ? (
@@ -223,7 +218,7 @@ export function CrewContent({
             </Stack>
           </Grid>
         ) : (
-          <></>
+          <div />
         )}
         {pd ? (
           <Grid item>
@@ -233,7 +228,7 @@ export function CrewContent({
             </Stack>
           </Grid>
         ) : (
-          <></>
+          <div />
         )}
         {story ? (
           <Grid item>
@@ -243,7 +238,7 @@ export function CrewContent({
             </Stack>
           </Grid>
         ) : (
-          <></>
+          <div />
         )}
         {conti ? (
           <Grid item>
@@ -253,7 +248,7 @@ export function CrewContent({
             </Stack>
           </Grid>
         ) : (
-          <></>
+          <div />
         )}
       </Grid>
 
