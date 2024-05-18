@@ -177,9 +177,9 @@ export default function BoardRecentPost() {
       <Box
         sx={{ borderBottom: '3px solid black', marginLeft: 15, marginRight: 15, marginBottom: 3 }}
       >
-        <Typography variant="h3" component="div" sx={{ color: 'black', ml: 3 }}>
-          자유 게시판
-        </Typography>
+        <Box ml={3}>
+          <h2>자유 게시판</h2>
+        </Box>
       </Box>
       <Stack
         direction="row"
