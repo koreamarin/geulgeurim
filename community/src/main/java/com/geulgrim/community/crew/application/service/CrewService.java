@@ -5,10 +5,7 @@ import com.geulgrim.community.crew.application.dto.request.CrewBoardModifyReques
 import com.geulgrim.community.crew.application.dto.request.CrewBoardRequest;
 import com.geulgrim.community.crew.application.dto.request.CrewJoinRequest;
 import com.geulgrim.community.crew.application.dto.request.CrewReply;
-import com.geulgrim.community.crew.application.dto.response.CrewApplicant;
-import com.geulgrim.community.crew.application.dto.response.CrewBoard;
-import com.geulgrim.community.crew.application.dto.response.CrewBoardDetail;
-import com.geulgrim.community.crew.application.dto.response.CrewInfo;
+import com.geulgrim.community.crew.application.dto.response.*;
 import com.geulgrim.community.crew.domain.entity.Crew;
 import com.geulgrim.community.crew.domain.entity.CrewImage;
 import com.geulgrim.community.crew.domain.entity.CrewRequest;
@@ -21,8 +18,11 @@ import com.geulgrim.community.crew.exception.CrewException;
 import com.geulgrim.community.global.s3.AwsS3Service;
 import com.geulgrim.community.global.user.domain.entity.User;
 import com.geulgrim.community.global.user.domain.repository.UserRepository;
+import com.geulgrim.community.share.application.dto.response.ShareListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +30,9 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.geulgrim.community.crew.exception.CrewErrorCode.*;
 
@@ -46,31 +48,28 @@ public class CrewService {
     private final CrewDslRepository crewDslRepository;
     private final AwsS3Service awsS3Service;
 
-    public List<CrewBoard> search(String keyword, String category){
-        List<Crew> crews = crewDslRepository.search(keyword, category);
-        List<CrewBoard> crewBoards = new ArrayList<>(crews.size());
+    public List<CrewListResponse> findRecentCrewList() {
+        List<CrewListResponse> crewList = crewRepository.findCrewMainList();
 
-        for (Crew crew : crews) {
-            List<CrewImage> crewImages = crewImageRepository.findByCrew_CrewId(crew.getCrewId());
-            String thumbnail = !crewImages.isEmpty() ? crewImages.get(0).getFileUrl() : null;
+        List<Long> crewIds = crewList.stream()
+                .map(CrewListResponse::getCrewId)
+                .toList();
 
-            CrewBoard crewBoard = CrewBoard.builder()
-                    .crewId(crew.getCrewId())
-                    .projectName(crew.getProjectName())
-                    .pen(crew.getPen())
-                    .color(crew.getColor())
-                    .bg(crew.getBg())
-                    .pd(crew.getPd())
-                    .story(crew.getStory())
-                    .conti(crew.getConti())
-                    .thumbnail(thumbnail)
-                    .date(LocalDate.from(crew.getCreatedAt()))
-                    .status(crew.getStatus())
-                    .build();
+        List<CrewImage> crewImages = crewImageRepository.findImagesByCrewIds(crewIds);
 
-            crewBoards.add(crewBoard);
+        Map<Long, List<CrewImage>> imagesByCrewId = crewImages.stream()
+                .collect(Collectors.groupingBy(ci -> ci.getCrew().getCrewId()));
+
+        crewList.forEach(response -> response.setImageList(imagesByCrewId.get(response.getCrewId())));
+
+        return crewList;
+    }
+
+    public Page<CrewListResponse> search(String keyword, String searchType, String sort, Pageable pageable) {
+        if (keyword == null || searchType == null) {
+            return crewRepository.findCrewResponseList(pageable);
         }
-        return crewBoards;
+        return crewRepository.searchCrews(keyword, searchType, sort, pageable);
     }
 
 
@@ -90,6 +89,7 @@ public class CrewService {
                 .story(crew.getStory())
                 .conti(crew.getConti())
                 .status(crew.getStatus())
+                .createdAt(crew.getCreatedAt())
                 .build();
 
         // 이미지 넣기
