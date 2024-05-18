@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BoardRepository extends JpaRepository<Board, Long> {
+public interface BoardRepository extends JpaRepository<Board, Long>, BoardCustomRepository {
     // 게시글 전체 리스트 조회
     @Query("SELECT new com.geulgrim.community.board.application.dto.response.BoardListResponse(" +
             "b.boardId, b.user.userId, b.user.nickname, b.title, b.hit, COUNT(c), b.createdAt, b.updatedAt) " +

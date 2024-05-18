@@ -11,6 +11,8 @@ import com.geulgrim.community.board.domain.entity.Board;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,4 +70,11 @@ public class BoardController {
         return new ResponseEntity<>(boardService.modifyBoard(userId, boardUpdateRequest, files), HttpStatus.OK);
     }
     // 검색
+    @GetMapping("/search/")
+    public Page<BoardListResponse> searchBoards(
+            @RequestParam String keyword,
+            @RequestParam String searchType,
+            Pageable pageable) {
+        return boardService.searchBoards(keyword, searchType, pageable);
+    }
 }
