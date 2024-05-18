@@ -1,10 +1,10 @@
+import axiosOrigin from 'axios';
+import { useEffect } from 'react';
+import { initializeApp } from 'firebase/app';
+import { getToken, Messaging, getMessaging } from 'firebase/messaging';
+
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-
-import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken, Messaging } from 'firebase/messaging';
-import { useEffect } from 'react';
-import axiosOrigin from 'axios';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -19,90 +19,105 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
-async function requestNotificationPermissionAndGetToken(messagingVal: Messaging, vapidKey: string | undefined) {
-  try {
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      console.log('Notification permission granted.');
-      // 허용되면 FCM 토큰을 가져옴
-      const token = await getToken(messagingVal, { vapidKey });
-      return token;
-    }
-    console.log('Unable to get permission to notify.');
-    return null;  // 권한이 거부되면 null 반환
-
-  } catch (error) {
-    console.error('Error getting notification permission: ', error);
-    return null;
-  }
-}
-
-// 서비스워커 등록
-const registerServiceWorker = () => {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker
-        .register('/public/firebase-messaging-sw.js')
-        .then((registration) => {
-          // 테스트콘솔
-          console.log(registration);
-        })
-        .catch((err) => {
-          console.log('Service Worker 등록 실패:', err);
-        });
-    });
-  }
-};
-
 export default function RecruitListView() {
 
-  useEffect(() => {
+  async function requestNotificationPermissionAndGetToken(messagingVal: Messaging, vapidKey: string | undefined) {
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        console.log('Notification permission granted.');
+        // 허용되면 FCM 토큰을 가져옴
+        return await getToken(messagingVal, { vapidKey });
+      }
+      console.log('Unable to get permission to notify.');
+      return null;  // 권한이 거부되면 null 반환
 
-    const accessToken = localStorage.getItem('accessToken');
-    const tokenUpdated = localStorage.getItem('tokenUpdated');
+    } catch (error) {
+      console.error('Error getting notification permission: ', error);
+      return null;
+    }
+  }
 
-    // accessToken이 부여되었고 유저에게 fcmToken 업데이트 여부 체크
-    if (accessToken && !tokenUpdated){
+// 서비스워커 등록
+  const registerServiceWorker = () => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('/public/firebase-messaging-sw.js')
+          .then((registration) => {
+            // 테스트콘솔
+            console.log(registration);
+          })
+          .catch((err) => {
+            console.log('Service Worker 등록 실패:', err);
+          });
+      });
+    }
+  };
 
-      // fcmService worker 등록
-      registerServiceWorker();
+  function updateFcmToken() {
 
-      // 알림 권한 요청 및 FCM 토큰 획득
-      const generatedFcmtoken = requestNotificationPermissionAndGetToken(messaging, import.meta.env.VITE_FIREBASE_VAPID_ID);
+    // 알림 권한 요청 및 FCM 토큰 획득
+    const generatedFcmtoken = requestNotificationPermissionAndGetToken(messaging, import.meta.env.VITE_FIREBASE_VAPID_ID);
 
-      if (generatedFcmtoken) {
-        console.log('token = ', generatedFcmtoken);
+    if (generatedFcmtoken) {
+      console.log('token = ', generatedFcmtoken);
 
-        const api = axiosOrigin.create({
-          baseURL: import.meta.env.VITE_BACK_SERVER_URL,
+      // const api = axiosOrigin.create({
+      //   baseURL: 'https://글그림.com',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Authorization: `Bearer `, accessToken,
+      //   },
+      // });
+
+      const requestData = {
+        fcmToken: generatedFcmtoken,
+      };
+
+      // // 데이터를 POST 방식으로 전송합니다.
+      // api.post('/api/v1/auth/fcm', { dto: requestData })
+      //   .then(response => {
+      //     console.log('Response:', response.data);
+      //   })
+      //   .catch(error => {
+      //     console.error('Error:', error.response);
+      //   });
+
+      axiosOrigin
+        .post('/api/v1/auth/fcm', requestData, {
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
           },
+          baseURL: 'https://글그림.com',
+          // baseURL: 'http://localhost:8080',
+        })
+        .then((response) => {
+          console.log( response.data);
+        })
+        .catch((error) => {
+          alert('fcm토큰 업데이트 중 오류가 발생했습니다.');
         });
 
-        const requestData = {
-          fcmToken: generatedFcmtoken,
-        };
+      localStorage.setItem('tokenUpdated', 'true'); // 토큰 업데이트 후 플래그 설정
 
-        // 데이터를 POST 방식으로 전송합니다.
-        api.post('/api/v1/auth/fcm', { dto: requestData })
-          .then(response => {
-            console.log('Response:', response.data);
-          })
-          .catch(error => {
-            console.error('Error:', error.response);
-          });
-
-        localStorage.setItem('tokenUpdated', 'true'); // 토큰 업데이트 후 플래그 설정
-      }
     }
+  }
 
-    // 반환하는 함수는 컴포넌트가 언마운트될 때 실행됩니다 (클린업 함수)
-    return () => {
-      console.log('컴포넌트가 언마운트됩니다');
-    };
-  }, []);
+  useEffect(() => {
+    // 로컬 스토리지에서 accessToken과 updatedFcmToken 값을 가져옵니다.
+    const accessToken = localStorage.getItem('accessToken');
+    const updatedFcmToken = localStorage.getItem('updatedFcmToken');
+
+    // accessToken이 부여되었고 유저에게 fcmToken 업데이트 안된 경우에만 실행
+    if (accessToken && updatedFcmToken === 'false') {
+      registerServiceWorker();
+      updateFcmToken();
+
+      // FCM 토큰 업데이트를 완료했으므로, updatedFcmToken을 "true"로 설정합니다.
+      localStorage.setItem('updatedFcmToken', 'true');
+    }
+  });
 
   return (
     <Container>
