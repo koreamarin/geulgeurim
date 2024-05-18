@@ -6,6 +6,7 @@ import com.geulgrim.common.piece.application.dto.response.PieceSearchResponseDto
 import com.geulgrim.common.piece.domain.PieceSearchOrderType;
 import com.geulgrim.common.piece.domain.PieceSearchType;
 import com.geulgrim.common.piece.domain.entity.Piece;
+import com.geulgrim.common.piece.domain.entity.enums.PieceType;
 import com.geulgrim.common.piece.domain.repository.PieceRepository;
 import com.geulgrim.common.piece.exception.NoPieceExistException;
 import jakarta.transaction.Transactional;
@@ -42,7 +43,7 @@ public class PieceService {
         pieceRepository.save(dto.toEntity());
     }
 
-    public List<PieceSearchResponseDto> findAllPiece(Long userId, String condition, String keyWord, String type, String sortBy){
+    public List<PieceSearchResponseDto> findAllPiece(Long userId, PieceType type, String condition, String keyWord, String sortBy){
 
         List<Piece> pieces = null;
 
@@ -51,14 +52,14 @@ public class PieceService {
         if(sortBy.equals("updated_at")){
             try{
                 PieceSearchOrderType pieceSearchOrderType = PieceSearchOrderType.valueOf(condition.toUpperCase());
-                pieces = pieceSearchOrderType.getListByPieceSearchType(pieceRepository, userId, keyWord, type);
+                pieces = pieceSearchOrderType.getListByPieceSearchType(pieceRepository, userId, type, keyWord);
             } catch (Exception e){
             throw new NoPieceExistException();
             }
         } else{
             try{
                 PieceSearchType pieceSearchType = PieceSearchType.valueOf(condition.toUpperCase());
-                pieces = pieceSearchType.getListByPieceSearchType(pieceRepository, userId, keyWord, type);
+                pieces = pieceSearchType.getListByPieceSearchType(pieceRepository, userId, type, keyWord);
             } catch (Exception e){
                 throw new NoPieceExistException();
             }

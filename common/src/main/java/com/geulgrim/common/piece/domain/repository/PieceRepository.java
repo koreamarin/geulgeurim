@@ -1,6 +1,7 @@
 package com.geulgrim.common.piece.domain.repository;
 
 import com.geulgrim.common.piece.domain.entity.Piece;
+import com.geulgrim.common.piece.domain.entity.enums.PieceType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +16,6 @@ public interface PieceRepository extends JpaRepository<Piece, Long> {
     Optional<Piece> findById(Long pieceId);
 
     // 작품 조건 검색
-    List<Piece> findByOwnerIdAndNameContaining(Long ownerId, String keyword);
-
-    List<Piece> findByOwnerIdAndDescriptionContaining(Long ownerId, String keyword);
-
-    List<Piece> findByOwnerIdAndNameContainingOrDescriptionContaining(Long ownerId, String name, String description);
 
     // without type order by update
     List<Piece> findByOwnerIdAndNameContainingOrderByUpdatedAt(Long ownerId, String keyword);
@@ -36,16 +32,16 @@ public interface PieceRepository extends JpaRepository<Piece, Long> {
     List<Piece> findByOwnerIdAndNameContainingOrDescriptionContainingOrderByUpdatedAtDesc(Long ownerId, String name, String description);
 
     // with type order by update
-    List<Piece> findByOwnerIdAndTypeAndNameContainingOrderByUpdatedAt(Long ownerId, String keyword, String type);
+    List<Piece> findByOwnerIdAndTypeAndNameContainingOrderByUpdatedAt(Long ownerId, PieceType type, String keyword);
 
-    List<Piece> findByOwnerIdAndTypeAndDescriptionContainingOrderByUpdatedAt(Long ownerId, String keyword, String type);
+    List<Piece> findByOwnerIdAndTypeAndDescriptionContainingOrderByUpdatedAt(Long ownerId, PieceType type, String keyword);
 
-    List<Piece> findByOwnerIdAndTypeAndNameContainingOrDescriptionContainingOrderByUpdatedAt(Long ownerId, String name, String description, String type);
+    List<Piece> findByOwnerIdAndTypeAndNameContainingOrDescriptionContainingOrderByUpdatedAt(Long ownerId, PieceType type, String name, String description);
 
     // with type order by update desc
-    List<Piece> findByOwnerIdAndTypeAndNameContainingOrderByUpdatedAtDesc(Long ownerId, String keyword, String type);
+    List<Piece> findByOwnerIdAndTypeAndNameContainingOrderByUpdatedAtDesc(Long ownerId, PieceType type, String name);
 
-    List<Piece> findByOwnerIdAndTypeAndDescriptionContainingOrderByUpdatedAtDesc(Long ownerId, String keyword, String type);
+    List<Piece> findByOwnerIdAndTypeAndDescriptionContainingOrderByUpdatedAtDesc(Long ownerId, PieceType type, String keyword);
 
-    List<Piece> findByOwnerIdAndTypeAndNameContainingOrDescriptionContainingOrderByUpdatedAtDesc(Long ownerId, String name, String description, String type);
+    List<Piece> findByOwnerIdAndTypeAndNameContainingOrDescriptionContainingOrderByUpdatedAtDesc(Long ownerId, PieceType type, String name, String description);
 }

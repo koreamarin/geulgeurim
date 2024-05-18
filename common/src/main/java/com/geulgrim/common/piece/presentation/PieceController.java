@@ -4,6 +4,7 @@ import com.geulgrim.common.piece.application.PieceService;
 import com.geulgrim.common.piece.application.dto.request.PieceCreateRequestDto;
 import com.geulgrim.common.piece.application.dto.response.PieceResponseDto;
 import com.geulgrim.common.piece.application.dto.response.PieceSearchResponseDto;
+import com.geulgrim.common.piece.domain.entity.enums.PieceType;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,10 +39,10 @@ public class PieceController {
             @RequestParam(name = "user_id", required = true) Long userId,
             @RequestParam(name = "condition", defaultValue = "name") String condition,
             @RequestParam(name = "key_word", defaultValue = "") String keyWord,
-            @RequestParam(name = "type", defaultValue = "") String type,
+            @RequestParam(name = "type", defaultValue = "NONE") String type,
             @RequestParam(name = "sort", defaultValue = "updated_at") String sortBy
             ){
-        return new ResponseEntity<>(pieceService.findAllPiece(userId, condition, keyWord, type, sortBy), HttpStatus.OK);
+        return new ResponseEntity<>(pieceService.findAllPiece(userId, PieceType.valueOf(type.toUpperCase()), condition, keyWord, sortBy), HttpStatus.OK);
     }
 
     @DeleteMapping("/del/{piece_id}")
