@@ -19,16 +19,17 @@ type Pieces = {
 
 const URL = endpoints.pieces.mine;
 
-export function useGetPiecesList() {
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+export function useGetPiecesList(user_id: number, type: string) {
+  const vURL = `${URL}user_id=${user_id}&type=${type}`
+  const { data, isLoading, error, isValidating } = useSWR(vURL, fetcher);
 
   const memoizedValue = useMemo(
     () => ({
-      piecesData: (data as Pieces[]),
+      piecesData: (data as Pieces[]) || [],
       piecesLoading: isLoading,
       piecesError: error,
       piecesValidating: isValidating,
-      piecesEmpty: !isLoading && data.length === 0,
+
     }),
     [data, error, isLoading, isValidating]);
 

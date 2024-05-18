@@ -1,4 +1,4 @@
-import React, { useState, useCallback, ChangeEvent, useRef } from 'react';
+import React, { useState, useCallback, ChangeEvent, useRef, useEffect } from 'react';
 
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -11,9 +11,9 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useGetPiecesList } from 'src/api/piece';
+import { createPortfolio } from 'src/api/portfolio';
 
 import { Upload } from 'src/components/upload';
-import { createPortfolio } from 'src/api/portfolio';
 
 type Entry = {
   title: string;
@@ -27,11 +27,13 @@ type Entry = {
 };
 
 
+
 export default function PortfolioWriteView() {
-  const { piecesData, piecesLoading, piecesError , piecesEmpty} = useGetPiecesList()
+  const user_id = 33 // 추후에 토큰으로 바꿔야 함
+  const [type, setType] = useState('NONE');
+  const { piecesData, piecesLoading, piecesError} = useGetPiecesList(user_id, type)
   const router = useRouter()
 
-  // useState
   const [title, setTitle] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   // 1st item
@@ -46,27 +48,15 @@ export default function PortfolioWriteView() {
     image: -1
   }]);
 
-
   const files = useRef<File[]>([])
 
-  // const [pieces, setPieces] = useState<any[]>([]);
-  const userId = 33; // Your user ID
 
-  // useEffect(() => {
-  //   async function fetchPieces() {
-  //     try {
-  //       const data = await getPieces(userId);
-  //       setPieces(data);
-  //     } catch (error) {
-  //       console.error('Error fetching pieces:', error);
-  //     }
-  //   }
-
-  //   fetchPieces();
-  // }, [userId]);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const imagesPerPage = 5;
+  useEffect(() => {
+    const currentEntry = entries.find(entry => entry.firstDropdownValue === '작품에서 가져오기');
+    if (currentEntry) {
+      setType(currentEntry.secondDropdownValue);
+    }
+  }, [entries]);
 
   // entry 추가 로직
   const handleAddEntry = useCallback(() => {
@@ -92,12 +82,13 @@ export default function PortfolioWriteView() {
 
 
   // 페이지네이션
+  const [currentPage, setCurrentPage] = useState(1);
+  const imagesPerPage = 5;
   const indexOfLastImage = currentPage * imagesPerPage;
   const indexOfFirstImage = indexOfLastImage - imagesPerPage;
-  // const currentImages = pieces.slice(indexOfFirstImage, indexOfLastImage);
-
+  const currentPieces = piecesData.slice(indexOfFirstImage, indexOfLastImage);
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(dummyPieces.pieceUrl.length / imagesPerPage); i+=1) {
+  for (let i = 1; i <= Math.ceil(piecesData.length / imagesPerPage); i+=1) {
     pageNumbers.push(i);
   }
 
@@ -105,8 +96,8 @@ export default function PortfolioWriteView() {
     <Button key={number} onClick={() => setCurrentPage(number)}
       style={{
         fontSize: '12px',
-        padding: '5px 8px', // Adjusted padding
-        margin: '0 3px', // Adjusted margin
+        padding: '5px 8px',
+        margin: '0 3px',
         cursor: 'pointer',
         backgroundColor: currentPage === number ? '#007bff' : 'transparent',
         color: currentPage === number ? '#fff' : '#000',
@@ -119,7 +110,6 @@ export default function PortfolioWriteView() {
 
   // 인덱스를 잡아서 해당 엔트리에 이미지 인덱스 변경
   const changeImage = (index:number, imageIndex:number) => {
-    console.log()
     setEntries(prevEntries => prevEntries.map((entry, idx) =>
       idx === index ? { ...entry, 'image': imageIndex } : entry
     ));
@@ -171,16 +161,15 @@ export default function PortfolioWriteView() {
     formData.append("portfolioRequest", new Blob([JSON.stringify(inputData)], {
       type: "application/json"
   }));
-  console.log('파일들 : ', files.current)
+  // console.log('파일들 : ', files.current)
   files.current.forEach(file => {
     if (file instanceof File) {
       formData.append('files', file, file.name);
     }
   });
 
-
   createPortfolio(formData)
-  console.log('등록 성공!')
+  // console.log('등록 성공!')
   router.push(paths.mypage.portfolio)
 
   };
@@ -210,20 +199,20 @@ export default function PortfolioWriteView() {
       </Box>
       )
     }
-     if (piecesEmpty) {
-      return (
-      <Box>
-        작품이 없습니다.
-        <Button>
-          작품 등록하기
-        </Button>
-      </Box>
-      )
-  }
+  //    if (piecesEmpty) {
+  //     return (
+  //     <Box>
+  //       작품이 없습니다.
+  //       <Button>
+  //         작품 등록하기
+  //       </Button>
+  //     </Box>
+  //     )
+  // }
 
     return (
 
-      piecesData.map((piece, idx) => (
+      currentPieces.map((piece, idx) => (
         <Box key={idx} sx={{ width: 'calc(20% - 8px)', marginBottom: 3, height: '150px', overflow: 'hidden', cursor: 'pointer' }} onClick={() => changeImage(entryIndex, indexOfFirstImage + idx)}>
           <img src={piece?.fileUrl} alt={`Piece ${indexOfFirstImage + idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} />
           {indexOfFirstImage + idx}
@@ -330,12 +319,12 @@ export default function PortfolioWriteView() {
             fullWidth
             sx={{ width: '50%', ml: 2 }}
           >
-            <MenuItem value="선화">선화</MenuItem>
-            <MenuItem value="채색">채색</MenuItem>
-            <MenuItem value="배경">배경</MenuItem>
+            <MenuItem value="PEN">선화</MenuItem>
+            <MenuItem value="COLOR">채색</MenuItem>
+            <MenuItem value="BG">배경</MenuItem>
             <MenuItem value="PD">PD</MenuItem>
-            <MenuItem value="스토리">스토리</MenuItem>
-            <MenuItem value="콘티">콘티</MenuItem>
+            <MenuItem value="STORY">스토리</MenuItem>
+            <MenuItem value="CONTI">콘티</MenuItem>
           </Select>
         )}
       </Box>

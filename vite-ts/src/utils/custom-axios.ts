@@ -48,7 +48,7 @@ export const endpoints = {
 
   },
   pieces : {
-    mine: `api/v1/common/piece/search?user_id=33`
+    mine: '/api/v1/common/piece/search?'
   }
 
 };
