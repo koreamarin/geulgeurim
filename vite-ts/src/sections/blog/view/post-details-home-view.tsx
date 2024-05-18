@@ -22,8 +22,6 @@ import EmptyContent from 'src/components/empty-content';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
 import PostList from '../post-list';
-import PostCommentList from '../post-comment-list';
-import PostCommentForm from '../post-comment-form';
 import PostDetailsHero from '../post-details-hero';
 import { PostDetailsSkeleton } from '../post-skeleton';
 
@@ -148,11 +146,11 @@ export default function PostDetailsHomeView({ title }: Props) {
             </Typography>
           </Stack>
 
-          <PostCommentForm />
+          {/* <PostCommentForm /> */}
 
           <Divider sx={{ mt: 5, mb: 2 }} />
 
-          <PostCommentList comments={post.comments} />
+          {/* <PostCommentList comments={post.comments} /> */}
         </Stack>
       </Container>
     </>

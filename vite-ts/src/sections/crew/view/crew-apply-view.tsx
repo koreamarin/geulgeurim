@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+
 import {
-  Container, Typography, FormControl, FormControlLabel,
-  Radio, RadioGroup, TextField, Button,
-  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
+  Radio, Button, Dialog, Container,
+  TextField, Typography, RadioGroup, FormControl,
+  DialogTitle, DialogActions, DialogContent, FormControlLabel, DialogContentText
 } from '@mui/material';
+
 import ComponentBlock from 'src/sections/_examples/component-block';
 
 type CrewDetail = {

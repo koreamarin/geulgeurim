@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,6 +16,9 @@ import {
   FormControlLabel,
 } from '@mui/material';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { Upload } from 'src/components/upload';
@@ -24,18 +28,48 @@ type Props = {
 };
 
 export default function BoardWriteView({ id }: Props) {
+  const formData = new FormData();
+  const router = useRouter();
+
   const preview = useBoolean();
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [content, setContent] = useState('');
   const [files, setFiles] = useState<(File | string)[]>([]);
   
   const navigate = useNavigate();
 
   const handleSubmit = () => {
     console.log('Title:', title);
-    console.log('Description:', description);
+    console.log('Content:', content);
     console.log('Files:', files);
-    navigate('/community/crew');
+    const shareWriteRequest = {
+      title,
+      content,
+    };
+    Object.values(files).forEach((file) => formData.append('files', file));
+    formData.append(
+      'shareWriteRequest',
+      new Blob([JSON.stringify(shareWriteRequest)], {
+        type: 'application/json',
+      })
+    );
+    axios
+      .post('/api/v1/community/share', formData, {
+        headers: {
+          'Content-Type': `multipart/form-data; `,
+          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        baseURL: 'https://글그림.com',
+        // baseURL: 'http://localhost:8080',
+      })
+      .then((response) => {
+        const { share } = response.data;
+        console.log(share);
+        router.push(paths.community.share.detail(share.shareId));
+      })
+      .catch((error) => {
+        alert('글 작성 중 오류가 발생했습니다.');
+      });
   };
 
   const handleCancel = () => {
@@ -92,8 +126,8 @@ export default function BoardWriteView({ id }: Props) {
             fullWidth
             multiline
             rows={8}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
           />
           <Stack spacing={5}>
             <Card>

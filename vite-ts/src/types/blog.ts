@@ -71,7 +71,7 @@ export type BoardMainItem = {
   userNickname: string;
   title: string;
   hit: number;
-  comment_cnt: number;
+  commentCnt: number;
   createdAt: Date;
   updateAt: Date;
 };
@@ -115,7 +115,13 @@ export type ShareMainItem = {
   userId: number;
   userNickname: string;
   userProfile: string;
-  thumbnail: string;
+  imageList: 
+    {
+      shareImageId: number;
+      fileUrl: string;
+      imageType: string;
+    }[]
+  ;
   title: string;
   hit: string;
   commentCnt: string;
@@ -125,34 +131,22 @@ export type ShareMainItem = {
 
 export type ShareItem = {
   boardId: number;
-  user: {
-    userId: number;
-    email: string;
-    birthday: Date;
-    nickname: string;
-    wallet: string;
-    userType: string;
-    createdAt: Date;
-    name: string;
-    phoneNum: string;
-    fileUrl: string;
-  }
+  userId: number;
+  userFileUrl: string;
   title: string;
   content: string;
   hit: number;
-  commentList: [
+  commentList:
     {
       boardCommentId: number;
       content: string;
-    }
-  ];
-  imageList: [
+    }[];
+  imageList: 
     {
       boardImageId: number;
       imageType: string;
       fileUrl: string;
-    }
-  ];
+    }[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -161,12 +155,13 @@ export type CrewMainItem = {
   crewId: number;
   userId: number;
   userNickname: string;
-  userProfile: string;
-  thumbnail: string;
-  title: string;
-  date: string;
-  hit: string;
-  commentCnt: string;
+  userFileUrl: string;
+  projectName: string;
+  imageList:
+    {
+      crewImageId: number;
+      fileUrl: string;
+    }[];
   pen: number;
   color: number;
   bg: number;
@@ -174,15 +169,16 @@ export type CrewMainItem = {
   story: number;
   conti: number;
   status: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type communityMainItem = {
-  boardNew: BoardMainItem[];
-  boardRecent: BoardMainItem[];
-  shareRecent: ShareMainItem[];
-  crewRecent: ShareMainItem[];
+  popBoard: BoardMainItem[];
+  newBoard: BoardMainItem[];
+  newShare: ShareMainItem[];
+  newCrew: CrewMainItem[];
 }
-
 
 export type MarketMainItem = {
   marketId: number;
@@ -197,4 +193,16 @@ export type MarketMainItem = {
   hit: string;
   createdAt: string;
 
+}
+
+
+export type commentItem = {
+  boardCommentId: number;
+  userId: number;
+  userNickname: string;
+  userFileUrl: string;
+  content: string;
+  boardId: number;
+  createdAt: Date;
+  updatedAt: Date;
 }

@@ -115,14 +115,7 @@ export default function JwtLoginView() {
     </button>
   );
 
-  const indiRenderForm = (
-    <Stack spacing={2.5}>
-      {KakaoLoginBtn}
-      <Link component={RouterLink} href={paths.auth.jwt.register} variant="subtitle2">
-        회원가입
-      </Link>
-    </Stack>
-  );
+  const indiRenderForm = <Stack spacing={2.5}>{KakaoLoginBtn}</Stack>;
 
   // 로그인 버튼 클릭 시 실행할 함수
   const enterLogin = () => {

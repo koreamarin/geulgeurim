@@ -41,18 +41,18 @@ type ActionsType = ActionMapType<Payload>[keyof ActionMapType<Payload>];
 
 // ----------------------------------------------------------------------
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-};
-
-const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+// const firebaseConfig = {
+//   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+//   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+//   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+//   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+//   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+//   appId: import.meta.env.VITE_FIREBASE_APP_ID,
+//   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+// };
+//
+// const app = initializeApp(firebaseConfig);
+// const messaging = getMessaging(app);
 
 const initialState: AuthStateType = {
   user: null,
@@ -152,40 +152,40 @@ export function AuthProvider({ children }: Props) {
   //     });
   // };
 
-  async function requestNotificationPermissionAndGetToken(messagingVal: Messaging, vapidKey: string | undefined) {
-    try {
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        console.log('Notification permission granted.');
-        // 허용되면 FCM 토큰을 가져옴
-        const token = await getToken(messagingVal, { vapidKey });
-        return token;
-      }
-        console.log('Unable to get permission to notify.');
-        return null;  // 권한이 거부되면 null 반환
-
-    } catch (error) {
-      console.error('Error getting notification permission: ', error);
-      return null;
-    }
-  }
-
-  // 서비스워커 등록
-  const registerServiceWorker = () => {
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("/public/firebase-messaging-sw.js")
-          .then((registration) => {
-            // 테스트콘솔
-            console.log(registration);
-          })
-          .catch((err) => {
-            console.log("Service Worker 등록 실패:", err);
-          });
-      });
-    }
-  };
+  // async function requestNotificationPermissionAndGetToken(messagingVal: Messaging, vapidKey: string | undefined) {
+  //   try {
+  //     const permission = await Notification.requestPermission();
+  //     if (permission === 'granted') {
+  //       console.log('Notification permission granted.');
+  //       // 허용되면 FCM 토큰을 가져옴
+  //       const token = await getToken(messagingVal, { vapidKey });
+  //       return token;
+  //     }
+  //       console.log('Unable to get permission to notify.');
+  //       return null;  // 권한이 거부되면 null 반환
+  //
+  //   } catch (error) {
+  //     console.error('Error getting notification permission: ', error);
+  //     return null;
+  //   }
+  // }
+  //
+  // // 서비스워커 등록
+  // const registerServiceWorker = () => {
+  //   if ("serviceWorker" in navigator) {
+  //     window.addEventListener("load", () => {
+  //       navigator.serviceWorker
+  //         .register("/public/firebase-messaging-sw.js")
+  //         .then((registration) => {
+  //           // 테스트콘솔
+  //           console.log(registration);
+  //         })
+  //         .catch((err) => {
+  //           console.log("Service Worker 등록 실패:", err);
+  //         });
+  //     });
+  //   }
+  // };
 
 
   // LOGIN
@@ -211,30 +211,30 @@ export function AuthProvider({ children }: Props) {
       setSession(accessToken);
 
 
-      // 알림 권한 요청 및 FCM 토큰 획득
-      const generatedFcmtoken = await requestNotificationPermissionAndGetToken(messaging, import.meta.env.VITE_FIREBASE_VAPID_ID);
-
-      if(generatedFcmtoken){
-        const url = 'http://localhost:8080/api/v1/user/fcm';
-
-        console.log("token = ", generatedFcmtoken);
-        console.log("user = ", user.id);
-        const postData = {
-          id: 2, // 로그인 유저 아이디로 변경 필요
-          fcmToken: generatedFcmtoken
-        };
-
-        // Axios를 사용한 POST 요청
-        axiosOrigin.post(url, postData)
-          .then((response: { data: any; }) => {
-            console.log('Server response:', response.data);
-          })
-          .catch((error: any) => {
-            console.error('Error sending token to server:', error);
-          });
-      }else {
-        console.log('No FCM token available. Request permission to generate one.');
-      }
+      // // 알림 권한 요청 및 FCM 토큰 획득
+      // const generatedFcmtoken = await requestNotificationPermissionAndGetToken(messaging, import.meta.env.VITE_FIREBASE_VAPID_ID);
+      //
+      // if(generatedFcmtoken){
+      //   const url = 'http://localhost:8080/api/v1/user/fcm';
+      //
+      //   console.log("token = ", generatedFcmtoken);
+      //   console.log("user = ", user.id);
+      //   const postData = {
+      //     id: 2, // 로그인 유저 아이디로 변경 필요
+      //     fcmToken: generatedFcmtoken
+      //   };
+      //
+      //   // Axios를 사용한 POST 요청
+      //   axiosOrigin.post(url, postData)
+      //     .then((response: { data: any; }) => {
+      //       console.log('Server response:', response.data);
+      //     })
+      //     .catch((error: any) => {
+      //       console.error('Error sending token to server:', error);
+      //     });
+      // }else {
+      //   console.log('No FCM token available. Request permission to generate one.');
+      // }
 
         // 로컬 상태 업데이트
         dispatch({
@@ -243,7 +243,7 @@ export function AuthProvider({ children }: Props) {
             user: {
               ...user,
               accessToken,
-              generatedFcmtoken
+              // generatedFcmtoken
             },
           },
         });
@@ -253,10 +253,10 @@ export function AuthProvider({ children }: Props) {
     }
   }, []);
 
-  // fcm서비스 워커 등록
-  useEffect(() => {
-    registerServiceWorker();
-  }, []);
+  // // fcm서비스 워커 등록
+  // useEffect(() => {
+  //   registerServiceWorker();
+  // }, []);
 
 
   // REGISTER
