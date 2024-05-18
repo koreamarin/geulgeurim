@@ -45,7 +45,7 @@ export default function ResumeRHFUpload({ name, multiple, helperText, ...other }
             error={!!error}
             helperText={
               (!!error || helperText) && (
-                <FormHelperText error={!!error} sx={{ px: 2 }}>asdf
+                <FormHelperText error={!!error} sx={{ px: 2 }}>
                   {error ? error?.message : helperText}
                 </FormHelperText>
               )

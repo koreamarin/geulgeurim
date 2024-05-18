@@ -84,7 +84,7 @@ export function useGetBoardDetail(boardId: string) {
   );
 
   return memoizedValue;
-  
+
 }
 
 // ----------------------------------------------------------------------
@@ -155,7 +155,7 @@ export function useGetBoardSearch(searchRef: string, optionBy: string, sortBy: s
   const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
     refreshInterval: 0,  // disable automatic re-fetching
     revalidateOnFocus: false, // disable re-fetching when the window is focused
-  }); 
+  });
   console.log('Share List' ,data)
 
   const memoizedValue = useMemo(

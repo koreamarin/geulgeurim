@@ -233,48 +233,48 @@ const dummyPortfolio = [
   {
     pofolName : "더미데이터 제목1",
 	  pofolId : 1,
-    createAt: '2022-04-01',
-    updateAt: '2024-04-01',
+    createdAt: '2022-04-01',
+    updatedAt: '2024-04-01',
     status : 'PUBLIC',
     format : 'USER'
   },
   {
     pofolName : "더미데이터 제목2",
 	  pofolId : 2,
-    createAt: '2022-04-02',
-    updateAt: '2024-04-01',
+    createdAt: '2022-04-02',
+    updatedAt: '2024-04-01',
     status : 'PUBLIC',
     format : 'SERVICE'
   },
   {
     pofolName : "더미데이터 제목3",
 	  pofolId : 3,
-    createAt: '2022-04-03',
-    updateAt: '2024-04-01',
+    createdAt: '2022-04-03',
+    updatedAt: '2024-04-01',
     status : 'PUBLIC',
     format : 'USER'
   },
   {
     pofolName : "더미데이터 제목4",
 	  pofolId : 4,
-    createAt: '2022-04-04',
-    updateAt: '2024-04-01',
+    createdAt: '2022-04-04',
+    updatedAt: '2024-04-01',
     status : 'PUBLIC',
     format : 'SERVICE'
   },
   {
     pofolName : "더미데이터 제목5",
 	  pofolId : 5,
-    createAt: '2022-04-05',
-    updateAt: '2024-04-01',
+    createdAt: '2022-04-05',
+    updatedAt: '2024-04-01',
     status : 'PUBLIC',
     format : 'SERVICE'
   },
   {
     pofolName : "더미데이터 제목6",
 	  pofolId : 6,
-    createAt: '2022-04-06',
-    updateAt: '2024-04-01',
+    createdAt: '2022-04-06',
+    updatedAt: '2024-04-01',
     status : 'PUBLIC',
     format : 'SERVICE'
   }
