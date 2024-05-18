@@ -1,5 +1,6 @@
 package com.geulgrim.community.share.presentation;
 
+import com.geulgrim.community.board.application.dto.response.BoardListResponse;
 import com.geulgrim.community.share.application.dto.request.ShareUpdateRequest;
 import com.geulgrim.community.share.application.dto.request.ShareWriteRequest;
 import com.geulgrim.community.share.application.dto.response.ShareDetailResponse;
@@ -11,6 +12,8 @@ import com.geulgrim.community.share.domain.entity.Share;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,4 +72,12 @@ public class ShareController {
         return new ResponseEntity<>(shareService.modifyShare(userId, shareUpdateRequest), HttpStatus.OK);
     }
     // 검색
+    @GetMapping("/search")
+    public Page<ShareListResponse> searchBoards(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String sort,
+            Pageable pageable) {
+        return shareService.searchShares(keyword, searchType, sort, pageable);
+    }
 }

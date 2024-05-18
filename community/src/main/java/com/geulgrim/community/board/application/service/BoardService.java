@@ -135,7 +135,10 @@ public class BoardService {
         return boardDetail(board.getBoardId());
     }
 
-    public Page<BoardListResponse> searchBoards(String keyword, String searchType, Pageable pageable) {
-        return boardRepository.searchBoards(keyword, searchType, pageable);
+    public Page<BoardListResponse> searchBoards(String keyword, String searchType, String sort, Pageable pageable) {
+        if (keyword == null || searchType == null) {
+            return boardRepository.findBoardResponseList(pageable);
+        }
+        return boardRepository.searchBoards(keyword, searchType, sort, pageable);
     }
 }

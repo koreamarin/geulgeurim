@@ -5,5 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface BoardCustomRepository {
-    Page<BoardListResponse> searchBoards(String keyword, String searchType, Pageable pageable);
+    Page<BoardListResponse> searchBoards(String keyword, String searchType, String sort, Pageable pageable);
+    Page<BoardListResponse> findBoardResponseList(Pageable pageable);
 }

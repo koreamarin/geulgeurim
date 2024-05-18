@@ -3,7 +3,10 @@ package com.geulgrim.community.board.domain.repository;
 import com.geulgrim.community.board.application.dto.response.BoardListResponse;
 import com.geulgrim.community.board.domain.entity.Board;
 import com.geulgrim.community.board.domain.entity.QBoard;
+import com.geulgrim.community.board.domain.entity.QBoardComment;
 import com.geulgrim.community.global.user.domain.entity.QUser;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -15,7 +18,8 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BoardCustomRepositoryImpl implements BoardCustomRepository{
+public class BoardCustomRepositoryImpl implements BoardCustomRepository {
+
     private final JPAQueryFactory queryFactory;
 
     public BoardCustomRepositoryImpl(EntityManager em) {
@@ -23,15 +27,17 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository{
     }
 
     @Override
-    public Page<BoardListResponse> searchBoards(String keyword, String searchType, Pageable pageable) {
+    public Page<BoardListResponse> searchBoards(String keyword, String searchType, String sort, Pageable pageable) {
         QBoard board = QBoard.board;
         QUser user = QUser.user;
 
         BooleanExpression predicate = createPredicate(keyword, searchType, board, user);
+        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(sort, board);
 
         List<Board> boards = queryFactory.selectFrom(board)
                 .leftJoin(board.user, user)
                 .where(predicate)
+                .orderBy(orderSpecifier)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -57,6 +63,38 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository{
         return new PageImpl<>(boardListResponses, pageable, total);
     }
 
+    @Override
+    public Page<BoardListResponse> findBoardResponseList(Pageable pageable) {
+        QBoard board = QBoard.board;
+        QBoardComment comment = QBoardComment.boardComment;
+        QUser user = QUser.user;
+
+        List<BoardListResponse> results = queryFactory
+                .select(Projections.constructor(BoardListResponse.class,
+                        board.boardId,
+                        board.user.userId,
+                        board.user.nickname,
+                        board.title,
+                        board.hit,
+                        comment.count(),
+                        board.createdAt,
+                        board.updatedAt))
+                .from(board)
+                .leftJoin(board.commentList, comment)
+                .leftJoin(board.user, user)
+                .groupBy(board.boardId, board.user.userId, board.user.nickname, board.title, board.hit, board.createdAt, board.updatedAt)
+                .orderBy(board.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = queryFactory
+                .from(board)
+                .fetchCount();
+
+        return new PageImpl<>(results, pageable, total);
+    }
+
     private BooleanExpression createPredicate(String keyword, String searchType, QBoard board, QUser user) {
         if (!StringUtils.hasText(keyword)) {
             return null;
@@ -71,6 +109,19 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository{
                 return user.nickname.containsIgnoreCase(keyword);
             default:
                 return null;
+        }
+    }
+
+    private OrderSpecifier<?> getOrderSpecifier(String sort, QBoard board) {
+        switch (sort) {
+            case "latest":
+                return board.createdAt.desc();
+            case "oldest":
+                return board.createdAt.asc();
+            case "popular":
+                return board.hit.desc();
+            default:
+                return board.createdAt.desc(); // Default sorting
         }
     }
 }
