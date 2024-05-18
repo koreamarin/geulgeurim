@@ -4,41 +4,51 @@ import { CUSTOM_API } from 'src/config-global';
 
 // ----------------------------------------------------------------------
 
-
 const customAxiosInstance = axios.create({ baseURL: CUSTOM_API });
+
+customAxiosInstance.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('accessToken');
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config
+  },
+  (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong')
+);
+
 
 customAxiosInstance.interceptors.response.use(
   (res) => res,
-  (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong')
+  (error) => console.log('에러코드', error.response.status)
 );
 
 export default customAxiosInstance;
 
 // ----------------------------------------------------------------------
 
+export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
 
-export const customFetcher = async (args: string | [string, AxiosRequestConfig], token?: string) => {
-  const [url, config] = Array.isArray(args) ? args : [args, {}];
+    const [url, config] = Array.isArray(args) ? args : [args];
 
-  const headers = {
-    ...config.headers,
-    ...(token && { Authorization: `Bearer ${token}` }),
-  };
+    const res = await customAxiosInstance.get(url, { ...config });
 
-  const res = await customAxiosInstance.get(url, { ...config, headers });
+    return res.data;
 
-  console.log('axios', res)
-
-  return res.data;
 };
-
 
 // ----------------------------------------------------------------------
 
 export const endpoints = {
-  portfolio: {
-    list:'/api/v1/common/portfolio',
-    writeUser: '/api/v1/common/portfolio/user',
-    writeService: '/api/v1/common/portfolio'
+  resume:{
+    list:'/api/v1/recruit/resume',
+  },
+  portfolio : {
+
+  },
+  pieces : {
+    mine: `api/v1/common/piece/search?user_id=33`
   }
+
 };

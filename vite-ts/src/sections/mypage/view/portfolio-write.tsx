@@ -3,20 +3,24 @@ import React, { useState, useCallback, ChangeEvent } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {
-  Box, Grid, Paper, Button, Select, MenuItem, Container, TextField, Typography, IconButton,
-  Dialog, DialogTitle, DialogActions, DialogContent,
+  Box, Grid, Paper, Button, Select, Dialog, MenuItem, Container, TextField, Typography,
+  IconButton, DialogTitle, DialogActions, DialogContent,
 } from '@mui/material';
 
-import { Upload } from 'src/components/upload';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import { useGetPiecesList } from 'src/api/piece';
+
+import { Upload } from 'src/components/upload';
+import { createPortfolio } from 'src/api/portfolio';
 
 type Entry = {
   title: string;
   program: string;
   contribution: string;
   content: string;
-  file: File | string | null;
+  file: File  | null;
   firstDropdownValue: string;
   secondDropdownValue: string;
   image: number;
@@ -24,7 +28,12 @@ type Entry = {
 
 
 export default function PortfolioWriteView() {
+  const { piecesData, piecesLoading, piecesError , piecesEmpty} = useGetPiecesList()
+  console.log('작품 데이터', piecesData)
+
   const router = useRouter()
+
+  // useState
   const [title, setTitle] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   // 1st item
@@ -44,28 +53,30 @@ export default function PortfolioWriteView() {
     pieceUrl: [
       'https://source.unsplash.com/random/6',
       'https://source.unsplash.com/random/7',
-      'https://source.unsplash.com/random/8',
-      'https://source.unsplash.com/random/9',
-      'https://source.unsplash.com/random/10',
-      'https://source.unsplash.com/random/11',
-      'https://source.unsplash.com/random/12',
-      'https://source.unsplash.com/random/13',
-      'https://source.unsplash.com/random/14',
-      'https://source.unsplash.com/random/15',
-      'https://source.unsplash.com/random/16',
-      'https://source.unsplash.com/random/17',
-      'https://source.unsplash.com/random/18',
-      'https://source.unsplash.com/random/19',
-      'https://source.unsplash.com/random/20',
+      'https://source.unsplash.com/random/8'
     ]
   };
 
+  // const [pieces, setPieces] = useState<any[]>([]);
+  const userId = 33; // Your user ID
 
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  // useEffect(() => {
+  //   async function fetchPieces() {
+  //     try {
+  //       const data = await getPieces(userId);
+  //       setPieces(data);
+  //     } catch (error) {
+  //       console.error('Error fetching pieces:', error);
+  //     }
+  //   }
+
+  //   fetchPieces();
+  // }, [userId]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const imagesPerPage = 5;
 
-
+  // entry 추가 로직
   const handleAddEntry = useCallback(() => {
     // next items
     setEntries(prevEntries => [
@@ -75,10 +86,12 @@ export default function PortfolioWriteView() {
     ]);
   }, []);
 
+
   const handleRemoveEntry = useCallback((index: number) => {
     setEntries(prevEntries => prevEntries.filter((_, idx) => idx !== index));
   }, []);
 
+  // entry index를 받아서 entry 내부 인자 변경 로직
   const handleChange = useCallback((index: number, field: keyof Entry) => (event: ChangeEvent<HTMLInputElement>) => {
     setEntries(prevEntries => prevEntries.map((entry, idx) =>
       idx === index ? { ...entry, [field]: event.target.value } : entry
@@ -89,7 +102,7 @@ export default function PortfolioWriteView() {
   // 페이지네이션
   const indexOfLastImage = currentPage * imagesPerPage;
   const indexOfFirstImage = indexOfLastImage - imagesPerPage;
-  const currentImages = dummyPieces.pieceUrl.slice(indexOfFirstImage, indexOfLastImage);
+  // const currentImages = pieces.slice(indexOfFirstImage, indexOfLastImage);
 
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(dummyPieces.pieceUrl.length / imagesPerPage); i+=1) {
@@ -112,6 +125,7 @@ export default function PortfolioWriteView() {
     </Button>
   ));
 
+  // 인덱스를 잡아서 해당 엔트리에 이미지 인덱스 변경
   const changeImage = (index:number, imageIndex:number) => {
     console.log()
     setEntries(prevEntries => prevEntries.map((entry, idx) =>
@@ -137,7 +151,46 @@ export default function PortfolioWriteView() {
   }, []);
 
   const handleSubmit = () => {
-    router.push(paths.mypage.portfolio)
+    // console.log('입력')
+    // console.log('predata', entries)
+    // console.log('제목?', title)
+    const formData = new FormData();
+    const inputData = {
+      pofol_name : title,
+      status : 'PUBLIC',
+
+      pieces: entries.map((inputItem) => (
+        {
+          "pieceId": inputItem.firstDropdownValue === '작품에서 가져오기' ? piecesData[inputItem.image].id : null,
+          "title": inputItem.title,
+          "program": inputItem.program,
+          "contribution": inputItem.contribution,
+          "content": inputItem.content,
+          "identifier": inputItem.file ? inputItem.file.name : null
+        }
+      )
+      )
+    }
+    console.log(inputData)
+
+    formData.append("portfolioRequest", new Blob([JSON.stringify(inputData)], {
+      type: "application/json"
+  }));
+
+  formData.append("files", filesToUpload.current[0]);
+  console.log('데이터', formData)
+
+  createPortfolio(formData)
+
+  files.forEach(file => {
+    if (file instanceof File) {
+      formData.append('file_url', file, file.name);
+    }
+  });
+
+    // router.push(paths.mypage.portfolio)
+
+    // api 연결
   };
 
   const handleCancel = () => {
@@ -150,6 +203,42 @@ export default function PortfolioWriteView() {
       router.push(paths.mypage.portfolio);
     }
   };
+  const selectPieces = (entryIndex:number) => {
+    if (piecesLoading) {
+      return (
+      <Box>
+        로딩중..
+      </Box>
+      )
+    } if (piecesError) {
+      return (
+
+      <Box>
+        네트워크 확인해주세요!
+      </Box>
+      )
+    }
+     if (piecesEmpty) {
+      return (
+      <Box>
+        작품이 없습니다.
+        <Button>
+          작품 등록하기
+        </Button>
+      </Box>
+      )
+  }
+
+    return (
+
+      piecesData.map((piece, idx) => (
+        <Box key={idx} sx={{ width: 'calc(20% - 8px)', marginBottom: 3, height: '150px', overflow: 'hidden', cursor: 'pointer' }} onClick={() => changeImage(entryIndex, indexOfFirstImage + idx)}>
+          <img src={piece?.fileUrl} alt={`Piece ${indexOfFirstImage + idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} />
+          {indexOfFirstImage + idx}
+        </Box>
+      ))
+    )
+  }
 
 
   return (
@@ -261,9 +350,7 @@ export default function PortfolioWriteView() {
             </Grid>
 
 
-            {/* 이미지 미리보기 또는 파일 업로드 */}
-
-            {/* 파일 업로드 또는 폼 */}
+      {/* 파일 업로드 클릭하면, 파일 업로드 항목과 폼 추가 */}
       {entry.firstDropdownValue === '파일 업로드' ? (
       <>
         <Grid item xs={12} md={6}>
@@ -310,17 +397,13 @@ export default function PortfolioWriteView() {
         </Grid>
       </>
       ) : (
+
         <>
 
           <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
               {/* {renderImages} */}
-              {currentImages.map((url, idx) => (
-                <Box key={idx} sx={{ width: 'calc(20% - 8px)', marginBottom: 3, height: '150px', overflow: 'hidden', cursor: 'pointer' }} onClick={() => changeImage(index, indexOfFirstImage + idx)}>
-                  <img src={url} alt={`Piece ${indexOfFirstImage + idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} />
-                  {indexOfFirstImage + idx}
-                </Box>
-              ))}
+            {selectPieces(index)}
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px', marginBottom: '10px' }}>
               {renderPageNumbers}
@@ -328,10 +411,10 @@ export default function PortfolioWriteView() {
           </Grid>
 
           <Grid item xs={12} md={6}>
-              {selectedImageIndex !== null && entry.image !== -1 ? (
+              {entry.image !== -1 ? (
                 <Box sx={{ mb: 2 }}>
                   <img
-                    src={dummyPieces.pieceUrl[entries[index].image]}
+                    src={piecesData[entries[index].image]?.fileUrl}
                     alt="Selected"
                     style={{ width: '100%', height: '330px', objectFit: 'cover' }}
                   />

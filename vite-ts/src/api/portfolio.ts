@@ -85,6 +85,25 @@ export async function createUserFormat(data: any) {
 
 // ----------------------------------------------------------------------
 
+export async function createPortfolio(data: any) {
+  // const URL = endpoints.portfolio.writeUser;
+  /**
+   * Work on server
+   */
+  await axios.post('http://localhost:8080/api/v1/common/portfolio',
+  data,
+  {headers : {
+    user_id : 33
+  }}  )
+  .then((res) => console.log('성공', res))
+  .catch((err) => console.log('에러!', err))
+
+  // const data = { eventData };
+  // await axios.post(URL, data);
+}
+
+// ----------------------------------------------------------------------
+
 export async function deletePortfolio (pofolId: number) {
   const url = `http://localhost:8080/api/v1/common/portfolio/${pofolId}`;
 

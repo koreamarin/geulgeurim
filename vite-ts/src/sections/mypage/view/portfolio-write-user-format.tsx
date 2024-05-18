@@ -61,52 +61,21 @@ export default function PortfolioWriteUserFormatView() {
     const formData = new FormData();
 
     const portfolioRequest = {
-      "pofol_name": "주현의 채색 포트폴리오",
-      "status": "PUBLIC",
-      "pieces": [
-        {
-          "title": "작품1",
-          "program": "string",
-          "contribution": "채색 20",
-          "content": "작업 내용을 입력하세요.",
-          "identifier": "city"
-        },
-        {
-          "title": "작품2",
-          "program": "string",
-          "contribution": "채색 60",
-          "content": "작업 내용을 입력하세요.",
-          "identifier": "sunset.jpg"
-        }
-      ]
+      "pofol_name": title,
+      "status": "PUBLIC"
     }
 
     formData.append("portfolioRequest", new Blob([JSON.stringify(portfolioRequest)], {
         type: "application/json"
     }));
 
-    formData.append("files", filesToUpload.current[0]);
-    console.log('데이터', formData)
-
-    createUserFormat(formData)
-
     files.forEach(file => {
       if (file instanceof File) {
-        formData.append('file_url', file, file.name);
+        formData.append('files', file, file.name);
       }
     });
 
-    // try {
-    //   const response = await fetch('http://localhost:8080/api/v1/portfolio/user/2', {
-    //     method: 'POST',
-    //     body: formData,  // No headers related to content-type. Let the browser set it
-    //   });
-
-    //   const responseData = await response.json();
-    //   console.log('Server Response:', responseData);
-    // } catch (error) {
-    //   console.error('Error posting data:', error);
-    // }
+    createUserFormat(formData)
 
     router.push(paths.mypage.portfolio)
   };
