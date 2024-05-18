@@ -2,9 +2,8 @@ import axios from 'axios';
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 
-import { fetcher, endpoints } from 'src/utils/custom-axios';
+import { customFetcher, endpoints } from 'src/utils/custom-axios';
 
-// import { IResumeResponse } from 'src/types/resume';
 // ----------------------------------------------------------------------
 
 type Pieces = {
@@ -19,9 +18,9 @@ type Pieces = {
 
 const URL = endpoints.pieces.mine;
 
-export function useGetPiecesList(user_id: number, type: string) {
-  const vURL = `${URL}user_id=${user_id}&type=${type}`
-  const { data, isLoading, error, isValidating } = useSWR(vURL, fetcher);
+export function useGetPiecesList(type: string) {
+  const vURL = `${URL}type=${type}`
+  const { data, isLoading, error, isValidating } = useSWR(vURL, customFetcher);
 
   const memoizedValue = useMemo(
     () => ({
@@ -34,26 +33,4 @@ export function useGetPiecesList(user_id: number, type: string) {
     [data, error, isLoading, isValidating]);
 
   return memoizedValue;
-}
-
-
-// ----------------------------------------------------------------------
-
-export async function getPieceDetail(pieceId: number) {
-
-  const url = `http://localhost:8080/api/v1/common/piece/detail/${pieceId}`;
-
-  try {
-    const response = await axios.get(url, {
-      headers: {
-        user_id: 33
-      }
-    });
-    console.log('작품 상세보기 성공', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('작품 상세보기 에러!', error);
-    throw error;
-  }
-
 }

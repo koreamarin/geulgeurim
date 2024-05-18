@@ -1,4 +1,4 @@
-import React, { useState, useCallback, ChangeEvent, useRef, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback, ChangeEvent } from 'react';
 
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -11,7 +11,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useGetPiecesList } from 'src/api/piece';
-import { createPortfolio } from 'src/api/portfolio';
+import { createPortfolio, useGetPortfolios } from 'src/api/portfolio';
 
 import { Upload } from 'src/components/upload';
 
@@ -27,13 +27,12 @@ type Entry = {
 };
 
 
-
 export default function PortfolioWriteView() {
-  const user_id = 33 // 추후에 토큰으로 바꿔야 함
-  const [type, setType] = useState('NONE');
-  const { piecesData, piecesLoading, piecesError} = useGetPiecesList(user_id, type)
-  const router = useRouter()
 
+  const [type, setType] = useState('NONE');
+  const { piecesData, piecesLoading, piecesError} = useGetPiecesList(type)
+  const router = useRouter()
+  const { portfoliosMutate } = useGetPortfolios();
   const [title, setTitle] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   // 1st item
@@ -133,7 +132,7 @@ export default function PortfolioWriteView() {
   }, []);
 
   // post api 연결
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
 
     const formData = new FormData();
     const inputData = {
@@ -161,15 +160,15 @@ export default function PortfolioWriteView() {
     formData.append("portfolioRequest", new Blob([JSON.stringify(inputData)], {
       type: "application/json"
   }));
-  // console.log('파일들 : ', files.current)
+
   files.current.forEach(file => {
     if (file instanceof File) {
       formData.append('files', file, file.name);
     }
   });
 
-  createPortfolio(formData)
-  // console.log('등록 성공!')
+  await createPortfolio(formData)
+  await portfoliosMutate()
   router.push(paths.mypage.portfolio)
 
   };

@@ -10,26 +10,11 @@ import {
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { deletePortfolio, getPortfolioDetail, usePortfolioDetail } from 'src/api/portfolio';
+import { deletePortfolio, usePortfolioDetail } from 'src/api/portfolio';
 
 type Props = {
   id: string;
 };
-
-type ServicePortfolio = {
-  pofolId: number;
-  pofolName: string;
-  status: string;
-  format: string;
-  pieces: {
-    title: string;
-    program: string;
-    contribution: string;
-    content: string;
-    pieceUrl: string;
-  }[];
-};
-
 
 export default function PortfolioDetailView({ id }: Props) {
   const router = useRouter()

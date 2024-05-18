@@ -1,18 +1,8 @@
-import { mutate } from 'swr';
 import { useState, useCallback, useRef} from 'react';
 
 import {
-  Box,
-  Card,
-  Stack,
-  Button,
-  Switch,
-  Dialog,
-  Container,
-  TextField,
-  Typography,
-  CardHeader,
-  CardContent,
+  Box, Card, Stack, Button, Switch,
+  Dialog, Container, TextField, Typography, CardHeader, CardContent,
   DialogTitle, DialogActions, DialogContent, FormControlLabel
 } from '@mui/material';
 
