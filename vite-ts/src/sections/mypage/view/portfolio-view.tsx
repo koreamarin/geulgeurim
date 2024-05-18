@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -6,16 +6,17 @@ import PersonIcon from '@mui/icons-material/Person';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import {
-  Box, Grid, Paper, Button, Tooltip, Container,
-  FormGroup, Typography, IconButton,
-  Dialog, DialogTitle, DialogContent, DialogActions
+  Box, Grid, Paper, Button, Dialog, Tooltip,
+  Container, FormGroup, Typography,
+  IconButton, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 // import { useGetPortfolios } from "src/api/test";
-import { useGetPortfolios, deletePortfolio } from 'src/api/portfolio';
+import { deletePortfolio, useGetPortfolios } from 'src/api/portfolio';
+
 import { SplashScreen } from 'src/components/loading-screen';
 
 interface Portfolio {
@@ -86,33 +87,21 @@ export default function PortfolioView() {
   //   )
   // }
 
-  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useGetPortfolios().then(data => {
-      setPortfolios(data);
-      setLoading(false);
-    }).catch((err: Error) => {
-      console.error('Fetch error:', err);
-      setError(err);
-      setLoading(false);
-    });
-  }, []);
+  const  { portfoliosData, portfoliosError, portfoliosLoading, portfoliosMutate } = useGetPortfolios()
 
-  if (loading) return <Box>Loading...</Box>;
-  if (error) return <Box>Error loading portfolios: {error.message}</Box>;
-  if (portfolios.length === 0) return <Box>포트폴리오가 없습니다.</Box>;
+  if (portfoliosLoading) return <Box>Loading...</Box>;
+  if (portfoliosError) return <Box>Error loading portfolios:</Box>;
+  if (portfoliosData.length === 0) return <Box>포트폴리오가 없습니다.</Box>;
 
   const handleDelete = async () => {
     if (selectedPortfolioId === null) return;
 
     try {
-      await deletePortfolio(selectedPortfolioId );
-      const updatedPortfolios = portfolios.filter(portfolio => portfolio.pofolId !== selectedPortfolioId );
-      setPortfolios(updatedPortfolios);
+      await deletePortfolio(selectedPortfolioId);
+      await portfoliosMutate();
+      // const updatedPortfolios = portfoliosData.filter(portfolio => portfolio.pofolId !== selectedPortfolioId );
+      // setPortfolios(updatedPortfolios);
       handleDeleteClose();
     } catch (err) {
       console.error('Error deleting portfolio:', err);
@@ -120,7 +109,7 @@ export default function PortfolioView() {
   };
 
   const handlePortfolioClick = (pofolId: number) => {
-    const portfolio = portfolios.find(p => p.pofolId === pofolId);
+    const portfolio = portfoliosData.find(p => p.pofolId === pofolId);
 
     if (!portfolio) {
       console.error('Portfolio not found');
@@ -143,7 +132,7 @@ export default function PortfolioView() {
         {/* 포트폴리오 */}
       </Typography>
 
-    {portfolios.map((portfolio: Portfolio) => (
+    {portfoliosData.map((portfolio: Portfolio) => (
       <Paper key={portfolio.pofolId} elevation={3} sx={{ p: 2, mt: 2, mb: 4, cursor: 'pointer' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         <Typography variant="h3" onClick={() => handlePortfolioClick(portfolio.pofolId)}>

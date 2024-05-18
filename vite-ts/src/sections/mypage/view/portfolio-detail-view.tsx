@@ -4,13 +4,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Box, Grid, Paper, Switch, Tooltip, Container, Button,
-  FormGroup, Typography, IconButton, FormControlLabel
+  FormGroup, Typography, IconButton, FormControlLabel, Dialog, DialogTitle, DialogActions
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { getPortfolioDetail } from 'src/api/portfolio';
+import { deletePortfolio, getPortfolioDetail, usePortfolioDetail } from 'src/api/portfolio';
 
 type Props = {
   id: string;
@@ -33,53 +33,51 @@ type ServicePortfolio = {
 
 export default function PortfolioDetailView({ id }: Props) {
   const router = useRouter()
-  const [portfolioState, setPortfolioState] = useState<ServicePortfolio | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchPortfolio = async () => {
-      try {
-        const data: ServicePortfolio = await getPortfolioDetail(parseInt(id, 10));
-        setPortfolioState(data);
-      } catch (error) {
-        console.error("Failed to fetch portfolio details:", error);
-      }
-    };
-    fetchPortfolio();
-  }, [id]);
-
+  const { portfolioDetailData, portfolioDetailError, portfolioDeatilLoading } = usePortfolioDetail(parseInt(id, 10));
 
   const handleTogglePublic = () => {
-    setPortfolioState(currentState => {
-      if (!currentState) return null;
-      return {
-        ...currentState,
-        status: currentState.status === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC'
-      };
-    });
+    if (!portfolioDetailData) return;
+    portfolioDetailData.status = portfolioDetailData.status === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC';
   };
 
   const handleHome = () => {
     router.push(paths.mypage.portfolio);
   };
 
-  const handleEditClick = (portfolioId: number) => {
-    router.push(paths.mypage.portfolioEdit(portfolioId))
-  };
 
-  if (!portfolioState) return <Box>Loading...</Box>;
+  if (portfolioDeatilLoading) return <Box>Loading...</Box>;
+  if (portfolioDetailError) return <Box>Error loading portfolio: {portfolioDetailError.message}</Box>;
+
+  // 삭제
+  const handleDeleteOpen = () => setDeleteOpen(true);
+  const handleDeleteClose = () => setDeleteOpen(false);
+
+  const handleDelete = async () => {
+    try {
+      if (portfolioDetailData) {
+        await deletePortfolio(portfolioDetailData.pofolId);
+        router.push(paths.mypage.portfolio); // 삭제 후 포트폴리오 목록으로 이동
+      }
+    } catch (error) {
+      console.error("Failed to delete portfolio:", error);
+    }
+    handleDeleteClose();
+  };
 
   return (
     <Container>
     <Paper elevation={3} sx={{ p: 2, mt: 2, mb: 4 }}>
-      <Typography variant="h2" sx={{ mb: 2 }}>{portfolioState.pofolName}</Typography>
+      <Typography variant="h2" sx={{ mb: 2 }}>{portfolioDetailData.pofolName}</Typography>
 
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <FormGroup sx={{ flexDirection: 'row', alignItems: 'center' }}>
           <FormControlLabel
-            control={<Switch checked={portfolioState.status === "PUBLIC"} onChange={handleTogglePublic} />}
-            label={portfolioState.status === 'PUBLIC' ? "Public" : "Private"}
-            labelPlacement="start"
-          />
+              control={<Switch checked={portfolioDetailData.status === "PUBLIC"} onChange={handleTogglePublic} />}
+              label={portfolioDetailData.status === 'PUBLIC' ? "Public" : "Private"}
+              labelPlacement="start"
+            />
         </FormGroup>
 
         <Tooltip title="Edit">
@@ -90,17 +88,15 @@ export default function PortfolioDetailView({ id }: Props) {
         </Tooltip>
 
         <Tooltip title="Delete">
-          <IconButton color="secondary" onClick={(e) => {
-            console.log('Delete action triggered'); // Replace with actual delete function call
-          }}>
+          <IconButton color="secondary" onClick={handleDeleteOpen}>
             <DeleteIcon sx={{ color: 'grey' }} />
           </IconButton>
         </Tooltip>
       </Box>
 
       {/* 글그림 포맷 */}
-      {'pieces' in portfolioState && (
-        portfolioState.pieces.map((piece, index) => (
+      {'pieces' in portfolioDetailData && (
+        portfolioDetailData.pieces.map((piece, index) => (
           <Grid container spacing={2} key={index} sx={{ mt: 3, alignItems: 'center'}}>
            <Grid item xs={12} md={6}>
               <img
@@ -142,6 +138,19 @@ export default function PortfolioDetailView({ id }: Props) {
       </Box>
 
     </Paper>
+
+    <Dialog open={deleteOpen} onClose={handleDeleteClose} aria-labelledby="delete-portfolio-title">
+        <DialogTitle id="delete-portfolio-title">정말로 삭제하시겠습니까?</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleDeleteClose} color="primary">
+            아니오
+          </Button>
+          <Button onClick={handleDelete} color="secondary">
+            네
+          </Button>
+        </DialogActions>
+      </Dialog>
+
   </Container>
   )
 

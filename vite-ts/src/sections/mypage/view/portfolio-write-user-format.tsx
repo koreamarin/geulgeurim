@@ -1,3 +1,4 @@
+import { mutate } from 'swr';
 import { useState, useCallback, useRef} from 'react';
 
 import {
@@ -20,9 +21,9 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { Upload } from 'src/components/upload';
+import { createUserFormat, useGetPortfolios } from 'src/api/portfolio';
 
-import { createUserFormat } from 'src/api/portfolio';
+import { Upload } from 'src/components/upload';
 
 
 export default function PortfolioWriteUserFormatView() {
@@ -32,6 +33,7 @@ export default function PortfolioWriteUserFormatView() {
   const [title, setTitle] = useState('');
   const [files, setFiles] = useState<(File | string)[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
+  const { portfoliosMutate } = useGetPortfolios();
 
   const handleDropMultiFile = useCallback(
     (acceptedFiles: File[]) => {
@@ -52,11 +54,11 @@ export default function PortfolioWriteUserFormatView() {
     setFiles(filesFiltered);
   };
 
-  const handleRemoveAllFiles = () => {
+  const handleRemoveAllFiles = async () => {
     setFiles([]);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
 
     const formData = new FormData();
 
@@ -75,7 +77,8 @@ export default function PortfolioWriteUserFormatView() {
       }
     });
 
-    createUserFormat(formData)
+    await createUserFormat(formData)
+    await portfoliosMutate()
 
     router.push(paths.mypage.portfolio)
   };

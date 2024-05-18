@@ -28,7 +28,7 @@ export default customAxiosInstance;
 
 // ----------------------------------------------------------------------
 
-export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
+export const customFetcher = async (args: string | [string, AxiosRequestConfig]) => {
 
     const [url, config] = Array.isArray(args) ? args : [args];
 
@@ -45,7 +45,12 @@ export const endpoints = {
     list:'/api/v1/recruit/resume',
   },
   portfolio : {
-
+    list: '/api/v1/common/portfolio',
+    create: '/api/v1/common/portfolio',
+    createUser: '/api/v1/common/portfolio/user',
+    detail: '/api/v1/common/portfolio/detail',
+    detailUserFormat: '/api/v1/common/portfolio/detail/user',
+    delete: '/api/v1/common/portfolio'
   },
   pieces : {
     mine: '/api/v1/common/piece/search?'

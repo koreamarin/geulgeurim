@@ -1,47 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
-  Box, Grid, Paper, Switch, Tooltip, Container, Button,
-  FormGroup, Typography, IconButton, FormControlLabel
+  Box, Grid, Paper, Switch, Button, Dialog, Tooltip, Container,
+  FormGroup, Typography, IconButton, DialogTitle, DialogActions, FormControlLabel
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { getPortfolioDetailUserFormat } from 'src/api/portfolio';
+import { deletePortfolio, usePortfolioDetailUserFormat } from 'src/api/portfolio';
+
 
 type Props = {
   id: string;
 };
 
-type UserPortfolio = {
-  pofolId: number;
-  pofolName: string;
-  status: string;
-  format: string;
-  fileUrls: string[];
-};
-
 export default function PortfolioDetailUserView({ id }: Props) {
   const router = useRouter();
-  const [portfolioState, setPortfolioState] = useState<UserPortfolio | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [portfolioState, setPortfolioState] = useState<any>(null);
+
+  const { portfolioDetailUserData, portfolioDeatilUserLoading, portfolioDetailUserError } = usePortfolioDetailUserFormat(parseInt(id, 10));
 
   useEffect(() => {
-    const fetchPortfolio = async () => {
-      try {
-        const data: UserPortfolio = await getPortfolioDetailUserFormat(parseInt(id, 10));
-        setPortfolioState(data);
-      } catch (error) {
-        console.error("Failed to fetch portfolio details:", error);
-      }
-    };
-    fetchPortfolio();
-  }, [id]);
+    if (portfolioDetailUserData) {
+      setPortfolioState(portfolioDetailUserData);
+    }
+  }, [portfolioDetailUserData]);
 
   const handleTogglePublic = () => {
-    setPortfolioState(currentState => {
+    setPortfolioState((currentState: any) => {
       if (!currentState) return null;
       return {
         ...currentState,
@@ -51,30 +41,42 @@ export default function PortfolioDetailUserView({ id }: Props) {
   };
 
 
-  const handleEditClick = () => {
-    if (portfolioState) {
-      router.push(`${paths.mypage.portfolioEdit}/${portfolioState.pofolId}`)
-    }
-  };
-
-
   const handleHome = () => {
     router.push(paths.mypage.portfolio);
   };
 
-  if (!portfolioState) return <Box>Loading...</Box>;
+
+  if (portfolioDeatilUserLoading) return <Box>Loading...</Box>;
+  if (portfolioDetailUserError) return <Box>Error loading portfolio: {portfolioDetailUserError.message}</Box>;
+
+    // 삭제
+    const handleDeleteOpen = () => setDeleteOpen(true);
+    const handleDeleteClose = () => setDeleteOpen(false);
+
+    const handleDelete = async () => {
+      try {
+        if (portfolioState) {
+          await deletePortfolio(portfolioDetailUserData.pofolId);
+          router.push(paths.mypage.portfolio); // 삭제 후 포트폴리오 목록으로 이동
+        }
+      } catch (error) {
+        console.error("Failed to delete portfolio:", error);
+      }
+      handleDeleteClose();
+    };
+
 
   return (
     <Container>
 
       <Paper elevation={3} sx={{ p: 2, mt: 2, mb: 4 }}>
-        <Typography variant="h4" sx={{ mb: 2 }}>{portfolioState.pofolName}</Typography>
+        <Typography variant="h4" sx={{ mb: 2 }}>{portfolioDetailUserData.pofolName}</Typography>
 
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <FormGroup sx={{ flexDirection: 'row', alignItems: 'center' }}>
             <FormControlLabel
-              control={<Switch checked={portfolioState.status === "PUBLIC"} onChange={handleTogglePublic} />}
-              label={portfolioState.status === 'PUBLIC' ? "Public" : "Private"}
+              control={<Switch checked={portfolioState?.status === 'PUBLIC'} onChange={handleTogglePublic} />}
+              label={portfolioState?.status === 'PUBLIC' ? 'Public' : 'Private'}
               labelPlacement="start"
             />
           </FormGroup>
@@ -87,14 +89,14 @@ export default function PortfolioDetailUserView({ id }: Props) {
           </Tooltip>
 
           <Tooltip title="Delete">
-            <IconButton color="secondary" onClick={() => console.log('Delete action triggered')}>
+            <IconButton color="secondary" onClick={handleDeleteOpen}>
               <DeleteIcon sx={{ color: 'grey' }} />
             </IconButton>
           </Tooltip>
         </Box>
 
 
-        {portfolioState.fileUrls.map((url, index) => (
+        {portfolioDetailUserData.fileUrls.map((url, index) => (
           <Grid item xs={12} key={index} sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
             <img
               src={url}
@@ -116,14 +118,22 @@ export default function PortfolioDetailUserView({ id }: Props) {
         <Button variant="contained" onClick={handleHome}>
           홈으로
         </Button>
-        {/* <Button variant="outlined" onClick={handleCancel}>
-          취소
-        </Button> */}
       </Box>
 
-
-
       </Paper>
+
+      <Dialog open={deleteOpen} onClose={handleDeleteClose} aria-labelledby="delete-portfolio-title">
+        <DialogTitle id="delete-portfolio-title">정말로 삭제하시겠습니까?</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleDeleteClose} color="primary">
+            아니오
+          </Button>
+          <Button onClick={handleDelete} color="secondary">
+            네
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </Container>
   );
 }
