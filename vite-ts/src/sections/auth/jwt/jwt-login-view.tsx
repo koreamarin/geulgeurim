@@ -75,15 +75,16 @@ export default function JwtLoginView() {
   const handleButtonClick = () => {
     const url =
       'http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/auth/oauth2/authorization/kakao';
-    // 'http://localhost:8080/api/v1/auth/oauth2/authorization/kakao';
     const windowFeatures = 'width=500,height=600,left=10,top=10';
     const newWindow = window.open(url, '_blank', windowFeatures);
+
+    const currentUrl = window.location.href;
 
     const checkWindowClosed = setInterval(() => {
       if (newWindow?.closed) {
         clearInterval(checkWindowClosed);
         // 로그인 창이 닫혔으므로 홈페이지로 이동
-        window.location.href = '/'; // 홈페이지 URL로 변경해주세요.
+        window.location.href = currentUrl; // 홈페이지 URL로 변경해주세요.
       }
     }, 500); // 500ms 마다 창이 닫혔는지 확인
   };

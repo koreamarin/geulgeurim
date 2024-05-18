@@ -5,18 +5,6 @@ import { useRouter } from 'src/routes/hooks';
 
 import { SplashScreen } from 'src/components/loading-screen';
 
-import { useAuthContext } from '../hooks';
-
-// ----------------------------------------------------------------------
-
-const loginPaths: Record<string, string> = {
-  jwt: paths.auth.jwt.login,
-  auth0: paths.auth.auth0.login,
-  amplify: paths.auth.amplify.login,
-  firebase: paths.auth.firebase.login,
-  supabase: paths.auth.supabase.login,
-};
-
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -24,7 +12,12 @@ type Props = {
 };
 
 export default function AuthGuard({ children }: Props) {
-  const { loading } = useAuthContext();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    setLoading(false)
+  }, []);
 
   return <>{loading ? <SplashScreen /> : <Container>{children}</Container>}</>;
 }
@@ -33,31 +26,28 @@ export default function AuthGuard({ children }: Props) {
 
 function Container({ children }: Props) {
   const router = useRouter();
-
-  const { authenticated, method } = useAuthContext();
-
   const [checked, setChecked] = useState(false);
 
   const check = useCallback(() => {
-    if (!authenticated) {
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (!accessToken) {
       const searchParams = new URLSearchParams({
         returnTo: window.location.pathname,
       }).toString();
 
-      const loginPath = loginPaths[method];
-
+      const loginPath = paths.auth.jwt.login
       const href = `${loginPath}?${searchParams}`;
 
       router.replace(href);
     } else {
       setChecked(true);
     }
-  }, [authenticated, method, router]);
+  }, [router]);
 
   useEffect(() => {
     check();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [check]);
 
   if (!checked) {
     return null;
