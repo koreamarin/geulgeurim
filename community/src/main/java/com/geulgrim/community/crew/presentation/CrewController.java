@@ -7,10 +7,14 @@ import com.geulgrim.community.crew.application.dto.request.CrewReply;
 import com.geulgrim.community.crew.application.dto.response.CrewApplicant;
 import com.geulgrim.community.crew.application.dto.response.CrewBoard;
 import com.geulgrim.community.crew.application.dto.response.CrewBoardDetail;
+import com.geulgrim.community.crew.application.dto.response.CrewListResponse;
 import com.geulgrim.community.crew.application.service.CrewService;
 import com.geulgrim.community.global.s3.AwsS3Service;
+import com.geulgrim.community.share.application.dto.response.ShareListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +27,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/community/crew")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class CrewController {
 
@@ -32,12 +37,13 @@ public class CrewController {
 
     @GetMapping("/search")
     @Operation(summary = "크루모집 게시판 검색", description = "크루 모집 게시판의 게시글을 검색합니다.")
-    public ResponseEntity<List<CrewBoard>> search(
+    public Page<CrewListResponse> search(
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String category
-    ) {
-        List<CrewBoard> crews = crewService.search(keyword, category);
-        return ResponseEntity.ok(crews);
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String sort,
+            Pageable pageable) {
+        System.out.println("@@@@@@@@@@@@@");
+        return crewService.search(keyword, searchType, sort, pageable);
     }
 
 
