@@ -63,7 +63,7 @@ const POST_SEARCH_OPTIONS = [
   { value: 'title', label: '제목' },
   { value: 'content', label: '내용' },
   { value: 'author', label: '작성자' },
-  { value: 'content&title', label: '제목+내용' },
+  { value: 'title+content', label: '제목+내용' },
 ];
 
 function createBoardData(
