@@ -132,7 +132,10 @@ export default function BoardRecentPost() {
           page,
           size,
         },
-        baseURL: 'http://localhost:8080',
+        baseURL: 'https://글그림.com',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
       });
       const boardData = response.data.content;
       const transformedBoardData = boardData.map(
