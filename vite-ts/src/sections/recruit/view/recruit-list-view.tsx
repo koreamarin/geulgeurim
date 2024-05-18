@@ -90,19 +90,19 @@ export default function RecruitListView() {
       axiosOrigin
         .post('/api/v1/auth/fcm', requestData, {
           headers: {
-            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
           },
           baseURL: 'https://글그림.com',
           // baseURL: 'http://localhost:8080',
         })
         .then((response) => {
-          console.log( response.data);
+          console.log(response.data);
+          localStorage.setItem('updatedFcmToken', 'true'); // 토큰 업데이트 후 플래그 설정
         })
         .catch((error) => {
           alert('fcm 토큰 업데이트 중 오류가 발생했습니다.');
         });
 
-      localStorage.setItem('tokenUpdated', 'true'); // 토큰 업데이트 후 플래그 설정
 
     }
   }
@@ -113,12 +113,10 @@ export default function RecruitListView() {
     const updatedFcmToken = localStorage.getItem('updatedFcmToken');
 
     // accessToken 부여되었고 유저에게 fcmToken 업데이트 안된 경우에만 실행
-    console.log('fcm 관련 로직 실행');
-    if (accessToken != null && updatedFcmToken === 'false' || updatedFcmToken == null) {
+    if (accessToken != null && updatedFcmToken == null) {
+      console.log('accessToken 부여,  유저에게 fcmToken 업데이트 되어 있지 않음, fcm업데이트 시작...');
       registerServiceWorker();
       updateFcmToken();
-
-      localStorage.setItem('updatedFcmToken', 'true');
     }
   });
 
