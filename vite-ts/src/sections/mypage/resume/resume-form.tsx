@@ -48,11 +48,13 @@ export default function ResumeForm({ copyId }: Props) {
   const router = useRouter();
   const { resumesDetailData,  resumesDetailLoading } = useGetResumeDetail(copyId ? parseInt(copyId, 10) : undefined)
   const { portfoliosData, portfoliosLoading } = useGetPortfolios()
-  const { userDetailData, userDetailError, userDetailLoading, userDetailValidating} = useGetUserDetail()
+  const { userDetailData, userDetailLoading} = useGetUserDetail()
+
+  console.log(userDetailData)
 
   // defaults
   const defaultValues = useMemo(() => ({
-    resumeTitle: resumesDetailData?.resumeTitle || `${ userDetailData?.name }님의 이력서`,
+    resumeTitle: resumesDetailData?.resumeTitle || `${ userDetailData?.name || userDetailData?.nickname }님의 이력서`,
     essay: resumesDetailData?.essay || '',
     openStatus: resumesDetailData?.openStatus || 'PRIVATE',
     fileUrl: resumesDetailData?.fileUrl || '',
@@ -83,7 +85,7 @@ export default function ResumeForm({ copyId }: Props) {
       startDate: exp.startDate ? new Date(exp.startDate) : new Date(),
       endDate: exp.endDate ? new Date(exp.endDate) : new Date()
     })) || [],
-  }), [resumesDetailData, userDetailData.name ]);
+  }), [resumesDetailData, userDetailData ]);
 
 
   const { enqueueSnackbar } = useSnackbar();
@@ -262,7 +264,7 @@ export default function ResumeForm({ copyId }: Props) {
   }, [setValue]);
 
   const renderDetails = () => {
-    if (resumesDetailLoading || portfoliosLoading) {
+    if (resumesDetailLoading || portfoliosLoading || userDetailLoading) {
       return <SplashScreen />;
     }
     if ((resumesDetailData && portfoliosData) || !copyId) {
