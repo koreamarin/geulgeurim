@@ -18,11 +18,12 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/common/piece")
-@CrossOrigin(origins = {"http://localhost:3000", "https://글그림.com"})
+@CrossOrigin(origins = {"http://localhost:3000", "https://글그림.com", "https://xn--2i0bpa721g.com/"})
 @RequiredArgsConstructor
 public class PieceController {
 
     private final PieceService pieceService;
+
 
     @GetMapping("/detail/{id}")
     @Operation(summary = "작품조회", description = "id로 piece를 조회합니다. market server가 사용하는 api입니다.")

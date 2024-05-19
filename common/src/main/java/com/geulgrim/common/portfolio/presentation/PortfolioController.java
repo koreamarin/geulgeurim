@@ -20,12 +20,12 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/common/portfolio")
+@CrossOrigin(origins = {"http://localhost:3000", "https://글그림.com", "https://xn--2i0bpa721g.com/"})
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "https://글그림.com"})
-@Slf4j
 public class PortfolioController {
 
     private final PortfolioService portfolioService;
+
 
     @GetMapping
     @Operation(summary = "내 포트폴리오 전체 조회", description = "모든 포트폴리오를 조회합니다.")
