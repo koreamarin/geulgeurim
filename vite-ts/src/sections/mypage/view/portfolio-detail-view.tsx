@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
-  Box, Grid, Paper, Switch, Tooltip, Container, Button,
-  FormGroup, Typography, IconButton, FormControlLabel, Dialog, DialogTitle, DialogActions
+  Box, Grid, Paper, Switch, Button, Dialog, Tooltip,
+  Container, FormGroup, Typography, IconButton, DialogTitle, DialogActions, FormControlLabel
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';

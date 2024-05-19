@@ -52,6 +52,9 @@ export default function WorksDetail({workId}:Props) {
     return '';
   };
 
+  const handleHome = () => {
+    router.push(paths.mypage.works);
+  };
 
   return (
     <Grid container spacing={3} sx={{ pt: 3 }}>
@@ -89,17 +92,27 @@ export default function WorksDetail({workId}:Props) {
             등록일 : {new Date(pieceDetailData?.createdAt).toLocaleDateString()}
           </Typography>
         </Card>
+
         <Grid container justifyContent="flex-end" mt={3}>
           <Button
             style={{ height: '2.8rem', fontSize: '1rem' }}
             variant="outlined"
+            color="info"
+            size="medium"
+            sx={{ marginRight: 1 }}
+            onClick={handleHome}>
+            홈으로
+          </Button>
+          {/* <Button
+            style={{ height: '2.8rem', fontSize: '1rem' }}
+            variant="outlined"
             color="success"
             size="medium"
-            sx={{ marginRight: 3 }}
+            sx={{ marginRight: 1 }}
             onClick={() => router.push(paths.mypage.worksEdit(Number(workId)))}
           >
             수정하기
-          </Button>
+          </Button> */}
 
           <WorksDetailDelete
             open={view.value}
@@ -109,7 +122,12 @@ export default function WorksDetail({workId}:Props) {
             deleteWorks={workId}
           />
         </Grid>
+
+
+
       </Grid>
+
+
     </Grid>
   );
 }

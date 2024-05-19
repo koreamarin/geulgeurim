@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 
 import { customFetcher, endpoints } from 'src/utils/custom-axios';
+import { CUSTOM_API } from 'src/config-global';
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +30,7 @@ type PieceDetail = {
   updatedAt: string
 }
 
+const accessToken = localStorage.getItem('accessToken')
 
 export function useGetPiecesList(type: string) {
   const URL = endpoints.pieces.mine;
@@ -66,4 +68,21 @@ export function useGetPiecesDetail(pieceId: number) {
     [data, error, isLoading, isValidating]);
 
   return memoizedValue;
+}
+
+// ----------------------------------------------------------------------
+
+export async function createPiece(data: any) {
+  const URL = endpoints.pieces.create;
+
+  try {
+    await axios.post(`${CUSTOM_API}${URL}`, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  } catch (error) {
+    console.error('Error creating portfolio:', error);
+    throw error;
+  }
 }
