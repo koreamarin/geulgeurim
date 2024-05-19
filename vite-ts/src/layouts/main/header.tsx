@@ -84,7 +84,6 @@ export default function Header() {
             {!token && mdUp && (
               <Button
                 variant="contained"
-                target="_blank"
                 rel="noopener"
                 href={paths.auth.jwt.register}
               >

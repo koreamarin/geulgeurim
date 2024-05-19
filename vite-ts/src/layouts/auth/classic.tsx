@@ -66,6 +66,7 @@ export default function AuthClassicLayout({ children, image, title }: Props) {
         position: 'absolute',
         m: { xs: 2, md: 5 },
       }}
+      showLogoPreview={false}
     />
   );
 
