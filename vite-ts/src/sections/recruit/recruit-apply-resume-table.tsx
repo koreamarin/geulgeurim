@@ -55,7 +55,7 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
   const { enqueueSnackbar } = useSnackbar();
 
   const [tableData, setTableData] = useState<RowDataType[]>([]);
-  const [selectedResumeId, setSelectedResumeId] = useState<number | null>(null);
+  const [selectedResumeId, setSelectedResumeId] = useState<number>(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [canvasImage, setCanvasImage] = useState<string | null>(null);
   const hiddenPreviewRef = useRef<HTMLDivElement>(null);
@@ -122,6 +122,7 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
                       미리보기
                     </Button>
                     <Button variant="contained" color="primary" sx={{ ml: 1 }} onClick={() => handleSelectClick(row.pk)}>
+                      {row.pk}
                       선택하기
                     </Button>
                   </TableCell>
@@ -140,6 +141,7 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
   });
 
   const handlePreviewClick = async (pk: number) => {
+    console.log('미리보기 클릭 확인', pk)
     setSelectedResumeId(pk);
     setModalOpen(true);
     await new Promise(resolve => setTimeout(resolve, 500));
@@ -175,7 +177,6 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
   };
 
   const handleSelectClick = async (pk: number) => {
-    setSelectedResumeId(pk);
     await new Promise(resolve => setTimeout(resolve, 1000));
     const element = hiddenPreviewRef.current;
     if (element) {
@@ -190,7 +191,7 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
         }
         return Promise.resolve();
       });
-
+  
       try {
         await Promise.all(imageLoadPromises);
         const canvas = await html2canvas(element, {
@@ -202,44 +203,48 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
           width: 1200
         });
         const canvasImageForm = canvas.toDataURL('image/png');
-        await handleSubmitImage(canvasImageForm);
+        await handleSubmitImage(canvasImageForm, pk);
       } catch (error) {
         console.error('이미지 로드 중 오류 발생:', error);
       }
     }
   };
-
+  
   const handleModalClose = () => {
     setModalOpen(false);
     setCanvasImage(null);
   };
-
-  const handleImageUpload = async () => {
-    if (!canvasImage || !selectedResumeId) return;
-
+  
+  const handleImageUpload = async (pk: number) => {
+    console.log('중중확인', pk)
+    if (!canvasImage) return;
+  
     if (!window.confirm('제출 시 수정이 불가능합니다 정말로 제출하시겠습니까?')) return;
-
-    await handleSubmitImage(canvasImage);
+  
+    await handleSubmitImage(canvasImage, pk);
   };
-
-  const handleSubmitImage = async (image: string) => {
+  
+  // 제출!!
+  
+  const handleSubmitImage = async (image: string, pk: number) => {
+    console.log('중간확인', pk)
     const byteString = atob(image.split(',')[1]);
     const mimeString = image.split(',')[0].split(':')[1].split(';')[0];
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
-
+  
     for (let i = 0; i < byteString.length; i += 1) {
       ia[i] = byteString.charCodeAt(i);
     }
-
+  
     const blob = new Blob([ab], { type: mimeString });
     const formData = new FormData();
     formData.append('image_file', blob, 'resume.png');
-
-    const submit = await submitRecruit(recruitId, selectedResumeId!, formData);
+  
+    const submit = await submitRecruit(recruitId, pk, formData);
     if (submit) {
       enqueueSnackbar('제출 성공!');
-      router.push(paths.recruit.main)
+      router.push(paths.recruit.main);
     } else {
       enqueueSnackbar('제출에 실패했습니다', { variant: 'error' });
     }
@@ -289,7 +294,7 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
         >
           <Box sx={{ position: 'fixed', top: 0, left: 0, width: '100%', backgroundColor: 'white', zIndex: 1000, p: 2, boxShadow: 1, display: 'flex', justifyContent: 'space-between' }}>
             <Button onClick={handleModalClose} variant="contained">취소</Button>
-            <Button onClick={handleImageUpload} variant="contained" color="primary">제출하기</Button>
+            <Button onClick={() => handleImageUpload(selectedResumeId)} variant="contained" color="primary">제출하기</Button>
           </Box>
           <Box sx={{ mt: 8, display: 'flex', justifyContent: 'center' }}>
             {canvasImage ? (
