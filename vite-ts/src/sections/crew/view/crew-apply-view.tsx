@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 
 import ComponentBlock from 'src/sections/_examples/component-block';
+import axiosOrigin from 'axios';
 
 type CrewDetail = {
   crew_id: number;
@@ -80,9 +81,37 @@ export default function CrewApplyView({ id }: Props) {
   };
 
   const handleCloseDialog = () => {
+
+    sendPushApply();
     setOpenDialog(false);
     navigate(`/community/crew/${crewDetails?.crew_id}`);  // 다시 크루 모집 상세페이지로
   };
+
+  function  sendPushApply()  {
+    const requestData = {
+      'receiverId' : crewDetails.user_id,
+      'senderId' : localStorage.getItem('userId'),
+      'favoriteJobs' : [],
+      'domain' : 'CREW_REQUEST'
+    };
+
+    // console.log('fcmToken: ', fcmToken);
+    // console.log('localStorage.getItem(\'accessToken\'): ', localStorage.getItem('accessToken'));
+    axiosOrigin
+      .post('/api/v1/common/push/create', requestData, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        baseURL: 'https://글그림.com',
+        // baseURL: 'http://localhost:8081',
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log('크루 신청 알림 오류')
+      });
+  }
 
   return (
     <Container>
