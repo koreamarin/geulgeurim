@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 
-import { customFetcher, endpoints } from 'src/utils/custom-axios';
+import { endpoints, customFetcher } from 'src/utils/custom-axios';
 
 import { CUSTOM_API } from 'src/config-global';
 

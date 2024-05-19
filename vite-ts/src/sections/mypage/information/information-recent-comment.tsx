@@ -69,9 +69,9 @@ interface CommentData {
 export default function InformationRecentPost() {
   const [data, setData] = useState<CommentData[]>([]);
   const [keyword, setKeyword] = useState<string>('');
-  const [searchType, setSearchType] = useState<string>('title');
+  const [searchType, setSearchType] = useState<string>('content');
   const [page, setPage] = useState<number>(0);
-  const [size, setSize] = useState<number>(15);
+  const [size] = useState<number>(15);
   const [sort, setSort] = useState<string>('latest');
   const [totalPages, setTotalPages] = useState<number>(0);
 
@@ -128,10 +128,6 @@ export default function InformationRecentPost() {
   const handlePageChange = (event: ChangeEvent<unknown>, value: number) => {
     setPage(value - 1);
   };
-
-  const handleOptionBy = useCallback((newValue: string) => {
-    setSearchType(newValue);
-  }, []);
 
   const handleSortBy = useCallback((newValue: string) => {
     setSort(newValue);

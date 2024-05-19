@@ -242,6 +242,7 @@ export default function CrewDetailView({ id }: Props) {
             color="success"
             size="medium"
             sx={{ mb: 5, mt: 3 }}
+            disabled={crewDetails.status === "CLOSED"}
           >
             지원하기
           </Button>
