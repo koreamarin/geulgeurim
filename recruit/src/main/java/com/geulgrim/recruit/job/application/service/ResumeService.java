@@ -189,9 +189,6 @@ public class ResumeService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 구인구직 입니다."));
 
         Boolean star = starRepository.findByJobAndUserId(job, userId).isPresent();
-        System.out.println(userId);
-        System.out.println(star);
-
 
         List<Long> positionIds = job.getJobPositions().stream().map(jobPosition -> jobPosition.getPosition().getPositionId()).toList();
 
