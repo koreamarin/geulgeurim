@@ -57,6 +57,9 @@ export const endpoints = {
     detail: '/api/v1/common/piece/detail',
     create: '/api/v1/common/piece/create',
     delete: '/api/v1/common/piece/del'
+  },
+  user : {
+    detail: '/api/v1/auth/user',
   }
 
 };

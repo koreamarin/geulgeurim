@@ -180,7 +180,7 @@ export default function RecruitMainFilter() {
               <Grid xl={11.5} lg={11.4} md={11.3} sm={11.2} xs={10.8}>
                 <Box mt={1} display="flex" flexWrap="wrap" gap={1}>
                   {positionIds.length > 0 && (
-                    positionIds.sort((a, b) => positions.findIndex(p => p.value === a) - positions.findIndex(p => p.value === b)).map((id) => (
+                    positionIds.sort((a: number, b: number) => positions.findIndex(p => p.value === a) - positions.findIndex(p => p.value === b)).map((id) => (
                       <Chip
                         key={id}
                         label={positions.find((p) => p.value === id)?.label}
@@ -191,7 +191,7 @@ export default function RecruitMainFilter() {
                   )}
 
                   {experienceTypes.length > 0 && (
-                    experienceTypes.sort((a, b) => experiences.findIndex(e => e.value === a) - experiences.findIndex(e => e.value === b)).map((value) => (
+                    experienceTypes.sort((a: string, b: string) => experiences.findIndex(e => e.value === a) - experiences.findIndex(e => e.value === b)).map((value) => (
                       <Chip
                         key={value}
                         label={experiences.find((e) => e.value === value)?.label}
@@ -202,7 +202,7 @@ export default function RecruitMainFilter() {
                   )}
 
                   {closeTypes.length > 0 && (
-                    closeTypes.sort((a, b) => closeTypesd.findIndex(c => c.value === a) - closeTypesd.findIndex(c => c.value === b)).map((id) => (
+                    closeTypes.sort((a: string, b: string) => closeTypesd.findIndex(c => c.value === a) - closeTypesd.findIndex(c => c.value === b)).map((id) => (
                       <Chip
                         key={id}
                         label={closeTypesd.find((c) => c.value === id)?.label}

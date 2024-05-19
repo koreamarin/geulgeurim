@@ -15,6 +15,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useGetUserDetail } from 'src/api/user';
 import { useGetPortfolios } from 'src/api/portfolio';
 import { postResumeList, useGetResumeDetail } from 'src/api/mypageResume';
 
@@ -41,24 +42,17 @@ type Props = {
   copyId?: string
 };
 
-const userDummy = {
-  name : "배상훈",
-  birthday : new Date('1996-08-06'),
-  email : "test@test.com",
-  phone_num : "010-1234-5678",
-  thumbnail: "",
-}
-
 
 export default function ResumeForm({ copyId }: Props) {
   // 만약 workId가 있으면(복사하기) api get 요청 후 default에 삽입
   const router = useRouter();
   const { resumesDetailData,  resumesDetailLoading } = useGetResumeDetail(copyId ? parseInt(copyId, 10) : undefined)
   const { portfoliosData, portfoliosLoading } = useGetPortfolios()
+  const { userDetailData, userDetailError, userDetailLoading, userDetailValidating} = useGetUserDetail()
 
   // defaults
   const defaultValues = useMemo(() => ({
-    resumeTitle: resumesDetailData?.resumeTitle || `${userDummy.name}님의 이력서`,
+    resumeTitle: resumesDetailData?.resumeTitle || `${ userDetailData?.name }님의 이력서`,
     essay: resumesDetailData?.essay || '',
     openStatus: resumesDetailData?.openStatus || 'PRIVATE',
     fileUrl: resumesDetailData?.fileUrl || '',
@@ -89,7 +83,7 @@ export default function ResumeForm({ copyId }: Props) {
       startDate: exp.startDate ? new Date(exp.startDate) : new Date(),
       endDate: exp.endDate ? new Date(exp.endDate) : new Date()
     })) || [],
-  }), [resumesDetailData]);
+  }), [resumesDetailData, userDetailData.name ]);
 
 
   const { enqueueSnackbar } = useSnackbar();
@@ -308,26 +302,26 @@ export default function ResumeForm({ copyId }: Props) {
                   disabled
                   fullWidth
                   label="이름"
-                  defaultValue={userDummy.name}
+                  defaultValue={userDetailData.name}
                 />
                 <TextField
                   disabled
                   fullWidth
                   label="이메일"
-                  defaultValue={userDummy.email}
+                  defaultValue={userDetailData.email}
                 />
                 <TextField
                   disabled
                   fullWidth
                   label="연락처"
-                  defaultValue={userDummy.phone_num}
+                  defaultValue={userDetailData.phoneNum}
                 />
 
                 <TextField
                   disabled
                   fullWidth
                   label="생년월일"
-                  defaultValue={userDummy.birthday.toLocaleDateString()}
+                  defaultValue={userDetailData.birthday}
                 />
             </Grid>
 
