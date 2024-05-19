@@ -101,6 +101,7 @@ public class PushService {
                 SimpleJobResponseDto jobSimple = recruitFeignClient.getJobSimple(jobId);
                 jobContent.append(jobSimple.getCompanyName()).append(" 회사의\n").append(jobSimple.getTitle()).append("공고가\n").append(jobSimple.getEndDate()).append("에 마감되요!\n얼른 지원하러 가볼까요?");
                 jobContent.append("\n\n");
+                log.info("jobContent: ", jobContent);
             }
             push.updateContent(jobContent.toString());
             log.info("push 업데이트: ", push.getContent());
