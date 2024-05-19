@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Box, Card, Grid, Paper, Button, Container, Typography } from '@mui/material';
+import { Box, Card, Grid, Paper, Stack, Button, Container, Typography } from '@mui/material';
 
 import {fDate} from 'src/utils/format-time';
 
@@ -56,9 +56,42 @@ export default function CrewDetailView({ id }: Props) {
             <Typography variant="h4">
               {crewDetails.content}
             </Typography>
-            <Typography variant="h6" sx={{ mt: 2 }}>
-              선화: {crewDetails.pen} · 채색: {crewDetails.color} · 배경: {crewDetails.bg} · PD: {crewDetails.pd} · 스토리: {crewDetails.story} · 콘티: {crewDetails.conti}
-            </Typography>
+            <Stack 
+              direction="row"
+              spacing={2}
+              sx={{alignItems: 'center', justifyContent:'center', mt:5 }}>
+              {crewDetails.pen !==0 && (
+                <Typography variant="h6" sx={{ mt: 2 }}>
+                  선화: {crewDetails.pen} 
+                </Typography>
+              )}
+              {crewDetails.color !==0 && (
+                <Typography variant="h6" sx={{ mt: 2 }}>
+                  채색: {crewDetails.color}
+                </Typography>
+              )}
+              {crewDetails.bg !==0 && (
+                <Typography variant="h6" sx={{ mt: 2 }}>
+                  배경: {crewDetails.bg} 
+                </Typography>
+              )}
+              {crewDetails.pd !==0 && (
+                <Typography variant="h6" sx={{ mt: 2 }}>
+                  PD: {crewDetails.pd} 
+                </Typography>
+              )}
+              {crewDetails.story !==0 && (
+                <Typography variant="h6" sx={{ mt: 2 }}>
+                  스토리: {crewDetails.story}
+                </Typography>
+              )}
+              {crewDetails.conti !==0 && (
+                <Typography variant="h6" sx={{ mt: 2 }}>
+                  콘티: {crewDetails.conti}
+                </Typography>
+              )}
+            </Stack>
+           
           </Card>
         </Grid>
 
