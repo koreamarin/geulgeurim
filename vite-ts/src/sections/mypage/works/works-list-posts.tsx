@@ -42,7 +42,7 @@ const WORKS_SEARCH_OPTIONS = [
 
 export default function WorksListPosts() {
   const router = useRouter()
-  const { user } = useMockedUser(); // 이거 변경해야 함.
+  const userName = localStorage.getItem('nickname')
   const type = 'NONE'
   const { piecesData, piecesLoading, piecesError} = useGetPiecesList(type)
 
@@ -108,7 +108,7 @@ export default function WorksListPosts() {
   return (
     <>
       <Typography variant="h3" sx={{ mb: 5 }}>
-        {user?.displayName} 님의 작품
+        {userName} 님의 작품
       </Typography>
 
       <Stack direction="row" alignItems="center" spacing={1}>

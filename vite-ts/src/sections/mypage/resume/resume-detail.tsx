@@ -19,6 +19,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
+import { useGetUserDetail } from 'src/api/user';
 import { useGetPortfolios } from 'src/api/portfolio';
 import { useGetResumeDetail } from 'src/api/mypageResume';
 
@@ -32,14 +33,6 @@ import ResumeFormPortfolioUserPreview from './resume-form-portfolio-user-preview
 import ResumeFormPortfolioServicePreview from './resume-form-portfolio-service-preview';
 
 
-const userDummy = {
-  name : "배상훈",
-  birthday : new Date('1996-08-06'),
-  email : "test@test.com",
-  phone_num : "010-1234-5678",
-  thumbnail: "",
-}
-
 type Props = {
   resumeId: string
 }
@@ -47,7 +40,8 @@ type Props = {
 export default function ResumeDetail({resumeId}:Props) {
   const { resumesDetailData, resumesDetailError, resumesDetailLoading } = useGetResumeDetail(parseInt(resumeId, 10))
   const { portfoliosData, portfoliosError, portfoliosLoading } = useGetPortfolios()
-
+  const { userDetailData, userDetailError, userDetailLoading, userDetailValidating} = useGetUserDetail()
+  console.log('유저 정보 들고왔나?!?!', userDetailData)
 
   const view = useBoolean();
 
@@ -126,10 +120,10 @@ export default function ResumeDetail({resumeId}:Props) {
                     justifyContent: 'space-between'
                   }}>
                   {[
-                    { label: "이름", value: userDummy?.name },
-                    { label: "이메일", value: userDummy?.email },
-                    { label: "연락처", value: userDummy?.phone_num },
-                    { label: "생년월일", value: userDummy?.birthday.toLocaleDateString() },
+                    { label: "이름", value: userDetailData?.name },
+                    { label: "이메일", value: userDetailData?.email },
+                    { label: "연락처", value: userDetailData?.phoneNum },
+                    { label: "생년월일", value: userDetailData?.birthday },
                     { label: "직군", value: resumesDetailData?.resumePositionResponses.map(item => positionList.find(positionItem => positionItem.value === item.positionId.toString())?.label).join(', ') }
                   ].map((info, index) => (
                     <Stack key={index} direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2}}>
