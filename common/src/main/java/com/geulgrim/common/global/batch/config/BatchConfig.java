@@ -71,15 +71,7 @@ public class BatchConfig {
                             log.info("!!!담긴 내일 마감 공고 ={}", jobSimple.getTitle());
                             log.info("!!!담긴 내일 마감 공고 마감날 ={}", endDate);
 
-                            SimpleJobResponseDto favoriteJob = SimpleJobResponseDto.builder()
-                                    .jobId(jobId)
-                                    .title(jobSimple.getTitle())
-                                    .companyName(jobSimple.getCompanyName())
-                                    .startDate(jobSimple.getStartDate())
-                                    .endDate(jobSimple.getEndDate())
-                                    .build();
-
-                            jobList.add(favoriteJob.getJobId());
+                            jobList.add(jobSimple.getJobId());
 
                         }
                     }
