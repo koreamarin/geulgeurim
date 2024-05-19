@@ -87,6 +87,7 @@ export default function WorksDetail({workId}:Props) {
               {category()}
             </Typography>
           </Grid>
+        
           {pieceDetailData?.description}
           <Typography variant="body2" textAlign='right'>
             등록일 : {new Date(pieceDetailData?.createdAt).toLocaleDateString()}

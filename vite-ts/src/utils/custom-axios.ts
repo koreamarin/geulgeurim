@@ -55,7 +55,7 @@ export const endpoints = {
   pieces : {
     mine: '/api/v1/common/piece/search?',
     detail: '/api/v1/common/piece/detail',
-    create: '/api/v1/piece/create'
+    create: '/api/v1/common/piece/create'
   }
 
 };
