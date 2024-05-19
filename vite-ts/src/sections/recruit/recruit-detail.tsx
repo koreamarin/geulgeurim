@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -9,7 +10,8 @@ import CardContent from '@mui/material/CardContent';
 
 import Image from 'src/components/image';
 import Iconify from 'src/components/iconify';
-import Link from '@mui/material/Link';
+
+import { RecruitApply } from './recruit-apply';
 
 type Props = {
     id:number
@@ -145,6 +147,20 @@ export default function RecruitDetail({id}:Props) {
         return diffInDays >= 0 ? `D-${diffInDays}` : `D+${Math.abs(diffInDays)}`;
       };
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleApplyClick = () => {
+      if (token) {
+        setIsModalOpen(true);
+      } else {
+        alert('로그인이 필요한 서비스입니다')
+      }
+    };
+
+    const handleCloseModal = () => {
+      setIsModalOpen(false);
+    };
+
     const dDay = calculateDDay(jobData.endDate);
 
     return (
@@ -166,7 +182,7 @@ export default function RecruitDetail({id}:Props) {
                     ) : (
                         <Iconify icon="eva:star-outline" sx={{ ml: 1, color: 'text.disabled' }} onClick={handleIconClick} />
                     )}
-                    <Button variant="contained" color="primary">지원하기</Button>
+                    <Button variant="contained" color="primary" onClick={handleApplyClick}>지원하기</Button>
                     </Stack>
                 </Stack>
                 <Stack direction="row" spacing={4} mt={2} justifyContent="space-between" minHeight='70px'>
@@ -219,12 +235,14 @@ export default function RecruitDetail({id}:Props) {
                     <CardContent>
                       <Typography variant="h5" gutterBottom marginBottom={3}>회사 정보</Typography>
                       <Typography variant="body2"><strong>회사 이름</strong>: {jobData.companyName}</Typography>
-                      <Typography variant="body2"><strong>회사 주소</strong>: <Link>{jobData.companyUrl}</Link></Typography>
-                      <Typography variant="body2"><strong>공고 주소</strong>: <Link>{jobData.url}</Link></Typography>
+                      <Typography variant="body2"><strong>회사 주소</strong>: <Link href={jobData.companyUrl} target="_blank" rel="noopener">{jobData.companyUrl}</Link></Typography>
+                      <Typography variant="body2"><strong>공고 주소</strong>: <Link href={jobData.url} target="_blank" rel="noopener">{jobData.url}</Link></Typography>
                     </CardContent>
                   </Card>
                 </CardContent>
             </Card>
+            {/* 모달 컴포넌트 */}
+          <RecruitApply open={isModalOpen} handleClose={handleCloseModal} />
         </Box>
     );
 };
