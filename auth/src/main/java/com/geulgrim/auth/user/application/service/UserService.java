@@ -1,10 +1,6 @@
 package com.geulgrim.auth.user.application.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.geulgrim.auth.S3.AwsS3Service;
 import com.geulgrim.auth.security.jwt.JWTUtil;
 import com.geulgrim.auth.user.Exception.NoUserExistException;
@@ -26,7 +22,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -164,6 +159,7 @@ public class UserService {
                 .userType(String.valueOf(user.getUserType()))
                 .fileUrl(user.getFile_url())
                 .phoneNum(user.getPhone_num())
+                .fcmToken(user.getFcmToken())
                 .build();
 
         return getUserResponse;
