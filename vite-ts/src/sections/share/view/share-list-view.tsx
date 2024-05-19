@@ -65,6 +65,7 @@ export default function ShareRecentPost() {
       setTotalPages(response.data.totalPages);
       console.log(response.data);
     } catch (error) {
+      setData([])
       console.error('Error fetching boards:', error);
     }
   }, [keyword, searchType, sort, page, size]);
@@ -109,7 +110,7 @@ export default function ShareRecentPost() {
   };
 
   const maxColumns = 4;
-  const numberOfRows = Math.ceil(Math.min(data?.length, maxColumns * 3) / maxColumns); // 최대 3열까지만 허용
+  const numberOfRows = Math.ceil(Math.min((data ? data.length : 0), maxColumns * 3) / maxColumns); // 최대 3열까지만 허용
 
   const renderTable = Array.from({ length: numberOfRows }, (_, rowIndex) => (
     <tr key={rowIndex}>
@@ -190,7 +191,7 @@ export default function ShareRecentPost() {
       </Stack>
       {/* 테이블 구성 */}
       <Box paddingLeft={15} paddingRight={15} marginBottom={0}>
-        {data?.length === 0 ? (
+        {data && data.length === 0 ? (
           <Typography variant="body1" align="center" sx={{ my: 3 }}>
             아직 작성한 글이 없습니다
           </Typography>

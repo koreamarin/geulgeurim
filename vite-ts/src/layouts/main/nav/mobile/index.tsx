@@ -56,7 +56,7 @@ export default function NavMobile({ data }: NavProps) {
             ml={5}
             //  alignItems="center" sx={{ display: 'flex' }}
           >
-            <Logo sx={{ mx: 2.5, my: 3 }} />
+            <Logo sx={{  my: 3 }} />
           </Box>
 
           {data.map((list) => (

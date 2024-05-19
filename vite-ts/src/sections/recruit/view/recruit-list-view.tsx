@@ -3,8 +3,9 @@ import { useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getToken, Messaging, getMessaging } from 'firebase/messaging';
 
-import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+
+import RecruitMain from '../recruit-main';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -75,7 +76,7 @@ export default function RecruitListView() {
       // });
 
       const requestData = {
-        fcmToken: generatedFcmToken,
+        'fcmToken' : generatedFcmToken,
       };
 
       // // 데이터를 POST 방식으로 전송합니다.
@@ -87,21 +88,22 @@ export default function RecruitListView() {
       //     console.error('Error:', error.response);
       //   });
 
+      console.log('request json 값: ', requestData.fcmToken);
       axiosOrigin
         .post('/api/v1/auth/fcm', requestData, {
           headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
           },
-          baseURL: 'https://글그림.com',
-          // baseURL: 'http://localhost:8080',
+          // baseURL: 'https://글그림.com',
+          baseURL: 'http://localhost:8080',
         })
         .then((response) => {
           console.log(response.data);
           localStorage.setItem('updatedFcmToken', 'true'); // 토큰 업데이트 후 플래그 설정
         })
         .catch((error) => {
-          alert('fcm 토큰 업데이트 중 오류가 발생했습니다.');
+          // alert('fcm 토큰 업데이트 중 오류가 발생했습니다.');
+          console.log('fcm 오류')
         });
 
 
@@ -123,9 +125,7 @@ export default function RecruitListView() {
 
   return (
     <Container>
-      <Box>
-        구인구직 리스트
-      </Box>
+        <RecruitMain/>
     </Container>
   );
 }

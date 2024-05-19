@@ -38,6 +38,8 @@ type PortfolioUserDetail = {
   fileUrls: string[]
 }
 
+const accessToken = localStorage.getItem('accessToken')
+
 
 export function useGetPortfolios() {
   const URL = endpoints.portfolio.list;
@@ -56,7 +58,65 @@ export function useGetPortfolios() {
   return memoizedValue;
 }
 
+
 // ----------------------------------------------------------------------
+
+export async function createUserFormat(data: any) {
+  const URL = endpoints.portfolio.createUser;
+
+  try {
+    const response = await axios.post(`${CUSTOM_API}${URL}`, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log('Success:', response.data);
+  } catch (error) {
+    console.error('Error creating portfolio:', error);
+    throw error;
+  }
+
+}
+
+// ----------------------------------------------------------------------
+
+export async function createPortfolio(data: any) {
+  const URL = endpoints.portfolio.create;
+
+  try {
+    await axios.post(`${CUSTOM_API}${URL}`, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  } catch (error) {
+    console.error('Error creating portfolio:', error);
+    throw error;
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export async function deletePortfolio (pofolId: number) {
+  const URL = endpoints.portfolio.delete
+
+  if (!accessToken) {
+    throw new Error('No access token found');
+  }
+
+  try {
+    await axios.delete(`${CUSTOM_API}${URL}/${pofolId}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+  } catch (error) {
+    console.error('Error deleting portfolio:', error);
+    throw new Error('Failed to delete portfolio');
+  }
+
+}
+
+// ----------------------------------------------------------------------
+
 
 export function usePortfolioDetail(pofolId: number) {
   const URL = endpoints.portfolio.detail
@@ -74,6 +134,7 @@ export function usePortfolioDetail(pofolId: number) {
   return memoizedValue;
 }
 
+
 // ----------------------------------------------------------------------
 
 export function usePortfolioDetailUserFormat(pofolId: number) {
@@ -90,101 +151,4 @@ export function usePortfolioDetailUserFormat(pofolId: number) {
     [data, error, isLoading, isValidating]);
 
   return memoizedValue;
-}
-
-// ----------------------------------------------------------------------
-
-
-// export async function createUserFormat(eventData: ICalendarEvent) {
-export async function createUserFormat(data: any) {
-  // const URL = endpoints.portfolio.writeUser;
-  /**
-   * Work on server
-   */
-  await axios.post('http://localhost:8080/api/v1/common/portfolio/user',
-  data,
-  {headers : {
-    user_id : 33
-  }}  )
-  .then((res) => console.log('성공', res))
-  .catch((err) => console.log('에러!', err))
-
-  // const data = { eventData };
-  // await axios.post(URL, data);
-
-  /**
-   * Work in local
-   */
-  // mutate(
-  //   URL,
-  //   (currentData: any) => {
-  //     const events: ICalendarEvent[] = [...currentData.events, eventData];
-
-  //     return {
-  //       ...currentData,
-  //       events,
-  //     };
-  //   },
-  //   false
-  // );
-}
-
-// ----------------------------------------------------------------------
-
-export async function createPortfolio(data: any) {
-  // const URL = endpoints.portfolio.writeUser;
-  /**
-   * Work on server
-   */
-  await axios.post('http://localhost:8080/api/v1/common/portfolio',
-  data,
-  {headers : {
-    user_id : 33
-  }}  )
-  .then((res) => console.log('성공', res))
-  .catch((err) => console.log('에러!', err))
-
-  // const data = { eventData };
-  // await axios.post(URL, data);
-}
-
-// ----------------------------------------------------------------------
-
-export async function deletePortfolio (pofolId: number) {
-  const url = `http://localhost:8080/api/v1/common/portfolio/${pofolId}`;
-
-  try {
-    const response = await axios.delete(url, {
-      headers: {
-        user_id: 33
-      }
-    });
-    return response.data;
-  } catch (err) {
-    console.error('Delete error:', err);
-    return err;
-  }
-
-}
-
-
-// ----------------------------------------------------------------------
-
-export async function getPortfolioDetailUserFormat(pofolId: number) {
-
-  const url = `http://localhost:8080/api/v1/common/portfolio/detail/user/${pofolId}`;
-
-  try {
-    const response = await axios.get(url, {
-      headers: {
-        user_id: 33
-      }
-    });
-    console.log('사용자 포맷 상세보기 성공', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('사용자 포맷 상세보기 에러!', error);
-    throw error;
-  }
-
 }

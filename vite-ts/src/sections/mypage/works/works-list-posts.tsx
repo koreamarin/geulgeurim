@@ -16,6 +16,8 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useMockedUser } from 'src/hooks/use-mocked-user';
 
+import { useGetPiecesList } from 'src/api/piece';
+
 import Image from 'src/components/image';
 import Iconify from 'src/components/iconify';
 
@@ -24,25 +26,6 @@ import WorksListSearchOption from './works-list-search-option';
 
 
 // ----------------------------------------------------------------------
-function createDummyData(piece_id: number, fileUrl: string, type: string, name: string, create_at: Date) {
-  const date:string = create_at.toLocaleDateString()
-  return { piece_id, fileUrl, type, name, date };
-}
-
-const dummy = [
-  createDummyData(1, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_1.jpg', 'PEN', '그림1', new Date('2024-05-03')),
-  createDummyData(2, '', 'STORY', '스토리1', new Date('2024-05-03')),
-  createDummyData(3, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_2.jpg', 'COLOR', '그림2', new Date('2024-05-03')),
-  createDummyData(4, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_3.jpg', 'BG', '그림3', new Date('2024-05-03')),
-  createDummyData(5, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_4.jpg', 'PD', '그림4', new Date('2024-05-03')),
-  createDummyData(6, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_5.jpg', 'CONT', '그림5', new Date('2024-05-03')),
-  createDummyData(7, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_6.jpg', 'PEN', '그림6', new Date('2024-05-03')),
-  createDummyData(8, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_7.jpg', 'PEN', '그림7', new Date('2024-05-03')),
-  createDummyData(9, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_8.jpg', 'PEN', '그림8', new Date('2024-05-03')),
-  createDummyData(10, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_9.jpg', 'PEN', '그림9', new Date('2024-05-03')),
-  createDummyData(11, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_10.jpg', 'PEN', '그림10', new Date('2024-05-03')),
-  createDummyData(12, 'https://api-dev-minimal-v510.vercel.app/assets/images/cover/cover_11.jpg', 'PEN', '그림11', new Date('2024-05-03')),
-];
 
 const WORKS_SORT_OPTIONS = [
   { value: 'latest', label: '최신 순' },
@@ -59,10 +42,9 @@ const WORKS_SEARCH_OPTIONS = [
 
 export default function WorksListPosts() {
   const router = useRouter()
-
-  const { user } = useMockedUser();
-
-  const gallery = dummy
+  const { user } = useMockedUser(); // 이거 변경해야 함.
+  const type = 'NONE'
+  const { piecesData, piecesLoading, piecesError} = useGetPiecesList(type)
 
   const theme = useTheme();
 
@@ -95,6 +77,33 @@ export default function WorksListPosts() {
   const handleSortBy = useCallback((newValue: string) => {
     setSortBy(newValue);
   }, []);
+
+  const category = (pieceType: string) => {
+    switch (pieceType) {
+      case 'PEN':
+        return '선화';
+      case 'COLOR':
+        return '채색';
+      case 'BG':
+        return '배경';
+      case 'PD':
+        return 'PD';
+      case 'STORY':
+        return '스토리';
+      case 'CONTI':
+        return '콘티';
+      default:
+        return '';
+    }
+  };
+
+  if (piecesLoading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (piecesError) {
+    return <Typography>Error loading pieces</Typography>;
+  }
 
   return (
     <>
@@ -138,27 +147,12 @@ export default function WorksListPosts() {
           lg: 'repeat(4, 1fr)',
         }}
       >
-        {gallery.map((image) => {
-
-          const category = () => {
-          if (image.type === 'PEN') {
-            return '선화'
-          } if (image.type === 'COLOR') {
-            return '채색'
-          } if (image.type === 'BG') {
-            return '배경'
-          } if (image.type === 'PD') {
-            return 'PD'
-          } if (image.type === 'STORY') {
-            return '스토리'
-          } if (image.type === 'CONT') {
-            return '콘티'
-          }
-            return '기타'
-        }
-
-          return (
-          <Card key={image.piece_id} sx={{ cursor: 'pointer', color: 'common.white' }} onClick={() => router.push(paths.mypage.worksDetail(image.piece_id))}>
+  {piecesData.map((image) => (
+          <Card
+            key={image.id}
+            sx={{ cursor: 'pointer', color: 'common.white' }}
+            onClick={() => router.push(paths.mypage.worksDetail(image.id))}
+          >
             <ListItemText
               sx={{
                 p: 3,
@@ -168,8 +162,8 @@ export default function WorksListPosts() {
                 zIndex: 9,
                 position: 'absolute',
               }}
-              primary={`${image.name} - ${category()}`}
-              secondary={image.date}
+              primary={`${image.name} - ${category(image.type)}`}
+              // secondary={new Date(image.created_at).toLocaleDateString()} // Adjust date formatting if necessary
               primaryTypographyProps={{
                 noWrap: true,
                 typography: 'h6',
@@ -186,29 +180,25 @@ export default function WorksListPosts() {
             <Image
               alt="gallery"
               ratio="1/1"
-              src={image.fileUrl ? image.fileUrl : `/no_image.png`}
+              src={image.fileUrl || '/no_image.png'}
               padding={image.fileUrl ? 0 : 10}
-              overlay={`linear-gradient(to bottom, ${alpha(theme.palette.grey[900], 0)} 0%, ${
-                theme.palette.grey[900]
-              } 75%)`}
+              overlay={`linear-gradient(to bottom, ${alpha(theme.palette.grey[900], 0)} 0%, ${theme.palette.grey[900]} 75%)`}
             />
           </Card>
-        )})}
-
-
+        ))}
       </Box>
-        <Pagination
-            count={Math.floor((dummy.length - 1) / pageCount) + 1}
-            defaultPage={1}
-            siblingCount={1}
-            sx={{
-              mt: 3,
-              mb: 3,
-              [`& .${paginationClasses.ul}`]: {
-                justifyContent: 'center',
-              },
-            }}
-          />
+      <Pagination
+        count={Math.floor((piecesData.length - 1) / pageCount) + 1}
+        defaultPage={1}
+        siblingCount={1}
+        sx={{
+          mt: 3,
+          mb: 3,
+          [`& .${paginationClasses.ul}`]: {
+            justifyContent: 'center',
+          },
+        }}
+      />
     </>
   );
 }

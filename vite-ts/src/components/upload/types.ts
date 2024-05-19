@@ -11,6 +11,7 @@ export interface CustomFile extends File {
 }
 
 export interface UploadProps extends DropzoneOptions {
+
   error?: boolean;
   sx?: SxProps<Theme>;
   thumbnail?: boolean;
