@@ -58,44 +58,28 @@ export default function RecruitListView() {
     }
   };
 
-  function updateFcmToken() {
+  async function updateFcmToken() {
 
     console.log('fcmToken 업데이트 로직 실행');
-    // 알림 권한 요청 및 FCM 토큰 획득
-    const generatedFcmToken = requestNotificationPermissionAndGetToken(messaging, import.meta.env.VITE_FIREBASE_VAPID_ID);
+    // 알림 권한 요청 및 FCM 토큰 획득Íß
 
-    if (generatedFcmToken) {
-      console.log('token = ', generatedFcmToken);
-
-      // const api = axiosOrigin.create({
-      //   baseURL: 'https://글그림.com',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     Authorization: `Bearer `, accessToken,
-      //   },
-      // });
+    const fcmToken = await requestNotificationPermissionAndGetToken(messaging, import.meta.env.VITE_FIREBASE_VAPID_ID);
+    // console.log('fcmToken: ', fcmToken);
+    if (fcmToken) {
 
       const requestData = {
-        'fcmToken' : generatedFcmToken,
+        fcmToken
       };
 
-      // // 데이터를 POST 방식으로 전송합니다.
-      // api.post('/api/v1/auth/fcm', { dto: requestData })
-      //   .then(response => {
-      //     console.log('Response:', response.data);
-      //   })
-      //   .catch(error => {
-      //     console.error('Error:', error.response);
-      //   });
-
-      console.log('request json 값: ', requestData.fcmToken);
+      // console.log('fcmToken: ', fcmToken);
+      // console.log('localStorage.getItem(\'accessToken\'): ', localStorage.getItem('accessToken'));
       axiosOrigin
         .post('/api/v1/auth/fcm', requestData, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
           },
-          // baseURL: 'https://글그림.com',
-          baseURL: 'http://localhost:8080',
+          baseURL: 'https://글그림.com',
+          // baseURL: 'http://localhost:8085',
         })
         .then((response) => {
           console.log(response.data);
