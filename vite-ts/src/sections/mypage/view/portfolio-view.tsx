@@ -90,9 +90,8 @@ export default function PortfolioView() {
 
   const  { portfoliosData, portfoliosError, portfoliosLoading, portfoliosMutate } = useGetPortfolios()
 
-  if (portfoliosLoading) return <Box>Loading...</Box>;
-  if (portfoliosError) return <Box>Error loading portfolios:</Box>;
-  if (portfoliosData.length === 0) return <Box>포트폴리오가 없습니다.</Box>;
+  if (portfoliosLoading) return <Box><SplashScreen/></Box>;
+  if (portfoliosError) return <Box>잘못된 접근입니다</Box>;
 
   const handleDelete = async () => {
     if (selectedPortfolioId === null) return;

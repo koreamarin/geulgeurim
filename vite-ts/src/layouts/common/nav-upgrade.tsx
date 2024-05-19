@@ -1,14 +1,7 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-
-import { paths } from 'src/routes/paths';
-
-import { useMockedUser } from 'src/hooks/use-mocked-user';
-
-import Label from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +22,7 @@ export default function NavUpgrade() {
       <Stack alignItems="center">
         <Box sx={{ position: 'relative' }}>
           <Avatar src={imageUrl || '/no_profile.jpg'} alt='이미지' sx={{ width: 100, height: 100 }}>
-            {nickName?.charAt(0).toUpperCase()}asdfdasf
+            {nickName}
           </Avatar>
 
         </Box>

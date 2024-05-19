@@ -19,6 +19,8 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
+const checkUser = localStorage.getItem('userType') === 'INDIVIDUAL'
+
 const OPTIONS = [
   {
     label: '메인화면',
@@ -26,7 +28,7 @@ const OPTIONS = [
   },
   {
     label: '마이페이지',
-    linkTo: paths.mypage.root,
+    linkTo: checkUser ? paths.mypage.root : paths.company.root,
   }
 ];
 
