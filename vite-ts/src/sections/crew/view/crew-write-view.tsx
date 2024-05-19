@@ -51,7 +51,7 @@ export default function CrewApplyView({ id }: Props) {
     };
 
   const handleSubmit = () => {
-    console.log('Title:', projectName);
+    console.log('ProjectName:', projectName);
     console.log('Description:', content);
     console.log('Files:', files);
     console.log('Positions:', positions);
@@ -66,9 +66,10 @@ export default function CrewApplyView({ id }: Props) {
       "conti":positions.콘티,
       "status": "INPROGRESS",
     };
+    console.log("request", crewBoardRequest);
     Object.values(files).forEach((file) => formData.append('files', file));
     formData.append(
-      'shareWriteRequest',
+      'crewBoardRequest',
       new Blob([JSON.stringify(crewBoardRequest)], {
         type: 'application/json',
       })
@@ -85,7 +86,7 @@ export default function CrewApplyView({ id }: Props) {
       .then((response) => {
         const crewId = response.data;
         console.log(response.data);
-        router.push(paths.community.share.detail(crewId));
+        router.push(paths.community.crew.detail(crewId));
       })
       .catch((error) => {
         alert('글 작성 중 오류가 발생했습니다.');

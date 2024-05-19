@@ -23,6 +23,7 @@ const ICONS = {
   portfolio: icon('ic_portfolio'),
   interest: icon('ic_interest'),
   apply: icon('ic_apply'),
+  crew: icon('ic_calender'),
 };
 
 // ----------------------------------------------------------------------
@@ -65,6 +66,11 @@ export function useNavData() {
             title: t('지원 내역'),
             path: paths.mypage.apply,
             icon: ICONS.apply,
+          },
+          {
+            title: t('크루 모집'),
+            path: paths.mypage.crew,
+            icon: ICONS.crew,
           },
         ],
       },

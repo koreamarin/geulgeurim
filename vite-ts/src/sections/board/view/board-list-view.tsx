@@ -18,6 +18,8 @@ import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { CUSTOM_API } from 'src/config-global';
+
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
@@ -104,8 +106,7 @@ export default function BoardRecentPost() {
           page,
           size,
         },
-        baseURL: 'https://글그림.com',
-        // baseURL: 'http://localhost:8080',
+        baseURL: CUSTOM_API,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }

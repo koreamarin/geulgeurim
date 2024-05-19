@@ -13,6 +13,8 @@ import Pagination, { paginationClasses } from '@mui/material/Pagination';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { CUSTOM_API } from 'src/config-global';
+
 import Iconify from 'src/components/iconify';
 
 import ShareItem from 'src/sections/blog/share-item';
@@ -55,8 +57,7 @@ export default function ShareRecentPost() {
           page,
           size,
         },
-        baseURL: 'https://글그림.com',
-        // baseURL: 'http://localhost:8080',
+        baseURL: CUSTOM_API,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }

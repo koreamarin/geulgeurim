@@ -41,10 +41,10 @@ export const customFetcher = async (args: string | [string, AxiosRequestConfig])
 // ----------------------------------------------------------------------
 
 export const endpoints = {
-  resume:{
-    list:'/api/v1/recruit/resume'
+  resume: {
+    list: '/api/v1/recruit/resume'
   },
-  portfolio : {
+  portfolio: {
     list: '/api/v1/common/portfolio',
     create: '/api/v1/common/portfolio',
     createUser: '/api/v1/common/portfolio/user',
@@ -52,13 +52,18 @@ export const endpoints = {
     detailUserFormat: '/api/v1/common/portfolio/detail/user',
     delete: '/api/v1/common/portfolio'
   },
-  pieces : {
-    mine: '/api/v1/common/piece/search?'
+  pieces: {
+    mine: '/api/v1/common/piece/search?',
+    detail: '/api/v1/common/piece/detail',
+    create: '/api/v1/common/piece/create',
+    delete: '/api/v1/common/piece/del'
   },
-  recruit : {
+  recruit: {
     list: '/api/v1/recruit/joblist',
     stars: '/api/v1/recruit/star',
     detail: '/api/v1/recruit/jobdetail'
+  },
+  user: {
+    detail: '/api/v1/auth/user'
   }
-
 };

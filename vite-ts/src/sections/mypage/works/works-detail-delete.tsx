@@ -10,6 +10,8 @@ import DialogActions from '@mui/material/DialogActions';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { deletePiece } from 'src/api/piece';
+
 import getVariant from '../get-variant';
 
 // ----------------------------------------------------------------------
@@ -34,6 +36,7 @@ export default function WorksDetailDelete({
     console.log(deleteWorks, '번 작품삭제!')
     onClose()
     // 성공하면 list로 이동!
+    deletePiece(parseInt(deleteWorks, 10))
     router.push(paths.mypage.works)
   }
   return (
