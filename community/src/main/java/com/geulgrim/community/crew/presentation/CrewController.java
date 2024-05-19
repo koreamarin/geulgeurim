@@ -51,8 +51,8 @@ public class CrewController {
             @RequestHeader HttpHeaders headers,
             @PathVariable("crew_id") Long crewId
     ) {
-        long userId = Long.parseLong(headers.get("user_id").get(0));
-//        long userId = 5;
+//        long userId = Long.parseLong(headers.get("user_id").get(0));
+        long userId = 5;
         CrewBoardDetail detail = crewService.getCrewBoardDetail(crewId, userId);
         return ResponseEntity.ok(detail);
     }

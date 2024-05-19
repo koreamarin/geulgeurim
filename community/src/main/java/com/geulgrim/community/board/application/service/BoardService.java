@@ -59,7 +59,7 @@ public class BoardService {
 
     // 자유게시판 상세조회
     public BoardDetailResponse boardDetail(long boardId) {
-        log.info("조회수 증가 : {}", boardRepository.updateView(boardId));
+//        log.info("조회수 증가 : {}", boardRepository.updateView(boardId));
 
         return BoardDetailResponse.builder()
                 .board(boardRepository.findBoardByBoardId(boardId))
@@ -77,7 +77,7 @@ public class BoardService {
             BoardImage boardImage = new BoardImage();
             boardImage.setFileUrl(url);
             boardImage.setImageType(ImageType.URL);
-            log.info("URL : {}", boardImage.getFileUrl());
+//            log.info("URL : {}", boardImage.getFileUrl());
             boardImageList.add(boardImage);
         }
 
@@ -113,7 +113,7 @@ public class BoardService {
             BoardImage boardImage = new BoardImage();
             boardImage.setFileUrl(url);
             boardImage.setImageType(ImageType.URL);
-            log.info("URL : {}", boardImage.getFileUrl());
+//            log.info("URL : {}", boardImage.getFileUrl());
             boardImageList.add(boardImage);
         }
 
