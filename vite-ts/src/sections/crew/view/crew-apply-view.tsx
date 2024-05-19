@@ -103,6 +103,7 @@ export default function CrewApplyView({ id }: Props) {
       })
       .catch((error) => {
         console.log('크루 신청 알림 오류')
+        console.log(error);
       });
   }
 
