@@ -1,17 +1,21 @@
+import { useRef } from 'react';
+
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Unstable_Grid2';
+import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
+import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
+import InputAdornment from '@mui/material/InputAdornment';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import { useRecruitFilterStore } from 'src/store/RecruitFilterStore';
 
-import { CloseIcon } from 'src/components/lightbox';
+import Iconify from 'src/components/iconify';
 
 const positions = [
   { value: 1, label: '선화' },
@@ -45,7 +49,7 @@ const closeTypesd = [
   { value: '수시', label: '수시' }
 ];
 
-export function RecruitMainFilter() {
+export default function RecruitMainFilter() {
   const { positionIds, experienceTypes, closeTypes, ChangePositionIds, ChangeExperienceTypes, ChangeCloseTypes, ResetFilter } = useRecruitFilterStore();
 
   const handlePositionChange = (event: SelectChangeEvent<number[]>) => {
@@ -72,11 +76,28 @@ export function RecruitMainFilter() {
     ChangeCloseTypes(closeTypes.filter(closeTypeId => closeTypeId !== id));
   };
 
+  const changeSearchRef = useRef<string>('')
+
+  const querySearch = useRef<string>('')
+
+  const handleClick = async  () => {
+    querySearch.current = changeSearchRef.current
+    // api 연동
+    // await resumesMutate()
+  };
+
+  // 검색 입력 후 enter
+  const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleClick();
+    }
+  };
+
   return (
     <div>
-      <Grid container spacing={2} xs={12}>
-        <Grid xs={4}>
-          <FormControl fullWidth margin="normal">
+      <Grid container spacing={2}>
+        <Grid xs={4} sm={2.5} md={2}>
+          <FormControl fullWidth>
             <InputLabel id="position" shrink={false}>직군</InputLabel>
             <Select
               labelId="position"
@@ -95,8 +116,8 @@ export function RecruitMainFilter() {
           </FormControl>
         </Grid>
 
-        <Grid xs={4}>
-          <FormControl fullWidth margin="normal">
+        <Grid xs={4} sm={2.5} md={2}>
+          <FormControl fullWidth>
             <InputLabel id="experience" shrink={false}>경력</InputLabel>
             <Select
               labelId="experience"
@@ -115,8 +136,8 @@ export function RecruitMainFilter() {
           </FormControl>
         </Grid>
 
-        <Grid xs={4}>
-          <FormControl fullWidth margin="normal">
+        <Grid xs={4} sm={2.5} md={2}>
+          <FormControl fullWidth>
             <InputLabel id="close" shrink={false}>마감방식</InputLabel>
             <Select
               labelId="close"
@@ -134,55 +155,73 @@ export function RecruitMainFilter() {
             </Select>
           </FormControl>
         </Grid>
+
+        {/* 검색 */}
+        <Grid xs={12} sm={4.5} md={6}>
+          <TextField
+              placeholder="검색"
+              onKeyUp={handleKeyUp}
+              sx={{ width:'100%' }}
+              onChange={(event) => {changeSearchRef.current = event.target.value}}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="start">
+                      <Iconify icon="eva:search-fill" sx={{ ml: 1, color: 'text.disabled' }} onClick={handleClick} />
+                  </InputAdornment>
+                )
+              }}
+          />
+        </Grid>
+
+        {/* 선택 인자들 */}
+        {(!!positionIds.length || !!experienceTypes.length || !!closeTypes.length) &&
+          (
+            <>
+              <Grid xl={11.5} lg={11.4} md={11.3} sm={11.2} xs={10.8}>
+                <Box mt={1} display="flex" flexWrap="wrap" gap={1}>
+                  {positionIds.length > 0 && (
+                    positionIds.sort((a, b) => positions.findIndex(p => p.value === a) - positions.findIndex(p => p.value === b)).map((id) => (
+                      <Chip
+                        key={id}
+                        label={positions.find((p) => p.value === id)?.label}
+                        onClick={() => handleRemovePosition(id)}
+                        sx={{ backgroundColor: 'black', color: '#e8e8e8' }}
+                      />
+                    ))
+                  )}
+
+                  {experienceTypes.length > 0 && (
+                    experienceTypes.sort((a, b) => experiences.findIndex(e => e.value === a) - experiences.findIndex(e => e.value === b)).map((value) => (
+                      <Chip
+                        key={value}
+                        label={experiences.find((e) => e.value === value)?.label}
+                        onClick={() => handleRemoveExperience(value)}
+                        sx={{ backgroundColor: '#000000ab', color: '#ffffff' }}
+                      />
+                    ))
+                  )}
+
+                  {closeTypes.length > 0 && (
+                    closeTypes.sort((a, b) => closeTypesd.findIndex(c => c.value === a) - closeTypesd.findIndex(c => c.value === b)).map((id) => (
+                      <Chip
+                        key={id}
+                        label={closeTypesd.find((c) => c.value === id)?.label}
+                        onClick={() => handleRemoveCloseType(id)}
+                        sx={{ backgroundColor: '#a6a6a6', color: '#ffffff' }}
+                      />
+                    ))
+                  )}
+                </Box>
+              </Grid>
+              <Grid xl={0.5} lg={0.6} md={0.7} sm={0.8} xs={1.2} sx={{ display: 'flex', alignItems: 'start' }}>
+                <IconButton onClick={ResetFilter} sx={{ width: '100%', padding:0.2, aspectRatio:1}}>
+                  <Iconify icon="solar:restart-bold" width="100%" />
+                </IconButton>
+              </Grid>
+            </>
+          )
+        }
       </Grid>
-
-      <Box mt={2} display="flex" flexWrap="wrap" gap={1}>
-        {positionIds.length > 0 && (
-          <Box display="flex" flexWrap="wrap" gap={1}>
-            {positionIds.sort().map((id) => (
-              <Chip
-                key={id}
-                label={positions.find((p) => p.value === id)?.label}
-                onDelete={() => handleRemovePosition(id)}
-                deleteIcon={<CloseIcon />}
-                sx={{ backgroundColor: 'balck', color: 'white' }}
-              />
-            ))}
-          </Box>
-        )}
-
-        {experienceTypes.length > 0 && (
-          <Box display="flex" flexWrap="wrap" gap={1}>
-            {experienceTypes.sort().map((value) => (
-              <Chip
-                key={value}
-                label={experiences.find((e) => e.value === value)?.label}
-                onDelete={() => handleRemoveExperience(value)}
-                deleteIcon={<CloseIcon />}
-                sx={{ backgroundColor: 'lightgreen', color: 'black' }}
-              />
-            ))}
-          </Box>
-        )}
-
-        {closeTypes.length > 0 && (
-          <Box display="flex" flexWrap="wrap" gap={1}>
-            {closeTypes.sort().map((id) => (
-              <Chip
-                key={id}
-                label={closeTypesd.find((c) => c.value === id)?.label}
-                onDelete={() => handleRemoveCloseType(id)}
-                deleteIcon={<CloseIcon />}
-                sx={{ backgroundColor: 'lightcoral', color: 'black' }}
-              />
-            ))}
-          </Box>
-        )}
-      </Box>
-
-      <Button onClick={ResetFilter} variant="outlined" color="secondary" sx={{ mt: 2 }}>
-        Reset Filters
-      </Button>
     </div>
-  );
+  )
 }

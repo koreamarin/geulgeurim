@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getToken, Messaging, getMessaging } from 'firebase/messaging';
 
-import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
 import RecruitMain from '../recruit-main';
@@ -126,9 +125,7 @@ export default function RecruitListView() {
 
   return (
     <Container>
-      <Box>
         <RecruitMain/>
-      </Box>
     </Container>
   );
 }
