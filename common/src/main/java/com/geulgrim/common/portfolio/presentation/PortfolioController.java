@@ -21,7 +21,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/common/portfolio")
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://글그림.com"})
 @Slf4j
 public class PortfolioController {
 
@@ -76,7 +76,7 @@ public class PortfolioController {
             @RequestPart ArrayList<MultipartFile> files,
             @RequestHeader HttpHeaders headers
     ) {
-        Long userId = Long.parseLong(headers.get("user_id").get(0));
+        Long userId =  Long.parseLong(headers.get("user_id").get(0));
         portfolioRequest.setFiles(files);
         Long portfolioId = portfolioService.addPortfolio(userId, portfolioRequest);
         return ResponseEntity.ok(portfolioId);
