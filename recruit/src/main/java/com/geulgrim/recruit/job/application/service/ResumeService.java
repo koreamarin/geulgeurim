@@ -177,12 +177,21 @@ public class ResumeService {
     // 구인구직 상세 조회
     public GetJobResponse getJob(
             HttpHeaders headers, Long jobId) {
-        Long userId = Long.parseLong(headers.get("user_id").get(0));
+        List<String> userIds = headers.get("user_id");
+
+        long userId = 0L;
+
+        if(userIds != null) {
+            userId = Long.parseLong(userIds.get(0));
+        }
 
         Job job = jobRepository.findById(jobId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 구인구직 입니다."));
 
         Boolean star = starRepository.findByJobAndUserId(job, userId).isPresent();
+        System.out.println(userId);
+        System.out.println(star);
+
 
         List<Long> positionIds = job.getJobPositions().stream().map(jobPosition -> jobPosition.getPosition().getPositionId()).toList();
 
