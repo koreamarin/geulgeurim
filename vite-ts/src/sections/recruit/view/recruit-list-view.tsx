@@ -3,8 +3,9 @@ import { useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getToken, Messaging, getMessaging } from 'firebase/messaging';
 
-import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+
+import RecruitMain from '../recruit-main';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -101,7 +102,8 @@ export default function RecruitListView() {
           localStorage.setItem('updatedFcmToken', 'true'); // 토큰 업데이트 후 플래그 설정
         })
         .catch((error) => {
-          alert('fcm 토큰 업데이트 중 오류가 발생했습니다.');
+          // alert('fcm 토큰 업데이트 중 오류가 발생했습니다.');
+          console.log('fcm 오류')
         });
 
 
@@ -123,9 +125,7 @@ export default function RecruitListView() {
 
   return (
     <Container>
-      <Box>
-        구인구직 리스트
-      </Box>
+        <RecruitMain/>
     </Container>
   );
 }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -27,15 +27,19 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 // ----------------------------------------------------------------------
 
 export default function JwtLoginView() {
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get('returnTo');
+
+  useEffect(() => {
+    if (localStorage.getItem('accessToken') && localStorage.getItem('nickname') && localStorage.getItem('userId')) {
+      window.location.href = returnTo || '/';
+    }
+  }, [returnTo])
   const { login } = useAuthContext();
 
   const router = useRouter();
 
   const [errorMsg, setErrorMsg] = useState('');
-
-  const searchParams = useSearchParams();
-
-  const returnTo = searchParams.get('returnTo');
 
   const password = useBoolean();
 
@@ -51,7 +55,6 @@ export default function JwtLoginView() {
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting },
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
@@ -73,9 +76,9 @@ export default function JwtLoginView() {
   );
 
   const handleButtonClick = () => {
+    
     const url =
       'http://ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/auth/oauth2/authorization/kakao';
-    // 'http://localhost:8080/api/v1/auth/oauth2/authorization/kakao';
     const windowFeatures = 'width=500,height=600,left=10,top=10';
     const newWindow = window.open(url, '_blank', windowFeatures);
 
@@ -83,9 +86,9 @@ export default function JwtLoginView() {
       if (newWindow?.closed) {
         clearInterval(checkWindowClosed);
         // 로그인 창이 닫혔으므로 홈페이지로 이동
-        window.location.href = '/'; // 홈페이지 URL로 변경해주세요.
+        window.location.href = returnTo || '/';
       }
-    }, 500); // 500ms 마다 창이 닫혔는지 확인
+    }, 500);
   };
 
   const KakaoLoginBtn = (
