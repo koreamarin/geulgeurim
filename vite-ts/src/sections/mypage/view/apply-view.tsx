@@ -11,14 +11,20 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import CardContent from '@mui/material/CardContent';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { useGetApplyList } from 'src/api/recruit';
 
 import { SplashScreen } from 'src/components/loading-screen';
 
 export default function ApplyView() {
+  
   const { applyData, applyLoading, applyError } = useGetApplyList();
   const [openModal, setOpenModal] = useState(false);
   const [selectedResumeUrl, setSelectedResumeUrl] = useState<string>('');
+
+  const router = useRouter()
 
   const handleOpenModal = (resumeUrl: string) => {
     setSelectedResumeUrl(resumeUrl);
@@ -78,7 +84,7 @@ export default function ApplyView() {
                   {getResultStatusText(job.resultStatus)}
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                  <Button variant="outlined" size="small" onClick={() => console.log(job.jobId)}>
+                  <Button variant="outlined" size="small" onClick={() => router.push(paths.recruit.details(job.jobId))}>
                     공고보기
                   </Button>
                   <Button variant="contained" size="small" onClick={() => handleOpenModal(job.resumeUrl)}>
