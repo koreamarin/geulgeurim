@@ -36,6 +36,8 @@ public class PieceService {
                 .name(piece.getName())
                 .description(piece.getDescription())
                 .type(piece.getType())
+                .createdAt(piece.getCreatedAt())
+                .updatedAt(piece.getUpdatedAt())
                 .build();
     }
 
