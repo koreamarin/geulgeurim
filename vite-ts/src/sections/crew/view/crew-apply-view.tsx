@@ -57,14 +57,14 @@ export default function CrewApplyView({ id }: Props) {
       message,
     }
     axios
-    .post(`/api/v1/crew/request/${crewId}`, crewJoinRequest, {
+    .post(`/api/v1/community/crew/request/${crewId}`, crewJoinRequest, {
       headers: {
-        'Content-Type': `multipart/form-data; `,
         "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
       },
       baseURL: CUSTOM_API
     })
     .then((response) => {
+      console.log(response);
       setOpenDialog(true);
     })
     .catch((error) => {
