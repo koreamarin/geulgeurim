@@ -83,6 +83,12 @@ public class UserController {
         return new ResponseEntity<>(getUserResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/userinfo/{id}")
+    public ResponseEntity<GetUserResponse> getUserInfo(@PathVariable Long id) {
+        GetUserResponse getUserResponse = userService.getUser(id);
+        return new ResponseEntity<>(getUserResponse, HttpStatus.OK);
+    }
+
     @GetMapping("/enteruser")
     public ResponseEntity<?> getEnterUser(@RequestHeader HttpHeaders headers) {
         Long userId = Long.parseLong(headers.get("user_id").get(0));
