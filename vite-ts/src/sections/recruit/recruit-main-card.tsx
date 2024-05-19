@@ -9,7 +9,10 @@ import CardContent from '@mui/material/CardContent';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { deleteRecruitStar, submitRecruitStar, useGetRecruitStarsList } from 'src/api/recruit';
+
 import Iconify from 'src/components/iconify';
+import { useSnackbar } from 'src/components/snackbar';
 
 type JobItemProps = {
   data: {
@@ -42,6 +45,9 @@ const positions = [
   ];
 
 export default function RecruitMainCard({ data }: JobItemProps) {
+  const token = localStorage.getItem('accessToken')
+  const {recruitStarsMutate} = useGetRecruitStarsList(token)
+  const { enqueueSnackbar } = useSnackbar();
     const router = useRouter()
     const calculateDDay = (endDate: string) => {
         const end = new Date(endDate).getTime();
@@ -60,22 +66,34 @@ export default function RecruitMainCard({ data }: JobItemProps) {
 
     const [selected, setSelected] = useState(data.selected);
 
-    const token = localStorage.getItem('accessToken')
 
-    const handleIconClick = (event:React.MouseEvent) => {
+    const handleIconClick = async (event:React.MouseEvent) => {
         event.stopPropagation();
         if (selected && token) {
-            console.log(`삭제 ${jobId} selected status: ${!selected}`);
+          setSelected((prevSelected:boolean) => !prevSelected);
+          const deleteStar = await deleteRecruitStar(jobId)
+          if (!deleteStar) {
+            enqueueSnackbar('즐겨찾기 삭제 실패!', { variant: 'error' });
+            setSelected((prevSelected:boolean) => !prevSelected);
+          } else {
+            await recruitStarsMutate()
+          }
         } else if (!selected && token) {
-            console.log(`등록 ${jobId} selected status: ${!selected}`);
+          setSelected((prevSelected:boolean) => !prevSelected);
+          const submitStar = await submitRecruitStar(jobId)
+          if (!submitStar) {
+            enqueueSnackbar('즐겨찾기 등록 실패!', { variant: 'error' });
+            setSelected((prevSelected:boolean) => !prevSelected);
+          } else {
+            await recruitStarsMutate()
+          }
         } else {
-            alert('로그인이 필요한 서비스입니다.')
+          alert('로그인이 필요한 서비스입니다.')
         }
-        setSelected((prevSelected:boolean) => !prevSelected);
     };
 
     return (
-    <Card key={jobId} sx={{ padding: 2, cursor: 'pointer' }} onClick={handleClick}>
+    <Card key={jobId} sx={{ padding: 2, cursor: 'pointer', height:'100%' }} onClick={handleClick}>
         <Box display="flex" justifyContent="flex-end">
         {selected ? (
                 <Iconify icon="eva:star-fill" sx={{ ml: 1, color: 'text.disabled' }} onClick={handleIconClick} />
@@ -89,7 +107,7 @@ export default function RecruitMainCard({ data }: JobItemProps) {
                   {companyName}
                 </Typography>
                 <Typography variant="h5" component="div" align="center">
-                {title.length > 20 ? `${title.slice(0, 18)}...` : title}
+                {title.length > 15 ? `${title.slice(0, 15)}...` : title}
                 </Typography>
             </Box>
             <Box textAlign='end' mt={5}>

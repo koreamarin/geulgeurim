@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 
-import { customFetcher, endpoints } from 'src/utils/custom-axios';
+import { endpoints, customFetcher } from 'src/utils/custom-axios';
 
 import { CUSTOM_API } from 'src/config-global';
 
@@ -103,13 +103,16 @@ export async function deleteResumeId(resumeId: number) {
     })
 
     // SWR mutate를 이용하여 로컬 데이터 업데이트
-    mutate(URL, async (data: ResumeListResult) => (
-       {
-        ...data,
-        getResumesResponse: data.getResumesResponse.filter(resume => resume.resumeId !== resumeId),
-        totalPage: data.totalPage - 1
+    mutate(URL, async (data: ResumeListResult) => {
+      if (data && data.getResumesResponse) {
+        return {
+          ...data,
+          getResumesResponse: data.getResumesResponse.filter(resume => resume.resumeId !== resumeId),
+          totalPage: data.totalPage ? data.totalPage - 1 : 0
+        };
       }
-    ), false);
+      return data;
+    }, false);
     return true
   } catch (error) {
     console.log(error)

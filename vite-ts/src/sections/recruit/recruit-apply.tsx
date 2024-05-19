@@ -3,6 +3,8 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+import SortingSelectingTable from './recruit-apply-resume-table';
+
 type ApplyModalProps = {
   open: boolean;
   handleClose: () => void;
@@ -22,21 +24,27 @@ export function RecruitApply({ open, handleClose }: ApplyModalProps) {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: 400,
+          width: '80%',
           bgcolor: 'background.paper',
           boxShadow: 24,
           p: 4,
+          borderRadius: '16px'
         }}
       >
-        <Typography id="apply-modal-title" variant="h6" component="h2">
-          지원하기
+        <Typography id="apply-modal-title" variant="h4" component="h2" mb={4} textAlign='center'>
+          내 이력서 선택하기
         </Typography>
-        <Typography id="apply-modal-description" sx={{ mt: 2 }}>
-          지원 내용을 여기에 작성하세요.
-        </Typography>
-        <Button onClick={handleClose} sx={{ mt: 2 }} variant="contained">
-          닫기
-        </Button>
+        <Box display="flex" justifyContent="flex-end" mb={3}>
+          <Button onClick={handleClose} variant="contained">
+            이력서 추가하기
+          </Button>
+        </Box>
+        <SortingSelectingTable/>
+        <Box display="flex" justifyContent="flex-end" mt={2}>
+          <Button onClick={handleClose} variant="contained">
+            닫기
+          </Button>
+        </Box>
       </Box>
     </Modal>
   );
