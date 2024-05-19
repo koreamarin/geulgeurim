@@ -17,4 +17,6 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> getJobs(@Param("positionIds") List<Long> positionIds, @Param("experienceTypes") List<String> experienceTypes, @Param("closeTypes") List<String> closeType);
 
     Optional<Job> findBySaraminId(Long saraminId);
+
+    Optional<Job> findByJobId(Long jobId);
 }

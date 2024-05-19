@@ -1255,5 +1255,16 @@ public class ResumeService {
         return response;
     }
 
+    public SimpleJobResponseDto getJobSimple(Long jobId){
+        Job job = jobRepository.findByJobId(jobId).orElseThrow();
+        return SimpleJobResponseDto.from(job);
+    }
 
+
+    public List<UserStarsResponseDto> getUserStars(Long id) {
+        List<Star> stars = starRepository.findAllByUserId(id).orElseThrow();
+        return stars.stream()
+                .map(UserStarsResponseDto::from)
+                .toList();
+    }
 }

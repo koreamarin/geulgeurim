@@ -357,4 +357,16 @@ public class RecruitController {
 
         return new ResponseEntity<>(resumeService.test2(), HttpStatus.OK);
     }
+
+    @GetMapping("/jobsimple/{id}")
+    public ResponseEntity<SimpleJobResponseDto> getJobSimple(@PathVariable("id") Long jobId){
+        return new ResponseEntity<>(resumeService.getJobSimple(jobId) , HttpStatus.OK);
+    }
+
+    @GetMapping("/userstars/{id}") //특정 유저의 관심공고 id 리스트를 가져옵니다
+    public ResponseEntity<?> getUserStars(@PathVariable Long id){
+        return new ResponseEntity<>(resumeService.getUserStars(id) ,HttpStatus.OK);
+    }
+
+
 }
