@@ -14,7 +14,7 @@ public class ResumePortfolio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long resumePofolId;
 
-    @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="resume_id", referencedColumnName = "resume_id", nullable = false)
     private Resume resume;
 
