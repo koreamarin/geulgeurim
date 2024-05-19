@@ -141,4 +141,11 @@ public class BoardService {
         }
         return boardRepository.searchBoards(keyword, searchType, sort, pageable);
     }
+
+    public Page<BoardListResponse> myBoards(long userId, String keyword, String searchType, String sort, Pageable pageable) {
+        if (keyword == null || searchType == null) {
+            return boardRepository.myBoards(userId, pageable);
+        }
+        return boardRepository.myBoards(userId, keyword, searchType, sort, pageable);
+    }
 }

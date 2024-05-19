@@ -78,4 +78,15 @@ public class BoardController {
             Pageable pageable) {
         return boardService.searchBoards(keyword, searchType, sort, pageable);
     }
+
+    @GetMapping("/myboard")
+    public Page<BoardListResponse> myBoards(@RequestHeader HttpHeaders headers,
+                                            @RequestParam(required = false) String keyword,
+                                            @RequestParam(required = false) String searchType,
+                                            @RequestParam(required = false) String sort,
+                                            Pageable pageable) {
+        long userId = Long.parseLong(headers.get("user_id").get(0));
+//        long userId = 5;
+        return boardService.myBoards(userId, keyword, searchType, sort, pageable);
+    }
 }
