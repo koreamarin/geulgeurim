@@ -49,11 +49,12 @@ public class PushService {
             log.info("닉네임이 필요한 푸시메일 ={}", domain);
 
             //auth에서 sender 닉네임 얻어서 title 수정
-            String senderNick = authFeignClient.getUser().getNickname();
+            String senderNick = authFeignClient.getUserInfo(userId).getNickname();
             push.updateTitle(senderNick);
         }
 
-        UserResponseDto rcvUser = authFeignClient.getRcvUser(dto.getReceiverId());
+        //알람 수신자 정보 얻기
+        UserResponseDto rcvUser = authFeignClient.getUserInfo(dto.getReceiverId());
         //exception 처리
         if (rcvUser == null){
             throw new NoUserExistException();
@@ -76,11 +77,9 @@ public class PushService {
         //메일 로그 저장
         pushRespository.save(push);
 
-        Long senderId = authFeignClient.getUser().getUserId();
-
         return PushCreateResponseDto.builder()
                 .receiverId(dto.getReceiverId())
-                .senderId(senderId)
+                .senderId(userId)
                 .favoriteJobList(dto.getFavoriteJobs())
                 .domain(domain)
                 .title(push.getTitle())
@@ -97,15 +96,16 @@ public class PushService {
         log.info("domain Enum 값 ={} ", domain);
 
         //구인에서 공고제목 얻어서 content 수정, 이후 페이지 링크로 수정
-        String jobContent = "";
+        StringBuilder jobContent = new StringBuilder();
         for (Long jobId : dto.getFavoriteJobs()) {
             SimpleJobResponseDto jobSimple = recruitFeignClient.getJobSimple(jobId);
-            jobContent += jobSimple.getCompanyName() + " 회사의\n" + jobSimple.getTitle() + "공고가\n" + jobSimple.getEndDate() + "에 마감되요!\n얼른 지원하러 가볼까요?";
+            jobContent.append(jobSimple.getCompanyName()).append(" 회사의\n").append(jobSimple.getTitle()).append("공고가\n").append(jobSimple.getEndDate()).append("에 마감되요!\n얼른 지원하러 가볼까요?");
+            jobContent.append("\n\n");
         }
-        push.updateContent(jobContent);
+        push.updateContent(jobContent.toString());
 
 
-        UserResponseDto rcvUser = authFeignClient.getRcvUser(dto.getReceiverId());
+        UserResponseDto rcvUser = authFeignClient.getUserInfo(dto.getReceiverId());
         //exception 처리
         if (rcvUser == null){
             throw new NoUserExistException();
