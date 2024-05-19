@@ -52,7 +52,6 @@ export function useGetPiecesList(type: string) {
 
 // ----------------------------------------------------------------------
 
-
 export function useGetPiecesDetail(pieceId: number) {
   const URL = endpoints.pieces.detail
   const { data, isLoading, error, isValidating } = useSWR(`${URL}/${pieceId}`, customFetcher);
@@ -85,4 +84,24 @@ export async function createPiece(data: any) {
     console.error('Error creating portfolio:', error);
     throw error;
   }
+}
+
+// ----------------------------------------------------------------------
+
+export async function deletePiece(pieceId: number) {
+  const URL = endpoints.pieces.delete;
+
+  if (!accessToken) {
+    throw new Error('No access token found');
+  }
+
+  try {
+    await axios.delete(`${CUSTOM_API}${URL}/${pieceId}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+  } catch (error) {
+    console.error('Error deleting piece:', error);
+    throw new Error('Failed to delete piece');
+  }
+
 }
