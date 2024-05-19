@@ -122,7 +122,6 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
                       미리보기
                     </Button>
                     <Button variant="contained" color="primary" sx={{ ml: 1 }} onClick={() => handleSelectClick(row.pk)}>
-                      {row.pk}
                       선택하기
                     </Button>
                   </TableCell>
@@ -141,7 +140,6 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
   });
 
   const handlePreviewClick = async (pk: number) => {
-    console.log('미리보기 클릭 확인', pk)
     setSelectedResumeId(pk);
     setModalOpen(true);
     await new Promise(resolve => setTimeout(resolve, 500));
@@ -216,7 +214,6 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
   };
   
   const handleImageUpload = async (pk: number) => {
-    console.log('중중확인', pk)
     if (!canvasImage) return;
   
     if (!window.confirm('제출 시 수정이 불가능합니다 정말로 제출하시겠습니까?')) return;
@@ -227,7 +224,6 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
   // 제출!!
   
   const handleSubmitImage = async (image: string, pk: number) => {
-    console.log('중간확인', pk)
     const byteString = atob(image.split(',')[1]);
     const mimeString = image.split(',')[0].split(':')[1].split(';')[0];
     const ab = new ArrayBuffer(byteString.length);

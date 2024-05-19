@@ -123,7 +123,7 @@ export default function RecruitDetail({id}:Props) {
                   ) : (
                       <Iconify icon="eva:star-outline" sx={{ ml: 1, color: 'text.disabled' }} onClick={handleIconClick} />
                   )}
-                  {shouldShowApplyButton && <Button disabled={(diffInDays < 0) || recruitDetailData.applyStatus} variant="contained" color="primary" onClick={handleApplyClick}>지원하기</Button>}
+                  {shouldShowApplyButton && <Button disabled={(diffInDays < 0) || recruitDetailData.applyStatus || localStorage.getItem('userType') === 'ENTERPRISE'} variant="contained" color="primary" onClick={handleApplyClick}>지원하기</Button>}
                   </Stack>
               </Stack>
               <Stack direction="row" spacing={4} mt={2} justifyContent="space-between" minHeight='70px'>
