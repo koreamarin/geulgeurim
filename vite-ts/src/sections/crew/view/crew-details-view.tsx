@@ -101,7 +101,7 @@ export default function CrewDetailView({ id }: Props) {
   const statusProps = getStatusProps(crewDetails.status);
   console.log(crew);
 
-  const handleAccept = async (crewRequestId: number) => {
+  const handleAccept = async (crewRequestId: React.Key | null | undefined) => {
     try {
       const response = await axios.get('/api/v1/community/crew/accept', {
         params: {
@@ -123,7 +123,7 @@ export default function CrewDetailView({ id }: Props) {
     }
   }
 
-  const handleRefuse = async (crewRequestId: number) => {
+  const handleRefuse = async (crewRequestId: React.Key | null | undefined) => {
     try {
       const response = await axios.get('/api/v1/community/crew/refuse', {
         params: {
@@ -356,7 +356,7 @@ export default function CrewDetailView({ id }: Props) {
                           table.page * table.rowsPerPage + table.rowsPerPage
                         )
                         .map(
-                          (row) => (
+                          (row: { [x: string]: any; crewRequestId: React.Key | null | undefined; }) => (
                             <TableRow hover role="checkbox" tabIndex={-1} key={row.crewRequestId}>
                               {COLUMNS2.map((column) => {
                                 const value = row[column.id];
