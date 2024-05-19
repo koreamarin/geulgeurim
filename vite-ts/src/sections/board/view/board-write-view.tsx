@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Route } from 'react-router-dom';
 import { useState, useCallback } from 'react';
 
@@ -20,8 +21,9 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
+import { CUSTOM_API } from 'src/config-global';
+
 import { Upload } from 'src/components/upload';
-import axios from 'axios';
 
 export default function BoardWriteView() {
   const router = useRouter();
@@ -53,8 +55,7 @@ export default function BoardWriteView() {
           'Content-Type': `multipart/form-data; `,
           "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
         },
-        baseURL: 'https://글그림.com',
-        // baseURL: 'http://localhost:8080',
+        baseURL: CUSTOM_API
       })
       .then((response) => {
         const { board } = response.data;
