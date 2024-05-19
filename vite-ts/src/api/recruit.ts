@@ -58,6 +58,28 @@ type JobResponse = {
   applyStatus: boolean;
 }
 
+type GetMyRecruitProps = {
+  getJobsResponses: {
+    jobId: number;
+    secondLocate: {
+      secondLocateKey: number;
+      firstLocate: {
+        firstLocateKey: number;
+        firstLocateName: string;
+      };
+      secondLocateName: string;
+    };
+    startDate: string;
+    endDate: string;
+    title: string;
+    companyName: string;
+    positionIds: number[];
+  }[];
+  totalPage: number;
+};
+
+
+
 
 export function useGetRecruitList({ positionIds, experienceTypes, closeTypes}:GetRecruitProps) {
   const URL = endpoints.recruit.list;
@@ -198,75 +220,59 @@ export async function submitRecruit(recruitId:number, resumeId:number, Data: For
   }
 }
 
+// ----------------------------------------------------------------------
+
+// 작성한 공고
+
+export function useGetMyRecruitList(page: number = 0, size: number = 20) {
+  const URL =  endpoints.company.myRecruit;
+  const queryURL = `${URL}?page=${page}&size=${size}`;
+
+  const { data, isLoading, error, isValidating, mutate: recruitMineMutate } = useSWR(queryURL, customFetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      recruitMineData: (data as GetMyRecruitProps) || { getJobsResponses: [], totalPage: 0 },
+      recruitMineLoading: isLoading,
+      recruitMineError: error,
+      recruitMineValidating: isValidating,
+      recruitMineMutate,
+    }),
+    [data, error, isLoading, isValidating, recruitMineMutate]
+  );
+
+  return memoizedValue;
+}
 
 
-// export function useGetResumeDetail(resumeId:number | undefined) {
-//   const URL = endpoints.resume.list;
-//   const { data, isLoading, error, isValidating } = useSWR(resumeId ? `${URL}/${resumeId}` : null, customFetcher);
+type GetSubmittListProps = {
+  getSubmittedResumesResponse : {
+    resumeId: number
+    resultStatus: string
+    resumeUrl: string
+  }[]
+}
 
-//   const memoizedValue = useMemo(
-//     () => ({
-//       resumesDetailData: (data as ResumeDetail),
-//       resumesDetailLoading: isLoading,
-//       resumesDetailError: error,
-//       resumesDetailValidating: isValidating,
-//     }),
-//     [data, error, isLoading, isValidating]);
+// ----------------------------------------------------------------------
 
-//   return memoizedValue;
-// }
+// 지원자 리스트
 
-// // ----------------------------------------------------------------------
+export function useGetSubmittList(page: number = 0, size: number = 20) {
+  const URL =  endpoints.company.myRecruit;
+  const queryURL = `${URL}?page=${page}&size=${size}`;
 
-// export async function postResumeList(resumeData: FormData) {
-//   const URL = endpoints.resume.list;
-//   try {
-//     const accessToken = localStorage.getItem('accessToken');
-//     await axios ({
-//       method: 'post',
-//       url: `${CUSTOM_API}${URL}`,
-//       data: resumeData,
-//       headers: {'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${accessToken}`}
-//     })
+  const { data, isLoading, error, isValidating, mutate: recruitSubmittMutate } = useSWR(queryURL, customFetcher);
 
-//     // SWR mutate를 이용하여 로컬 데이터 업데이트
-//     mutate(URL, (currentData: any) => {
-//       const updatedResumes = [...(currentData?.resumes || []), resumeData]
+  const memoizedValue = useMemo(
+    () => ({
+      recruitSubmittData: (data as GetSubmittListProps) || { getJobsResponses: []},
+      recruitSubmittLoading: isLoading,
+      recruitSubmittError: error,
+      recruitSubmittValidating: isValidating,
+      recruitSubmittMutate,
+    }),
+    [data, error, isLoading, isValidating, recruitSubmittMutate]
+  );
 
-//       return { ...currentData, resumes: updatedResumes };
-//     }, false);
-
-//     return true
-
-//   } catch (error) {
-//     console.log(error)
-//     return false
-//   }
-// }
-
-// // ----------------------------------------------------------------------
-
-// export async function deleteResumeId(resumeId: number) {
-//   const URL = endpoints.resume.list;
-//   try {
-//     const accessToken = localStorage.getItem('accessToken');
-//     await axios ({
-//       method: 'delete',
-//       url: `${CUSTOM_API}${URL}/${resumeId}`,
-//       headers: {'Authorization': `Bearer ${accessToken}`}
-//     })
-
-//     // SWR mutate를 이용하여 로컬 데이터 업데이트
-//     mutate(URL, async (data: ResumeListResult) => (
-//        {
-//         ...data,
-//         getResumesResponse: data.getResumesResponse.filter(resume => resume.resumeId !== resumeId),
-//         totalPage: data.totalPage - 1
-//       }
-//     ), false);
-//     return true
-//   } catch (error) {
-//     console.log(error)
-//     return false
-//   }
-// }
+  return memoizedValue;
+}

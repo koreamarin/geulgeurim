@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { ApplyView } from 'src/sections/mypage/view';
+import CompanyInformationView from 'src/sections/mypage/view/company-info-view';
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ export default function InformationHome() {
         <title>기업 기본 정보</title>
       </Helmet>
 
-      <ApplyView />
+      <CompanyInformationView />
     </>
   );
 }
