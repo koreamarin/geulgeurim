@@ -81,6 +81,8 @@ export default function CrewApplyView({ id }: Props) {
   };
 
   function  sendPushApply()  {
+
+    console.log('crewDetails.user_id =', crewDetails.user_id);
     const requestData = {
       'receiverId' : crewDetails.user_id,
       'senderId' : localStorage.getItem('userId'),
