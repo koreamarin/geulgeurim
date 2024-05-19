@@ -3,6 +3,7 @@ package com.geulgrim.community.board.application.service;
 import com.geulgrim.community.board.application.dto.request.BoardCommentUpdateRequest;
 import com.geulgrim.community.board.application.dto.request.BoardCommentWriteRequest;
 import com.geulgrim.community.board.application.dto.response.BoardCommentResponse;
+import com.geulgrim.community.board.application.dto.response.BoardListResponse;
 import com.geulgrim.community.board.application.dto.response.BoardResponse;
 import com.geulgrim.community.board.domain.entity.Board;
 import com.geulgrim.community.board.domain.entity.BoardComment;
@@ -12,6 +13,8 @@ import com.geulgrim.community.global.user.domain.entity.User;
 import com.geulgrim.community.global.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,5 +63,12 @@ public class BoardCommentService {
     // 삭제
     public void deleteComment(long boardCommentId) {
         boardCommentRepository.deleteBoardCommentByBoardCommentId(boardCommentId);
+    }
+
+    public Page<BoardCommentResponse> myComments(long userId, String keyword, String sort, Pageable pageable) {
+        if (keyword == null) {
+            return boardRepository.myComments(userId, pageable);
+        }
+        return boardRepository.myComments(userId, keyword, sort, pageable);
     }
 }

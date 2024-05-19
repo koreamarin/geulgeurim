@@ -4,11 +4,14 @@ import com.geulgrim.community.board.application.dto.request.BoardCommentUpdateRe
 import com.geulgrim.community.board.application.dto.request.BoardCommentWriteRequest;
 import com.geulgrim.community.board.application.dto.request.BoardUpdateRequest;
 import com.geulgrim.community.board.application.dto.response.BoardCommentResponse;
+import com.geulgrim.community.board.application.dto.response.BoardListResponse;
 import com.geulgrim.community.board.application.service.BoardCommentService;
 import com.geulgrim.community.board.domain.entity.BoardComment;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +49,17 @@ public class BoardCommentController {
     public ResponseEntity<Void> deleteBoardComment(@PathVariable Long boardCommentId) {
         boardCommentService.deleteComment(boardCommentId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/mycomment")
+    public Page<BoardCommentResponse> myComments(@RequestHeader HttpHeaders headers,
+                                               @RequestParam(required = false) String keyword,
+                                               @RequestParam(required = false) String searchType,
+                                               @RequestParam(required = false) String sort,
+                                               Pageable pageable) {
+        long userId = Long.parseLong(headers.get("user_id").get(0));
+//        long userId = 5;
+        return boardCommentService.myComments(userId, keyword, sort, pageable);
     }
 
 }
