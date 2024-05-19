@@ -25,6 +25,5 @@ public class CreateJobRequest {
     private String salary;
     private String closeType;
     private String openStatus;
-    private String fileUrl;
     private List<Long> positionIds;
 }

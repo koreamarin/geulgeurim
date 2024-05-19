@@ -25,8 +25,9 @@ public class RecruitController {
     @PostMapping("/job")
     public ResponseEntity<?> createJob(
             @RequestHeader HttpHeaders headers,
-            @RequestBody CreateJobRequest createJobRequest) {
-        Map<String, Long> map = resumeService.createJob(headers, createJobRequest);
+            @RequestPart CreateJobRequest createJobRequest,
+            @RequestPart MultipartFile image_file) {
+        Map<String, Long> map = resumeService.createJob(headers, createJobRequest, image_file);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 

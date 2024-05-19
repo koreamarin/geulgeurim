@@ -45,7 +45,8 @@ public class ResumeService {
     // 구인구직 등록
     public Map<String, Long> createJob(
             HttpHeaders headers,
-            CreateJobRequest createJobRequest) {
+            CreateJobRequest createJobRequest,
+            MultipartFile image_file) {
         Long userId = Long.parseLong(headers.get("user_id").get(0));
         String userType = headers.get("user_type").get(0);
         if(userType.equals("INDIVIDUAL")) {
@@ -54,6 +55,13 @@ public class ResumeService {
 
         SecondLocate secondLocateOptional = secondLocateRepository.findBySecondLocateKey(createJobRequest.getSecondLocateKey())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 2차 지역 입니다."));
+
+        // 이미지 파일 업로드
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        String fileUrl = null;
+        if(image_file.getSize()>0) {
+            fileUrl = awsS3Service.uploadFile(userId, image_file, time, "job");
+        }
 
         // 구인구직 저장 파트
         Job job = Job.builder()
@@ -75,7 +83,7 @@ public class ResumeService {
                 .salary(createJobRequest.getSalary())
                 .closeType(CloseType.valueOf(createJobRequest.getCloseType()))
                 .openStatus(OpenStatus.valueOf(createJobRequest.getOpenStatus()))
-                .fileUrl(createJobRequest.getFileUrl())
+                .fileUrl(fileUrl)
                 .build();
 
         jobRepository.save(job);
