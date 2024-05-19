@@ -3,6 +3,7 @@ package com.geulgrim.community.share.application.service;
 import com.geulgrim.community.global.user.domain.repository.UserRepository;
 import com.geulgrim.community.share.application.dto.request.ShareUpdateRequest;
 import com.geulgrim.community.share.application.dto.response.ShareImageResponse;
+import com.geulgrim.community.share.application.dto.response.ShareResponse;
 import com.geulgrim.community.share.domain.entity.Share;
 import com.geulgrim.community.share.domain.entity.ShareImage;
 import com.geulgrim.community.share.domain.entity.enums.ImageType;
@@ -63,10 +64,10 @@ public class ShareService {
     }
     
     // 그림공유 작성
-    public Share writeShare(long userId, ShareWriteRequest shareWriteRequest) {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+    public ShareResponse writeShare(long userId, ShareWriteRequest shareWriteRequest) {
         List<ShareImage> shareImageList = new ArrayList<>();
         for(MultipartFile image : shareWriteRequest.getImageList()) {
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             String url = awsS3Service.uploadFile(userId, image, timestamp, "share");
             ShareImage shareImage = new ShareImage();
             shareImage.setFileUrl(url);
@@ -90,7 +91,7 @@ public class ShareService {
             shareImageRepository.save(shareImage);
         }
 
-        return share;
+        return shareRepository.findByShareId(share.getShareId());
     }
 
     // 그림평가 게시글 삭제

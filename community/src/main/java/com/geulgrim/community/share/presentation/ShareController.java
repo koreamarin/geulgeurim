@@ -5,6 +5,7 @@ import com.geulgrim.community.share.application.dto.request.ShareUpdateRequest;
 import com.geulgrim.community.share.application.dto.request.ShareWriteRequest;
 import com.geulgrim.community.share.application.dto.response.ShareDetailResponse;
 import com.geulgrim.community.share.application.dto.response.ShareListResponse;
+import com.geulgrim.community.share.application.dto.response.ShareResponse;
 import com.geulgrim.community.share.application.service.ShareCommentService;
 import com.geulgrim.community.share.application.service.ShareImageService;
 import com.geulgrim.community.share.application.service.ShareService;
@@ -35,11 +36,12 @@ public class ShareController {
 
     @PostMapping()
     @Operation(summary = "자유게시판 게시글 작성", description = "그림공유게시판에 게시글을 1개 작성합니다.")
-    public ResponseEntity<Share> createShare(@RequestHeader HttpHeaders headers,
-                                             @RequestPart ShareWriteRequest shareWriteRequest,
-                                             @RequestPart(required = false) List<MultipartFile> files) {
+    public ResponseEntity<ShareResponse> createShare(@RequestHeader HttpHeaders headers,
+                                                     @RequestPart ShareWriteRequest shareWriteRequest,
+                                                     @RequestPart(required = false) List<MultipartFile> files) {
         // 유저 아이디 수정
         long userId = Long.parseLong(headers.get("user_id").get(0));
+//        long userId = 32;
         shareWriteRequest.setImageList(files);
         return new ResponseEntity<>(shareService.writeShare(userId, shareWriteRequest), HttpStatus.CREATED);
     }
