@@ -7,6 +7,7 @@ import com.geulgrim.common.push.application.dto.response.PushResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,16 +24,18 @@ public class PushController {
 
     @PostMapping("/create")
     @Operation(summary = "푸시생성", description = "메일푸시와 웹푸시를 생성합니다.")
-    public ResponseEntity<PushCreateResponseDto> create(@RequestBody PushCreateRequestDto dto) {
+    public ResponseEntity<PushCreateResponseDto> create(@RequestBody PushCreateRequestDto dto, @RequestHeader HttpHeaders headers) {
         log.info("push - 푸시 생성 요청 : {}", dto);
-        return new ResponseEntity<>(pushService.create(dto), HttpStatus.CREATED);
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+        return new ResponseEntity<>(pushService.create(dto, userId), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "푸시조회", description = "id가 수신한 푸시를 조회합니다.")
-    public ResponseEntity<List<PushResponseDto>> getPush(@PathVariable Long id) {
-        log.info("push - 푸시 조회 요청 id: {}", id);
-        return new ResponseEntity<>(pushService.getPush(id), HttpStatus.OK);
+    @GetMapping
+    @Operation(summary = "푸시조회", description = "로그인 유저가 수신한 푸시를 조회합니다.")
+    public ResponseEntity<List<PushResponseDto>> getPush(@RequestHeader HttpHeaders headers) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+        log.info("push - 푸시 조회 요청 id: {}", userId);
+        return new ResponseEntity<>(pushService.getPush(userId), HttpStatus.OK);
         
     }
 

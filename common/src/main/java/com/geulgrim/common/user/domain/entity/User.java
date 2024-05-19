@@ -27,11 +27,5 @@ public class User {
     private String phoneNum;
     private String fcmToken;
 
-    @ElementCollection
-    private List<Long> favoriteJobList;
-    public void updateFcmToken(String fcmToken) {
-        this.fcmToken = fcmToken;
-    }
-
 
 }
