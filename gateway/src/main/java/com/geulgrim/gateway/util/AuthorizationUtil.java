@@ -30,7 +30,16 @@ public class AuthorizationUtil {
             log.info("user_type {}",dto.getUserType());
             return dto;
         }
+    }
 
+    public UserInfoResponseDto NonAuthorizeButHeaderCheck(ServerHttpRequest request) {
+        String header = (String) request.getHeaders().getFirst("Authorization");
+        if (header == null || !header.startsWith("Bearer ")) {
+            return null;
+        } else{
+            String token = header.replace("Bearer ","");
+            return jwtUtil.getUserInfo(token);
+        }
     }
 
 }
