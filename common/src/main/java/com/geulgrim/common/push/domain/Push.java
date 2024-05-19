@@ -37,8 +37,8 @@ public class Push extends BaseEntity {
         this.title = nickname + this.title;
     }
 
-    public void updateContent(String jobTitle) {
-        this.content = jobTitle + this.content;
+    public void updateContent(String jobContent) {
+        this.content = jobContent + this.content;
     }
 
 
