@@ -74,7 +74,7 @@ export default function CrewApplyView({ id }: Props) {
       })
     );
     axios
-      .post('/api/v1/community/share', formData, {
+      .post('/api/v1/community/crew', formData, {
         headers: {
           'Content-Type': `multipart/form-data; `,
           "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
@@ -89,6 +89,7 @@ export default function CrewApplyView({ id }: Props) {
       })
       .catch((error) => {
         alert('글 작성 중 오류가 발생했습니다.');
+        console.log("error", error);
       });
   };
 

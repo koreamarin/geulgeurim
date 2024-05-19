@@ -34,10 +34,8 @@ export const customFetcher = async (args: string | [string, AxiosRequestConfig])
 
     const res = await customAxiosInstance.get(url, { ...config });
 
-    return res.data;
-
-  // console.log('axios', res);
-  // console.log(res.data);
+  console.log('axios', res);
+  console.log(res.data);
 
   return res.data;
 };
