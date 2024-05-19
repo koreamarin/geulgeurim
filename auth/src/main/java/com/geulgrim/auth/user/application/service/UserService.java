@@ -159,10 +159,27 @@ public class UserService {
                 .userType(String.valueOf(user.getUserType()))
                 .fileUrl(user.getFile_url())
                 .phoneNum(user.getPhone_num())
-                .fcmToken(user.getFcmToken())
                 .build();
 
         return getUserResponse;
+    }
+
+    //fcmToken 포함 유저 정보 가져오는 로직
+    public UserInfoResponse getUserInfo(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(NoUserExistException::new);
+
+        return UserInfoResponse.builder()
+                .userId(user.getUser_id())
+                .email(user.getEmail())
+                .birthday(user.getBirthday())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .wallet(user.getWallet())
+                .userType(String.valueOf(user.getUserType()))
+                .fileUrl(user.getFile_url())
+                .phoneNum(user.getPhone_num())
+                .fcmToken(user.getFcmToken())
+                .build();
     }
 
     public GetEnterUserResponse getEnterUser(Long userId) {

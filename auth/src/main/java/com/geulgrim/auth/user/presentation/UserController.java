@@ -84,9 +84,8 @@ public class UserController {
     }
 
     @GetMapping("/userinfo/{id}")
-    public ResponseEntity<GetUserResponse> getUserInfo(@PathVariable Long id) {
-        GetUserResponse getUserResponse = userService.getUser(id);
-        return new ResponseEntity<>(getUserResponse, HttpStatus.OK);
+    public ResponseEntity<UserInfoResponse> getUserInfo(@PathVariable Long id) {
+        return new ResponseEntity<>(userService.getUserInfo(id), HttpStatus.OK);
     }
 
     @GetMapping("/enteruser")
