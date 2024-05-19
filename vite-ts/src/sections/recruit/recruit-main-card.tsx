@@ -48,7 +48,7 @@ export default function RecruitMainCard({ data }: JobItemProps) {
         const now = new Date().getTime();
         const diffInMs = end - now;
         const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
-        return diffInDays >= 0 ? `${diffInDays}일 남음` : `${Math.abs(diffInDays)}일 지남`;
+          return diffInDays >= 0 ? `${diffInDays}일 남음` : `${Math.abs(diffInDays)}일 지남`;
         };
     const { jobId, endDate, title, companyName, salary, positionIds } = data;
     const dDay = calculateDDay(endDate);
@@ -86,7 +86,7 @@ export default function RecruitMainCard({ data }: JobItemProps) {
         <CardContent>
             <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" mb={2}>
                 <Typography color="text.secondary" align="center">
-                회사명: {companyName}
+                  {companyName}
                 </Typography>
                 <Typography variant="h5" component="div" align="center">
                 {title.length > 20 ? `${title.slice(0, 18)}...` : title}
@@ -105,7 +105,7 @@ export default function RecruitMainCard({ data }: JobItemProps) {
                 const position = positions.find(pos => pos.value === id);
                 return position ? <Chip key={id} label={position.label} /> : null;
                 })}
-        </Box>
+          </Box>
         </CardContent>
     </Card>
     );
