@@ -13,10 +13,10 @@ import { ShareMainView } from 'src/sections/share/view';
 export default function CommunityHome() {
   const { community } = useGetCommunityMain();
   // console.log('community', community);
-  // console.log('newBoard', community.newBoard);
-  // console.log('popBoard', community.popBoard);
-  // console.log('newShare', community.newShare);
-  // console.log('newCrew', community.newCrew);
+  console.log('newBoard', community.newBoard);
+  console.log('popBoard', community.popBoard);
+  console.log('newShare', community.newShare);
+  console.log('newCrew', community.newCrew);
   return (
     <Container maxWidth="md" sx={{justifyContent: 'center'}}>
       <Helmet>
