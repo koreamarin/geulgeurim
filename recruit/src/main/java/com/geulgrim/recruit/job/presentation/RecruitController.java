@@ -91,8 +91,9 @@ public class RecruitController {
     public ResponseEntity<?> createJobSubmitted(
             @RequestHeader HttpHeaders headers,
             @PathVariable Long jobId,
-            @PathVariable Long resumeId) {
-        String result = resumeService.submmitedJob(headers, jobId, resumeId);
+            @PathVariable Long resumeId,
+            @RequestPart MultipartFile image_file) {
+        String result = resumeService.submmitedJob(headers, jobId, resumeId, image_file);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -141,8 +142,6 @@ public class RecruitController {
         String result = resumeService.deleteStar(headers, deleteStarRequest);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
-
 
 
 

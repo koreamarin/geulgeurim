@@ -312,7 +312,7 @@ public class ResumeService {
 
     // 구인구직 지원 신청
     public String submmitedJob(
-            HttpHeaders headers, Long jobId, Long resumeId) {
+            HttpHeaders headers, Long jobId, Long resumeId, MultipartFile image_file) {
         Long userId = Long.parseLong(headers.get("user_id").get(0));
 
         Job job = jobRepository.findById(jobId)
@@ -329,11 +329,19 @@ public class ResumeService {
             return "이미 해당 이력서로 지원한 공고입니다."; // 이미 지원되어 있습니다.
         }
 
+        // 이미지 파일 업로드
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        String resumeUrl = null;
+        if(image_file.getSize()>0) {
+            resumeUrl = awsS3Service.uploadFile(userId, image_file, time, "resume");
+        }
+
         // 지원되어 있지 않을 시
         SubmittedResume submittedResume = SubmittedResume.builder()
                 .job(job)
                 .resume(resume)
                 .resultStatus(ResultStatus.PENDING)
+                .resumeUrl(resumeUrl)
                 .build();
 
         submittedResumeRepository.save(submittedResume);

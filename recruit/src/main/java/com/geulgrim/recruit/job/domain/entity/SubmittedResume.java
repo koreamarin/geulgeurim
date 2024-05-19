@@ -29,4 +29,7 @@ public class SubmittedResume {
     @Column(name="result", nullable = false)
     @Enumerated(EnumType.STRING)
     private ResultStatus resultStatus = ResultStatus.PENDING;
+
+    @Column(name="resume_url")
+    private String resumeUrl;
 }
