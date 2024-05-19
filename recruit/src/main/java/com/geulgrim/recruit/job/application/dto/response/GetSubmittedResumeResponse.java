@@ -12,4 +12,5 @@ public class GetSubmittedResumeResponse {
     private Long resumeId;
     private String resultStatus;
     private String resumeUrl;
+    private String resumeTitle;
 }

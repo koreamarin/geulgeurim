@@ -412,6 +412,7 @@ public class ResumeService {
                     .resumeId(submittedResume.getResume().getResumeId())
                     .resultStatus(String.valueOf(submittedResume.getResultStatus()))
                     .resumeUrl(submittedResume.getResumeUrl())
+                    .resumeTitle(submittedResume.getResume().getResumeTitle())
                     .build();
             getSubmittedResumeResponses.add(getSubmittedResumeResponse);
         }
