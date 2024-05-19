@@ -33,6 +33,11 @@ const ResumeWrite = lazy(() => import('src/pages/mypage/resume/write'));
 const ResumeCopy = lazy(() => import('src/pages/mypage/resume/copy'));
 // 크루
 const Crew = lazy(() => import('src/pages/mypage/crew'));
+
+// 회사
+const CompanyInfo = lazy(() => import('src/pages/company/infomation'));
+const CompanyIntroduction = lazy(() => import('src/pages/company/introduction'));
+const CompanyApplications = lazy(() => import('src/pages/company/application'));
 // ----------------------------------------------------------------------
 
 export const mypageRoutes = [
@@ -126,6 +131,23 @@ export const mypageRoutes = [
             path: ':id/edit',
             element: <ResumeEdit />,
           },
+        ],
+      },
+      {
+        path: 'company',
+        children: [
+          {
+            path: '',
+            element: <CompanyInfo />,
+          },
+          {
+            path: 'introduction',
+            element: <CompanyIntroduction />,
+          },
+          {
+            path: 'applicants',
+            element: <CompanyApplications />
+          }
         ],
       },
     ],
