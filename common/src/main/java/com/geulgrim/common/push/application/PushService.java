@@ -75,8 +75,11 @@ public class PushService {
         //메일 로그 저장
         pushRespository.save(push);
 
+        Long senderId = authFeignClient.getUser().getUserId();
+
         return PushCreateResponseDto.builder()
                 .receiverId(dto.getReceiverId())
+                .senderId(senderId)
                 .favoriteJobList(dto.getFavoriteJobs())
                 .domain(domain)
                 .title(push.getTitle())
