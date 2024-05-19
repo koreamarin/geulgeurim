@@ -1,65 +1,95 @@
-## Git Commit Convention
+# 🎨 웹툰 종사자들을 위한 종합 플랫폼, <img src="/readmeImg/logo-preview.png" width="150"> 🎨
 
-### Commit Message 구조
-type : 어떤 의도로 커밋했는지를 type 에 명시(ex. Feat, Fix, Docs)
+<img src="/readmeImg/board.png" width="750">
 
-Subject : 제목. 코드 변경사항에 대한 짧은 요약
+<br><br>
 
-body : 긴 설명이 필요한 경우, 어떻게 작성했는지가 아닌 무엇을 왜 했는지 를 작성(부연설명 혹은 커밋이유)
+> ### 🎪 글그림은 어떤 서비스인가요?
+>
+##### 포토폴리오 관리
 
-footer : issue tracker ID 를 명시하고 싶은 경우에 작성
+- 글그림은 회원들의 이미지, 포토폴리오, 이력서를 체계적으로 관리하여 줍니다.
+<br>
 
-### 타입(Commit Type)
+##### 편리한 구인/구직을 위한 서비스
 
-- 태그(tag) + 제목(subject) 형식
-- 첫 문자만 대문자
-- "태그: 제목" 의 형태이며, ":" 뒤에 space 가 있음에 유의[ex) Feat: buy album api (Feat 가 태그이고, buy album api 가 제목)]
+- 정리된 포토폴리오를 이용하여 구인공고에 쉽게 지원하게 할 수 있습니다.
+- 따라서, 구인구직 절차를 간소화 시켜 구인구직 활동시에 편리함을 느낄 수 있습니다.
+<br>
 
-### 태그 종류
+##### 웹툰 활동 팀원 모집을 위한 크루 모집 게시판 서비스
 
-- Temp : 작업 중에 사정상 임시로 저장할 경우
-- Add : 코드나 테스트, 예제, 문서등의 추가 생성이 있는경우
-- Feat : 새로운 기능을 추가하는 경우
-- Implement : 코드가 추가된 정도보다 더 주목할만한 구현체를 완성시켰을 때
-- Design : CSS 등 사용자가 UI 디자인을 변경했을 때
-- Docs : 문서를 수정한 경우
-- Fix : 버그를 고친경우
-- Comment : 필요한 주석 추가 및 변경
-- Rename : 파일명(or 폴더명) 을 수정한 경우
-- Move : 코드의 이동이 있는경우
-- Remove : 코드(파일) 의 삭제가 있을 때
-- Improve : 향상이 있는 경우. 호환성, 검증 기능, 접근성 등이 될수 있습니다.
-- Style : 코드 포맷 변경, 세미콜론 누락, 코드 수정이 없는경우
-- Refactor : 코드 리펙토링
-- Test : 테스트 코드. 리펙토링 테스트 코드를 추가했을 때
-- Chore : 빌드 업무 수정, 패키지 매니저 수정
-- Update : 계정이나 버전 업데이트가 있을 때 사용. 주로 코드보다는 문서나, 리소스, 라이브러리등에 사용합니다.
+- 여러명이 협업을 해야하는 경우나, 새로운 도전을 하는 경우 팀원들을 모집하기에 적합한 게시판 서비스를 제공중입니다.
+<br>
 
-### 제목
+##### 종사자들간의 교류를 위한 자유게시판 서비스
 
-- 제목은 최대 50글자가 넘지 않고, 마침표 및 특수기호는 사용 금지
-- 동사(원형)를 가장 앞에 두고 첫 글자는 대문자로 표기
-- 제목은 개조식 구문으로 작성 --> 완전한 서술형 문장이 아니라, 간결하고 요점적인 서술을 의미.
+##### 그림을 평가를 그림 평가 게시판 서비스
 
-* Fixed --> Fix
-* Added --> Add
-* Modified --> Modify
+<br>
 
-### 본문(Body)
+### 👩‍👩‍👧‍👧 Crew
 
-- 본문은 한 줄 당 72자 내로 작성
-- 본문 내용은 양에 구애받지 않고 최대한 상세히 작성
-- 어떻게 변경했는지 보다 무엇을 변경했는지 또는 왜 변경했는지를 설명
+| Name   | Part                 | Detail                                          | 사진                                          |
+| ------ | ---------------      | ----------------------------------------------- |-----------------------------------------------|
+| 윤지현 | BE, FE               | API GateWay, Eureka, NFT, Auth, API 설계 등      | <img src="/readmeImg/jihyen.jpg" width="100"> |
+| 류지원 | BE, Infra            | Security, Infra & auth 구조 설계, API 설계 등     | <img src="/readmeImg/jiwon.jpg" width="100"> |
+| 배상훈 | FE                   | 프론트 전반 설계 (MyPage, Resume, Recruit 등)     | <img src="/readmeImg/sanghun.png" width="100">
+| 김무준 | Infra, CI/CD, BE, FE | CI/CD 구축, Infra, API, 프론트 설계 등            | <img src="/readmeImg/mujun.jpg" width="100"> |
+| 이세은 | BE, FE               | Spring Batch, 알람기능, NFT, API, 프론트 설계 등  | <img src="/readmeImg/se.jpg" width="100">     |
+| 이주현 | BE, FE               | API설계, 프론트 설계 등                           | <img src="/readmeImg/juhyun.png" width="100"> |
 
-### 꼬릿말(Footer)
+<br>
 
-- 꼬리말은 선택사항, 이슈 트래커 ID 작성
-- "유형: #이슈 번호" 형식으로 사용
-- 여러 개의 이슈 번호를 적을 때는 쉼표(,)로 구분
-- 이슈 트래커 유형은 다음 중 하나를 사용
+### 💻 기술 스택
 
-1. Fixes: 이슈 수정중 (아직 해결되지 않은 경우)
-2. Resolves: 이슈를 해결했을 때 사용
-3. Ref: 참고할 이슈가 있을 때 사용
-4. Related to: 해당 커밋에 관련된 이슈번호 (아직 해결되지 않은 경우)
-   ex) Fixes: #45 Related to: #34, #23
+- **FE**:  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white"> ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+- **BE**:  <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white">  ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens) ![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=for-the-badge&logo=Spring%20Security&logoColor=white) ![Spring Data Jpa](https://img.shields.io/badge/spring%20data%20jpa-green?style=for-the-badge&logoColor=white) ![Spring Security](https://img.shields.io/badge/Spring%20Cloude-6DB33F?style=for-the-badge&logo=Spring%20Security&logoColor=white)
+
+- **DB**: ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
+
+- **INFRA**:  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white"> <img src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=Jenkins&logoColor=white"> <img src="https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=white">  <img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=white">  <img src="https://img.shields.io/badge/amazonec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white">
+
+<br>
+
+### 🚀 기능
+
+1. 포토폴리오 관리 기능
+<img src="/readmeImg/board.png" width="400"><br>
+2. 이력서 관리 기능
+<img src="/readmeImg/resume.png" width="400"><br>
+3. 구인공고 열람
+<img src="/readmeImg/getJob.png" width="400"><br>
+4. 구인중인 회사에 지원하기
+<img src="/readmeImg/applyResume.png" width="400"><br>
+5. 소통을 위한 자유게시판
+<img src="/readmeImg/freeboard.png" width="400"><br>
+6. 그림 피드백를 위한 그림 평가 게시판
+<img src="/readmeImg/grim.png" width="400"><br>
+7. 동료 모집을 위한 크루 모집 게시판
+<img src="/readmeImg/crew.png" width="400"><br>
+
+### 🔮 앞으로 글그림 서비스의 미래는?
+
+- 핑거프린팅 기술 도입으로 이미지 도용 추적 기술 삽입
+- 해외 기업 구인구직 연결
+- 캐릭터를 학습한 AI로 웹툰 창작에 관여
+- 공모전, 행사 주최
+
+### 📋 산출물
+
+##### 🔗 [노션페이지](https://leeseny.notion.site/1d123fbca6eb4ac4b9df10d9458430f8?pvs=4)
+
+##### 🔗 [ERD](https://www.erdcloud.com/d/qgkktHFHfeF99G2DT)
+
+##### 🔗 [기능 명세서](https://leeseny.notion.site/4e2058dbcda846ed9baa092eddd7577d)
+
+##### 🔗 [요구사항 명세서](https://leeseny.notion.site/4389cf9b84664f8cb19578e7930cc60d)
+
+##### 🔗 [API 명세서](https://leeseny.notion.site/API-1dcfee91ba7e497e86a231e3a9af97f4)
+
+##### 🔗 [와이어프레임](https://www.figma.com/design/h2iAYbgWUj3ma7vzjNOxx3/%EC%9B%B9%ED%88%B0-%EC%A4%91%EA%B0%9C-%ED%94%8C%EB%9E%AB%ED%8F%BC%2C-%EA%B8%80%EA%B7%B8%EB%A6%BC-(Community)?m=auto&is-community-duplicate=1&fuid=)
+
+<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fdesign%2FD0WJGSKMB52VcO2KCo9lpo%2F%25EC%259B%25B9%25ED%2588%25B0-%25EC%25A4%2591%25EA%25B0%259C-%25ED%2594%258C%25EB%259E%25AB%25ED%258F%25BC%3Fnode-id%3D0%253A1%26t%3DV1BzTen7Q1BjWZz4-1" allowfullscreen></iframe>
+
+<br>
