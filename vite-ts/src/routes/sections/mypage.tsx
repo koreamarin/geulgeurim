@@ -31,6 +31,8 @@ const ResumeDetail = lazy(() => import('src/pages/mypage/resume/detail'));
 const ResumeEdit = lazy(() => import('src/pages/mypage/resume/edit'));
 const ResumeWrite = lazy(() => import('src/pages/mypage/resume/write'));
 const ResumeCopy = lazy(() => import('src/pages/mypage/resume/copy'));
+// 크루
+const Crew = lazy(() => import('src/pages/mypage/crew'));
 // ----------------------------------------------------------------------
 
 export const mypageRoutes = [
@@ -49,6 +51,7 @@ export const mypageRoutes = [
       { path: '', element: <Inforamtion /> },
       { path: 'apply', element: <Apply /> },
       { path: 'interest', element: <Interest /> },
+      { path: 'crew', element: <Crew />},
       {
         path: 'portfolio',
         children: [

@@ -59,6 +59,7 @@ export const paths = {
     root: `${ROOTS.MYPAGE}`,
     apply: `${ROOTS.MYPAGE}/apply`,
     interest: `${ROOTS.MYPAGE}/interest`,
+    crew: `${ROOTS.MYPAGE}/crew`,
 
     // 포트폴리오
     portfolio: `${ROOTS.MYPAGE}/portfolio`,
@@ -80,6 +81,9 @@ export const paths = {
     worksWrite: `${ROOTS.MYPAGE}/works/write`,
     worksDetail: (id: number) => `${ROOTS.MYPAGE}/works/${id}`,
     worksEdit: (id: number) => `${ROOTS.MYPAGE}/works/${id}/edit`,
+
+    // 크루
+    applyList: `${ROOTS.MYPAGE}/crew/applylist`,
   },
 
   comingSoon: '/coming-soon',
