@@ -11,4 +11,5 @@ import lombok.*;
 public class GetSubmittedResumeResponse {
     private Long resumeId;
     private String resultStatus;
+    private String resumeUrl;
 }
