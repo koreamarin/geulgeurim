@@ -2,7 +2,6 @@ package com.geulgrim.common.push.application.dto.request;
 
 import com.geulgrim.common.push.domain.Push;
 import com.geulgrim.common.push.domain.PushDomain;
-import com.geulgrim.common.recruitserver.application.dto.response.SimpleJobResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

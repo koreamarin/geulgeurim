@@ -1,6 +1,5 @@
 package com.geulgrim.common.recruitserver.application.dto.response;
 
-import com.geulgrim.common.recruitserver.doamin.SecondLocate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
