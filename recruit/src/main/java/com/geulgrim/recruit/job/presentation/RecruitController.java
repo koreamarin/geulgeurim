@@ -364,8 +364,8 @@ public class RecruitController {
     }
 
     @GetMapping("/userstars/{id}") //특정 유저의 관심공고 id 리스트를 가져옵니다
-    public ResponseEntity<?> getUserStars(@PathVariable Long id){
-        return new ResponseEntity<>(resumeService.getUserStars(id) ,HttpStatus.OK);
+    public ResponseEntity<List<Long>> getUserFavoriteJobs(@PathVariable Long id){
+        return new ResponseEntity<>(resumeService.getUserFavoriteJobs(id) ,HttpStatus.OK);
     }
 
 

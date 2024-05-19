@@ -7,6 +7,7 @@ import com.geulgrim.recruit.job.domain.entity.*;
 import com.geulgrim.recruit.job.domain.entity.Enums.*;
 import com.geulgrim.recruit.job.domain.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,6 +25,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ResumeService {
     private final ResumeRepository resumeRepository;
     private final PositionRepository positionRepository;
@@ -1261,10 +1263,11 @@ public class ResumeService {
     }
 
 
-    public List<Long> getUserStars(Long id) {
-        List<Star> stars = starRepository.findAllByUserId(id).orElseThrow();
+    public List<Long> getUserFavoriteJobs(Long id) {
+        List<Star> stars = starRepository.findByUserId(id).orElseThrow();
         return stars.stream()
-                .map(Star::getStarId)
+                .map(Star::getJob)
+                .map(Job::getJobId)
                 .toList();
     }
 }

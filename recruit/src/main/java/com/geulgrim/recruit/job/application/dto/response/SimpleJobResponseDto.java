@@ -2,10 +2,14 @@ package com.geulgrim.recruit.job.application.dto.response;
 
 import com.geulgrim.recruit.job.domain.entity.Job;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Builder
+@ToString
+@Getter
 public class SimpleJobResponseDto {
     private Long jobId;
     private String title;
