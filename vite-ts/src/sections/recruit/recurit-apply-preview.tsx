@@ -1,36 +1,39 @@
-import { useState, useEffect } from 'react';
-
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
-import Accordion from '@mui/material/Accordion';
 import CardMedia from '@mui/material/CardMedia';
-import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import CardHeader from '@mui/material/CardHeader';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/use-boolean';
-
 import { useGetPortfolios } from 'src/api/portfolio';
 import { useGetResumeDetail } from 'src/api/mypageResume';
 
-import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import { SplashScreen } from 'src/components/loading-screen';
 
-import { positionList } from '../position';
-import ResumeDetailDelete from './resume-detail-delete';
 import ResumeFormPortfolioUserPreview from './resume-form-portfolio-user-preview';
 import ResumeFormPortfolioServicePreview from './resume-form-portfolio-service-preview';
 
+const positionList = [
+  {value:'1', label:'선화'},
+  {value:'2', label:'밑색'},
+  {value:'3', label:'명암'},
+  {value:'4', label:'후보정'},
+  {value:'5', label:'작화'},
+  {value:'6', label:'어시'},
+  {value:'7', label:'각색'},
+  {value:'8', label:'콘티'},
+  {value:'9', label:'표지'},
+  {value:'10', label:'삽화'},
+  {value:'11', label:'배경'},
+  {value:'12', label:'채색'},
+  {value:'13', label:'편집'},
+  {value:'14', label:'작가'},
+];
 
 const userDummy = {
   name : "배상훈",
@@ -44,42 +47,19 @@ type Props = {
   resumeId: string
 }
 
-export default function ResumeDetail({resumeId}:Props) {
-  const { resumesDetailData, resumesDetailError, resumesDetailLoading } = useGetResumeDetail(parseInt(resumeId, 10))
-  const { portfoliosData, portfoliosError, portfoliosLoading } = useGetPortfolios()
+export default function RecruitApplyPreview({resumeId}: Props) {
+  const { resumesDetailData, resumesDetailError, resumesDetailLoading } = useGetResumeDetail(parseInt(resumeId, 10));
+  const { portfoliosData, portfoliosError, portfoliosLoading } = useGetPortfolios();
 
-
-  const view = useBoolean();
-
-  const selectVariant = 'zoomIn';
-
-  const router = useRouter()
-
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
   if (resumesDetailError || portfoliosError) {
     enqueueSnackbar('에러 발생! 다시 로그인해주세요');
     localStorage.clear();
-    router.push(paths.recruit.main)
+    router.push(paths.recruit.main);
   }
-  const [changePrivate, setChangePrivate] = useState(false)
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // 우선적으로 변경하고 api를 보내서 사용자 경험 향상
-    const newState = event.target.checked ? 'PUBLIC' : 'PRIVATE';
-    setChangePrivate(event.target.checked)
-    // SWR을 통해초기 캐시 관리
-    console.log(newState)
-    // 실패 시 로직이 있어야됌 (ex) 실패했습니다 모달이나 메세지)
-    // 로딩 시 좌측 로딩원 작게 띄우기
-  };
 
-  useEffect(() => {
-    if (resumesDetailData) {
-      setChangePrivate(resumesDetailData.openStatus === 'PUBLIC')
-    }
-  }, [resumesDetailData])
-
-  // 조건렌더
   const renderResumeDetail = () => {
     if (resumesDetailLoading || portfoliosLoading) {
       return <SplashScreen />;
@@ -90,14 +70,6 @@ export default function ResumeDetail({resumeId}:Props) {
           <Grid xsOffset={1} mdOffset={2} xs={10} md={8}>
             <Typography variant="h3" sx={{display:'flex',  justifyContent: 'space-between', mb: 3}}>
               {resumesDetailData.resumeTitle}
-              <FormControlLabel
-                checked={changePrivate}
-                key='status'
-                label='공개여부'
-                labelPlacement='start'
-                control={<Switch onChange={handleChange}/>}
-                onClick={(event) => event.stopPropagation()}
-              />
             </Typography>
 
             {/* 기본정보 */}
@@ -107,11 +79,11 @@ export default function ResumeDetail({resumeId}:Props) {
                 <Grid  xsOffset={3} mdOffset={0} xs={6} md={4} xl={3}>
                   <CardMedia
                     component="img"
+                    crossOrigin='anonymous'
                     image={resumesDetailData?.fileUrl || `/default_person.png`}
                     alt="증명사진"
                     sx={{
                       display: 'block',
-                      height: '100%',
                       margin: 'auto',
                       border: '1px solid #80808036',
                       p: 1
@@ -149,9 +121,8 @@ export default function ResumeDetail({resumeId}:Props) {
             <Card sx={{ p: 3, my:3 }}>
               <CardHeader sx={{ mb: 2, pt: 0 }} titleTypographyProps={{variant:'h4' }} title="자기소개서"/>
               <Grid container spacing={2} mt={2}>
-                {/* 자기소개서 */}
                 <Grid xs={12} mt={1} px={3} py={1}>
-                  <Typography paragraph  whiteSpace="pre-wrap" sx={{ lineHeight: '2' }}>
+                  <Typography paragraph whiteSpace="pre-wrap" sx={{ lineHeight: '2' }}>
                     {resumesDetailData?.essay}
                   </Typography>
                 </Grid>
@@ -164,7 +135,6 @@ export default function ResumeDetail({resumeId}:Props) {
               {resumesDetailData?.educationResponses.map((item, index) => (
                 <Grid container spacing={2} mt={2} key={index} sx={{ borderBottom: 1, borderColor: 'divider', pb: 2, mb: 2 }}>
                   <Grid xs={12} mt={1} px={3} py={1}>
-                    {/* 학교 이름 */}
                     <Stack direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2 }}>
                       <Typography variant="subtitle1" color="gray" sx={{minWidth: '170px' }}>
                         학교 이름
@@ -175,14 +145,13 @@ export default function ResumeDetail({resumeId}:Props) {
                     </Stack>
                   </Grid>
 
-                    {/* 시작일과 종료일 */}
                   <Grid xs={12} md={6} mt={1} px={3} py={1}>
                     <Stack direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2 }}>
                       <Typography variant="subtitle1" color="gray" sx={{minWidth: '170px' }}>
                         시작일
                       </Typography>
                       <Typography variant="body1" sx={{ flexGrow: 1, textAlign: 'left' }}>
-                        {item.startDate.slice(0, 10)}
+                        {item.startDate?.slice(0, 10)}
                       </Typography>
                     </Stack>
                   </Grid>
@@ -198,7 +167,6 @@ export default function ResumeDetail({resumeId}:Props) {
                   </Grid>
 
                   <Grid xs={12} md={6} mt={1} px={3} py={1}>
-                    {/* 교육상태와 학점 */}
                     <Stack direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2 }}>
                       <Typography variant="subtitle1" color="gray" sx={{minWidth: '170px' }}>
                         교육상태
@@ -223,14 +191,12 @@ export default function ResumeDetail({resumeId}:Props) {
               ))}
             </Card>
 
-
             {/* 경력사항 */}
             <Card sx={{ p: 3, my: 3 }}>
               <CardHeader sx={{ mb: 1, pt: 0 }} titleTypographyProps={{ variant: 'h4' }} title="경력 정보" />
               {resumesDetailData?.workResponses.map((item, index) => (
                 <Grid container spacing={2} mt={2} key={index} sx={{ borderBottom: 1, borderColor: 'divider', pb: 2, mb: 2 }}>
                   <Grid xs={12} mt={1} px={3} py={1}>
-                    {/* 회사 이름 */}
                     <Stack direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2 }}>
                       <Typography variant="subtitle1" color="gray" sx={{minWidth: '170px' }}>
                         회사명
@@ -241,7 +207,6 @@ export default function ResumeDetail({resumeId}:Props) {
                     </Stack>
                   </Grid>
 
-                    {/* 시작일과 종료일 */}
                   <Grid xs={12} md={6} mt={1} px={3} py={1}>
                     <Stack direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2 }}>
                       <Typography variant="subtitle1" color="gray" sx={{minWidth: '170px' }}>
@@ -264,7 +229,6 @@ export default function ResumeDetail({resumeId}:Props) {
                   </Grid>
 
                   <Grid xs={12} mt={1} px={3} py={1}>
-                    {/* 교육상태와 학점 */}
                     <Stack direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2 }}>
                       <Typography variant="subtitle1" color="gray" sx={{ minWidth: '170px' }}>
                         경력 설명
@@ -278,14 +242,12 @@ export default function ResumeDetail({resumeId}:Props) {
               ))}
             </Card>
 
-
             {/* 자격/어학/수상 */}
             <Card sx={{ p: 3, my: 3 }}>
               <CardHeader sx={{ mb: 1, pt: 0 }} titleTypographyProps={{ variant: 'h4' }} title="자격/어학/수상명" />
               {resumesDetailData?.awardResponses.map((item, index) => (
                 <Grid container spacing={2} mt={2} key={index} sx={{ borderBottom: 1, borderColor: 'divider', pb: 2, mb: 2 }}>
                   <Grid xs={12} mt={1} px={3} py={1}>
-                    {/* 자격/어학/수상명 */}
                     <Stack direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2 }}>
                       <Typography variant="subtitle1" color="gray" sx={{ minWidth: '170px' }}>
                       자격/어학/수상명
@@ -296,7 +258,6 @@ export default function ResumeDetail({resumeId}:Props) {
                     </Stack>
                   </Grid>
 
-                  {/* 취득일 */}
                   <Grid xs={12} md={6} mt={1} px={3} py={1}>
                     <Stack direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2 }}>
                       <Typography variant="subtitle1" color="gray" sx={{minWidth: '170px' }}>
@@ -307,7 +268,7 @@ export default function ResumeDetail({resumeId}:Props) {
                       </Typography>
                     </Stack>
                   </Grid>
-                  {/* 등급/점수 */}
+
                   <Grid xs={12} md={6} mt={1} px={3} py={1}>
                     <Stack direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2}}>
                       <Typography variant="subtitle1" color="gray" sx={{minWidth: '170px' }}>
@@ -320,7 +281,6 @@ export default function ResumeDetail({resumeId}:Props) {
                   </Grid>
 
                   <Grid xs={12} mt={1} px={3} py={1}>
-                    {/* 발급 기관 */}
                     <Stack direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2 }}>
                       <Typography variant="subtitle1" color="gray" sx={{ minWidth: '170px' }}>
                         발급 기관
@@ -340,7 +300,6 @@ export default function ResumeDetail({resumeId}:Props) {
               {resumesDetailData?.experienceResponses.map((item, index) => (
                 <Grid container spacing={2} mt={2} key={index} sx={{ borderBottom: 1, borderColor: 'divider', pb: 2, mb: 2 }}>
                   <Grid xs={12} mt={1} px={3} py={1}>
-                    {/* 경험 명 */}
                     <Stack direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2 }}>
                       <Typography variant="subtitle1" color="gray" sx={{minWidth: '170px' }}>
                         경험/활동/교육명
@@ -351,7 +310,6 @@ export default function ResumeDetail({resumeId}:Props) {
                     </Stack>
                   </Grid>
 
-                    {/* 시작일과 종료일 */}
                   <Grid xs={12} md={6} mt={1} px={3} py={1}>
                     <Stack direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2 }}>
                       <Typography variant="subtitle1" color="gray" sx={{minWidth: '170px' }}>
@@ -374,7 +332,6 @@ export default function ResumeDetail({resumeId}:Props) {
                   </Grid>
 
                   <Grid xs={12} mt={1} px={3} py={1}>
-                    {/* 경험 설명 */}
                     <Stack direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2 }}>
                       <Typography variant="subtitle1" color="gray" sx={{ minWidth: '170px' }}>
                         경험/활동/교육 설명
@@ -394,59 +351,20 @@ export default function ResumeDetail({resumeId}:Props) {
                 {resumesDetailData?.resumePortfolioResponses.map((item, index) => {
                   const data = portfoliosData.find(portfol => portfol.pofolId === item.pofolId);
                   return (
-                    <Accordion key={index} sx={{borderBottom: 'solid #00000014 1px'}}>
-                      <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
-                        <Typography variant="subtitle2" alignContent='center' ml={2}>{data?.pofolName}</Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        {data?.format === 'USER' ?
-                          <ResumeFormPortfolioUserPreview portfolId={item.pofolId}/>
-                          :
-                          <ResumeFormPortfolioServicePreview portfolId={item.pofolId}/>
-                          }
-                      </AccordionDetails>
-                    </Accordion>
-                )})}
+                        <Box key={index} sx={{borderBottom: 'solid #00000014 1px'}}>
+                            {data?.format === 'USER' ?
+                            <ResumeFormPortfolioUserPreview portfolId={item.pofolId}/>
+                            :
+                            <ResumeFormPortfolioServicePreview portfolId={item.pofolId}/>
+                            }
+                        </Box>
+                    )})}
             </Card>
-            <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
-              <Button
-                style={{ height: '2.8rem', fontSize: '1rem' }}
-                variant="outlined"
-                color="info"
-                size="medium"
-                onClick={() => router.push(paths.mypage.resumeCopy(parseInt(resumeId, 10)))}
-              >
-                복사하기
-              </Button>
-
-              <Box>
-                <Button
-                  style={{ height: '2.8rem', fontSize: '1rem', marginRight: '24px' }}
-                  variant="outlined"
-                  color="success"
-                  size="medium"
-                  onClick={() => router.push(paths.mypage.resumeEdit(parseInt(resumeId, 10)))}
-                >
-                  수정하기
-                </Button>
-
-                <ResumeDetailDelete
-                  open={view.value}
-                  onOpen={view.onTrue}
-                  onClose={view.onFalse}
-                  selectVariant={selectVariant}
-                  deleteResume={resumeId}
-                />
-              </Box>
-            </Stack>
           </Grid>
         </Grid>
       )}
       return <Typography sx={{ textAlign: 'center', mt: 4 }}>잘못된 접근입니다.</Typography>;
     };
-  return (
-    renderResumeDetail()
-  )
+
+  return renderResumeDetail();
 }
-
-

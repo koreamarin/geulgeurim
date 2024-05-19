@@ -58,7 +58,8 @@ export const endpoints = {
   recruit : {
     list: '/api/v1/recruit/joblist',
     stars: '/api/v1/recruit/star',
-    detail: '/api/v1/recruit/jobdetail'
+    detail: '/api/v1/recruit/jobdetail',
+    submit: '/api/v1/recruit/job'
   }
 
 };

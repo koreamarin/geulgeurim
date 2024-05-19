@@ -174,6 +174,29 @@ export function useGetRecruitDetailList(id:number) {
   return memoizedValue;
 }
 
+// ----------------------------------------------------------------------
+
+// 공고 등록
+
+export async function submitRecruit(recruitId:number, resumeId:number, Data: FormData) {
+
+  const URL = `${endpoints.recruit.submit}/${recruitId}/submitted/${resumeId}`;
+
+  try {
+    const accessToken = localStorage.getItem('accessToken');
+    await axios ({
+      method: 'post',
+      url: `${CUSTOM_API}${URL}`,
+      data: Data,
+      headers: {'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${accessToken}`}
+    })
+    return true
+
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
 
 
 

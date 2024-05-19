@@ -184,7 +184,7 @@ export default function RecruitDetail({id}:Props) {
               </CardContent>
           </Card>
           {/* 모달 컴포넌트 */}
-        <RecruitApply open={isModalOpen} handleClose={handleCloseModal} />
+        <RecruitApply open={isModalOpen} handleClose={handleCloseModal} recruitId={id}/>
       </Box>
     );
 };
