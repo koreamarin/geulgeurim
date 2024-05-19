@@ -1,129 +1,26 @@
 import { useState } from 'react';
 
 import Grid from '@mui/material/Unstable_Grid2';
+import Typography from '@mui/material/Typography';
 import Pagination, {paginationClasses} from '@mui/material/Pagination';
+
+import { useRecruitFilterStore } from 'src/store/RecruitFilterStore';
+import { useGetRecruitList, useGetRecruitStarsList } from 'src/api/recruit';
+
+import { SplashScreen } from 'src/components/loading-screen';
 
 import RecruitMainCard from './recruit-main-card';
 
 
 export default function RecruitMainList() {
     // 토큰 존재시만 불러와서 즐겨찾기 검증
-    // const { resumesDetailData,  resumesDetailLoading } = useGetResumeDetail(copyId ? parseInt(copyId, 10) : undefined)
-    const selectdummy = {
-        "getJobsResponses": [
-            {
-                "jobId": 5,
-                "secondLocate": {
-                    "secondLocateKey": 101000,
-                    "firstLocate": {
-                        "firstLocateKey": 101000,
-                        "firstLocateName": "서울"
-                    },
-                    "secondLocateName": "서울전체"
-                },
-                "startDate": "2024-05-08T00:00:00",
-                "endDate": "2024-05-08T00:00:00",
-                "title": "대감집 노예(경비견) 모집",
-                "companyName": "대갑집",
-                "positionIds": [
-                    1,
-                    2
-                ]
-            },
-            {
-                "jobId": 4,
-                "secondLocate": {
-                    "secondLocateKey": 101000,
-                    "firstLocate": {
-                        "firstLocateKey": 101000,
-                        "firstLocateName": "서울"
-                    },
-                    "secondLocateName": "서울전체"
-                },
-                "startDate": "2024-05-08T00:00:00",
-                "endDate": "2024-05-08T00:00:00",
-                "title": "대감집 노예(경비견) 모집",
-                "companyName": "대갑집",
-                "positionIds": [
-                    1,
-                    2
-                ]
-            }
-        ]
-    }
+    const token = localStorage.getItem('accessToken')
 
-    const dummy = {
-        "getJobsResponses": [
-            {
-                "jobId": 2,
-                "secondLocate": {
-                    "secondLocateKey": 101000,
-                    "firstLocate": {
-                        "firstLocateKey": 101000,
-                        "firstLocateName": "서울"
-                    },
-                    "secondLocateName": "서울전체"
-                },
-                "startDate": "2024-05-08T00:00:00",
-                "endDate": "2024-05-08T00:00:00",
-                "url": "https://board.jinhak.com/BoardV1/Upload/Job/News/Analysis/Images/200729_%EC%B1%84%EC%9A%A9_0729_171957.png",
-                "title": "대감집 노예(경비견) 모집",
-                "content": "한양 최대의 대감집에서 집지키는 개 역할을 하실 노예를 구합니다.",
-                "companyName": "대갑집",
-                "companyUrl": "https://koreamarin.github.io/project/",
-                "jobType": "풀타임(24시간)",
-                "experienceType": "경력무관",
-                "minExperience": 0,
-                "education": "석사졸업이상",
-                "perk": "사료제공, 정문 옆 개집제공",
-                "procedureInfo": "1.서류전형, 2.개소리면접, 3.임원과 담화, 4.신체검사",
-                "salary": "초봉 8000만원",
-                "closeType": "채용시",
-                "openStatus": "PUBLIC",
-                "fileUrl": "https://board.jinhak.com/BoardV1/Upload/Job/News/Analysis/Images/200729_%EC%B1%84%EC%9A%A9_0729_171957.png",
-                "positionIds": [
-                    1,
-                    2
-                ]
-            },
-            {
-                "jobId": 3,
-                "secondLocate": {
-                    "secondLocateKey": 101000,
-                    "firstLocate": {
-                        "firstLocateKey": 101000,
-                        "firstLocateName": "서울"
-                    },
-                    "secondLocateName": "서울전체"
-                },
-                "startDate": "2024-05-08T00:00:00",
-                "endDate": "2024-05-08T00:00:00",
-                "url": "https://board.jinhak.com/BoardV1/Upload/Job/News/Analysis/Images/200729_%EC%B1%84%EC%9A%A9_0729_171957.png",
-                "title": "대감집 노예(경비견) 모집",
-                "content": "한양 최대의 대감집에서 집지키는 개 역할을 하실 노예를 구합니다.",
-                "companyName": "대갑집",
-                "companyUrl": "https://koreamarin.github.io/project/",
-                "jobType": "풀타임(24시간)",
-                "experienceType": "경력무관",
-                "minExperience": 0,
-                "education": "석사졸업이상",
-                "perk": "사료제공, 정문 옆 개집제공",
-                "procedureInfo": "1.서류전형, 2.개소리면접, 3.임원과 담화, 4.신체검사",
-                "salary": "초봉 8000만원",
-                "closeType": "채용시",
-                "openStatus": "PUBLIC",
-                "fileUrl": "https://board.jinhak.com/BoardV1/Upload/Job/News/Analysis/Images/200729_%EC%B1%84%EC%9A%A9_0729_171957.png",
-                "positionIds": [
-                    1,
-                    2
-                ]
-            }
-        ],
-        count: 2
-    }
-
+    const { positionIds, experienceTypes, closeTypes } = useRecruitFilterStore();
+    const {recruitsData, recruitsError, recruitsLoading} = useGetRecruitList({ positionIds, experienceTypes, closeTypes})
+    const {recruitStarsData, recruitStarsError, recruitStarsLoading} = useGetRecruitStarsList(token)
     // 더미데이터 이용중
-    const selectIdList = selectdummy.getJobsResponses.map((item) => item.jobId);
+    const selectIdList = recruitStarsData?.getJobsResponses?.map((item) => item.jobId) || [];
 
     // 페이지네이션
     const [page, setPage] = useState<number>(1)
@@ -132,10 +29,19 @@ export default function RecruitMainList() {
     };
     const pageCount = 12
 
+    if (recruitsLoading || recruitStarsLoading) {
+      return <SplashScreen />;
+    }
+    if (recruitsError || recruitStarsError) {
+      return <Typography sx={{ textAlign: 'center', mt: 4 }}>잘못된 접근입니다.</Typography>;
+    }
+    if (!recruitsData.totalPage) {
+      return <Typography sx={{ textAlign: 'center', mt: 4 }}>공고가 없습니다.</Typography>;
+    }
     return (
         <>
             <Grid container spacing={2} mt={3}>
-                {dummy?.getJobsResponses.slice((page - 1) * pageCount, page * pageCount).map((job) => {
+                {recruitsData?.getJobsResponses.slice((page - 1) * pageCount, page * pageCount).map((job) => {
                     const jobInfo = {
                         "jobId": job.jobId,
                         "endDate": job.endDate,
@@ -155,7 +61,7 @@ export default function RecruitMainList() {
             <Pagination
                 page={page}
                 onChange={handleChange}
-                count={Math.floor((dummy.count - 1) / pageCount) + 1}
+                count={Math.floor((recruitsData.totalPage - 1) / pageCount) + 1}
                 defaultPage={1}
                 siblingCount={1}
                 sx={{
