@@ -81,7 +81,6 @@ const POST_SORT_OPTIONS = [
 const POST_SEARCH_OPTIONS = [
   { value: 'title', label: '제목' },
   { value: 'content', label: '내용' },
-  { value: 'author', label: '작성자' },
   { value: 'title+content', label: '제목+내용' },
 ];
 
