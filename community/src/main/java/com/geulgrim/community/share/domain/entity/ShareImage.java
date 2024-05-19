@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
 @Getter
 @Setter
@@ -19,7 +21,7 @@ public class ShareImage {
     @Enumerated(EnumType.STRING)
     private ImageType imageType;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "share_id")
     private Share share;
 }

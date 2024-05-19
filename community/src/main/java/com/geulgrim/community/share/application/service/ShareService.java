@@ -2,6 +2,7 @@ package com.geulgrim.community.share.application.service;
 
 import com.geulgrim.community.global.user.domain.repository.UserRepository;
 import com.geulgrim.community.share.application.dto.request.ShareUpdateRequest;
+import com.geulgrim.community.share.application.dto.response.ShareImageResponse;
 import com.geulgrim.community.share.domain.entity.Share;
 import com.geulgrim.community.share.domain.entity.ShareImage;
 import com.geulgrim.community.share.domain.entity.enums.ImageType;
@@ -15,6 +16,7 @@ import com.geulgrim.community.share.domain.repository.ShareRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,37 +38,19 @@ public class ShareService {
     private final ShareCommentRepository shareCommentRepository;
     private final UserRepository userRepository;
 
-    public List<ShareListResponse> getShareListResponses() {
+    // 메인 페이지 신규 그림평가글 목록
+    public List<ShareListResponse> mainShareNewList() {
+        Pageable pageable = PageRequest.of(0, 6);
         // Fetch the share list responses without images
-        List<ShareListResponse> shareListResponses = shareRepository.findShareMainList();
+        List<ShareListResponse> shareListResponses = shareRepository.findShareMainList(pageable);
 
-        // Extract share IDs
-        List<Long> shareIds = shareListResponses.stream()
-                .map(ShareListResponse::getShareId)
-                .toList();
-
-        // Fetch share images by share IDs
-        List<ShareImage> shareImages = shareImageRepository.findImagesByShareIds(shareIds);
-
-        // Map images to respective shares
-        Map<Long, List<ShareImage>> imagesByShareId = shareImages.stream()
-                .collect(Collectors.groupingBy(si -> si.getShare().getShareId()));
-
-        // Assign images to share list responses
-        shareListResponses.forEach(response -> response.setImageList(imagesByShareId.get(response.getShareId())));
-
+        for(ShareListResponse shareListResponse : shareListResponses) {
+            List<ShareImageResponse> list = shareImageRepository.findShareImageResponseByShareIds(shareListResponse.getShareId());
+            shareListResponse.setImageList(list);
+        }
         return shareListResponses;
     }
 
-    // 메인 페이지 신규 그림평가글 목록
-    public List<ShareListResponse> mainShareNewList() {
-        return getShareListResponses();
-    }
-    
-    // 그림평가 게시판 전체 조회
-    public List<ShareListResponse> shareList() {
-        return shareRepository.findShareResponseList();
-    }
     
     // 그림평가 게시판 상세조회
     public ShareDetailResponse shareDetail(long shareId) {
@@ -74,7 +58,7 @@ public class ShareService {
         return ShareDetailResponse.builder()
                 .share(shareRepository.findByShareId(shareId))
                 .commentList(shareCommentRepository.findAllByShareId(shareId))
-                .imageList(shareImageRepository.findByShareShareId(shareId))
+                .imageList(shareImageRepository.findShareImageResponseByShareIds(shareId))
                 .build();
     }
     
