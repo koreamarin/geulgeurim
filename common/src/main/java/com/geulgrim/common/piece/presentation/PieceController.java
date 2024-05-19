@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,7 +32,14 @@ public class PieceController {
 
     @PostMapping("/create")
     @Operation(summary = "작품등록", description = "작품 정보를 입력받아 작품을 등록하는 api입니다.")
-    public ResponseEntity<?> create(@RequestBody PieceCreateRequestDto dto){
+    public ResponseEntity<?> create(
+            @RequestPart PieceCreateRequestDto dto,
+            @RequestPart MultipartFile file,
+            @RequestHeader HttpHeaders headers
+            ){
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+        dto.setFile(file);
+        dto.setOwnerId(userId);
         pieceService.create(dto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
