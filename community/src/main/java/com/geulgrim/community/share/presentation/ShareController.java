@@ -40,8 +40,8 @@ public class ShareController {
                                                      @RequestPart ShareWriteRequest shareWriteRequest,
                                                      @RequestPart(required = false) List<MultipartFile> files) {
         // 유저 아이디 수정
-//        long userId = Long.parseLong(headers.get("user_id").get(0));
-        long userId = 32;
+        long userId = Long.parseLong(headers.get("user_id").get(0));
+//        long userId = 32;
         shareWriteRequest.setImageList(files);
         return new ResponseEntity<>(shareService.writeShare(userId, shareWriteRequest), HttpStatus.CREATED);
     }

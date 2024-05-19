@@ -65,8 +65,8 @@ public class CrewController {
             @RequestPart CrewBoardRequest crewBoardRequest,
             @RequestPart(required = false) List<MultipartFile> files
     ) {
-//        long userId = Long.parseLong(headers.get("user_id").get(0));
-        long userId = 32;
+        long userId = Long.parseLong(headers.get("user_id").get(0));
+//        long userId = 32;
         crewBoardRequest.setImageList(files);
         Long crewId = crewService.addCrewBoard(userId, crewBoardRequest);
         return ResponseEntity.ok(crewId);
