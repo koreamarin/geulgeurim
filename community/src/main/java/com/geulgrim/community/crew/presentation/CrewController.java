@@ -51,8 +51,8 @@ public class CrewController {
             @RequestHeader HttpHeaders headers,
             @PathVariable("crew_id") Long crewId
     ) {
-//        long userId = Long.parseLong(headers.get("user_id").get(0));
-        long userId = 5;
+        long userId = Long.parseLong(headers.get("user_id").get(0));
+//        long userId = 5;
         CrewBoardDetail detail = crewService.getCrewBoardDetail(crewId, userId);
         return ResponseEntity.ok(detail);
     }
@@ -131,8 +131,8 @@ public class CrewController {
     @Operation(summary = "내가 쓴 크루 목록", description = "내가 쓴 크루 모집 글 목록을 가져옵니다.")
     public Page<MyCrewListResponse> getMyCrewList(@RequestHeader HttpHeaders headers,
                                                                   Pageable pageable) {
-//        long userId = Long.parseLong(headers.get("user_id").get(0));
-        long userId = 5;
+        long userId = Long.parseLong(headers.get("user_id").get(0));
+//        long userId = 5;
         return crewService.getMyCrewList(userId, pageable);
     }
 
@@ -140,8 +140,8 @@ public class CrewController {
     @Operation(summary = "내가 쓴 크루 지원서 목록", description = "내가 쓴 크루 지원서 목록을 가져옵니다.")
     public Page<MyApplyListResponse> getMyApplyList(@RequestHeader HttpHeaders headers,
                                                   Pageable pageable) {
-//        long userId = Long.parseLong(headers.get("user_id").get(0));
-        long userId = 5;
+        long userId = Long.parseLong(headers.get("user_id").get(0));
+//        long userId = 5;
         return crewService.getMyApplyList(userId, pageable);
     }
 
