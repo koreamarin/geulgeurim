@@ -13,14 +13,51 @@ type GetRecruitProps = {
   closeTypes: string[]
 }
 
-type ResumeListResult = {
+type RecruitListResult = {
   getJobsResponses: any[],
   totalPage:number
 }
 
-type ResumeStarsResult = {
+type RecruitStarsResult = {
   getJobsResponses: any[]
 }
+
+type FirstLocate = {
+  firstLocateKey: number;
+  firstLocateName: string;
+}
+
+type SecondLocate = {
+  secondLocateKey: number;
+  firstLocate: FirstLocate;
+  secondLocateName: string;
+}
+
+type JobResponse = {
+  jobId: number;
+  secondLocate: SecondLocate;
+  startDate: string;
+  endDate: string;
+  url: string;
+  title: string;
+  content: string;
+  companyName: string;
+  companyUrl: string;
+  jobType: string;
+  experienceType: string;
+  minExperience: number;
+  education: string;
+  perk: string;
+  procedureInfo: string;
+  salary: string;
+  closeType: string;
+  openStatus: string;
+  fileUrl: string;
+  star: boolean;
+  positionIds: number[];
+  applyStatus: boolean;
+}
+
 
 export function useGetRecruitList({ positionIds, experienceTypes, closeTypes}:GetRecruitProps) {
   const URL = endpoints.recruit.list;
@@ -36,7 +73,7 @@ export function useGetRecruitList({ positionIds, experienceTypes, closeTypes}:Ge
 
   const memoizedValue = useMemo(
     () => ({
-      recruitsData: (data as ResumeListResult) || {getResumesResponse : [], totalPage : 0},
+      recruitsData: (data as RecruitListResult) || {getResumesResponse : [], totalPage : 0},
       recruitsLoading: isLoading,
       recruitsError: error,
       recruitsValidating: isValidating,
@@ -59,7 +96,7 @@ export function useGetRecruitStarsList(token:string | null) {
 
   const memoizedValue = useMemo(
     () => ({
-      recruitStarsData: (data as ResumeStarsResult) || {getResumesResponse : []},
+      recruitStarsData: (data as RecruitStarsResult) || {getResumesResponse : []},
       recruitStarsLoading: isLoading,
       recruitStarsError: error,
       recruitStarsValidating: isValidating,
@@ -115,6 +152,28 @@ export async function deleteRecruitStar(recruitId:number) {
     return false
   }
 }
+
+// ----------------------------------------------------------------------
+
+// 공고 상세 조회
+
+export function useGetRecruitDetailList(id:number) {
+  const URL = `${endpoints.recruit.detail}/${id}`;
+  const { data, isLoading, error, isValidating, mutate: recruitDetailMutate } = useSWR(URL, customFetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      recruitDetailData: (data as JobResponse) || {},
+      recruitDetailLoading: isLoading,
+      recruitDetailError: error,
+      recruitDetailValidating: isValidating,
+      recruitDetailMutate
+    }),
+    [data, error, isLoading, isValidating, recruitDetailMutate]);
+
+  return memoizedValue;
+}
+
 
 
 

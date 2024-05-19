@@ -41,7 +41,7 @@ export default function RecruitMainList() {
     return (
         <>
             <Grid container spacing={2} mt={3}>
-                {recruitsData?.getJobsResponses.slice((page - 1) * pageCount, page * pageCount).map((job) => {
+                {recruitsData?.getJobsResponses.slice((page - 1) * pageCount, page * pageCount).map((job, index) => {
                     const jobInfo = {
                         "jobId": job.jobId,
                         "endDate": job.endDate,
@@ -52,8 +52,8 @@ export default function RecruitMainList() {
                         "selected": selectIdList.includes(job.jobId)
                     }
                     return (
-                    <Grid xs={12} md={6} lg={4}>
-                        <RecruitMainCard key={job.jobId} data={jobInfo}/>
+                    <Grid key={index} xs={12} md={6} lg={4}>
+                        <RecruitMainCard data={jobInfo}/>
                     </Grid>
                 )}
                 )}

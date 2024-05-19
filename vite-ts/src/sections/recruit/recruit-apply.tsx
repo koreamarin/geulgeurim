@@ -31,13 +31,20 @@ export function RecruitApply({ open, handleClose }: ApplyModalProps) {
           borderRadius: '16px'
         }}
       >
-        <Typography id="apply-modal-title" variant="h5" component="h2" mb={4} textAlign='center'>
+        <Typography id="apply-modal-title" variant="h4" component="h2" mb={4} textAlign='center'>
           내 이력서 선택하기
         </Typography>
+        <Box display="flex" justifyContent="flex-end" mb={3}>
+          <Button onClick={handleClose} variant="contained">
+            이력서 추가하기
+          </Button>
+        </Box>
         <SortingSelectingTable/>
-        <Button onClick={handleClose} sx={{ mt: 2 }} variant="contained">
-          닫기
-        </Button>
+        <Box display="flex" justifyContent="flex-end" mt={2}>
+          <Button onClick={handleClose} variant="contained">
+            닫기
+          </Button>
+        </Box>
       </Box>
     </Modal>
   );
