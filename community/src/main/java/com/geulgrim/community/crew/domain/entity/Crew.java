@@ -48,7 +48,7 @@ public class Crew extends BaseEntity {
     @Enumerated(STRING)
     private BoardStatus status;
 
-    @OneToMany(mappedBy = "crew", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "crew", cascade = CascadeType.ALL, fetch = LAZY)
     @JsonManagedReference
     private List<CrewImage> imageList;
 

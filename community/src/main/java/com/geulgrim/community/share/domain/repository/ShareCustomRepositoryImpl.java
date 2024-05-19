@@ -1,5 +1,6 @@
 package com.geulgrim.community.share.domain.repository;
 
+import com.geulgrim.community.share.application.dto.response.ShareImageResponse;
 import com.geulgrim.community.share.application.dto.response.ShareListResponse;
 import com.geulgrim.community.share.domain.entity.QShareImage;
 import com.geulgrim.community.share.domain.entity.Share;
@@ -45,20 +46,24 @@ public class ShareCustomRepositoryImpl implements ShareCustomRepository {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        List<ShareListResponse> shareListResponses = shares.stream().map(s ->
-                new ShareListResponse(
-                        s.getShareId(),
-                        s.getUser().getUserId(),
-                        s.getUser().getNickname(),
-                        s.getUser().getFileUrl(),
-                        s.getTitle(),
-                        s.getHit(),
-                        s.getCommentList().size(),
-                        s.getCreatedAt(),
-                        s.getUpdatedAt(),
-                        s.getImageList() // ShareImage 객체 리스트 그대로 전달
-                )
-        ).collect(Collectors.toList());
+        List<ShareListResponse> shareListResponses = shares.stream().map(s -> {
+            List<ShareImageResponse> imageResponses = s.getImageList().stream()
+                    .map(image -> new ShareImageResponse(image.getShareImageId(), image.getFileUrl()))
+                    .collect(Collectors.toList());
+
+            return new ShareListResponse(
+                    s.getShareId(),
+                    s.getUser().getUserId(),
+                    s.getUser().getNickname(),
+                    s.getUser().getFileUrl(),
+                    s.getTitle(),
+                    s.getHit(),
+                    s.getCommentList().size(),
+                    s.getCreatedAt(),
+                    s.getUpdatedAt(),
+                    imageResponses
+            );
+        }).collect(Collectors.toList());
 
         long total = queryFactory.selectFrom(share)
                 .leftJoin(share.user, user)

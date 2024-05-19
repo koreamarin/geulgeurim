@@ -24,7 +24,7 @@ public class CrewImage {
     @GeneratedValue(strategy = IDENTITY)
     private Long crewImageId;
 
-    @ManyToOne(fetch = EAGER)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "crew_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Crew crew;

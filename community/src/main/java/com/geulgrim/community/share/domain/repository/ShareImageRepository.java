@@ -1,5 +1,6 @@
 package com.geulgrim.community.share.domain.repository;
 
+import com.geulgrim.community.share.application.dto.response.ShareImageResponse;
 import com.geulgrim.community.share.domain.entity.ShareImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +13,7 @@ import java.util.List;
 public interface ShareImageRepository extends JpaRepository<ShareImage, Long> {
     List<ShareImage> findByShareShareId(Long shareId);
 
-    @Query("SELECT si FROM ShareImage si WHERE si.share.shareId IN :shareIds")
-    List<ShareImage> findImagesByShareIds(@Param("shareIds") List<Long> shareIds);
+    @Query("SELECT new com.geulgrim.community.share.application.dto.response.ShareImageResponse(" +
+            "si.shareImageId, si.fileUrl) FROM ShareImage si WHERE si.share.shareId =:shareId")
+    List<ShareImageResponse> findShareImageResponseByShareIds(@Param("shareId") long shareId);
 }

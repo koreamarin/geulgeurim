@@ -28,9 +28,9 @@ public class Share extends BaseEntity {
     private String content;
     private long hit;
 
-    @OneToMany(mappedBy = "share", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "share", cascade = CascadeType.ALL, fetch = LAZY)
     private List<ShareComment> commentList;
 
-    @OneToMany(mappedBy = "share", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "share", cascade = CascadeType.ALL, fetch = LAZY)
     private List<ShareImage> imageList;
 }

@@ -1,7 +1,5 @@
 package com.geulgrim.community.share.application.dto.response;
 
-import com.geulgrim.community.share.domain.entity.QShareImage;
-import com.geulgrim.community.share.domain.entity.ShareImage;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,7 +15,7 @@ public class ShareListResponse {
     private long userId;
     private String userNickname;
     private String userFileUrl;
-    private List<ShareImage> imageList;
+    private List<ShareImageResponse> imageList;
     private String title;
     private long hit;
     private long commentCnt;
@@ -36,7 +34,7 @@ public class ShareListResponse {
         this.updatedAt = updatedAt;
     }
 
-    public ShareListResponse(long shareId, long userId, String userNickname, String userFileUrl, String title, long hit, long commentCnt, LocalDateTime createdAt, LocalDateTime updatedAt, List<ShareImage> imageList) {
+    public ShareListResponse(long shareId, long userId, String userNickname, String userFileUrl, String title, long hit, long commentCnt, LocalDateTime createdAt, LocalDateTime updatedAt, List<ShareImageResponse> imageList) {
         this.shareId = shareId;
         this.userId = userId;
         this.userNickname = userNickname;

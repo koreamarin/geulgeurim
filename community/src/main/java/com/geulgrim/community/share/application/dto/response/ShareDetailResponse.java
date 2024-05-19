@@ -17,5 +17,5 @@ import java.util.List;
 public class ShareDetailResponse {
     private ShareResponse share;
     private List<ShareCommentResponse> commentList;
-    private List<ShareImage> imageList;
+    private List<ShareImageResponse> imageList;
 }
