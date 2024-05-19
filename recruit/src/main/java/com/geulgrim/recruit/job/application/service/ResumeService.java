@@ -872,6 +872,29 @@ public class ResumeService {
 
     }
 
+    // 이력서 포토폴리오 전체삭제
+    public String deleteResumePortfolioAll(
+            HttpHeaders headers, Long pofolId) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        List<ResumePortfolio> resumePortfolios = resumePorfolioRepository.findByPofolId(pofolId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 이력서-포토롤리오가 존재하지 않습니다."));
+
+        if(resumePortfolios.isEmpty()) {
+            throw new IllegalArgumentException("해당하는 이력서-포토롤리오가 존재하지 않습니다.");
+        }
+
+        for(ResumePortfolio resumePortfolio : resumePortfolios) {
+            Resume resume = resumePortfolio.getResume();
+            System.out.println(resume.getUserId() + " " + userId);
+            if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+        }
+
+        resumePorfolioRepository.deleteAll(resumePortfolios);
+        return "이력서-포토폴리오 삭제완료";
+    }
+
+
     // 학력사항 생성
     public Map<String, Long> createEducation (
             HttpHeaders headers, Long resumeId, CreateEducationRequest createEducationRequest) {

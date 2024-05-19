@@ -250,6 +250,16 @@ public class RecruitController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // 이력서 포토폴리오 전체삭제
+    @DeleteMapping("/resume/portfolio/{pofolId}")
+    public ResponseEntity<?> deleteResumePortfolioAll(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable Long pofolId) {
+        String result = resumeService.deleteResumePortfolioAll(headers, pofolId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
     // 학력사항 생성
     @PostMapping("/resume/{resumeId}/education")
     public ResponseEntity<?> createEducation(
