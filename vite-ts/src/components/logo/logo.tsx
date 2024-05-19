@@ -11,10 +11,11 @@ import { RouterLink } from 'src/routes/components';
 
 export interface LogoProps extends BoxProps {
   disabledLink?: boolean;
+  showLogoPreview?: boolean; // 새 props 추가
 }
 
 const Logo = forwardRef<HTMLDivElement, LogoProps>(
-  ({ disabledLink = false, sx, ...other }, ref) => {
+  ({ disabledLink = false, showLogoPreview = true, sx, ...other }, ref) => {
 
     // OR using local (public folder)
     // -------------------------------------------------------
@@ -25,11 +26,13 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
           src="/logo/logo_single.svg"
           sx={{ width: 40, height: 40, marginY:1, cursor: 'pointer', ...sx }}
         />
-        <Box
-          component="img"
-          src="/logo-preview.png"
-          sx={{ marginLeft:2, height: 45, cursor: 'pointer', ...sx }}
-        />
+        {showLogoPreview && (
+          <Box
+            component="img"
+            src="/logo-preview.png"
+            sx={{ marginLeft:2, height: 45, cursor: 'pointer', ...sx }}
+          />
+        )}
       </Stack>
     );
 

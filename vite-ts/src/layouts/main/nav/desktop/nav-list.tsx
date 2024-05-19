@@ -107,8 +107,8 @@ function NavSubList({ data, sx, ...other }: NavSubListProps) {
       }}
       {...other}
     >
-      {data.map((item) => (
-        <Box>
+      {data.map((item, index) => (
+        <Box key={index}>
           <NavItem
             key={item.title}
             title={item.title}
