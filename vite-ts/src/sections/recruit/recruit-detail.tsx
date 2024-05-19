@@ -9,12 +9,29 @@ import CardContent from '@mui/material/CardContent';
 
 import Image from 'src/components/image';
 import Iconify from 'src/components/iconify';
-
-// import RecruitDetailMenu from './recruit-detail-menu';
+import Link from '@mui/material/Link';
 
 type Props = {
     id:number
 }
+
+const positions = [
+  { value: 1, label: '선화' },
+  { value: 2, label: '밑색' },
+  { value: 3, label: '명암' },
+  { value: 4, label: '후보정' },
+  { value: 5, label: '작화' },
+  { value: 6, label: '어시' },
+  { value: 7, label: '각색' },
+  { value: 8, label: '콘티' },
+  { value: 9, label: '표지' },
+  { value: 10, label: '삽화' },
+  { value: 11, label: '배경' },
+  { value: 12, label: '채색' },
+  { value: 13, label: '편집' },
+  { value: 14, label: '작가' },
+  { value: 15, label: '공고확인' }
+];
 
 const jobData = {
     "jobId": 8,
@@ -114,10 +131,26 @@ export default function RecruitDetail({id}:Props) {
         }
         setSelected((prevSelected:boolean) => !prevSelected);
     };
+
+    const positionList = jobData.positionIds.map(p_id => {
+      const position = positions.find(pos => pos.value === p_id);
+      return position ? position.label : null;
+      })
+
+    const calculateDDay = (endDate: string) => {
+      const end = new Date(endDate).getTime();
+      const now = new Date().getTime();
+      const diffInMs = end - now;
+      const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+        return diffInDays >= 0 ? `D-${diffInDays}` : `D+${Math.abs(diffInDays)}`;
+      };
+
+    const dDay = calculateDDay(jobData.endDate);
+
     return (
         <Box >
             {/* 메뉴 */}
-            <Box sx={{ position: 'fixed', top: 60, width: '95%', zIndex: 1000, padding: 2, borderBottom: '1px solid #e0e0e0', backgroundColor: '#fff' }}>
+            <Box sx={{ position: 'sticky', top: 60, width: '100%', zIndex: 2, padding: 2, borderBottom: '1px solid #e0e0e0', backgroundColor: '#fff' }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                     <Box>
                         <Typography variant="h6" sx={{ display: 'inline', fontWeight: 'bold' }}>
@@ -136,24 +169,60 @@ export default function RecruitDetail({id}:Props) {
                     <Button variant="contained" color="primary">지원하기</Button>
                     </Stack>
                 </Stack>
-                <Stack direction="row" spacing={4} mt={2}>
+                <Stack direction="row" spacing={4} mt={2} justifyContent="space-between" minHeight='70px'>
+                  <Box sx={{display: 'flex', flexDirection:'column', justifyContent:'space-between'}}>
                     <Typography variant="body2"><strong>경력</strong>: {jobData.experienceType}</Typography>
                     {jobData.experienceType === '경력' && <Typography variant="body2"><strong>최소 경력</strong>: {jobData.minExperience}</Typography>}
                     <Typography variant="body2"><strong>학력</strong>: {jobData.education}</Typography>
-                    <Typography variant="body2"><strong>고용형태</strong>: {jobData.closeType}</Typography>
-                    <Typography variant="body2"><strong>급여</strong>: {jobData.salary}</Typography>
-                    <Typography variant="body2"><strong>지역</strong>: {jobData.secondLocate.firstLocate.firstLocateName} / {jobData.secondLocate.secondLocateName}</Typography>
+                    <Typography variant="body2"><strong>직군</strong>: {positionList}</Typography>
+                  </Box>
+                  <Box sx={{display: 'flex', flexDirection:'column', justifyContent:'space-between'}}>
+                    <Typography variant="body2"><strong>근무형태</strong>: {jobData.jobType}</Typography>
+                    <Typography variant="body2"><strong>근무급여</strong>: {jobData.salary}</Typography>
+                    <Typography variant="body2"><strong>근무지역</strong>: {jobData.secondLocate.firstLocate.firstLocateName} / {jobData.secondLocate.secondLocateName}</Typography>
+                    <Typography variant="body2"><strong>마감방식</strong>: {jobData.closeType}</Typography>
+
+                  </Box>
+                  <Box sx={{display: 'flex', alignContent:'center', justifyContent:'center'}}>
+                    <Typography variant="h3" gutterBottom  sx={{margin: 'auto 0px'}}>{dDay}</Typography>
+                  </Box>
                 </Stack>
             </Box>
 
             {/* 내용 */}
-            <Card sx={{ marginTop:13 }}>
+            <Card sx={{ marginY:5 }}>
                 <CardContent>
-                <Typography variant="h4" gutterBottom>{jobData.title}</Typography>
-                <Image src={jobData.fileUrl} alt={jobData.title} style={{ width: '100%' }} />
-                <Typography variant="body1" mt={2}>{jobData.content}</Typography>
-                <Typography variant="body1" mt={2}>{jobData.perk}</Typography>
-                <Typography variant="body1" mt={2}>{jobData.procedureInfo}</Typography>
+                  <Typography variant="h4" gutterBottom>{jobData.title}</Typography>
+                  <Image src={jobData.fileUrl} alt={jobData.title} style={{ width: '100%' }} />
+                  <Card sx={{ marginY: 3 }}>
+                    <CardContent>
+                      <Typography variant="h5" gutterBottom marginBottom={3}>직무 상세 내용</Typography>
+                      {jobData.content}
+                    </CardContent>
+                  </Card>
+
+                  <Card sx={{ marginY: 3 }}>
+                    <CardContent>
+                      <Typography variant="h5" gutterBottom marginBottom={3}>직원 복지</Typography>
+                      {jobData.perk}
+                    </CardContent>
+                  </Card>
+
+                  <Card sx={{ marginY: 3 }}>
+                    <CardContent>
+                      <Typography variant="h5" gutterBottom marginBottom={3}>절차 정보</Typography>
+                      {jobData.procedureInfo}
+                    </CardContent>
+                  </Card>
+
+                  <Card sx={{ marginY: 3 }}>
+                    <CardContent>
+                      <Typography variant="h5" gutterBottom marginBottom={3}>회사 정보</Typography>
+                      <Typography variant="body2"><strong>회사 이름</strong>: {jobData.companyName}</Typography>
+                      <Typography variant="body2"><strong>회사 주소</strong>: <Link>{jobData.companyUrl}</Link></Typography>
+                      <Typography variant="body2"><strong>공고 주소</strong>: <Link>{jobData.url}</Link></Typography>
+                    </CardContent>
+                  </Card>
                 </CardContent>
             </Card>
         </Box>
