@@ -3,6 +3,7 @@ package com.geulgrim.common.global.batch.config;
 import com.geulgrim.common.authserver.presentation.AuthFeignClient;
 import com.geulgrim.common.push.application.PushService;
 import com.geulgrim.common.push.application.dto.request.PushCreateRequestDto;
+import com.geulgrim.common.push.application.dto.response.PushCreateResponseDto;
 import com.geulgrim.common.recruitserver.application.dto.response.SimpleJobResponseDto;
 import com.geulgrim.common.recruitserver.presentation.RecruitFeignClient;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @RequiredArgsConstructor
@@ -84,11 +86,14 @@ public class BatchConfig {
                     }
 
                     //유저에 대해 마감공고 푸시 보내기
-                    pushService.createBatch(PushCreateRequestDto.builder()
+                    PushCreateResponseDto favoriteJobClosingsoon = pushService.createBatch(PushCreateRequestDto.builder()
                             .receiverId(id)
                             .favoriteJobs(jobList)
                             .domain("FAVORITE_JOB_CLOSINGSOON")
                             .build());
+
+                    log.info("마감공고 배치 전송 ={}", favoriteJobClosingsoon.getTitle());
+                    favoriteJobClosingsoon.getFavoriteJobList().stream().map(jobId -> "마감공고들: "+ jobId).toList().forEach(log::info);
 
                 }
 
