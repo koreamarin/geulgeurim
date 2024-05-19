@@ -11,9 +11,7 @@ import java.util.List;
 @Getter @Setter
 public class CrewBoardRequest {
 
-    @JsonProperty("project_name")
     private String projectName;
-
     private String content;
     private Integer pen;
     private Integer color;
