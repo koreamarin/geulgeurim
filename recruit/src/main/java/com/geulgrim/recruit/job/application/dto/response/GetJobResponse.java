@@ -36,4 +36,5 @@ public class GetJobResponse {
     private String fileUrl;
     private Boolean star;
     private List<Long> positionIds;
+    private Boolean applyStatus;
 }

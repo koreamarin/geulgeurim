@@ -192,7 +192,40 @@ public class ResumeService {
 
         List<Long> positionIds = job.getJobPositions().stream().map(jobPosition -> jobPosition.getPosition().getPositionId()).toList();
 
-        GetJobResponse getJobResponse = GetJobResponse.builder()
+        Sort sqlSort = Sort.by(Sort.Direction.DESC, "createdAt");
+        List<Resume> resumes = resumeRepository.findByUserId(userId, sqlSort);
+
+        for(Resume resume : resumes) {
+            Optional<SubmittedResume> submittedResumeOptional = submittedResumeRepository.findByJobAndResume(job, resume);
+            if(submittedResumeOptional.isPresent()) {
+                return GetJobResponse.builder()
+                        .jobId(job.getJobId())
+                        .secondLocate(job.getSecondLocate())
+                        .startDate(job.getStartDate())
+                        .endDate(job.getEndDate())
+                        .url(job.getUrl())
+                        .title(job.getTitle())
+                        .content(job.getContent())
+                        .companyName(job.getCompanyName())
+                        .companyUrl(job.getCompanyUrl())
+                        .jobType(job.getJobType())
+                        .experienceType(job.getExperienceType().name())
+                        .minExperience(job.getMinExperience())
+                        .education(job.getEducation().name())
+                        .perk(job.getPerk())
+                        .procedureInfo(job.getProcedureInfo())
+                        .salary(job.getSalary())
+                        .closeType(job.getCloseType().name())
+                        .openStatus(job.getOpenStatus().name())
+                        .fileUrl(job.getFileUrl())
+                        .positionIds(positionIds)
+                        .star(star)
+                        .applyStatus(true)
+                        .build();
+            }
+        }
+
+        return GetJobResponse.builder()
                 .jobId(job.getJobId())
                 .secondLocate(job.getSecondLocate())
                 .startDate(job.getStartDate())
@@ -214,9 +247,8 @@ public class ResumeService {
                 .fileUrl(job.getFileUrl())
                 .positionIds(positionIds)
                 .star(star)
+                .applyStatus(false)
                 .build();
-
-        return getJobResponse;
     }
 
 
