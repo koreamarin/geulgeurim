@@ -11,7 +11,6 @@ import {
 import { CUSTOM_API } from 'src/config-global';
 
 import ComponentBlock from 'src/sections/_examples/component-block';
-import axiosOrigin from 'axios';
 
 type CrewDetail = {
   crew_id: number;
@@ -76,8 +75,8 @@ export default function CrewApplyView({ id }: Props) {
 
   const handleCloseDialog = () => {
 
-    sendPushApply();
     setOpenDialog(false);
+    sendPushApply();
     navigate(`/community/crew/${crewId}`);  // 다시 크루 모집 상세페이지로
   };
 
@@ -91,7 +90,7 @@ export default function CrewApplyView({ id }: Props) {
 
     // console.log('fcmToken: ', fcmToken);
     // console.log('localStorage.getItem(\'accessToken\'): ', localStorage.getItem('accessToken'));
-    axiosOrigin
+    axios
       .post('/api/v1/common/push/create', requestData, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
