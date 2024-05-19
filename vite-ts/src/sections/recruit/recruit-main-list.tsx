@@ -19,7 +19,6 @@ export default function RecruitMainList() {
     const { positionIds, experienceTypes, closeTypes } = useRecruitFilterStore();
     const {recruitsData, recruitsError, recruitsLoading} = useGetRecruitList({ positionIds, experienceTypes, closeTypes})
     const {recruitStarsData, recruitStarsError, recruitStarsLoading} = useGetRecruitStarsList(token)
-    // 더미데이터 이용중
     const selectIdList = recruitStarsData?.getJobsResponses?.map((item) => item.jobId) || [];
 
     // 페이지네이션
