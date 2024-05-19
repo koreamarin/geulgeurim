@@ -32,11 +32,6 @@ public class ShareController {
     private final ShareCommentService shareCommentService;
     private final ShareImageService shareImageService;
 
-    @GetMapping()
-    @Operation(summary = "그림공유게시판 게시글 전체 조회", description = "그림공유게시판의 모든 게시글을 조회합니다.")
-    public ResponseEntity<List<ShareListResponse>> getShare() {
-        return new ResponseEntity<>(shareService.shareList(), HttpStatus.OK);
-    }
 
     @PostMapping()
     @Operation(summary = "자유게시판 게시글 작성", description = "그림공유게시판에 게시글을 1개 작성합니다.")
