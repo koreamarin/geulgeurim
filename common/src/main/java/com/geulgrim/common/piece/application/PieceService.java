@@ -1,5 +1,6 @@
 package com.geulgrim.common.piece.application;
 
+import com.geulgrim.common.global.s3.S3UploadService;
 import com.geulgrim.common.piece.application.dto.request.PieceCreateRequestDto;
 import com.geulgrim.common.piece.application.dto.response.PieceResponseDto;
 import com.geulgrim.common.piece.application.dto.response.PieceSearchResponseDto;
@@ -14,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -24,6 +27,7 @@ public class PieceService {
 
     private static final Logger log = LoggerFactory.getLogger(PieceService.class);
     private final PieceRepository pieceRepository;
+    private final S3UploadService s3UploadService;
 
     public PieceResponseDto findById(Long id) {
         Piece piece = pieceRepository.findById(id).orElseThrow(NoPieceExistException::new);
@@ -41,8 +45,30 @@ public class PieceService {
                 .build();
     }
 
+//    public void create(PieceCreateRequestDto dto) {
+//        pieceRepository.save(dto.toEntity());
+//    }
+
     public void create(PieceCreateRequestDto dto) {
-        pieceRepository.save(dto.toEntity());
+        MultipartFile file = dto.getFile();
+        String fileUrl = "";
+        try {
+            fileUrl = s3UploadService.saveFile(file);
+        } catch (IOException e) {
+            e.fillInStackTrace();
+        }
+
+        Piece piece = Piece.builder()
+                .ownerId(dto.getOwnerId())
+                .fileUrl(fileUrl)
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .type(dto.getType())
+                .nftType(dto.getNftType())
+                .status(dto.getStatus())
+                .build();
+
+        pieceRepository.save(piece);
     }
 
     public List<PieceSearchResponseDto> findAllPiece(Long userId, PieceType type, String condition, String keyWord, String sortBy){
