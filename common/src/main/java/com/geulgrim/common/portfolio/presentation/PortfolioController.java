@@ -20,6 +20,7 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/common/portfolio")
+@CrossOrigin(origins = {"http://localhost:3000", "https://글그림.com", "https://xn--2i0bpa721g.com/"})
 @RestController
 public class PortfolioController {
 
