@@ -78,8 +78,8 @@ export default function WorksListPosts() {
     setSortBy(newValue);
   }, []);
 
-  const category = (type: string) => {
-    switch (type) {
+  const category = (pieceType: string) => {
+    switch (pieceType) {
       case 'PEN':
         return '선화';
       case 'COLOR':
@@ -90,7 +90,7 @@ export default function WorksListPosts() {
         return 'PD';
       case 'STORY':
         return '스토리';
-      case 'CONT':
+      case 'CONTI':
         return '콘티';
       default:
         return '';

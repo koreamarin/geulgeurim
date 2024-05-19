@@ -65,15 +65,15 @@ export default function RecruitMainFilter() {
   };
 
   const handleRemovePosition = (id: number) => {
-    ChangePositionIds(positionIds.filter(positionId => positionId !== id));
+    ChangePositionIds(positionIds.filter((positionId: number) => positionId !== id));
   };
 
   const handleRemoveExperience = (value: string) => {
-    ChangeExperienceTypes(experienceTypes.filter(expType => expType !== value));
+    ChangeExperienceTypes(experienceTypes.filter((expType: string) => expType !== value));
   };
 
   const handleRemoveCloseType = (id: string) => {
-    ChangeCloseTypes(closeTypes.filter(closeTypeId => closeTypeId !== id));
+    ChangeCloseTypes(closeTypes.filter((closeTypeId: string) => closeTypeId !== id));
   };
 
   const changeSearchRef = useRef<string>('')
