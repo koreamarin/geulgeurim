@@ -1,6 +1,5 @@
 package com.geulgrim.community.crew.application.service;
 
-import com.geulgrim.community.board.domain.entity.BoardImage;
 import com.geulgrim.community.crew.application.dto.request.CrewBoardModifyRequest;
 import com.geulgrim.community.crew.application.dto.request.CrewBoardRequest;
 import com.geulgrim.community.crew.application.dto.request.CrewJoinRequest;
@@ -10,7 +9,6 @@ import com.geulgrim.community.crew.domain.entity.Crew;
 import com.geulgrim.community.crew.domain.entity.CrewImage;
 import com.geulgrim.community.crew.domain.entity.CrewRequest;
 import com.geulgrim.community.crew.domain.entity.enums.CrewStatus;
-import com.geulgrim.community.crew.domain.repository.CrewDslRepository;
 import com.geulgrim.community.crew.domain.repository.CrewImageRepository;
 import com.geulgrim.community.crew.domain.repository.CrewRepository;
 import com.geulgrim.community.crew.domain.repository.CrewRequestRepository;
@@ -18,7 +16,6 @@ import com.geulgrim.community.crew.exception.CrewException;
 import com.geulgrim.community.global.s3.AwsS3Service;
 import com.geulgrim.community.global.user.domain.entity.User;
 import com.geulgrim.community.global.user.domain.repository.UserRepository;
-import com.geulgrim.community.share.application.dto.response.ShareListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,12 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static com.geulgrim.community.crew.exception.CrewErrorCode.*;
 
@@ -62,10 +56,11 @@ public class CrewService {
     }
 
 
-    public CrewBoardDetail getCrewBoardDetail(Long crewId) {
+    public CrewBoardDetail getCrewBoardDetail(Long crewId, Long userId) {
 
         Crew crew = crewRepository.findById(crewId)
                 .orElseThrow(() -> new CrewException(NOT_EXISTS_CREW_BOARD));
+        boolean owner = Objects.equals(crew.getUser().getUserId(), userId);
 
         CrewBoardDetail crewBoardDetail = CrewBoardDetail.builder()
                 .crewId(crew.getCrewId())
@@ -79,6 +74,7 @@ public class CrewService {
                 .conti(crew.getConti())
                 .status(crew.getStatus())
                 .createdAt(crew.getCreatedAt())
+                .owner(owner)
                 .build();
 
         // 이미지 넣기
@@ -94,11 +90,14 @@ public class CrewService {
         ArrayList<CrewInfo> realCrews = new ArrayList<>();
         List<CrewRequest> crewRequests = crewRequestRepository.findByCrew_CrewId(crewId);
         for (CrewRequest crewRequest: crewRequests) {
-            if (crewRequest.getStatus() == CrewStatus.SUCCESS) { // 승인을 받은 유저만 realCrews에 add
+            if (crewRequest.getStatus() != CrewStatus.FAIL) { // 거절이 아닌 유저만 realCrews에 add
                 CrewInfo crewInfo = CrewInfo.builder()
+                        .crewRequestId(crewRequest.getCrewRequestId())
                         .userId(crewRequest.getUser().getUserId())
                         .nickname(crewRequest.getUser().getNickname())
                         .position(crewRequest.getPosition())
+                        .message(crewRequest.getMessage())
+                        .status(crewRequest.getStatus())
                         .build();
                 realCrews.add(crewInfo);
             }
@@ -243,6 +242,51 @@ public class CrewService {
         crewRequestRepository.save(crewRequest); // 저장
 
         return crewRequest.getCrewRequestId();
+    }
 
+    public Page<MyCrewListResponse> getMyCrewList(long userId, Pageable pageable) {
+        return crewRepository.findMyCrewResponseList(userId, pageable);
+    }
+
+    public Page<MyApplyListResponse> getMyApplyList(long userId, Pageable pageable) {
+        return crewRepository.findMyApplyResponseList(userId, pageable);
+    }
+
+    public List<CrewInfo> acceptCrewRequest(Long crewRequestId, Long crewId) {
+        CrewRequest crewRequest = crewRequestRepository.findByCrewRequestId(crewRequestId);
+        crewRequest.setStatus(CrewStatus.SUCCESS);
+        crewRequestRepository.save(crewRequest);
+        List<CrewInfo> list = new ArrayList<>();
+        for(CrewRequest request : crewRequestRepository.findByCrew_CrewId(crewId)) {
+            CrewInfo crewInfo = CrewInfo.builder()
+                    .crewRequestId(request.getCrewRequestId())
+                    .userId(request.getUser().getUserId())
+                    .nickname(request.getUser().getNickname())
+                    .position(request.getPosition())
+                    .message(request.getMessage())
+                    .status(request.getStatus())
+                    .build();
+            list.add(crewInfo);
+        }
+        return list;
+    }
+
+    public List<CrewInfo> refuseCrewRequest(Long crewRequestId, Long crewId) {
+        CrewRequest crewRequest = crewRequestRepository.findByCrewRequestId(crewRequestId);
+        crewRequest.setStatus(CrewStatus.FAIL);
+        crewRequestRepository.save(crewRequest);
+        List<CrewInfo> list = new ArrayList<>();
+        for(CrewRequest request : crewRequestRepository.findByCrew_CrewId(crewId)) {
+            CrewInfo crewInfo = CrewInfo.builder()
+                    .crewRequestId(request.getCrewRequestId())
+                    .userId(request.getUser().getUserId())
+                    .nickname(request.getUser().getNickname())
+                    .position(request.getPosition())
+                    .message(request.getMessage())
+                    .status(request.getStatus())
+                    .build();
+            list.add(crewInfo);
+        }
+        return list;
     }
 }
