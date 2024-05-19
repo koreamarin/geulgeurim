@@ -1,13 +1,25 @@
 import Box from "@mui/material/Box"
-import Container from "@mui/material/Container"
+
+import InterestList from "../interest-list"
 
 
 export default function InterestView() {
   return (
-    <Container>
-      <Box>
-        관심 공고들
+      <Box sx={{
+        paddingLeft: {
+          xs: 5,
+          sm: 5,
+          md: 10,
+          lg: 10
+        },
+        paddingRight: {
+          xs: 5,
+          sm: 5,
+          md: 10,
+          lg: 10
+        }
+      }}>
+        <InterestList />
       </Box>
-    </Container>
   )
 }
