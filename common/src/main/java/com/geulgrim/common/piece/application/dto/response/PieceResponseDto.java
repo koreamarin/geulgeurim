@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,4 +25,8 @@ public class PieceResponseDto {
     private String description;
 
     private PieceType type;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }
