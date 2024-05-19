@@ -47,13 +47,6 @@ const typeList:SelectCatgory[] = [
 export default function WorksForm() {
   const router = useRouter();
 
-
-  // const a = true
-  // const blocker = useBlocker((
-  //   {currentLocation, nextLocation}) =>
-  //   a && currentLocation.pathname !== nextLocation.pathname
-  // )
-
   const { enqueueSnackbar } = useSnackbar();
 
   const NewWorksSchema = Yup.object().shape({
