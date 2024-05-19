@@ -70,8 +70,12 @@ public class PushService {
 
         //fcm
         log.info("fcm웹푸시 시작");
-        FCMDto fcmDto = FCMDto.of(rcvUser, push);
-        webSender.sendWebPush(fcmDto);
+        //fcm토큰 있는지 확인
+        log.info("rcv fcm_token ={}", rcvUser.getFcmToken());
+        if (rcvUser.getFcmToken() != null) {
+            FCMDto fcmDto = FCMDto.of(rcvUser, push);
+            webSender.sendWebPush(fcmDto);
+        }
 
         //메일 로그 저장
         pushRespository.save(push);
@@ -128,8 +132,12 @@ public class PushService {
 
         //fcm
         log.info("fcm웹푸시 시작");
-        FCMDto fcmDto = FCMDto.of(rcvUser, push);
-        webSender.sendWebPush(fcmDto);
+        //fcm토큰 있는지 확인
+        log.info("rcv fcm_token ={}", rcvUser.getFcmToken());
+        if (rcvUser.getFcmToken() != null) {
+            FCMDto fcmDto = FCMDto.of(rcvUser, push);
+            webSender.sendWebPush(fcmDto);
+        }
 
         //메일 로그 저장
         pushRespository.save(push);
