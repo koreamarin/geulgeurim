@@ -238,10 +238,10 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
 
     const submit = await submitRecruit(recruitId, selectedResumeId!, formData);
     if (submit) {
-      enqueueSnackbar('제출에 실패했습니다', { variant: 'error' });
-    } else {
       enqueueSnackbar('제출 성공!');
       router.push(paths.recruit.main)
+    } else {
+      enqueueSnackbar('제출에 실패했습니다', { variant: 'error' });
     }
   };
 

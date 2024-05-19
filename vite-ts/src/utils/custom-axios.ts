@@ -66,5 +66,10 @@ export const endpoints = {
   },
   user: {
     detail: '/api/v1/auth/user'
+  },
+  company: {
+    info: '/api/v1/auth/enteruser',
+    myRecruit: '/api/v1/recruit/job/myjob',
+    submittList: '/api/v1/recruit/job'
   }
 };
