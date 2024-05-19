@@ -7,10 +7,14 @@ import com.geulgrim.recruit.job.domain.entity.*;
 import com.geulgrim.recruit.job.domain.entity.Enums.*;
 import com.geulgrim.recruit.job.domain.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -35,12 +39,18 @@ public class ResumeService {
     private final SubmittedResumeRepository submittedResumeRepository;
     private final StarRepository starRepository;
     private final AwsS3Service awsS3Service;
+    private final WebClient webClient = WebClient.builder().build(); ;
+
 
     // 구인구직 등록
     public Map<String, Long> createJob(
             HttpHeaders headers,
             CreateJobRequest createJobRequest) {
         Long userId = Long.parseLong(headers.get("user_id").get(0));
+        String userType = headers.get("user_type").get(0);
+        if(userType.equals("INDIVIDUAL")) {
+            throw new IllegalArgumentException("기업회원만 구인구직을 등록할 수 있습니다.");
+        }
 
         SecondLocate secondLocateOptional = secondLocateRepository.findBySecondLocateKey(createJobRequest.getSecondLocateKey())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 2차 지역 입니다."));
@@ -90,6 +100,7 @@ public class ResumeService {
             List<Long> positionIds,
             List<String> experienceTypes,
             List<String> closeTypes) {
+
         if(positionIds.isEmpty())
             positionIds = positionRepository.findAll().stream().map(Position::getPositionId).toList();
 
@@ -106,6 +117,7 @@ public class ResumeService {
         List<GetJobsResponse> getJobsResponses = new ArrayList<>();
 
         for(Job job : jobs) {
+            if(job.getOpenStatus().equals(OpenStatus.PRIVATE)) continue;
             List<Long> positionIdsResponse = new ArrayList<>();
             for(JobPosition jobPosition : job.getJobPositions()) {
                 positionIdsResponse.add(jobPosition.getPosition().getPositionId());
@@ -125,15 +137,21 @@ public class ResumeService {
 
         return GetJobsResponses.builder()
                 .getJobsResponses(getJobsResponses)
+                .totalPage(getJobsResponses.size())
                 .build();
     }
 
     // 내가 작성한 구인구직 리스트 조회
     public GetJobsResponses getMyJobs(
-            HttpHeaders headers) {
+            HttpHeaders headers,
+            Pageable pageable) {
         Long userId = Long.parseLong(headers.get("user_id").get(0));
+        String userType = headers.get("user_type").get(0);
+        if(userType.equals("INDIVIDUAL")) {
+            throw new IllegalArgumentException("기업회원만 구인구직을 등록할 수 있습니다.");
+        }
 
-        List<Job> jobs = jobRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("작성한 구인구직이 없습니다."));
+        Page<Job> jobs = jobRepository.findByUserId(userId, pageable);
         List<GetJobsResponse> getJobsResponses = new ArrayList<>();
 
         for(Job job : jobs) {
@@ -151,6 +169,7 @@ public class ResumeService {
 
         return GetJobsResponses.builder()
                 .getJobsResponses(getJobsResponses)
+                .totalPage(getJobsResponses.size())
                 .build();
 
     }
@@ -698,6 +717,33 @@ public class ResumeService {
 
 
     // 내 이력서 수정 (3순위)
+    public String updateResume(
+            HttpHeaders headers,
+            MultipartFile image_file,
+            UpdateResumeRequest updateResumeRequest) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Resume resume = resumeRepository.findByResumeId(updateResumeRequest.getResumeId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이력서 입니다."));
+
+        if (!resume.getUserId().equals(userId)) throw new IllegalArgumentException("접근 권한이 없습니다.");
+
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+
+        String file_url = resume.getFileUrl();
+        if (image_file.getSize() > 0) {
+            file_url = awsS3Service.uploadFile(userId, image_file, time, "resume");
+        }
+
+        resume.setResumeTitle(updateResumeRequest.getResumeTitle());
+        resume.setEssay(updateResumeRequest.getEssay());
+        resume.setOpenStatus(OpenStatus.valueOf(updateResumeRequest.getOpenStatus()));
+        resume.setFileUrl(file_url);
+        resumeRepository.save(resume);
+
+        return "수정완료";
+    }
+
 
     // 내 이력서 삭제
     public String deleteResume(
@@ -997,6 +1043,139 @@ public class ResumeService {
         experienceRepository.delete(experience);
 
         return "삭제완료";
+    }
+
+
+    public String test() {
+        String response = webClient.get().uri("https://oapi.saramin.co.kr/job-search?access-key=hBuyJMoAcQ87lZ282p91zeQAGFg3Y7wNd0RrXJqZUgE3rKbNzy6G&keywords=웹툰,작가,작화,콘티,채색&count=30")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        System.out.println(response);
+        return response;
+    }
+
+    public String test2() {
+        String response = """
+                {
+                  "jobs": {
+                    "count": 2,
+                    "start": 1,
+                    "total": "7629",
+                    "job": [
+                      {
+                        "url": "http://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=27614114&utm_source=job-search-api&utm_medium=api&utm_campaign=saramin-job-search-api",
+                        "active": 1,
+                        "company": {
+                          "detail": {
+                            "href":"http://www.saramin.co.kr/zf_user/company-info/view?csn=1138600917&utm_source=job-search-api&utm_medium=api&utm_campaign=saramin-job-search-api",
+                            "name": "(주)사람인"
+                          }
+                        },
+                        "position": {
+                          "title": "(주)사람인 사무보조·문서작성 경력 채용합니다11212",
+                          "industry": {
+                            "code": "301",
+                            "name": "솔루션·SI·ERP·CRM"
+                          },
+                          "location": {
+                            "code": "101050,101060,101070",
+                            "name": "서울 > 관악구,서울 > 광진구,서울 > 구로구"
+                          },
+                          "job-type": {
+                            "code": "1",
+                            "name": "정규직"
+                          },
+                          "job-mid-code": {
+                            "code": "22",
+                            "name": "요리·제빵사·영양사"
+                          },
+                          "job-code": {
+                            "code": "2323",
+                            "name": "요리·제빵사·영양사"
+                          },
+                          "experience-level": {
+                            "code": 2,
+                            "min": 2,
+                            "max": 3,
+                            "name": "경력 2~3년"
+                          },
+                          "required-education-level": {
+                            "code": "0",
+                            "name": "학력무관"
+                          }
+                        },
+                        "keyword": "SI·시스템통합,Excel·도표,PowerPoint,전산입력·편집",
+                        "salary": {
+                          "code": "6",
+                          "name": "1,800~2,000만원"
+                        },
+                        "id": "27614114",
+                        "posting-timestamp": "1559191564",
+                        "modification-timestamp": "1559191564",
+                        "opening-timestamp": "1559188800",
+                        "expiration-timestamp": "1561820399",
+                        "close-type": {
+                          "code": "1",
+                          "name": "접수마감일"
+                        }
+                      },
+                      {
+                        "url":"http://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=27614112&utm_source=job-search-api&utm_medium=api&utm_campaign=saramin-job-search-api",
+                        "active": 1,
+                        "company": {
+                          "detail": {
+                            "href":"http://www.saramin.co.kr/zf_user/company-info/view?csn=1138600917&utm_source=job-search-api&utm_medium=api&utm_campaign=saramin-job-search-api",
+                            "name": "(주)사람인테스트계정04"
+                          }
+                        },
+                        "position": {
+                          "title": "건축·인테리어·설계 외 2개 부문 담당자 모집 공고123",
+                          "industry": {
+                            "code": "1005",
+                            "name": "연구소·컨설팅·조사"
+                          },
+                          "location": {
+                            "code": "101070",
+                            "name": "서울 > 구로구"
+                          },
+                          "job-type": {
+                            "code": "1",
+                            "name": "정규직"
+                          },
+                          "industry-keyword-code": "100501",
+                          "experience-level": {
+                            "code": 1,
+                            "min": 0,
+                            "max": 0,
+                            "name": "신입"
+                          },
+                          "required-education-level": {
+                            "code": "0",
+                            "name": "학력무관"
+                          }
+                        },
+                        "keyword": "연구소,전기공사,창호공사,항공사무",
+                        "salary": {
+                          "code": "4",
+                          "name": "1,400~1,600만원"
+                        },
+                        "id": "27614112",
+                        "posting-timestamp": "1559175921",
+                        "modification-timestamp": "1559175921",
+                        "opening-timestamp": "1559174400",
+                        "expiration-timestamp": "1561820399",
+                        "close-type": {
+                          "code": "1",
+                          "name": "접수마감일"
+                        }
+                      }
+                    ]
+                  }
+                }
+                """
+                ;
+        return response;
     }
 
 

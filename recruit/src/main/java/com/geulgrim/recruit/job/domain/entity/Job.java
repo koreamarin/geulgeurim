@@ -86,6 +86,9 @@ public class Job {
     @Column(name="file_url", nullable = false)
     private String fileUrl;
 
+    @Column(name="saramin_id", nullable = true)
+    private Long saraminId;
+
     @OneToMany(mappedBy = "job", fetch = FetchType.EAGER)
     private List<JobPosition> jobPositions;
 }

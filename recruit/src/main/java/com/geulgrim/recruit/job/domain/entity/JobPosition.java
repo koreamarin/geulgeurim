@@ -20,7 +20,7 @@ public class JobPosition {
     private Job job;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="position_id", referencedColumnName = "position_id", nullable = false)
+    @JoinColumn(name="position_id", referencedColumnName = "position_id", nullable = true)
     private Position position;
 
     @Override

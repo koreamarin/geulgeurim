@@ -5,6 +5,8 @@ import com.geulgrim.recruit.job.application.dto.response.*;
 import com.geulgrim.recruit.job.application.service.ResumeService;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,7 @@ public class RecruitController {
     }
 
     // 구인구직 리스트 조회
-    @GetMapping("/job")
+    @GetMapping("/joblist")
     public ResponseEntity<?> getJobs(
             @RequestParam List<Long> positionIds,
             @RequestParam List<String> experienceTypes,
@@ -41,8 +43,12 @@ public class RecruitController {
     // 내가 작성한 구인구직 리스트 조회
     @GetMapping("/job/myjob")
     public ResponseEntity<?> getMyJobs(
-            @RequestHeader HttpHeaders headers) {
-        GetJobsResponses getJobsResponses = resumeService.getMyJobs(headers);
+            @RequestHeader HttpHeaders headers,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "20") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        GetJobsResponses getJobsResponses = resumeService.getMyJobs(headers, pageable);
         return new ResponseEntity<>(getJobsResponses, HttpStatus.OK);
     }
 
@@ -173,6 +179,16 @@ public class RecruitController {
     }
 
     // 내 이력서 수정 (3순위)
+    @PutMapping("/resume/{resumeId}")
+    public ResponseEntity<?> updateResume(
+            @RequestHeader HttpHeaders headers,
+            @RequestPart UpdateResumeRequest updateResumeRequest,
+            @RequestParam MultipartFile image_file) {
+        String result = resumeService.updateResume(headers, image_file, updateResumeRequest);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
 
     // 내 이력서 삭제
     @DeleteMapping("/resume/{resumeId}")
@@ -318,5 +334,17 @@ public class RecruitController {
             @PathVariable Long experienceId) {
         String result = resumeService.deleteExperience(headers, experienceId);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> test() {
+
+        return new ResponseEntity<>(resumeService.test(), HttpStatus.OK);
+    }
+
+    @GetMapping("/test2")
+    public ResponseEntity<?> test2() {
+
+        return new ResponseEntity<>(resumeService.test2(), HttpStatus.OK);
     }
 }
