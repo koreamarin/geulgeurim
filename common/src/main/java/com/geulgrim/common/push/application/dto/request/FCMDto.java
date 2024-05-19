@@ -1,7 +1,7 @@
 package com.geulgrim.common.push.application.dto.request;
 
+import com.geulgrim.common.authserver.application.dto.response.UserResponseDto;
 import com.geulgrim.common.push.domain.Push;
-import com.geulgrim.common.user.domain.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,10 +19,10 @@ public class FCMDto {
 
     private String content;
 
-    public static FCMDto of(User user, Push push) {
+    public static FCMDto of(UserResponseDto userDto, Push push) {
 
         return FCMDto.builder()
-                .fcmToken(user.getFcmToken())
+                .fcmToken(userDto.getFcmToken())
                 .title(push.getTitle())
                 .content(push.getContent())
                 .build();
