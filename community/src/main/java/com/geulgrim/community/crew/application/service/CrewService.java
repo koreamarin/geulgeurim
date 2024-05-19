@@ -134,7 +134,7 @@ public class CrewService {
         for(MultipartFile image : crewBoardRequest.getImageList()) {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             String url = awsS3Service.uploadFile(userId, image, timestamp, "crew");
-            log.info("URL : {}", url);
+//            log.info("URL : {}", url);
             CrewImage crewImage = CrewImage.builder()
                     .crew(crew)
                     .fileUrl(url)

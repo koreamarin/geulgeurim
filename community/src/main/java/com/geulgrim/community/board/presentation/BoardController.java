@@ -85,8 +85,8 @@ public class BoardController {
                                             @RequestParam(required = false) String searchType,
                                             @RequestParam(required = false) String sort,
                                             Pageable pageable) {
-        long userId = Long.parseLong(headers.get("user_id").get(0));
-//        long userId = 5;
+//        long userId = Long.parseLong(headers.get("user_id").get(0));
+        long userId = 5;
         return boardService.myBoards(userId, keyword, searchType, sort, pageable);
     }
 }

@@ -103,7 +103,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
         QBoardComment comment = QBoardComment.boardComment;
         QUser user = QUser.user;
 
-        BooleanExpression predicate = createPredicate(keyword, searchType, board, user);
+        BooleanExpression predicate = createMyBoardPredicate(keyword, searchType, board, userId);
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(sort, board);
 
         List<BoardListResponse> results = queryFactory
@@ -257,6 +257,24 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                 return user.nickname.containsIgnoreCase(keyword);
             default:
                 return null;
+        }
+    }
+
+    private BooleanExpression createMyBoardPredicate(String keyword, String searchType, QBoard board, long userId) {
+        BooleanExpression predicate = board.user.userId.eq(userId);
+        if (!StringUtils.hasText(keyword)) {
+            return predicate;
+        }
+
+        switch (searchType) {
+            case "title":
+                return predicate.and(board.title.containsIgnoreCase(keyword));
+            case "content":
+                return predicate.and(board.content.containsIgnoreCase(keyword));
+            case "title+content":
+                return predicate.and(board.title.containsIgnoreCase(keyword).or(board.content.containsIgnoreCase(keyword)));
+            default:
+                return predicate;
         }
     }
 
