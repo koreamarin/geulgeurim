@@ -66,6 +66,12 @@ public class BatchConfig {
 
                         log.info("jobId={}, endDate={}", jobId, endDate);
                         log.info("tomorrow={}", tomorrow);
+                        log.info("simplejob");
+                        log.info("jobId", jobSimple.getJobId());
+                        log.info("CompanyName", jobSimple.getCompanyName());
+                        log.info("title", jobSimple.getTitle());
+                        log.info("startDate", jobSimple.getStartDate());
+                        log.info("endDate", jobSimple.getEndDate());
 
                         if ((endDate.toLocalDate()).equals(tomorrow.toLocalDate())) {
                             log.info("!!!담긴 내일 마감 공고 ={}", jobSimple.getTitle());
