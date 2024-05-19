@@ -303,3 +303,41 @@ export async function passedOrNot(recruitId:number, resumeId:number, resultStatu
     return false;
   }
 }
+
+// ----------------------------------------------------------------------
+
+// 내가 낸 이력서 확인
+
+type ApplyResponse = {
+  resumeUrl: string;
+  resultStatus: string;
+  jobTitle: string;
+  position: string[];
+  companyName: string;
+  endDate: string;
+  jobId: number;
+};
+
+type ApplyResponses = {
+  getMyApplyedJobsResponses: ApplyResponse[];
+  totalPage: number;
+};
+
+export function useGetApplyList() {
+  const URL =  endpoints.recruit.apply;
+
+  const { data, isLoading, error, isValidating, mutate: applyMutate } = useSWR(URL, customFetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      applyData: (data as ApplyResponses) || { getMyApplyedJobsResponses: [], totalPage:0},
+      applyLoading: isLoading,
+      applyError: error,
+      applyValidating: isValidating,
+      applyMutate,
+    }),
+    [data, error, isLoading, isValidating, applyMutate]
+  );
+
+  return memoizedValue;
+}

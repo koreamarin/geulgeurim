@@ -63,6 +63,7 @@ export const endpoints = {
     stars: '/api/v1/recruit/star',
     detail: '/api/v1/recruit/jobdetail',
     submit: '/api/v1/recruit/job',
+    apply: '/api/v1/recruit/job/myapply'
   },
   user: {
     detail: '/api/v1/auth/user'

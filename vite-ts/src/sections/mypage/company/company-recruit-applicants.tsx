@@ -12,7 +12,7 @@ import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 
-import { useGetSubmittList, passedOrNot } from 'src/api/recruit';
+import { passedOrNot, useGetSubmittList } from 'src/api/recruit';
 
 import { useSnackbar } from 'src/components/snackbar';
 import { SplashScreen } from 'src/components/loading-screen';
