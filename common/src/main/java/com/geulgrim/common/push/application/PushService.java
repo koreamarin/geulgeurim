@@ -55,10 +55,9 @@ public class PushService {
 
         //알람 수신자 정보 얻기
         UserResponseDto rcvUser = authFeignClient.getUserInfo(dto.getReceiverId());
+        log.info("rcvuser name: ", rcvUser.getName());
+        log.info("rcvuser fcmToken: ", rcvUser.getName());
         //exception 처리
-        if (rcvUser == null){
-            throw new NoUserExistException();
-        }
         String rcvNickname = rcvUser.getNickname();
         String rcvEmail = rcvUser.getEmail();
 
@@ -96,13 +95,17 @@ public class PushService {
         log.info("domain Enum 값 ={} ", domain);
 
         //구인에서 공고제목 얻어서 content 수정, 이후 페이지 링크로 수정
-        StringBuilder jobContent = new StringBuilder();
-        for (Long jobId : dto.getFavoriteJobs()) {
-            SimpleJobResponseDto jobSimple = recruitFeignClient.getJobSimple(jobId);
-            jobContent.append(jobSimple.getCompanyName()).append(" 회사의\n").append(jobSimple.getTitle()).append("공고가\n").append(jobSimple.getEndDate()).append("에 마감되요!\n얼른 지원하러 가볼까요?");
-            jobContent.append("\n\n");
+        if(domain.isNeedJobTitle()){
+            StringBuilder jobContent = new StringBuilder();
+            for (Long jobId : dto.getFavoriteJobs()) {
+                SimpleJobResponseDto jobSimple = recruitFeignClient.getJobSimple(jobId);
+                jobContent.append(jobSimple.getCompanyName()).append(" 회사의\n").append(jobSimple.getTitle()).append("공고가\n").append(jobSimple.getEndDate()).append("에 마감되요!\n얼른 지원하러 가볼까요?");
+                jobContent.append("\n\n");
+            }
+            push.updateContent(jobContent.toString());
+            log.info("push 업데이트: ", push.getContent());
+
         }
-        push.updateContent(jobContent.toString());
 
 
         UserResponseDto rcvUser = authFeignClient.getUserInfo(dto.getReceiverId());

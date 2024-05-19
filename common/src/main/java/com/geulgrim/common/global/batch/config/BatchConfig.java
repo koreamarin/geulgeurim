@@ -22,7 +22,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Configuration
 @RequiredArgsConstructor
@@ -53,7 +52,7 @@ public class BatchConfig {
             //모든 유저의 관심공고에 대해 내일 마감공고인지 확인
             for (Long id : authFeignClient.findAll().getUserIds()) {
                 log.info("확인할 유저 ={}", id);
-                List<Long> favoriteJobs = recruitFeignClient.getUserStars(id);
+                List<Long> favoriteJobs = recruitFeignClient.getUserFavoriteJobs(id);
                 log.info("관심 공고 ids ={}", favoriteJobs);
 
                 //관심 공고가 하나라도 있는 경우 탐색
