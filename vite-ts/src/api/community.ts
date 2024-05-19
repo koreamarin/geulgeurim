@@ -203,6 +203,56 @@ export function useGetCrewDetail(crewId: string) {
 
 // ----------------------------------------------------------------------
 
+export function useGetMyBoards(page: number) {
+  const URL = `/api/v1/community/board/myboard?page=${page}&size=10`
+
+  const token = `Bearer ${localStorage.getItem('accessToken')}`
+
+  const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
+    refreshInterval: 0,  // disable automatic re-fetching
+    revalidateOnFocus: false, // disable re-fetching when the window is focused
+  }); 
+  console.log('My Board' ,data)
+
+  const memoizedValue = useMemo(
+    () => ({
+      myBoard: (data) || [],
+      boardLoading: isLoading,
+      boardError: error,
+      boardValidating: isValidating,
+      boardEmpty: !isLoading && !data,
+    }),
+    [data, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
+
 // ----------------------------------------------------------------------
+
+export function useGetMyComments(page: number) {
+  const URL = `/api/v1/community/comment/board/mycomment?page=${page}&size=10`
+
+  const token = `Bearer ${localStorage.getItem('accessToken')}`
+
+  const { data, isLoading, error, isValidating } = useSWR([URL, { headers: { Authorization: `Bearer ${token}` } }], customFetcher, {
+    refreshInterval: 0,  // disable automatic re-fetching
+    revalidateOnFocus: false, // disable re-fetching when the window is focused
+  }); 
+  console.log('My Comments' ,data)
+
+  const memoizedValue = useMemo(
+    () => ({
+      myComments: (data) || [],
+      commentLoading: isLoading,
+      commentError: error,
+      commentValidating: isValidating,
+      commentEmpty: !isLoading && !data,
+    }),
+    [data, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
 
 // ----------------------------------------------------------------------
