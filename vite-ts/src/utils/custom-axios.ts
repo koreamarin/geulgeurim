@@ -53,7 +53,8 @@ export const endpoints = {
     delete: '/api/v1/common/portfolio'
   },
   pieces : {
-    mine: '/api/v1/common/piece/search?'
+    mine: '/api/v1/common/piece/search?',
+    detail: '/api/v1/common/piece/detail'
   }
 
 };
