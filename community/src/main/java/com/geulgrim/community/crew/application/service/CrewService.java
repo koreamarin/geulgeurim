@@ -185,23 +185,22 @@ public class CrewService {
     }
 
 
-    public Long apply(Long crewId, CrewJoinRequest crewJoinRequest) {
+    public Long apply(Long crewId, CrewJoinRequest crewJoinRequest, long userId) {
 
         Crew crew = crewRepository.findById(crewId)
                 .orElseThrow(() -> new CrewException(NOT_EXISTS_CREW_BOARD));
 
-        User user = userRepository.findById(crewJoinRequest.getUserId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
 
         // 이미 지원한 신청자인지 체크
-        CrewRequest existingRequest = crewRequestRepository.findByUserIdAndCrewId(
-                crewJoinRequest.getUserId(), crewId);
+        CrewRequest existingRequest = crewRequestRepository.findByUserIdAndCrewId(userId, crewId);
         if (existingRequest != null) {
             throw new CrewException(ALREADY_SUBMITTED);
         }
 
         // 게시글을 만든 사람은 지원할 수 없음
-        if (Objects.equals(crew.getUser().getUserId(), crewJoinRequest.getUserId())) {
+        if (Objects.equals(crew.getUser().getUserId(), userId)) {
             throw new CrewException(CREATOR_CANNOT_APPLY);
         }
 
@@ -210,12 +209,12 @@ public class CrewService {
                 .user(user)
                 .position(crewJoinRequest.getPosition())
                 .message(crewJoinRequest.getMessage())
+                .status(CrewStatus.PENDING)
                 .build();
 
         crewRequestRepository.save(crewRequest);
 
         return crewRequest.getCrewRequestId();
-
     }
 
     public List<CrewApplicant> getCrewApplicants(Long crewId) {
