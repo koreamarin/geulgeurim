@@ -10,25 +10,30 @@ import TextMaxLine from 'src/components/text-max-line';
 import { BoardMainItem } from 'src/types/blog';
 
 type propsType = {
-  newBoard: BoardMainItem[],
-  popBoard: BoardMainItem[],
-}
+  newBoard: BoardMainItem[];
+  popBoard: BoardMainItem[];
+};
 
 export default function BoardMainView(props: propsType) {
+  const { newBoard, popBoard } = props;
 
-  const {newBoard, popBoard} = props;
-  
   // console.log("api test: ", newBoard);
   // console.log("api test: ", popBoard);
 
   const board = paths.community.board.main;
   const boardDetail = paths.community.board.detail;
-  
+
   return (
     <Container sx={{ marginBottom: 5 }}>
       <Box width={800} alignItems="center" sx={{ border: '2px solid lightgrey' }}>
         <Box paddingLeft={3}>
-          <h2>자유 게시판</h2>
+          <Link
+            component={RouterLink}
+            href={board}
+            style={{ textDecoration: 'none', color: 'black' }}
+          >
+            <h2>자유 게시판</h2>
+          </Link>
         </Box>
 
         <Box display="flex" sx={{ borderTop: '1px solid lightgrey' }}>
@@ -40,21 +45,24 @@ export default function BoardMainView(props: propsType) {
               </Box>
               <Box paddingLeft={3}>
                 <ul style={{ paddingLeft: 0 }}>
-                  {popBoard?.length === 0 ? 
-                   <></>
-                   : 
-                   (popBoard?.map((popular, idx) => (
-                    <Link
-                      color="inherit"
-                      style={{ textDecoration: 'none' }}
-                      component={RouterLink}
-                      href={boardDetail(popular.boardId)}
-                    >
-                      <li style={{marginBottom: idx===4 ? 0 :3}}>
-                        <TextMaxLine line={1} variant='subtitle2' persistent>{popular.title}</TextMaxLine>
-                      </li>
-                    </Link>
-                  )))}
+                  {popBoard?.length === 0 ? (
+                    <>아직 작성한 글이 없습니다.</>
+                  ) : (
+                    popBoard?.map((popular, idx) => (
+                      <Link
+                        color="inherit"
+                        style={{ textDecoration: 'none' }}
+                        component={RouterLink}
+                        href={boardDetail(popular.boardId)}
+                      >
+                        <li style={{ marginBottom: idx === 4 ? 0 : 3 }}>
+                          <TextMaxLine line={1} variant="subtitle2" persistent>
+                            {popular.title}
+                          </TextMaxLine>
+                        </li>
+                      </Link>
+                    ))
+                  )}
                 </ul>
               </Box>
               <Box textAlign="right" mr={1} fontSize={10}>
@@ -80,25 +88,32 @@ export default function BoardMainView(props: propsType) {
                 </Box>
                 <Box paddingLeft={3}>
                   <ul style={{ paddingLeft: '0' }}>
-                  {newBoard?.length === 0 ?
-                  <></> 
-                   :
-                  (newBoard?.map((popular, idx) => (
-                    <Link
-                      color="inherit"
-                      style={{ textDecoration: 'none' }}
-                      component={RouterLink}
-                      href={boardDetail(popular.boardId)}
-                    >
-                      <li style={{marginBottom: idx===4 ? 0 :3}}>
-                        <TextMaxLine line={1} variant='subtitle2' persistent>{popular.title}</TextMaxLine>
-                      </li>
-                    </Link>
-                  )))}
+                    {newBoard?.length === 0 ? (
+                      <>아직 작성한 글이 없습니다.</>
+                    ) : (
+                      newBoard?.map((popular, idx) => (
+                        <Link
+                          color="inherit"
+                          style={{ textDecoration: 'none' }}
+                          component={RouterLink}
+                          href={boardDetail(popular.boardId)}
+                        >
+                          <li style={{ marginBottom: idx === 4 ? 0 : 3 }}>
+                            <TextMaxLine line={1} variant="subtitle2" persistent>
+                              {popular.title}
+                            </TextMaxLine>
+                          </li>
+                        </Link>
+                      ))
+                    )}
                   </ul>
                 </Box>
                 <Box textAlign="right" mr={1} fontSize={10}>
-                  <Link component={RouterLink} href={board} style={{ textDecoration: 'none', color: 'black' }}>
+                  <Link
+                    component={RouterLink}
+                    href={board}
+                    style={{ textDecoration: 'none', color: 'black' }}
+                  >
                     더보기 &gt;
                   </Link>
                 </Box>
