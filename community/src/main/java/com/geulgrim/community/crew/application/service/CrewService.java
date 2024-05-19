@@ -204,15 +204,13 @@ public class CrewService {
             throw new CrewException(CREATOR_CANNOT_APPLY);
         }
 
-        CrewRequest crewRequest = CrewRequest.builder()
+        CrewRequest crewRequest = crewRequestRepository.save(CrewRequest.builder()
                 .crew(crew)
                 .user(user)
                 .position(crewJoinRequest.getPosition())
                 .message(crewJoinRequest.getMessage())
                 .status(CrewStatus.PENDING)
-                .build();
-
-        crewRequestRepository.save(crewRequest);
+                .build());
 
         return crewRequest.getCrewRequestId();
     }
