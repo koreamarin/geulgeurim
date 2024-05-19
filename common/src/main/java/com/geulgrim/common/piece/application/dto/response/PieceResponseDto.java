@@ -1,6 +1,8 @@
 package com.geulgrim.common.piece.application.dto.response;
 
+import com.geulgrim.common.piece.domain.entity.enums.NftType;
 import com.geulgrim.common.piece.domain.entity.enums.PieceType;
+import com.geulgrim.common.piece.domain.entity.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +26,11 @@ public class PieceResponseDto {
 
     private String description;
 
-    private PieceType type;
+    private PieceType pieceType;
+
+    private NftType nftType;
+
+    private Status status;
 
     private LocalDateTime createdAt;
 
