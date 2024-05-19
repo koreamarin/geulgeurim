@@ -26,5 +26,6 @@ public class CrewBoardDetail {
     private ArrayList<String> images;
     private ArrayList<CrewInfo> crewInfo;
     private LocalDateTime createdAt;
+    private Boolean owner;
 
 }

@@ -2,12 +2,12 @@ package com.geulgrim.community.crew.domain.repository;
 
 import com.geulgrim.community.crew.application.dto.response.CrewImageResponse;
 import com.geulgrim.community.crew.application.dto.response.CrewListResponse;
-import com.geulgrim.community.crew.domain.entity.Crew;
-import com.geulgrim.community.crew.domain.entity.CrewImage;
-import com.geulgrim.community.crew.domain.entity.QCrew;
-import com.geulgrim.community.crew.domain.entity.QCrewImage;
+import com.geulgrim.community.crew.application.dto.response.MyApplyListResponse;
+import com.geulgrim.community.crew.application.dto.response.MyCrewListResponse;
+import com.geulgrim.community.crew.domain.entity.*;
 import com.geulgrim.community.global.user.domain.entity.QUser;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -126,6 +126,59 @@ public class CrewCustomRepositoryImpl implements CrewCustomRepository {
                 .fetchCount();
 
         return new PageImpl<>(results, pageable, total);
+    }
+
+    @Override
+    public Page<MyCrewListResponse> findMyCrewResponseList(long userId, Pageable pageable) {
+        QCrew crew = QCrew.crew;
+        QCrewRequest crewRequest = QCrewRequest.crewRequest;
+        List<MyCrewListResponse> content = queryFactory
+                .select(Projections.constructor(MyCrewListResponse.class,
+                        crew.crewId,
+                        crew.projectName,
+                        crewRequest.count().as("applyCnt")))
+                .from(crew)
+                .leftJoin(crewRequest).on(crew.crewId.eq(crewRequest.crew.crewId))
+                .where(crew.user.userId.eq(userId))
+                .groupBy(crew.crewId, crew.projectName)
+                .orderBy(crew.createdAt.desc()) // Modify this line for custom sorting if needed
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = queryFactory
+                .select(crew.countDistinct())
+                .from(crew)
+                .join(crewRequest).on(crew.crewId.eq(crewRequest.crew.crewId))
+                .where(crewRequest.user.userId.eq(userId))
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public Page<MyApplyListResponse> findMyApplyResponseList(long userId, Pageable pageable){
+        QCrewRequest crewRequest = QCrewRequest.crewRequest;
+        List<MyApplyListResponse> content = queryFactory
+                .select(Projections.constructor(MyApplyListResponse.class,
+                        crewRequest.crewRequestId,
+                        crewRequest.message,
+                        crewRequest.status,
+                        crewRequest.crew.crewId))
+                .from(crewRequest)
+                .where(crewRequest.user.userId.eq(userId))
+                .orderBy(crewRequest.createdAt.desc()) // Modify this line for custom sorting if needed
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = queryFactory
+                .select(crewRequest.countDistinct())
+                .from(crewRequest)
+                .where(crewRequest.user.userId.eq(userId))
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, total);
     }
 
     private BooleanExpression createPredicate(String keyword, String searchType, QCrew crew, QUser user) {

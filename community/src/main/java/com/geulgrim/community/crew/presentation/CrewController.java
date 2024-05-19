@@ -4,10 +4,7 @@ import com.geulgrim.community.crew.application.dto.request.CrewBoardModifyReques
 import com.geulgrim.community.crew.application.dto.request.CrewBoardRequest;
 import com.geulgrim.community.crew.application.dto.request.CrewJoinRequest;
 import com.geulgrim.community.crew.application.dto.request.CrewReply;
-import com.geulgrim.community.crew.application.dto.response.CrewApplicant;
-import com.geulgrim.community.crew.application.dto.response.CrewBoard;
-import com.geulgrim.community.crew.application.dto.response.CrewBoardDetail;
-import com.geulgrim.community.crew.application.dto.response.CrewListResponse;
+import com.geulgrim.community.crew.application.dto.response.*;
 import com.geulgrim.community.crew.application.service.CrewService;
 import com.geulgrim.community.global.s3.AwsS3Service;
 import com.geulgrim.community.share.application.dto.response.ShareListResponse;
@@ -51,9 +48,12 @@ public class CrewController {
     @GetMapping("/detail/{crew_id}")
     @Operation(summary = "크루모집 게시글 상세 조회", description = "크루모집 게시판의 게시글을 상세 조회합니다.")
     public ResponseEntity<CrewBoardDetail> getCrewBoardDetail(
+            @RequestHeader HttpHeaders headers,
             @PathVariable("crew_id") Long crewId
     ) {
-        CrewBoardDetail detail = crewService.getCrewBoardDetail(crewId);
+//        long userId = Long.parseLong(headers.get("user_id").get(0));
+        long userId = 5;
+        CrewBoardDetail detail = crewService.getCrewBoardDetail(crewId, userId);
         return ResponseEntity.ok(detail);
     }
 
@@ -96,11 +96,10 @@ public class CrewController {
 
     @PostMapping("/request/{crewId}")
     @Operation(summary = "크루 지원", description = "크루에 지원합니다.")
-    public ResponseEntity<Long> apply(
-            @RequestHeader HttpHeaders headers,
-            @RequestBody CrewJoinRequest crewJoinRequest,
-            @PathVariable("crewId") Long crewId
-    ) {
+    public ResponseEntity<Long> apply(@RequestHeader HttpHeaders headers,
+                                      @RequestBody CrewJoinRequest crewJoinRequest,
+                                      @PathVariable("crewId") Long crewId) {
+
         long userId = Long.parseLong(headers.get("user_id").get(0));
         Long crewRequestId = crewService.apply(crewId, crewJoinRequest, userId);
         return ResponseEntity.ok(crewRequestId);
@@ -126,6 +125,38 @@ public class CrewController {
     ) {
         Long crewId = crewService.reply(requestId, crewReply);
         return ResponseEntity.ok(crewId);
+    }
+
+    @GetMapping("/mycrew")
+    @Operation(summary = "내가 쓴 크루 목록", description = "내가 쓴 크루 모집 글 목록을 가져옵니다.")
+    public Page<MyCrewListResponse> getMyCrewList(@RequestHeader HttpHeaders headers,
+                                                                  Pageable pageable) {
+//        long userId = Long.parseLong(headers.get("user_id").get(0));
+        long userId = 5;
+        return crewService.getMyCrewList(userId, pageable);
+    }
+
+    @GetMapping("/myapply")
+    @Operation(summary = "내가 쓴 크루 지원서 목록", description = "내가 쓴 크루 지원서 목록을 가져옵니다.")
+    public Page<MyApplyListResponse> getMyApplyList(@RequestHeader HttpHeaders headers,
+                                                  Pageable pageable) {
+//        long userId = Long.parseLong(headers.get("user_id").get(0));
+        long userId = 5;
+        return crewService.getMyApplyList(userId, pageable);
+    }
+
+    @PutMapping("/accept")
+    public ResponseEntity<List<CrewInfo>> accept(@RequestParam Long crewRequestId,
+                                    @RequestParam Long crewId) {
+        List<CrewInfo> list = crewService.acceptCrewRequest(crewRequestId, crewId);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @PutMapping("/refuse")
+    public ResponseEntity<List<CrewInfo>> refuse(@RequestParam Long crewRequestId,
+                                    @RequestParam Long crewId) {
+        List<CrewInfo> list = crewService.refuseCrewRequest(crewRequestId, crewId);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
 }
