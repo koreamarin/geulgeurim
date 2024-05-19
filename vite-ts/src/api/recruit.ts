@@ -250,6 +250,7 @@ type GetSubmittListProps = {
     resumeId: number
     resultStatus: string
     resumeUrl: string
+    resumeTitle: string
   }[]
 }
 
@@ -257,9 +258,9 @@ type GetSubmittListProps = {
 
 // 지원자 리스트
 
-export function useGetSubmittList(page: number = 0, size: number = 20) {
-  const URL =  endpoints.company.myRecruit;
-  const queryURL = `${URL}?page=${page}&size=${size}`;
+export function useGetSubmittList(recruit: number) {
+  const URL =  endpoints.company.submittList;
+  const queryURL = `${URL}/${recruit}/submitted`;
 
   const { data, isLoading, error, isValidating, mutate: recruitSubmittMutate } = useSWR(queryURL, customFetcher);
 
@@ -275,4 +276,30 @@ export function useGetSubmittList(page: number = 0, size: number = 20) {
   );
 
   return memoizedValue;
+}
+
+// ----------------------------------------------------------------------
+
+// 합격 여부 수정
+
+
+export async function passedOrNot(recruitId:number, resumeId:number, resultStatus: 'SUCCESS' | 'FAIL') {
+
+  const URL = `${endpoints.recruit.submit}/${recruitId}/submitted/${resumeId}`;
+
+  try {
+    const accessToken = localStorage.getItem('accessToken');
+    await axios({
+      method: 'put',
+      url: `${CUSTOM_API}${URL}`,
+      data: { resultStatus },
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
