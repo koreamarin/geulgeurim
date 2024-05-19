@@ -3,14 +3,19 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import SortingSelectingTable from './recruit-apply-resume-table';
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
+import RecruitApplyResumeTable from './recruit-apply-resume-table';
 
 type ApplyModalProps = {
   open: boolean;
   handleClose: () => void;
+  recruitId: number;
 };
 
-export function RecruitApply({ open, handleClose }: ApplyModalProps) {
+export function RecruitApply({ open, handleClose, recruitId }: ApplyModalProps) {
+  const router = useRouter()
   return (
     <Modal
       open={open}
@@ -35,11 +40,11 @@ export function RecruitApply({ open, handleClose }: ApplyModalProps) {
           내 이력서 선택하기
         </Typography>
         <Box display="flex" justifyContent="flex-end" mb={3}>
-          <Button onClick={handleClose} variant="contained">
+          <Button onClick={() => {router.push(paths.mypage.resumeWrite)}} variant="outlined" color="success">
             이력서 추가하기
           </Button>
         </Box>
-        <SortingSelectingTable/>
+        <RecruitApplyResumeTable recruitId={recruitId} />
         <Box display="flex" justifyContent="flex-end" mt={2}>
           <Button onClick={handleClose} variant="contained">
             닫기

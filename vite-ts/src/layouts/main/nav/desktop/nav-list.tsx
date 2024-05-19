@@ -80,8 +80,8 @@ export default function NavList({ data }: NavListProps) {
                 boxShadow: theme.customShadows.dropdown,
               }}
             >
-              {data.children.map((list) => (
-                <NavSubList data={list.items} />
+              {data.children.map((list, index) => (
+                <NavSubList data={list.items} key={index} />
               ))}
             </Paper>
           </Fade>
@@ -107,8 +107,8 @@ function NavSubList({ data, sx, ...other }: NavSubListProps) {
       }}
       {...other}
     >
-      {data.map((item) => (
-        <Box>
+      {data.map((item, index) => (
+        <Box key={index}>
           <NavItem
             key={item.title}
             title={item.title}

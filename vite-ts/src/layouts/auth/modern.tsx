@@ -30,6 +30,7 @@ export default function AuthModernLayout({ children, image }: Props) {
           mt: { xs: 2, md: 8 },
           mb: { xs: 10, md: 8 },
         }}
+        showLogoPreview={false}
       />
 
       <Card

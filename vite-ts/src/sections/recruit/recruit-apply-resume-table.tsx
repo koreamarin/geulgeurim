@@ -1,6 +1,10 @@
-import { useState, useEffect } from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import html2canvas from 'html2canvas';
+import { useRef, useState, useEffect } from 'react';
 
+import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
+import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
@@ -9,15 +13,22 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import Pagination, {paginationClasses} from '@mui/material/Pagination';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
+import { submitRecruit } from 'src/api/recruit';
 import { useGetResumeList } from 'src/api/mypageResume';
 
 import Scrollbar from 'src/components/scrollbar';
+import { useSnackbar } from 'src/components/snackbar';
 import { SplashScreen } from 'src/components/loading-screen';
 import {
   useTable,
   getComparator,
   TableHeadCustom,
 } from 'src/components/table';
+
+import RecruitApplyPreview from './recurit-apply-preview';
 
 // ----------------------------------------------------------------------
 
@@ -35,14 +46,19 @@ const TABLE_HEAD = [
   { id: 'button', label: '', align: 'center', minWidth: '120px' },
 ];
 
-// ----------------------------------------------------------------------
-
-export default function SortingSelectingTable() {
+export default function RecruitApplyResumeTable({ recruitId }: { recruitId: number }) {
+  const router = useRouter();
   const table = useTable({
     defaultOrderBy: 'createdAt',
   });
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const [tableData, setTableData] = useState<RowDataType[]>([]);
+  const [selectedResumeId, setSelectedResumeId] = useState<number | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [canvasImage, setCanvasImage] = useState<string | null>(null);
+  const hiddenPreviewRef = useRef<HTMLDivElement>(null);
 
   const { resumesData, resumesLoading, resumesError } = useGetResumeList({
     searchType: '',
@@ -62,7 +78,7 @@ export default function SortingSelectingTable() {
       setTableData(data);
     }
   }, [resumesData]);
-  // 조건 랜더
+
   const renderResumeList = () => {
     if (resumesLoading) {
       return <SplashScreen />;
@@ -73,8 +89,16 @@ export default function SortingSelectingTable() {
     }
 
     if (!resumesData.totalPage) {
-      return <Typography sx={{ textAlign: 'center', mt: 4 }}>이력서가 없습니다.</Typography>;
+      return (
+        <>
+          <Typography sx={{ textAlign: 'center', mt: 4 }}>이력서가 없습니다.</Typography>
+          <Button onClick={() => { router.push(paths.mypage.resumeWrite) }} variant="outlined" color="success">
+            이력서 추가하기
+          </Button>
+        </>
+      );
     }
+
     return (
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
         <Scrollbar>
@@ -89,14 +113,11 @@ export default function SortingSelectingTable() {
 
             <TableBody>
               {dataFiltered.slice((page - 1) * pageCount, page * pageCount).map((row) => (
-                <TableRow
-                  hover
-                  key={row.pk}
-                >
+                <TableRow hover key={row.pk}>
                   <TableCell> {row.title} </TableCell>
                   <TableCell align="center">{row.createdAt}</TableCell>
                   <TableCell align="center">{row.updatedAt}</TableCell>
-                  <TableCell align="center">
+                  <TableCell align="right">
                     <Button variant="outlined" onClick={() => handlePreviewClick(row.pk)}>
                       미리보기
                     </Button>
@@ -111,28 +132,121 @@ export default function SortingSelectingTable() {
         </Scrollbar>
       </TableContainer>
     )
-
   }
-
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
   });
 
-  const handlePreviewClick = (pk: number) => {
-    console.log('미리보기 클릭:', pk);
-    // 미리보기 클릭 시 수행할 작업 추가
+  const handlePreviewClick = async (pk: number) => {
+    setSelectedResumeId(pk);
+    setModalOpen(true);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const element = hiddenPreviewRef.current;
+    if (element) {
+      // 이미지 로드 완료 확인
+      const images = element.getElementsByTagName('img');
+      const imageLoadPromises = Array.from(images).map(img => {
+        if (!img.complete) {
+          return new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+          });
+        }
+        return Promise.resolve();
+      });
+
+      try {
+        await Promise.all(imageLoadPromises);
+        const canvas = await html2canvas(element, {
+          scale: 2,
+          allowTaint: true,
+          useCORS: true,
+          scrollX: -window.scrollX,
+          scrollY: -window.scrollY,
+          width: 1200
+        });
+        setCanvasImage(canvas.toDataURL('image/png'));
+      } catch (error) {
+        console.error('이미지 로드 중 오류 발생:', error);
+      }
+    }
   };
 
-  const handleSelectClick = (pk: number) => {
-    console.log('선택하기 클릭:', pk);
-    // 선택하기 클릭 시 수행할 작업 추가
+  const handleSelectClick = async (pk: number) => {
+    setSelectedResumeId(pk);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const element = hiddenPreviewRef.current;
+    if (element) {
+      // 이미지 로드 완료 확인
+      const images = element.getElementsByTagName('img');
+      const imageLoadPromises = Array.from(images).map(img => {
+        if (!img.complete) {
+          return new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+          });
+        }
+        return Promise.resolve();
+      });
+
+      try {
+        await Promise.all(imageLoadPromises);
+        const canvas = await html2canvas(element, {
+          scale: 2,
+          allowTaint: true,
+          useCORS: true,
+          scrollX: -window.scrollX,
+          scrollY: -window.scrollY,
+          width: 1200
+        });
+        const canvasImageForm = canvas.toDataURL('image/png');
+        await handleSubmitImage(canvasImageForm);
+      } catch (error) {
+        console.error('이미지 로드 중 오류 발생:', error);
+      }
+    }
   };
 
-  // 페이지네이션
-  const pageCount = 7
-  const [page, setPage] = useState<number>(1)
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setCanvasImage(null);
+  };
+
+  const handleImageUpload = async () => {
+    if (!canvasImage || !selectedResumeId) return;
+
+    if (!window.confirm('제출 시 수정이 불가능합니다 정말로 제출하시겠습니까?')) return;
+
+    await handleSubmitImage(canvasImage);
+  };
+
+  const handleSubmitImage = async (image: string) => {
+    const byteString = atob(image.split(',')[1]);
+    const mimeString = image.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+
+    for (let i = 0; i < byteString.length; i += 1) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    const blob = new Blob([ab], { type: mimeString });
+    const formData = new FormData();
+    formData.append('image_file', blob, 'resume.png');
+
+    const submit = await submitRecruit(recruitId, selectedResumeId!, formData);
+    if (submit) {
+      enqueueSnackbar('제출에 실패했습니다', { variant: 'error' });
+    } else {
+      enqueueSnackbar('제출 성공!');
+      router.push(paths.recruit.main)
+    }
+  };
+
+  const pageCount = 7;
+  const [page, setPage] = useState<number>(1);
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
@@ -140,25 +254,55 @@ export default function SortingSelectingTable() {
   return (
     <>
       {renderResumeList()}
-        <Pagination
-          page={page}
-          onChange={handleChange}
-          count={Math.floor((resumesData.totalPage - 1) / pageCount) + 1}
-          defaultPage={1}
-          siblingCount={1}
+      <Pagination
+        page={page}
+        onChange={handleChange}
+        count={Math.floor((resumesData.totalPage - 1) / pageCount) + 1}
+        defaultPage={1}
+        siblingCount={1}
+        sx={{
+          mt: 3,
+          mb: 3,
+          [`& .${paginationClasses.ul}`]: {
+            justifyContent: 'center',
+          },
+        }}
+      />
+      <div style={{ position: 'absolute', top: '-10000px' }}>
+        <div ref={hiddenPreviewRef} style={{ width: '1200px', overflowX: 'hidden' }}>
+          {selectedResumeId && <RecruitApplyPreview resumeId={selectedResumeId.toString()} />}
+        </div>
+      </div>
+      <Modal open={modalOpen} onClose={handleModalClose}>
+        <Box
           sx={{
-            mt: 3,
-            mb: 3,
-            [`& .${paginationClasses.ul}`]: {
-              justifyContent: 'center',
-            },
+            position: 'relative',
+            width: '80%',
+            maxHeight: '90%',
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: '16px',
+            overflowY: 'scroll',
+            marginX: 'auto'
           }}
-        />
+        >
+          <Box sx={{ position: 'fixed', top: 0, left: 0, width: '100%', backgroundColor: 'white', zIndex: 1000, p: 2, boxShadow: 1, display: 'flex', justifyContent: 'space-between' }}>
+            <Button onClick={handleModalClose} variant="contained">취소</Button>
+            <Button onClick={handleImageUpload} variant="contained" color="primary">제출하기</Button>
+          </Box>
+          <Box sx={{ mt: 8, display: 'flex', justifyContent: 'center' }}>
+            {canvasImage ? (
+              <img src={canvasImage} alt="Resume Preview" style={{ width: '100%' }} />
+            ) : (
+              <Typography sx={{ textAlign: 'center', mt: 4 }}>이미지를 생성 중입니다...</Typography>
+            )}
+          </Box>
+        </Box>
+      </Modal>
     </>
   );
 }
-
-// ----------------------------------------------------------------------
 
 function applyFilter({
   inputData,
