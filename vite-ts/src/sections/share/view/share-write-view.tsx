@@ -20,6 +20,8 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
+import { CUSTOM_API } from 'src/config-global';
+
 import { Upload } from 'src/components/upload';
 
 type Props = {
@@ -56,16 +58,16 @@ export default function BoardWriteView({ id }: Props) {
           'Content-Type': `multipart/form-data; `,
           "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
         },
-        baseURL: 'https://글그림.com',
-        // baseURL: 'http://localhost:8080',
+        baseURL: CUSTOM_API,
       })
       .then((response) => {
-        const { share } = response.data;
+        const share  = response.data;
         console.log(share);
         router.push(paths.community.share.detail(share.shareId));
       })
       .catch((error) => {
         alert('글 작성 중 오류가 발생했습니다.');
+        console.log(error);
       });
   };
 
