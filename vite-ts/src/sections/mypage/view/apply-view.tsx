@@ -7,6 +7,7 @@ export default function ApplyView() {
     <Container>
       <Box>
         <header>지원 내역</header>
+        ㅁㄴㅇㄹㄴㅁㄹ
       </Box>
     </Container>
   );
