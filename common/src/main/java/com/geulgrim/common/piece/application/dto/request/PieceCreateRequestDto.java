@@ -5,22 +5,20 @@ import com.geulgrim.common.piece.domain.entity.enums.NftType;
 import com.geulgrim.common.piece.domain.entity.enums.PieceType;
 import com.geulgrim.common.piece.domain.entity.enums.Status;
 import jakarta.persistence.Enumerated;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import static jakarta.persistence.EnumType.STRING;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder @Setter
 public class PieceCreateRequestDto {
 
     private Long ownerId;
 
-    private String fileUrl;
+    private MultipartFile file;
 
     private String name;
 
@@ -39,7 +37,7 @@ public class PieceCreateRequestDto {
     public Piece toEntity(){
         return Piece.builder()
                 .ownerId(ownerId)
-                .fileUrl(fileUrl)
+//                .fileUrl(file)
                 .name(name)
                 .description(description)
                 .type(type)
