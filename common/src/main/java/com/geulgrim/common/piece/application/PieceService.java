@@ -11,13 +11,11 @@ import com.geulgrim.common.piece.domain.repository.PieceRepository;
 import com.geulgrim.common.piece.exception.NoPieceExistException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -35,7 +33,9 @@ public class PieceService {
                 .fileUrl(piece.getFileUrl())
                 .name(piece.getName())
                 .description(piece.getDescription())
-                .type(piece.getType())
+                .pieceType(piece.getType())
+                .nftType(piece.getNftType())
+                .status(piece.getStatus())
                 .createdAt(piece.getCreatedAt())
                 .updatedAt(piece.getUpdatedAt())
                 .build();
