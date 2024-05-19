@@ -53,7 +53,7 @@ public class RecruitController {
     }
 
     // 구인구직 상세 조회
-    @GetMapping("/job/{jobId}")
+    @GetMapping("/jobdetail/{jobId}")
     public ResponseEntity<?> getJob(
             @RequestHeader HttpHeaders headers,
             @PathVariable Long jobId) {
