@@ -67,7 +67,7 @@ public class BatchConfig {
                         log.info("jobId={}, endDate={}", jobId, endDate);
                         log.info("tomorrow={}", tomorrow);
 
-                        if (endDate.isEqual(tomorrow)) {
+                        if ((endDate.toLocalDate()).equals(tomorrow.toLocalDate())) {
                             log.info("!!!담긴 내일 마감 공고 ={}", jobSimple.getTitle());
                             log.info("!!!담긴 내일 마감 공고 마감날 ={}", endDate);
 
