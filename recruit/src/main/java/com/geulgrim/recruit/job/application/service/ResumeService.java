@@ -151,7 +151,7 @@ public class ResumeService {
                 .build();
     }
 
-    // 내가 작성한 구인구직 리스트 조회
+    // 내(기업회원)가 작성한 구인구직 리스트 조회
     public GetJobsResponses getMyJobs(
             HttpHeaders headers,
             Pageable pageable) {
@@ -182,6 +182,40 @@ public class ResumeService {
                 .totalPage(getJobsResponses.size())
                 .build();
 
+    }
+
+    // 내(개인회원)가 지원한 이력 및 공고 조회
+    public GetMyApplyedJobsResponses getMyApplyedJobs(
+            HttpHeaders headers) {
+        Long userId = Long.parseLong(headers.get("user_id").get(0));
+
+        Sort sqlSort = Sort.by(Sort.Direction.DESC, "createdAt");
+        List<Resume> resumes = resumeRepository.findByUserId(userId, sqlSort);
+
+        List<GetMyApplyedJobsResponse> getMyApplyedJobsResponses = new ArrayList<>();
+
+        for(Resume resume : resumes) {
+            List<SubmittedResume> submittedResumes = submittedResumeRepository.findByResume(resume)
+                    .orElseThrow(() -> new IllegalArgumentException("지원한 구인공고가 없습니다."));
+
+            for(SubmittedResume submittedResume : submittedResumes) {
+                GetMyApplyedJobsResponse getMyApplyedJobsResponse = GetMyApplyedJobsResponse.builder()
+                        .resumeUrl(submittedResume.getResumeUrl())
+                        .resultStatus(submittedResume.getResultStatus().name())
+                        .jobTitle(submittedResume.getJob().getTitle())
+                        .position(submittedResume.getJob().getJobPositions().stream().map(jobPosition -> jobPosition.getPosition().getPositionName()).toList())
+                        .companyName(submittedResume.getJob().getCompanyName())
+                        .endDate(String.valueOf(submittedResume.getJob().getEndDate()))
+                        .jobId(submittedResume.getJob().getJobId())
+                        .build();
+                getMyApplyedJobsResponses.add(getMyApplyedJobsResponse);
+            }
+        }
+
+        return GetMyApplyedJobsResponses.builder()
+                .getMyApplyedJobsResponses(getMyApplyedJobsResponses)
+                .totalPage(getMyApplyedJobsResponses.size())
+                .build();
     }
 
     // 구인구직 상세 조회

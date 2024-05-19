@@ -41,7 +41,7 @@ public class RecruitController {
         return new ResponseEntity<>(getJobsResponses, HttpStatus.OK);
     }
 
-    // 내가 작성한 구인구직 리스트 조회
+    // 내(기업회원)가 작성한 구인구직 리스트 조회
     @GetMapping("/job/myjob")
     public ResponseEntity<?> getMyJobs(
             @RequestHeader HttpHeaders headers,
@@ -52,6 +52,15 @@ public class RecruitController {
         GetJobsResponses getJobsResponses = resumeService.getMyJobs(headers, pageable);
         return new ResponseEntity<>(getJobsResponses, HttpStatus.OK);
     }
+
+    // 내(개인회원)가 지원한 이력 및 공고 조회
+    @GetMapping("/job/myapply")
+    public ResponseEntity<?> getMyApplyedJobs(
+            @RequestHeader HttpHeaders headers) {
+        GetMyApplyedJobsResponses getMyApplyedJobsResponses = resumeService.getMyApplyedJobs(headers);
+        return new ResponseEntity<>(getMyApplyedJobsResponses, HttpStatus.OK);
+    }
+
 
     // 구인구직 상세 조회
     @GetMapping("/jobdetail/{jobId}")
