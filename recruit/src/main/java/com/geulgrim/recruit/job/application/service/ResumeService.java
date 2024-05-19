@@ -1261,10 +1261,10 @@ public class ResumeService {
     }
 
 
-    public List<UserStarsResponseDto> getUserStars(Long id) {
+    public List<Long> getUserStars(Long id) {
         List<Star> stars = starRepository.findAllByUserId(id).orElseThrow();
         return stars.stream()
-                .map(UserStarsResponseDto::from)
+                .map(Star::getStarId)
                 .toList();
     }
 }
