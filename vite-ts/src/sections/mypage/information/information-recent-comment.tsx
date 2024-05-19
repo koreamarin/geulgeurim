@@ -1,21 +1,24 @@
-import { useRef, useState, useCallback } from 'react';
+import axios from 'axios';
+import { useRef, useState, useCallback, useEffect, ChangeEvent } from 'react';
 
-import Box from '@mui/material/Box'
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Table from '@mui/material/Table'
+import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import TableRow from '@mui/material/TableRow';
-import TableBody from '@mui/material/TableBody'
+import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import TableConttainer from '@mui/material/TableContainer'
+import TableConttainer from '@mui/material/TableContainer';
 import InputAdornment from '@mui/material/InputAdornment';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import { CUSTOM_API } from 'src/config-global';
 
 import Iconify from 'src/components/iconify';
 import { useTable } from 'src/components/table';
@@ -25,29 +28,15 @@ import InformationRecentSort from './information-recent-sort';
 
 // ----------------------------------------------------------------------
 
-function createDummyData(pk: number, fullTitle: string, upload:Date, hit:number, post_pk:number) {
-  const date = upload.toLocaleDateString()
-  const title:string = fullTitle.length > 10 ? `${fullTitle.substr(0, 10)}...` : `${fullTitle}`
+function createData(boardCommentId: number, fullTitle: string, upload: Date, boardId: number) {
+  const date = new Date(upload).toLocaleDateString();
+  const content: string = fullTitle.length > 10 ? `${fullTitle.substr(0, 10)}...` : `${fullTitle}`;
 
-  return { pk, title, date, hit, post_pk};
+  return { boardCommentId, content, date, boardId };
 }
 
-const dummy = [
-  createDummyData(1, '댓글1', new Date('2024-05-03'), 10, 5),
-  createDummyData(3, '댓글2', new Date('2024-05-03'), 3, 1),
-  createDummyData(4, '댓글3', new Date('2024-05-03'), 1, 3),
-  createDummyData(6, '댓글댓글댓글', new Date('2024-05-03'), 200, 10),
-  createDummyData(21, '오늘은 20240503 17시44분', new Date('2024-05-03'), 13, 2),
-  createDummyData(30, '집갈시간이다!!!', new Date('2024-05-03'), 5, 0),
-  createDummyData(41, '개미는 뚠뚠 오늘도 뚠뚠', new Date('2024-05-03'), 0, 2),
-  createDummyData(50, '댓글 마무리!', new Date('2024-05-03'), 1, 13),
-  createDummyData(76, '댓글댓글댓글', new Date('2024-05-03'), 1, 2),
-  createDummyData(101, '이 댓글은 영국에서 최초로 시작되어 일년에 한바퀴를 돌면서 받는 사람에게 행운을 주었고 지금은 당신에게로 옮겨진 이 편지는 4일 안에 당신 곁을 떠나야 합니다.', new Date('2024-05-03'), 503, 15),
-  createDummyData(109, '취업하고싶당', new Date('2024-05-03'), 20, 1),
-];
-
 interface Column {
-  id: 'pk' | 'title' | 'date' | 'hit' | 'post_pk';
+  id: 'boardCommentId' | 'content' | 'date' | 'boardId';
   label: string;
   minWidth?: number;
   align?: 'right' | 'center';
@@ -55,8 +44,8 @@ interface Column {
 }
 
 const COLUMNS: Column[] = [
-  { id: 'pk', label: '#', minWidth: 16 },
-  { id: 'title', label: '내용', minWidth: 170},
+  { id: 'boardCommentId', label: '#', minWidth: 16 },
+  { id: 'content', label: '내용', minWidth: 170 },
   {
     id: 'date',
     label: '날짜',
@@ -67,19 +56,63 @@ const COLUMNS: Column[] = [
 
 const POST_SORT_OPTIONS = [
   { value: 'latest', label: '최신 순' },
-  { value: 'popular', label: '조회수 순' },
   { value: 'oldest', label: '과거 순' },
 ];
 
+interface CommentData {
+  boardCommentId: number;
+  content: string;
+  date: string;
+  boardId: number;
+}
 
 export default function InformationRecentPost() {
+  const [data, setData] = useState<CommentData[]>([]);
+  const [keyword, setKeyword] = useState<string>('');
+  const [searchType, setSearchType] = useState<string>('title');
+  const [page, setPage] = useState<number>(0);
+  const [size, setSize] = useState<number>(15);
+  const [sort, setSort] = useState<string>('latest');
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   const router = useRouter();
+  const changeSearchRef = useRef<string>('');
 
-  const changeSearchRef = useRef<string>('')
+  const fetchBoards = useCallback(async () => {
+    try {
+      const response = await axios.get('/api/v1/community/comment/board/mycomment', {
+        params: {
+          keyword,
+          searchType,
+          sort,
+          page,
+          size,
+        },
+        baseURL: CUSTOM_API,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      });
+      const commentData = response.data.content;
+      const transformedCommentData = commentData.map(
+        (item: { boardCommentId: number; content: string; createdAt: Date; boardId: number }) =>
+          createData(item.boardCommentId, item.content, item.createdAt, item.boardId)
+      );
+      setData(transformedCommentData);
+      setTotalPages(response.data.totalPages);
+      // console.log(response.data);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  }, [keyword, searchType, sort, page, size]);
+
+  useEffect(() => {
+    fetchBoards();
+  }, [fetchBoards]);
 
   const handleClick = () => {
-    console.log(changeSearchRef.current)
+    setKeyword(changeSearchRef.current);
+    setPage(0);
   };
 
   const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -88,114 +121,134 @@ export default function InformationRecentPost() {
     }
   };
 
-  const handleRowClick = (pk:number) => {
-    router.push(paths.community.board.detail(pk));
-  }
+  const handleRowClick = (boardId: number) => {
+    router.push(`/community/board/${boardId}`);
+  };
 
-  const pageCount = 7
+  const handlePageChange = (event: ChangeEvent<unknown>, value: number) => {
+    setPage(value - 1);
+  };
 
-  const table = useTable({ defaultRowsPerPage: pageCount })
-
-  const [sortBy, setSortBy] = useState('latest');
-
-  const handleSortBy = useCallback((newValue: string) => {
-    setSortBy(newValue);
+  const handleOptionBy = useCallback((newValue: string) => {
+    setSearchType(newValue);
   }, []);
 
+  const handleSortBy = useCallback((newValue: string) => {
+    setSort(newValue);
+  }, []);
+
+  const pageCount = 10;
+
+  const table = useTable({ defaultRowsPerPage: pageCount });
+
   return (
-      <Card sx={{p:3}}>
-        <Box sx={{ borderBottom: '3px solid black'}}>
-          <Typography variant="h5" component="div" sx={{ color: 'gray', ml: 3, mb: 1, mt: 3 }}>
-            내가 작성한 댓글
-          </Typography>
-        </Box>
-        {/* 필터 들어가기 => zustand 이용, 바뀔 때 pagination 초기화 */}
-        <Stack direction="row" spacing={1} alignItems='center'>
-          {/* search */}
-          <TextField
-            placeholder="검색"
-            onKeyUp={handleKeyUp}
-            sx={{ flexGrow: 1, my: 1 }}
-            onChange={(event) => {changeSearchRef.current = event.target.value}}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="start">
-                    <Iconify icon="eva:search-fill" sx={{ ml: 1, color: 'text.disabled' }} onClick={handleClick} />
-                </InputAdornment>
-              )
-            }}
-          />
+    <Card sx={{ p: 3 }}>
+      <Box sx={{ borderBottom: '3px solid black' }}>
+        <Typography variant="h5" component="div" sx={{ color: 'gray', ml: 3, mb: 1, mt: 3 }}>
+          내가 작성한 댓글
+        </Typography>
+      </Box>
+      {/* 필터 들어가기 => zustand 이용, 바뀔 때 pagination 초기화 */}
+      <Stack direction="row" spacing={1} alignItems="center">
+        {/* search */}
+        <TextField
+          placeholder="검색"
+          onKeyUp={handleKeyUp}
+          sx={{ flexGrow: 1, my: 1 }}
+          onChange={(event) => {
+            changeSearchRef.current = event.target.value;
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="start">
+                <Iconify
+                  icon="eva:search-fill"
+                  sx={{ ml: 1, color: 'text.disabled' }}
+                  onClick={handleClick}
+                />
+              </InputAdornment>
+            ),
+          }}
+        />
 
-          {/* sort */}
-          <InformationRecentSort sort={sortBy} onSort={handleSortBy} sortOptions={POST_SORT_OPTIONS} />
-        </Stack>
-        {/* 테이블 구성 */}
-        <TableConttainer sx={{ position: 'relative', overflow: 'unset'}}>
-          <Scrollbar>
-            <Table>
-              {/* 표 헤더 */}
-              <TableHead>
-                <TableRow>
-                  {COLUMNS.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
-                      style={{ top: 56, minWidth: column.minWidth }}
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
+        {/* sort */}
+        <InformationRecentSort sort={sort} onSort={handleSortBy} sortOptions={POST_SORT_OPTIONS} />
+      </Stack>
+      {/* 테이블 구성 */}
+      <TableConttainer sx={{ position: 'relative', overflow: 'unset' }}>
+        <Scrollbar>
+          <Table>
+            {/* 표 헤더 */}
+            <TableHead>
+              <TableRow>
+                {COLUMNS.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ top: 56, minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {/* 데이터가 없을 때 */}
+              {!data.length ? (
+                <TableRow hover role="checkbox" tabIndex={-1}>
+                  <TableCell align="center" colSpan={COLUMNS.length}>
+                    아직 작성한 글이 없습니다
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {/* 데이터가 없을 때 */}
-                {!dummy.length ?
-                (
-                  <TableRow hover role="checkbox" tabIndex={-1}>
-                        <TableCell align='center' colSpan={COLUMNS.length}>
-                          아직 작성한 글이 없습니다
-                        </TableCell>
-                  </TableRow>
-                )
-                :
-                  (dummy.slice(
+              ) : (
+                data
+                  .slice(
                     table.page * table.rowsPerPage,
                     table.page * table.rowsPerPage + table.rowsPerPage
-                  ).map((row) => (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.pk} onClick={() => handleRowClick(row.post_pk)} sx={{ cursor: 'pointer'}}>
-                        {COLUMNS.map((column) => {
-                          const value = row[column.id];
-                          return (
-                            <TableCell key={column.id} align={column.align}>
-                              {column.format && typeof value === 'number' ? column.format(value) : value}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                  ))
                   )
-                }
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </TableConttainer>
+                  .map((row) => (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.boardCommentId}
+                      onClick={() => handleRowClick(row.boardId)}
+                      sx={{ cursor: 'pointer' }}
+                    >
+                      {COLUMNS.map((column) => {
+                        const value = row[column.id];
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {column.format && typeof value === 'number'
+                              ? column.format(value)
+                              : value}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  ))
+              )}
+            </TableBody>
+          </Table>
+        </Scrollbar>
+      </TableConttainer>
 
-
-        {/* 페이지 네이션, 위치 상태함수로 저장 */}
+      {/* 페이지 네이션, 위치 상태함수로 저장 */}
 
       <Pagination
-            count={Math.floor((dummy.length - 1) / pageCount) + 1}
-            defaultPage={1}
-            siblingCount={1}
-            sx={{
-              mt: 3,
-              mb: 3,
-              [`& .${paginationClasses.ul}`]: {
-                justifyContent: 'center',
-              },
-            }}
-          />
-      </Card>
+        count={totalPages}
+        page={page + 1}
+        onChange={handlePageChange}
+        siblingCount={3}
+        sx={{
+          mt: 3,
+          mb: 3,
+          [`& .${paginationClasses.ul}`]: {
+            justifyContent: 'center',
+          },
+        }}
+      />
+    </Card>
   );
 }
