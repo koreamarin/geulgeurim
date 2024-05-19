@@ -103,7 +103,7 @@ export default function CrewDetailView({ id }: Props) {
 
   const handleAccept = async (crewRequestId: React.Key | null | undefined) => {
     try {
-      const response = await axios.get('/api/v1/community/crew/accept', {
+      const response = await axios.put('/api/v1/community/crew/accept', {
         params: {
           crewRequestId,
           crewId: id,
@@ -125,7 +125,7 @@ export default function CrewDetailView({ id }: Props) {
 
   const handleRefuse = async (crewRequestId: React.Key | null | undefined) => {
     try {
-      const response = await axios.get('/api/v1/community/crew/refuse', {
+      const response = await axios.put('/api/v1/community/crew/refuse', {
         params: {
           crewRequestId,
           crewId: id,
@@ -233,8 +233,8 @@ export default function CrewDetailView({ id }: Props) {
             )}
           </Box>
         </Grid>
-
-        <Grid container justifyContent="center" mt={3}>
+        {crewDetails && crewDetails.owner ? (<></>) : (
+          <Grid container justifyContent="center" mt={3}>
           <Button
             style={{ height: '2.8rem', fontSize: '1rem' }}
             variant="outlined"
@@ -246,6 +246,8 @@ export default function CrewDetailView({ id }: Props) {
             지원하기
           </Button>
         </Grid>
+        )}
+        
         {crewDetails && crewDetails.owner ? (
           <Grid
             xs={10}
