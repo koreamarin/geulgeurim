@@ -22,6 +22,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @RequiredArgsConstructor
@@ -92,7 +93,7 @@ public class BatchConfig {
                             .build());
 
                     log.info("마감공고 배치 전송 ={}", favoriteJobClosingsoon.getTitle());
-                    log.info("마감공고들 ={}", favoriteJobClosingsoon.getFavoriteJobList().stream().map());
+                    favoriteJobClosingsoon.getFavoriteJobList().stream().map(jobId -> "마감공고들: "+ jobId).toList().forEach(log::info);
 
                 }
 
