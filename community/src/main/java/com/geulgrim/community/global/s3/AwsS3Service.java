@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -78,12 +79,16 @@ public class AwsS3Service {
         // 파일명 생성에 사용될 날짜 포맷 설정
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
+        // UUID를 파일명에 추가
+        String uuid = UUID.randomUUID().toString();
+        String uniqueFileName = uuid + "_" + fileName.replaceAll("\\s", "_");
+
         // 파일명 생성에 사용될 현재 날짜 문자열 가져오기
         String currentDate = dateFormat.format(new Date(time.getTime()));
 
         // 파일명 생성
 
-        return String.format("%s/%d_%s.%s", boardType, userId, currentDate, getFileExtension(fileName));
+        return String.format("%s/%d_%s_%s.%s", boardType, userId, currentDate, uniqueFileName, getFileExtension(fileName));
     }
 
     // file 형식이 잘못된 경우를 확인하기 위해 만들어진 로직이며, 파일 타입과 상관없이 업로드할 수 있게 하기위해, "."의 존재 유무만 판단하였습니다.
