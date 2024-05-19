@@ -26,6 +26,7 @@ public class PortfolioController {
 
     private final PortfolioService portfolioService;
 
+
     @GetMapping
     @Operation(summary = "내 포트폴리오 전체 조회", description = "모든 포트폴리오를 조회합니다.")
     public ResponseEntity<List<PortfolioResponse>> getPortfolios(

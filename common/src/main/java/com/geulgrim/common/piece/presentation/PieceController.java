@@ -24,6 +24,7 @@ public class PieceController {
 
     private final PieceService pieceService;
 
+
     @GetMapping("/detail/{id}")
     @Operation(summary = "작품조회", description = "id로 piece를 조회합니다. market server가 사용하는 api입니다.")
     public ResponseEntity<PieceResponseDto> findById(@PathVariable("id") Long id) {
