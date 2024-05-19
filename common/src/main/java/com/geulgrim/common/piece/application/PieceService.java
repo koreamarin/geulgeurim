@@ -35,7 +35,9 @@ public class PieceService {
                 .fileUrl(piece.getFileUrl())
                 .name(piece.getName())
                 .description(piece.getDescription())
-                .type(piece.getType())
+                .pieceType(piece.getType())
+                .nftType(piece.getNftType())
+                .status(piece.getStatus())
                 .createdAt(piece.getCreatedAt())
                 .updatedAt(piece.getUpdatedAt())
                 .build();
