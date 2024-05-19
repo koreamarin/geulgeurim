@@ -21,8 +21,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/common/portfolio")
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "https://글그림.com"})
-@Slf4j
 public class PortfolioController {
 
     private final PortfolioService portfolioService;

@@ -18,7 +18,6 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/common/piece")
-@CrossOrigin(origins = {"http://localhost:3000", "https://글그림.com"})
 @RequiredArgsConstructor
 public class PieceController {
 
