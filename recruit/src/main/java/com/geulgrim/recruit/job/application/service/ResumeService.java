@@ -375,6 +375,7 @@ public class ResumeService {
             GetSubmittedResumeResponse getSubmittedResumeResponse = GetSubmittedResumeResponse.builder()
                     .resumeId(submittedResume.getResume().getResumeId())
                     .resultStatus(String.valueOf(submittedResume.getResultStatus()))
+                    .resumeUrl(submittedResume.getResumeUrl())
                     .build();
             getSubmittedResumeResponses.add(getSubmittedResumeResponse);
         }
