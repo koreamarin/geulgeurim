@@ -97,11 +97,12 @@ public class CrewController {
     @PostMapping("/request/{crewId}")
     @Operation(summary = "크루 지원", description = "크루에 지원합니다.")
     public ResponseEntity<Long> apply(
+            @RequestHeader HttpHeaders headers,
             @RequestBody CrewJoinRequest crewJoinRequest,
             @PathVariable("crewId") Long crewId
     ) {
-
-        Long crewRequestId = crewService.apply(crewId, crewJoinRequest);
+        long userId = Long.parseLong(headers.get("user_id").get(0));
+        Long crewRequestId = crewService.apply(crewId, crewJoinRequest, userId);
         return ResponseEntity.ok(crewRequestId);
     }
 
