@@ -48,8 +48,11 @@ public class PushService {
         if (domain.isNeedNickName()) {
             log.info("닉네임이 필요한 푸시메일 ={}", domain);
 
+            log.info("로그인 userId ={}", userId);
+
             //auth에서 sender 닉네임 얻어서 title 수정
             String senderNick = authFeignClient.getUserInfo(userId).getNickname();
+            log.info("senderNick ={}", senderNick);
             push.updateTitle(senderNick);
         }
 
