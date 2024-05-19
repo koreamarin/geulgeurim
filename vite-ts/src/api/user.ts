@@ -20,6 +20,17 @@ type UserDetail = {
   fcmToken?: string
 }
 
+type CompanyInfo = {
+    userId: number
+    manager: string
+    company: string
+    thumbnail: string | null
+    birthday: string
+    address: string
+    introduce: string | null
+    ceo_name: string
+}
+
 export function useGetUserDetail() {
   const URL = endpoints.user.detail
   const { data, isLoading, error, isValidating } = useSWR(`${URL}`, customFetcher);
@@ -36,3 +47,21 @@ export function useGetUserDetail() {
 
   return memoizedValue;
 }
+
+export function useGetCompanyDetail() {
+  const URL = endpoints.company.info
+  const { data, isLoading, error, isValidating } = useSWR(`${URL}`, customFetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      companyDetailData: data as CompanyInfo,
+      companyDetailLoading: isLoading,
+      companyDetailError: error,
+      companyDetailValidating: isValidating,
+
+    }),
+    [data, error, isLoading, isValidating]);
+
+  return memoizedValue;
+}
+

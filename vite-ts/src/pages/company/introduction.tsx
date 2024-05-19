@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { InterestView } from 'src/sections/mypage/view';
+import CompanyIntroduction from 'src/sections/mypage/company/company-introduction';
 
 // ----------------------------------------------------------------------
 
@@ -8,10 +8,10 @@ export default function IntroductionHome() {
   return (
     <>
       <Helmet>
-        <title>관심있는 공고</title>
+        <title>회사 소개</title>
       </Helmet>
 
-      <InterestView />
+      <CompanyIntroduction />
     </>
   );
 }
