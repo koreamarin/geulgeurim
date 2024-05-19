@@ -11,8 +11,8 @@ import java.util.List;
 public interface RecruitFeignClient {
 
     @GetMapping("/api/v1/recruit/userstars/{id}")
-    public List<Long> getUserStars(@PathVariable Long id); //특정 유저의 관심공고 id 리스트를 가져옵니다
+    List<Long> getUserStars(@PathVariable Long id); //특정 유저의 관심공고 id 리스트를 가져옵니다
 
     @GetMapping("/api/v1/recruit/jobsimple/{id}")
-    public SimpleJobResponseDto getJobSimple(@PathVariable("id") Long jobId);
+    SimpleJobResponseDto getJobSimple(@PathVariable("id") Long jobId);
 }
