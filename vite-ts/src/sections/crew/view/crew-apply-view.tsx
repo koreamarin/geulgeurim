@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -6,6 +7,8 @@ import {
   TextField, Typography, RadioGroup, FormControl,
   DialogTitle, DialogActions, DialogContent, FormControlLabel, DialogContentText
 } from '@mui/material';
+
+import { CUSTOM_API } from 'src/config-global';
 
 import ComponentBlock from 'src/sections/_examples/component-block';
 
@@ -34,7 +37,7 @@ export default function CrewApplyView({ id }: Props) {
   const location = useLocation();
   const navigate = useNavigate();
   const crewDetails = location.state?.crewDetails as CrewDetail;
-  const crewId = crewDetails?.crew_id;
+  const crewId = id;
 
   const [position, setPosition] = useState('');
   const [message, setMessage] = useState('');
@@ -46,42 +49,33 @@ export default function CrewApplyView({ id }: Props) {
 
   const handleSubmit = async () => {
     if (!position || !message) {
-      alert("Please select a position and enter a message.");
+      alert("포지션을 선택하고 메세지를 입력해주세요.");
       return;
     }
-
-    const payload = {
-      user_id: 2,
+    const crewJoinRequest = {
       position,
-      message
-    };
-
-    setOpenDialog(true);
-
-    // try {
-    //   const response = await fetch('http://localhost:8080/api/v1/community/crew/request/${crewId}', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(payload)
-    //   });
-
-    //   if (!response.ok) {
-    //     throw new Error('에러가 발생했어요.');
-    //   }
-
-    //   const responseData = await response.json();
-    //   console.log('Submit response:', responseData);
-    //   setOpenDialog(true);
-    // } catch (error) {
-    //   console.error('Failed to submit:', error);
-    // }
+      message,
+    }
+    axios
+    .post(`/api/v1/community/crew/request/${crewId}`, crewJoinRequest, {
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      baseURL: CUSTOM_API
+    })
+    .then((response) => {
+      console.log(response);
+      setOpenDialog(true);
+    })
+    .catch((error) => {
+      alert('글 작성 중 오류가 발생했습니다.');
+      console.log(error);
+    });
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    navigate(`/community/crew/${crewDetails?.crew_id}`);  // 다시 크루 모집 상세페이지로
+    navigate(`/community/crew/${crewId}`);  // 다시 크루 모집 상세페이지로
   };
 
   return (

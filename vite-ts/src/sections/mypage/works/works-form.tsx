@@ -17,6 +17,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { createPiece } from 'src/api/piece';
+
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFUpload,
@@ -25,7 +27,6 @@ import FormProvider, {
 } from 'src/components/hook-form';
 
 import WorksRHFSwitch from './works-form-switch';
-// import WorksFormEscape from './works-form-escape';
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +35,7 @@ type SelectCatgory = {
   value: string
 }
 
-const typeList:SelectCatgory[] = [
+const typeList: SelectCatgory[] = [
   {label:'선화', value:'PEN'},
   {label:'채색', value:'COLOR'},
   {label:'배경', value:'BG'},
@@ -46,13 +47,6 @@ const typeList:SelectCatgory[] = [
 
 export default function WorksForm() {
   const router = useRouter();
-
-
-  // const a = true
-  // const blocker = useBlocker((
-  //   {currentLocation, nextLocation}) =>
-  //   a && currentLocation.pathname !== nextLocation.pathname
-  // )
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -91,20 +85,39 @@ export default function WorksForm() {
     formState: { isSubmitting },
   } = methods;
 
-  // usePreventPageChangeWhenDirty(isDirty);
-
-
   const onSubmit = handleSubmit(async (data) => {
     try {
-      // api로 바꿔야함
+      const formData = new FormData();
+      const dto = {
+        name: data.name,
+        description: data.description,
+        status: 'PUBLIC',
+        type: data.type,
+        nftType: 'URL'
+      };
+      console.log('dto', dto)
+      console.log('data', data)
+
+      formData.append(
+        'dto',
+        new Blob([JSON.stringify(dto)], {
+          type: 'application/json'
+        })
+      );
+
+      if (data.fileUrl) {
+        formData.append('file', data.fileUrl, data.fileUrl.name);
+      }
+
+      await createPiece(formData);
+
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       enqueueSnackbar('작품 등록 성공!');
-      // nft 등록 화면으로 이동하자!
       router.push(paths.mypage.works);
-      console.log('DATA', data);
     } catch (error) {
       console.error(error);
+      enqueueSnackbar('작품 등록 실패!', { variant: 'error' });
     }
   });
 
@@ -182,28 +195,13 @@ export default function WorksForm() {
     </Grid>
   );
 
-
-
   return (
-    <>
-      <FormProvider methods={methods} onSubmit={onSubmit}>
-        <Grid container spacing={3}>
-          {renderDetails}
-        </Grid>
-      </FormProvider>
-      {/* {blocker.state === 'blocked' && (
-        <Grid>
-          <Button onClick={() => blocker.proceed()}>과연</Button>
-          <Button onClick={() => blocker.reset()}>되랏</Button>
-        </Grid>
-      )} */}
-        {/* <WorksFormEscape
-        open={showPrompt}
-        onClose={() => cancelNavigation}
-        onOpen={() => showPrompt}
-        onMove={confirmNavigation}
-        selectVariant='zoomIn'
-      /> */}
-    </>
+
+    <FormProvider methods={methods} onSubmit={onSubmit}>
+      <Grid container spacing={3}>
+        {renderDetails}
+      </Grid>
+    </FormProvider>
+
   );
 }

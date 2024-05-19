@@ -10,6 +10,8 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
 import { useMockedUser } from 'src/hooks/use-mocked-user';
 
+import { useGetUserDetail } from 'src/api/user';
+
 import ComponentBlock from '../component-block';
 
 // ----------------------------------------------------------------------
@@ -20,6 +22,8 @@ interface EditModeState {
 
 export default function InformationProfile() {
     const { user } = useMockedUser();
+    const userName = localStorage.getItem('nickname')
+    const { userDetailData, userDetailError, userDetailLoading, userDetailValidating} = useGetUserDetail()
     const [editMode, setEditMode] = useState<EditModeState>({
       name: false,
       email: false,
@@ -87,7 +91,7 @@ export default function InformationProfile() {
           <Grid container spacing={3}>
             <Grid xsOffset={1} xs={11}>
               <Typography variant="h3" component="h1">
-                  {user?.displayName} 님
+                  {userName} 님
               </Typography>
             </Grid>
             <Grid mdOffset={1} md={2} xsOffset={4} xs={4}>
@@ -120,11 +124,11 @@ export default function InformationProfile() {
                         paddingTop: 5
                       }
                    }}
-                    defaultValue={user?.displayName}
+                    defaultValue={userName}
                     onChange={(event) => {changeNameRef.current = event.target.value}}
                 />
                   ) :
-                    user?.displayName
+                  userName
                   }
                   </Grid>
                   <Grid xs={editMode.name?5:3} pb={1} textAlign="end" sx={{ borderBottom: '1px solid #ccc' }}>
@@ -162,11 +166,11 @@ export default function InformationProfile() {
                         paddingTop: 5
                       }
                    }}
-                    defaultValue={user?.email}
+                    defaultValue={userDetailData?.email}
                     onChange={(event) => {changeEmailRef.current = event.target.value}}
                 />
                   ) :
-                    user?.email
+                  userDetailData?.email
                   }
                   </Grid>
                   <Grid xs={editMode.email?5:3} pb={1} textAlign="end" sx={{ borderBottom: '1px solid #ccc' }}>
@@ -205,11 +209,11 @@ export default function InformationProfile() {
                         paddingTop: 5
                       }
                    }}
-                    defaultValue={user?.phoneNumber}
+                    defaultValue={userDetailData?.phoneNum}
                     onChange={(event) => {changePhoneNumberRef.current = event.target.value}}
                 />
                   ) :
-                    user?.phoneNumber
+                  userDetailData?.phoneNum
                   }
                   </Grid>
                   <Grid xs={editMode.phoneNumber?5:3} pb={1} textAlign="end" sx={{ borderBottom: '1px solid #ccc' }}>
@@ -258,7 +262,7 @@ export default function InformationProfile() {
                         }}
                         sx={{alignContent:"end"}}
                       />
-                  ) : userBirthday.toLocaleDateString()
+                  ) : userDetailData?.birthday
                   }
                   </Grid>
                   <Grid xs={editMode.birthday?5:3} pb={1} textAlign="end" sx={{ borderBottom: '1px solid #ccc', marginBottom: 4}}>

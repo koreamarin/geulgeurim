@@ -47,7 +47,7 @@ export function useGetResumeList({ searchType, searchWord, sortType, sort }:GetR
 
 // ----------------------------------------------------------------------
 
-export function useGetResumeDetail(resumeId:number | undefined) {
+export function useGetResumeDetail(resumeId: number | undefined) {
   const { data, isLoading, error, isValidating } = useSWR(resumeId ? `${URL}/${resumeId}` : null, customFetcher);
 
   const memoizedValue = useMemo(
