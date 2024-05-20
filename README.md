@@ -49,6 +49,10 @@
 
 <br>
 
+### 🔃 CI/CD 및 Infra 구조<br>
+
+<img src="/readmeImg/infra.png" width="900"><br>
+
 ### 🚀 기능
 
 1. 포토폴리오 관리 기능<br>
