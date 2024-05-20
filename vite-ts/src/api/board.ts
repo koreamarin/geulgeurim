@@ -1,0 +1,70 @@
+import useSWR from 'swr';
+import { useMemo } from 'react';
+
+import { fetcher, endpoints } from 'src/utils/axios';
+
+import { IPostItem } from 'src/types/blog';
+
+// ----------------------------------------------------------------------
+
+export function useGetBoardList() {
+  const URL = endpoints.post.list;
+
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      posts: (data?.posts as IPostItem[]) || [],
+      postsLoading: isLoading,
+      postsError: error,
+      postsValidating: isValidating,
+      postsEmpty: !isLoading && !data?.posts.length,
+    }),
+    [data?.posts, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
+
+// ----------------------------------------------------------------------
+
+export function useGetBoardDetail(title: string) {
+  const URL = title ? [endpoints.post.details, { params: { title } }] : '';
+
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      post: data?.post as IPostItem,
+      postLoading: isLoading,
+      postError: error,
+      postValidating: isValidating,
+    }),
+    [data?.post, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
+
+// ----------------------------------------------------------------------
+
+export function useSearchBoard(query: string) {
+  const URL = query ? [endpoints.post.search, { params: { query } }] : '';
+
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, {
+    keepPreviousData: true,
+  });
+
+  const memoizedValue = useMemo(
+    () => ({
+      searchResults: (data?.results as IPostItem[]) || [],
+      searchLoading: isLoading,
+      searchError: error,
+      searchValidating: isValidating,
+      searchEmpty: !isLoading && !data?.results.length,
+    }),
+    [data?.results, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
