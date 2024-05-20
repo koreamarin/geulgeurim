@@ -121,9 +121,6 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
                     <Button variant="outlined" onClick={() => handlePreviewClick(row.pk)}>
                       미리보기
                     </Button>
-                    <Button variant="contained" color="primary" sx={{ ml: 1 }} onClick={() => handleSelectClick(row.pk)}>
-                      선택하기
-                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -189,7 +186,7 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
         }
         return Promise.resolve();
       });
-  
+
       try {
         await Promise.all(imageLoadPromises);
         const canvas = await html2canvas(element, {
@@ -207,36 +204,36 @@ export default function RecruitApplyResumeTable({ recruitId }: { recruitId: numb
       }
     }
   };
-  
+
   const handleModalClose = () => {
     setModalOpen(false);
     setCanvasImage(null);
   };
-  
+
   const handleImageUpload = async (pk: number) => {
     if (!canvasImage) return;
-  
+
     if (!window.confirm('제출 시 수정이 불가능합니다 정말로 제출하시겠습니까?')) return;
-  
+
     await handleSubmitImage(canvasImage, pk);
   };
-  
+
   // 제출!!
-  
+
   const handleSubmitImage = async (image: string, pk: number) => {
     const byteString = atob(image.split(',')[1]);
     const mimeString = image.split(',')[0].split(':')[1].split(';')[0];
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
-  
+
     for (let i = 0; i < byteString.length; i += 1) {
       ia[i] = byteString.charCodeAt(i);
     }
-  
+
     const blob = new Blob([ab], { type: mimeString });
     const formData = new FormData();
     formData.append('image_file', blob, 'resume.png');
-  
+
     const submit = await submitRecruit(recruitId, pk, formData);
     if (submit) {
       enqueueSnackbar('제출 성공!');
