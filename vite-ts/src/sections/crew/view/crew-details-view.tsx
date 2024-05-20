@@ -103,7 +103,7 @@ export default function CrewDetailView({ id }: Props) {
 
   const handleAccept = async (crewRequestId: React.Key | null | undefined) => {
     try {
-      const response = await axios.put('ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/community/crew/accept', {
+      const response = await axios.put('/api/v1/community/crew/accept', null, {
         params: {
           crewRequestId,
           crewId: id,
@@ -112,7 +112,7 @@ export default function CrewDetailView({ id }: Props) {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
-      });
+    });
       const crewInfoList = response.data;
       if (crewInfoList && crewInfoList.length !== 0) {
         crewDetails.crewInfo = crewInfoList;
@@ -125,7 +125,7 @@ export default function CrewDetailView({ id }: Props) {
 
   const handleRefuse = async (crewRequestId: React.Key | null | undefined) => {
     try {
-      const response = await axios.put('ec2-3-34-144-29.ap-northeast-2.compute.amazonaws.com:8080/api/v1/community/crew/accept', {
+      const response = await axios.put('/api/v1/community/crew/refuse', null, {
         params: {
           crewRequestId,
           crewId: id,
