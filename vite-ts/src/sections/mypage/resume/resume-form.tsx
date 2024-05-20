@@ -57,7 +57,7 @@ export default function ResumeForm({ copyId }: Props) {
     resumeTitle: resumesDetailData?.resumeTitle || `${ userDetailData?.name || userDetailData?.nickname }님의 이력서`,
     essay: resumesDetailData?.essay || '',
     openStatus: resumesDetailData?.openStatus || 'PRIVATE',
-    fileUrl: resumesDetailData?.fileUrl || '',
+    fileUrl: '',
     positionIds: resumesDetailData?.resumePositionResponses.map(pos => pos.positionId.toString()) || [],
     portfolioIds: resumesDetailData?.resumePortfolioResponses.map(pos => pos.pofolId) || [],
     createEducationRequests: resumesDetailData?.educationResponses.map(edu => ({

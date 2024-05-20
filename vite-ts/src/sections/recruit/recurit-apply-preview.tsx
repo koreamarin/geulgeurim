@@ -9,6 +9,7 @@ import CardHeader from '@mui/material/CardHeader';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useGetUserDetail } from 'src/api/user';
 import { useGetPortfolios } from 'src/api/portfolio';
 import { useGetResumeDetail } from 'src/api/mypageResume';
 
@@ -50,18 +51,19 @@ type Props = {
 export default function RecruitApplyPreview({resumeId}: Props) {
   const { resumesDetailData, resumesDetailError, resumesDetailLoading } = useGetResumeDetail(parseInt(resumeId, 10));
   const { portfoliosData, portfoliosError, portfoliosLoading } = useGetPortfolios();
+  const { userDetailData, userDetailLoading, userDetailError} = useGetUserDetail()
 
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
-  if (resumesDetailError || portfoliosError) {
+  if (resumesDetailError || portfoliosError || userDetailError) {
     enqueueSnackbar('에러 발생! 다시 로그인해주세요');
     localStorage.clear();
     router.push(paths.recruit.main);
   }
 
   const renderResumeDetail = () => {
-    if (resumesDetailLoading || portfoliosLoading) {
+    if (resumesDetailLoading || portfoliosLoading || userDetailLoading) {
       return <SplashScreen />;
     }
     if (resumesDetailData && portfoliosData) {
@@ -98,10 +100,10 @@ export default function RecruitApplyPreview({resumeId}: Props) {
                     justifyContent: 'space-between'
                   }}>
                   {[
-                    { label: "이름", value: userDummy?.name },
-                    { label: "이메일", value: userDummy?.email },
-                    { label: "연락처", value: userDummy?.phone_num },
-                    { label: "생년월일", value: userDummy?.birthday.toLocaleDateString() },
+                    { label: "이름", value:userDetailData.name  },
+                    { label: "이메일", value: userDetailData.email },
+                    { label: "연락처", value: userDetailData.phoneNum },
+                    { label: "생년월일", value: userDetailData.birthday },
                     { label: "직군", value: resumesDetailData?.resumePositionResponses.map(item => positionList.find(positionItem => positionItem.value === item.positionId.toString())?.label).join(', ') }
                   ].map((info, index) => (
                     <Stack key={index} direction='row' justifyContent="center" sx={{ borderBottom: '1px solid #80808036', pb: 2}}>
