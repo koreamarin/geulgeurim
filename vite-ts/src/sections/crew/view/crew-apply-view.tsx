@@ -11,7 +11,6 @@ import {
 import { CUSTOM_API } from 'src/config-global';
 
 import ComponentBlock from 'src/sections/_examples/component-block';
-import { useGetCrewDetail } from '../../../api/community';
 
 type CrewDetail = {
   crew_id: number;
@@ -37,9 +36,7 @@ type Props = {
 export default function CrewApplyView({ id }: Props) {
   const location = useLocation();
   const navigate = useNavigate();
-  // const crewDetails = location.state?.crewDetails as CrewDetail;
-  const { crew } = useGetCrewDetail(id);
-  const crewDetails = crew;
+  const crewDetails = location.state?.crewDetails as CrewDetail;
   const crewId = id;
 
   const [position, setPosition] = useState('');
