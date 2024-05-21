@@ -41,8 +41,6 @@
 <br>
 
 ### 💻 기술 스택
-- 쿼리dsl 추가해야 함
-
 - **FE**: <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white"> ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 - **BE**: <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white"> ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens) ![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=for-the-badge&logo=Spring%20Security&logoColor=white) ![Spring Data Jpa](https://img.shields.io/badge/spring%20data%20jpa-green?style=for-the-badge&logoColor=white) ![Spring Security](https://img.shields.io/badge/Spring%20Cloud-6DB33F?style=for-the-badge&logo=Spring%20Security&logoColor=white) ![QueryDsl](https://img.shields.io/badge/querydsl-blue?style=for-the-badge&logoColor=white)
 
