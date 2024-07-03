@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 public class ResumePortfolio {
@@ -20,4 +18,10 @@ public class ResumePortfolio {
 
     @Column(name="pofol_id", nullable = false)
     private Long pofolId;
+
+    @Builder
+    private ResumePortfolio(Resume resume, Long pofolId) {
+        this.resume = resume;
+        this.pofolId = pofolId;
+    }
 }

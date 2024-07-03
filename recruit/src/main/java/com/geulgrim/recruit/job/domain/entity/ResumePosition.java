@@ -1,17 +1,12 @@
 package com.geulgrim.recruit.job.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Cascade;
 
 @Entity
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
 public class ResumePosition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +20,10 @@ public class ResumePosition {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="position_id", referencedColumnName = "position_id", nullable = false)
     private Position position;
+
+    @Builder
+    private ResumePosition(Resume resume, Position position) {
+        this.resume = resume;
+        this.position = position;
+    }
 }

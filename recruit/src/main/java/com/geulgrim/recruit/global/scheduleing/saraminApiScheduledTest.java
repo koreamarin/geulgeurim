@@ -35,7 +35,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+//@Component
 @RequiredArgsConstructor
 public class saraminApiScheduledTest {
     private final SecondLocateRepository secondLocateRepository;

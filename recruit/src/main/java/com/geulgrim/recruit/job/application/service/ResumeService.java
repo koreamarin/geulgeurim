@@ -439,7 +439,7 @@ public class ResumeService {
         SubmittedResume submittedResume = submittedResumeRepository.findByJobAndResume(job, resume)
                 .orElseThrow(() -> new IllegalArgumentException("해당 구인공고에 지원하지 않은 이력서입니다."));
 
-        submittedResume.setResultStatus(ResultStatus.valueOf(updateSubmittedResumeRequest.getResultStatus()));
+        submittedResume.updateResultStatus(ResultStatus.valueOf(updateSubmittedResumeRequest.getResultStatus()));
 
         submittedResumeRepository.save(submittedResume);
 
@@ -827,10 +827,10 @@ public class ResumeService {
             file_url = awsS3Service.uploadFile(userId, image_file, time, "resume");
         }
 
-        resume.setResumeTitle(updateResumeRequest.getResumeTitle());
-        resume.setEssay(updateResumeRequest.getEssay());
-        resume.setOpenStatus(OpenStatus.valueOf(updateResumeRequest.getOpenStatus()));
-        resume.setFileUrl(file_url);
+        resume.updateResumeTitle(updateResumeRequest.getResumeTitle());
+        resume.updateEssay(updateResumeRequest.getEssay());
+        resume.updateOpenStatus(OpenStatus.valueOf(updateResumeRequest.getOpenStatus()));
+        resume.updateFileUrl(file_url);
         resumeRepository.save(resume);
 
         return "수정완료";

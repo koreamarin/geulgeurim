@@ -9,11 +9,9 @@ import java.util.List;
 
 import static jakarta.persistence.EnumType.STRING;
 
+@Getter
 @Entity
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Resume extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +32,30 @@ public class Resume extends BaseEntity {
 
     @Column(name="file_url")
     private String fileUrl;
+
+    @Builder
+    private Resume(Long resumeId, Long userId, String resumeTitle, String essay, OpenStatus openStatus, String fileUrl) {
+        this.resumeId = resumeId;
+        this.userId = userId;
+        this.resumeTitle = resumeTitle;
+        this.essay = essay;
+        this.openStatus = openStatus;
+        this.fileUrl = fileUrl;
+    }
+
+    public void updateResumeTitle(String resumeTitle) {
+        this.resumeTitle = resumeTitle;
+    }
+
+    public void updateEssay(String essay) {
+        this.essay = essay;
+    }
+
+    public void updateOpenStatus(OpenStatus openStatus) {
+        this.openStatus = openStatus;
+    }
+
+    public void updateFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
 }

@@ -2,16 +2,11 @@ package com.geulgrim.recruit.job.domain.entity;
 
 import com.geulgrim.recruit.job.domain.entity.Enums.ResultStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
 public class SubmittedResume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,4 +27,16 @@ public class SubmittedResume {
 
     @Column(name="resume_url")
     private String resumeUrl;
+
+    @Builder
+    private SubmittedResume(Job job, Resume resume, ResultStatus resultStatus, String resumeUrl) {
+        this.job = job;
+        this.resume = resume;
+        this.resultStatus = resultStatus;
+        this.resumeUrl = resumeUrl;
+    }
+
+    public void updateResultStatus(ResultStatus resultStatus) {
+        this.resultStatus = resultStatus;
+    }
 }

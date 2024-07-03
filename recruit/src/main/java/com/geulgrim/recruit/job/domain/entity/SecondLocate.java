@@ -1,16 +1,11 @@
 package com.geulgrim.recruit.job.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Getter
 @Entity
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class SecondLocate {
     @Id
     @Column(name="second_locate_key")
@@ -23,4 +18,10 @@ public class SecondLocate {
     @Column(name="second_locate_name", nullable = false, length = 63)
     private String secondLocateName;
 
+    @Builder
+    private SecondLocate(Long secondLocateKey, FirstLocate firstLocate, String secondLocateName) {
+        this.secondLocateKey = secondLocateKey;
+        this.firstLocate = firstLocate;
+        this.secondLocateName = secondLocateName;
+    }
 }

@@ -1,18 +1,13 @@
 package com.geulgrim.recruit.job.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
 public class Work {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +29,13 @@ public class Work {
 
     @Column(nullable = false)
     private String content;
+
+    @Builder
+    private Work(Resume resume, String company, LocalDateTime startDate, LocalDateTime endDate, String content) {
+        this.resume = resume;
+        this.company = company;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.content = content;
+    }
 }

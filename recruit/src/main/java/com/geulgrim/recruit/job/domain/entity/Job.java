@@ -5,21 +5,16 @@ import com.geulgrim.recruit.job.domain.entity.Enums.EducationEnum;
 import com.geulgrim.recruit.job.domain.entity.Enums.ExperienceTypeEnum;
 import com.geulgrim.recruit.job.domain.entity.Enums.OpenStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static jakarta.persistence.EnumType.STRING;
 
+@Getter
 @Entity
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class Job {
     @Id
     @Column(name="job_id")
@@ -91,4 +86,51 @@ public class Job {
 
     @OneToMany(mappedBy = "job", fetch = FetchType.EAGER)
     private List<JobPosition> jobPositions;
+
+    @Builder
+    private Job (
+            SecondLocate secondLocate,
+            Long userId,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            String url,
+            String title,
+            String content,
+            String companyName,
+            String companyUrl,
+            String jobType,
+            ExperienceTypeEnum experienceType,
+            int minExperience,
+            EducationEnum education,
+            String perk,
+            String procedureInfo,
+            String salary,
+            CloseType closeType,
+            OpenStatus openStatus,
+            String fileUrl,
+            Long saraminId,
+            List<JobPosition> jobPositions
+    ) {
+        this.secondLocate = secondLocate;
+        this.userId = userId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.url = url;
+        this.title = title;
+        this.content = content;
+        this.companyName = companyName;
+        this.companyUrl = companyUrl;
+        this.jobType = jobType;
+        this.experienceType = experienceType;
+        this.minExperience = minExperience;
+        this.education = education;
+        this.perk = perk;
+        this.procedureInfo = procedureInfo;
+        this.salary = salary;
+        this.closeType = closeType;
+        this.openStatus = openStatus;
+        this.fileUrl = fileUrl;
+        this.saraminId = saraminId;
+        this.jobPositions = jobPositions;
+    }
 }

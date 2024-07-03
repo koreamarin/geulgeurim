@@ -4,11 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 public class JobPosition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +26,11 @@ public class JobPosition {
                 "jobPositionId=" + jobPositionId +
                 ", position=" + position +
                 '}';
+    }
+
+    @Builder
+    public JobPosition(Job job, Position position) {
+        this.job = job;
+        this.position = position;
     }
 }

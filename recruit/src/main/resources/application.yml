@@ -1,3 +1,84 @@
 spring:
   profiles:
-    active: prod
+    default: production
+
+  jwt:
+    salt: geulgrimkeygeulgrimkeygeulgrimkeygeulgrimkeygeulgrimkey
+    expiretime:
+      access-token: 36000000  #10 hour (millis)
+      refresh-token: 2592000000 # 30 days (millis)
+
+  servlet:
+    multipart:
+      maxFileSize: 5000MB
+      maxRequestSize: 5000MB
+
+  cloud:
+    aws:
+      s3:
+        bucket: geulgrim
+      credentials:
+        access-key: AKIAW45OCOVJ4AQIQF7S
+        secret-key: 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
+      region:
+        static: ap-northeast-2
+        auto: false
+      stack:
+        auto: false
+
+  saramin:
+    key: hBuyJMoAcQ87lZ282p91zeQAGFg3Y7wNd0RrXJqZUgE3rKbNzy6G
+
+---
+# 배포용 yml
+spring:
+  config:
+    activate:
+      on-profile: production
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/geulgrim?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    hikari:
+      username: ssafy
+      password: ssafy
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        show_sql: true
+        format_sql: true
+    data:
+      web:
+        pageable:
+          one-indexed-parameters: true
+
+---
+# 테스트용 yml
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/geulgrim_test?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    hikari:
+      username: ssafy
+      password: ssafy
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        show_sql: true
+        format_sql: true
+    data:
+      web:
+        pageable:
+          one-indexed-parameters: true

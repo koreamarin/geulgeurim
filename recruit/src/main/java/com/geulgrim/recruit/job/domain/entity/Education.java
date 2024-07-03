@@ -7,11 +7,9 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
-@Builder
 @AllArgsConstructor
-@NoArgsConstructor
-@Data
 public class Education {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +35,14 @@ public class Education {
 
     @Column(columnDefinition = "DECIMAL(4,2)")
     private BigDecimal gpa;
+
+    @Builder
+    private Education(Resume resume, String institutionName, LocalDateTime startDate, LocalDateTime endDate, EducationStatus educationStatus, BigDecimal gpa) {
+        this.resume = resume;
+        this.institutionName = institutionName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.educationStatus = educationStatus;
+        this.gpa = gpa;
+    }
 }

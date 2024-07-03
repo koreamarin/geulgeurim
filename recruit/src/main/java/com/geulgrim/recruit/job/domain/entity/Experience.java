@@ -1,18 +1,13 @@
 package com.geulgrim.recruit.job.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class Experience {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +29,13 @@ public class Experience {
 
     @Column(name="end_date", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime endDate;
+
+    @Builder
+    public Experience(Resume resume, String experienceTitle, String experienceContent, LocalDateTime startDate, LocalDateTime endDate) {
+        this.resume = resume;
+        this.experienceTitle = experienceTitle;
+        this.experienceContent = experienceContent;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

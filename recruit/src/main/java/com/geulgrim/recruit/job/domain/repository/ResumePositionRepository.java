@@ -11,9 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface ResumePositionRepository extends JpaRepository<ResumePosition, Long> {
-
     Optional<List<ResumePosition>> findByResume(Resume resume);
     Optional<ResumePosition> findByResumeAndPosition(Resume resume, Position position);
-
-
 }

@@ -3,7 +3,7 @@ package com.geulgrim.recruit.job.presentation;
 import com.geulgrim.recruit.job.application.dto.request.*;
 import com.geulgrim.recruit.job.application.dto.response.*;
 import com.geulgrim.recruit.job.application.service.ResumeService;
-import jakarta.ws.rs.Path;
+//import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

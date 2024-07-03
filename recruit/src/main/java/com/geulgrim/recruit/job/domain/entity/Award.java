@@ -1,18 +1,13 @@
 package com.geulgrim.recruit.job.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Award {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +29,14 @@ public class Award {
 
     @Column(name="score", length = 15)
     private String score;
+
+    @Builder
+    private Award(Resume resume, String awardName, LocalDateTime acquisitionDate, String institution, String score) {
+        this.resume = resume;
+        this.awardName = awardName;
+        this.acquisitionDate = acquisitionDate;
+        this.institution = institution;
+        this.score = score;
+    }
+
 }

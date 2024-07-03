@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Getter
 @Entity
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,4 +15,9 @@ public class Position {
 
     @Column(name="position_name", nullable = false, length = 63)
     private String positionName;
+
+    @Builder
+    private Position(String positionName) {
+        this.positionName = positionName;
+    }
 }

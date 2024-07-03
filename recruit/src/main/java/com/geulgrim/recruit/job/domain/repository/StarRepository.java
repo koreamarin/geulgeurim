@@ -10,5 +10,4 @@ import java.util.Optional;
 public interface StarRepository extends JpaRepository<Star, Long>{
     Optional<Star> findByJobAndUserId(Job job, Long userId);
     Optional<List<Star>> findByUserId(Long userId);
-    Optional<List<Star>> findAllByUserId(Long userId);
 }

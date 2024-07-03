@@ -13,8 +13,17 @@ import java.util.Optional;
 public interface JobRepository extends JpaRepository<Job, Long> {
     Page<Job> findByUserId(Long userId, Pageable pageable);
 
-    @Query("SELECT j FROM Job j JOIN j.jobPositions jp ON jp.position.positionId IN :positionIds WHERE j.experienceType IN :experienceTypes AND j.closeType IN :closeTypes")
-    List<Job> getJobs(@Param("positionIds") List<Long> positionIds, @Param("experienceTypes") List<String> experienceTypes, @Param("closeTypes") List<String> closeType);
+    @Query("SELECT j FROM Job j " +
+            "JOIN j.jobPositions jp " +
+            "ON jp.position.positionId " +
+            "IN :positionIds " +
+            "WHERE j.experienceType IN :experienceTypes " +
+            "AND j.closeType IN :closeTypes")
+    List<Job> getJobs(
+            @Param("positionIds") List<Long> positionIds,
+            @Param("experienceTypes") List<String> experienceTypes,
+            @Param("closeTypes") List<String> closeType
+    );
 
     Optional<Job> findBySaraminId(Long saraminId);
 

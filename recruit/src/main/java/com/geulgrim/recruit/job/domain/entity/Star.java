@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Getter
 public class Star {
     @Id
@@ -21,5 +18,11 @@ public class Star {
 
     @Column(name="user_id", nullable = false)
     private Long userId;
+
+    @Builder
+    private Star(Job job, Long userId) {
+        this.job = job;
+        this.userId = userId;
+    }
 
 }
