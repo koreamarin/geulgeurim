@@ -25,8 +25,8 @@ public class RecruitController {
     @PostMapping("/job")
     public ResponseEntity<?> createJob(
             @RequestHeader HttpHeaders headers,
-            @RequestPart CreateJobRequest createJobRequest,
-            @RequestPart MultipartFile image_file) {
+            @RequestPart(name = "createJobRequest") CreateJobRequest createJobRequest,
+            @RequestPart(name = "image_file") MultipartFile image_file) {
         Map<String, Long> map = resumeService.createJob(headers, createJobRequest, image_file);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
@@ -34,9 +34,9 @@ public class RecruitController {
     // 구인구직 리스트 조회
     @GetMapping("/joblist")
     public ResponseEntity<?> getJobs(
-            @RequestParam List<Long> positionIds,
-            @RequestParam List<String> experienceTypes,
-            @RequestParam List<String> closeTypes) {
+            @RequestParam(name = "positionIds") List<Long> positionIds,
+            @RequestParam(name = "experienceTypes") List<String> experienceTypes,
+            @RequestParam(name = "closeTypes") List<String> closeTypes) {
         GetJobsResponses getJobsResponses = resumeService.getJobs(positionIds, experienceTypes, closeTypes);
         return new ResponseEntity<>(getJobsResponses, HttpStatus.OK);
     }
@@ -47,7 +47,6 @@ public class RecruitController {
             @RequestHeader HttpHeaders headers,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "20") int size) {
-
         Pageable pageable = PageRequest.of(page, size);
         GetJobsResponses getJobsResponses = resumeService.getMyJobs(headers, pageable);
         return new ResponseEntity<>(getJobsResponses, HttpStatus.OK);
@@ -355,18 +354,6 @@ public class RecruitController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<?> test() {
-
-        return new ResponseEntity<>(resumeService.test(), HttpStatus.OK);
-    }
-
-    @GetMapping("/test2")
-    public ResponseEntity<?> test2() {
-
-        return new ResponseEntity<>(resumeService.test2(), HttpStatus.OK);
-    }
-
     @GetMapping("/jobsimple/{id}")
     public ResponseEntity<SimpleJobResponseDto> getJobSimple(@PathVariable("id") Long jobId){
         return new ResponseEntity<>(resumeService.getJobSimple(jobId) , HttpStatus.OK);
@@ -376,6 +363,4 @@ public class RecruitController {
     public ResponseEntity<List<Long>> getUserFavoriteJobs(@PathVariable Long id){
         return new ResponseEntity<>(resumeService.getUserFavoriteJobs(id) ,HttpStatus.OK);
     }
-
-
 }
